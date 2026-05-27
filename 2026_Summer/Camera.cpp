@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include "Player.h"
 #include"Matrix4x4.h"
-#include<Dxlib.h>
+#include<DxLib.h>
 #include<algorithm>
 
 namespace

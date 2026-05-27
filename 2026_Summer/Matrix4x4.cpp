@@ -187,9 +187,9 @@ Matrix4x4 Matrix4x4::Scale(float x, float y, float z)
 Vector3 Matrix4x4::TransformForVector(const Vector3& vec) const
 {
 	return Vector3(
-		vec.x_ * x0_ + vec.y_ * y0_ + vec.z_ * z0_ + w0_,
-		vec.x_ * x1_ + vec.y_ * y1_ + vec.z_ * z1_ + w1_,
-		vec.x_ * x2_ + vec.y_ * y2_ + vec.z_ * z2_ + w2_
+		vec.x_ * x0_ + vec.y_ * x1_ + vec.z_ * x2_ + w0_, //1行目の要素
+		vec.x_ * y0_ + vec.y_ * y1_ + vec.z_ * y2_ + w1_, //2行目の要素
+		vec.x_ * z0_ + vec.y_ * z1_ + vec.z_ * z2_ + w2_  //3行目の要素
 	);
 }
 

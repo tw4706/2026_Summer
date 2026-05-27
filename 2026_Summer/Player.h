@@ -1,13 +1,21 @@
 #pragma once
 #include "GameObject.h"
+#include "Animation.h"
 
 class Input;
 class Camera;
 class Player :public GameObject
 {
 public:
+	//プレイヤーの状態
+	enum class PlayerState
+	{
+		Idle,	//待機
+		Run,	//移動
+	};
+
 	Player();
-	~Player();
+	virtual~Player();
 
 	void Init()override;
 	void Update()override {};
@@ -33,11 +41,22 @@ private:
 	/// </summary>
 	/// <param name="input">入力</param>
 	void UpdateAnalogStick(Input& input);
+
+	/// <summary>
+	/// 状態遷移の更新
+	/// </summary>
+	void UpdateState();
+
+	/// <summary>
+	/// アニメーションの更新
+	/// </summary>
+	void UpdateAnimation(float dt);
 private:
-
+	int modelH_;								//モデル
 	float moveAngle_;						//プレイヤーの向く角度
-	Camera* pCamera_ = nullptr;				//カメラ
 
-	int model_;								//モデル
+	Camera* pCamera_ = nullptr;				//カメラ
+	Animation animation_;					//アニメーション
+	PlayerState state_;						//プレイヤーの状態
 };
 
