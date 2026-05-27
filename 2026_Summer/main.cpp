@@ -1,9 +1,8 @@
 #include "DxLib.h"
 #include "Game.h"
-
-#include <memory>
-
+#include "Input.h"
 #include "SceneMain.h"
+#include <memory>
 
 
 
@@ -27,10 +26,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	//シーンの作成
-	
 	std::shared_ptr<SceneMain>pScene = std::make_shared<SceneMain>();
 	pScene->Init();
 	
+	Input input;
 
 	
 	while (ProcessMessage() != -1)
@@ -40,8 +39,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// 前のフレーム描画を消す
 		ClearDrawScreen();
 		//（ゲーム内容）
-		pScene->Update();
-
+		input.Update();
+		pScene->Update(input);
 		pScene->Draw();
 
 		if (CheckHitKey(KEY_INPUT_ESCAPE))

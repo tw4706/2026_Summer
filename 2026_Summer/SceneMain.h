@@ -1,4 +1,7 @@
 #pragma once
+#include"Player.h"
+#include<memory>
+
 class SceneMain
 {
 public:
@@ -6,7 +9,7 @@ public:
 	~SceneMain();
 
 	void Init();
-	void Update();
+	void Update(Input& input);
 	void Draw();
 
 private:
@@ -14,5 +17,7 @@ private:
 
 private:
 	int m_frameCount;
+
+	std::shared_ptr<Player>pPlayer_;
 };
 
