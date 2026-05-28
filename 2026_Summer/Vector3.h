@@ -14,6 +14,9 @@ public:
 
 	virtual ~Vector3() {};
 
+	//ベクトルの単項マイナス演算子
+	Vector3 operator-() const;
+
 	//ベクトルの足し算
 	Vector3 operator+(const Vector3& other) const;
 	//ベクトルの引き算

@@ -1,11 +1,17 @@
 #include "SceneMain.h"
 #include "DxLib.h"
 #include "Player.h"
+#include "Camera.h"
+
+namespace
+{
+}
 
 SceneMain::SceneMain() :
 	m_frameCount(0)
 {
 	pPlayer_ = std::make_shared<Player>();
+	pCamera_ = std::make_shared<Camera>();
 }
 
 SceneMain::~SceneMain()
@@ -15,18 +21,18 @@ SceneMain::~SceneMain()
 
 void SceneMain::Init()
 {
-	// カリングの設定（裏面のポリゴンは見えないようにする）
+	//カリングの設定（裏面のポリゴンは見えないようにする）
 	SetUseBackCulling(true);
 
-	// Zバッファの設定
-	SetUseZBuffer3D(true);		// Zバッファを使います
-	SetWriteZBuffer3D(true);	// 描画する物体はZバッファにも距離を書き込む
+	//Zバッファの設定
+	SetUseZBuffer3D(true);		//Zバッファを使う
+	SetWriteZBuffer3D(true);	//Zバッファ書き込み
 
-	SetCameraPositionAndTarget_UpVecY(VGet(0.0f, 300.0f, -700), VGet(0.0f, 0.0f, 0.0f));
-	SetupCamera_Perspective(DX_PI_F / 3.0f);
-	SetCameraNearFar(200.0f, 1500.0f);
-
+	pPlayer_->SetCamera(pCamera_.get());
 	pPlayer_->Init();
+
+	pCamera_->SetPlayer(pPlayer_);
+	pCamera_->Init();
 }
 
 void SceneMain::Update(Input&input)
@@ -34,6 +40,7 @@ void SceneMain::Update(Input&input)
 	m_frameCount++;
 
 	pPlayer_->Update(input);
+	pCamera_->Update();
 }
 
 void SceneMain::Draw()

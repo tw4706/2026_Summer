@@ -7,7 +7,7 @@
 namespace
 {
 	//初期位置
-	const Vector3 kFirstPos = { 0.0f, 30.0f, 0.0f };
+	const Vector3 kFirstPos = { 0.0f, 0.0f, 0.0f };
 
 	//初期スケール
 	const Vector3 kFirstScale = { 1.0f, 1.0f, 1.0f };
@@ -52,6 +52,7 @@ Player::~Player()
 
 void Player::Init()
 {
+	//ポジションと速度の初期化
 	pos_ = kFirstPos;
 
 	vel_ = { 0.0f,0.0f,0.0f };
@@ -124,7 +125,7 @@ void Player::Move(Input& input)
 		float cameraYaw = pCamera_ ? pCamera_->GetYaw() : 0.0f;
 
 		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraYaw);
-		Vector3 playerDir = rotMat.TransformForVector(inputDir).Normalize();
+		Vector3 playerDir = rotMat.TransformForVector(-inputDir).Normalize();
 
 		//キーボード移動もLerpを効かせる
 		Vector3 targetVel = playerDir * kSpeed;
@@ -150,7 +151,7 @@ void Player::Move(Input& input)
 	if (pCamera_)
 	{
 		Vector3 stickR = input.GetStickRight();
-		pCamera_->AddRotation(stickR.x_ * kCameraSpeed, stickR.z_ * kCameraSpeed);
+		pCamera_->AddRotation(-stickR.x_ * kCameraSpeed, -stickR.z_ * kCameraSpeed);
 	}
 
 	//位置の反映
@@ -166,7 +167,7 @@ void Player::UpdateAnalogStick(Input& input)
 		float cameraYaw = pCamera_ ? pCamera_->GetYaw() : 0.0f;
 
 		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraYaw);
-		Vector3 playerDir = rotMat.TransformForVector(stickL).Normalize();
+		Vector3 playerDir = rotMat.TransformForVector(-stickL).Normalize();
 
 		//速度変化の影響を受けないよう、入力方向から先に角度を計算
 		float playerAngle = atan2f(playerDir.x_, -playerDir.z_);

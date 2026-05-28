@@ -16,6 +16,11 @@ Vector3::Vector3(const VECTOR& v):
 {
 }
 
+Vector3 Vector3::operator-() const 
+{
+	return Vector3(-x_, -y_, -z_); //全ての成分を反転して返す
+}
+
 //ベクトルの足し算
 Vector3 Vector3::operator+(const Vector3& other) const
 {

@@ -7,13 +7,19 @@
 namespace
 {
 	//ターゲットからカメラの注視点
-	const Vector3 kTargetToCamera = { 0.0f,400.0f,-600.0f };
+	const Vector3 kTargetToCamera = { 0.0f,250.0f,400.0f };
 
 	//カメラのfov
-	constexpr float kCameraFov = DX_PI_F / 2.0f;
+	constexpr float kCameraFov = DX_PI_F / 3.0f;
 
 	//カメラのfovのターゲット
 	constexpr float kCameraFovTarget = DX_PI_F / 3.0f;
+
+	//Near
+	constexpr float kCameraNear = 200.0f;
+
+	//Far
+	constexpr float kCameraFar = 1500.0f;
 
 	//DXライブラリの光の向き
 	constexpr float kLightDirection = -1.8f;
@@ -44,19 +50,25 @@ Camera::~Camera()
 
 void Camera::Init()
 {
+	//視野角の初期化
 	fov_ = kCameraFov;
 	fovTarget_ = kCameraFovTarget;
 
+	//注視点の設定
 	cameraTarget_ = pPlayer_->GetCameraTarget();
 
+	//カメラの配置座標(回転)
 	Matrix4x4 rotY = Matrix4x4::RotateY(yaw_);
 	Matrix4x4 rotX = Matrix4x4::RotateX(pitch_);
-	Matrix4x4 rotMat = rotX * rotY;
+	Matrix4x4 rotMat = rotY * rotX;
 	Vector3 offset = rotMat.TransformForVector(kTargetToCamera);
 
 	pos_ = cameraTarget_ + offset;
 
 	SetCameraPositionAndTarget_UpVecY(pos_.ToDxlibVector(), cameraTarget_.ToDxlibVector());
+
+	SetupCamera_Perspective(kCameraFov);
+	SetCameraNearFar(kCameraNear, kCameraFar);
 }
 
 void Camera::Update()
@@ -72,17 +84,16 @@ void Camera::UpdateCamera()
 	//カメラの注視点
 	cameraTarget_ = pPlayer_->GetCameraTarget();
 
-	//ズームの補間
-	fov_ = Vector3::Lerp(fov_, fovTarget_, 0.07f);
-
-	//ズーム後少しずつ元に戻す
-	fovTarget_ = Vector3::Lerp(fovTarget_, kCameraFovTarget, 0.1f);
-	SetupCamera_Perspective(fov_);
+	////ズームの補間
+	//fov_ = Vector3::Lerp(fov_, fovTarget_, 0.07f);
+	////ズーム後少しずつ元に戻す
+	//fovTarget_ = Vector3::Lerp(fovTarget_, kCameraFovTarget, 0.1f);
+	//SetupCamera_Perspective(fov_);
 
 	//回転
 	Matrix4x4 rotY = Matrix4x4::RotateY(yaw_);
 	Matrix4x4 rotX = Matrix4x4::RotateX(pitch_);
-	Matrix4x4 rotMat = rotX * rotY;
+	Matrix4x4 rotMat = rotY * rotX;
 	Vector3 offset = rotMat.TransformForVector(kTargetToCamera);
 
 	//カメラの位置

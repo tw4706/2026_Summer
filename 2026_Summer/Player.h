@@ -28,6 +28,12 @@ public:
 	/// <returns>カメラの注視点位置</returns>
 	Vector3 GetCameraTarget()const;
 
+	/// <summary>
+	/// カメラのセット
+	/// </summary>
+	/// <param name="camera">カメラのポインタ</param>
+	void SetCamera(Camera* camera) { pCamera_ = camera; }
+
 private:
 
 	/// <summary>
