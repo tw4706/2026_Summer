@@ -58,7 +58,7 @@ void Player::Init()
 	vel_ = { 0.0f,0.0f,0.0f };
 
 	//モデルのロード
-	modelH_ = MV1LoadModel("data/Player.mv1");
+	modelH_ = MV1LoadModel("data/Player_Katana.mv1");
 
 	//モデルの位置のセット
 	MV1SetPosition(modelH_, kFirstPos.ToDxlibVector());
