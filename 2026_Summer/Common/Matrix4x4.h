@@ -43,6 +43,9 @@ public:
 	//ベクトル変換
 	Vector3 TransformForVector(const Vector3& v) const;
 
+	//単位行列
+	static Matrix4x4 Identity();
+
 	// DxLibのMatrixに変換
 	MATRIX ToDxLibMatrix(); // 型は使ってる側に合わせる
 };

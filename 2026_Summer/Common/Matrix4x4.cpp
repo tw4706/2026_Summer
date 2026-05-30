@@ -193,6 +193,18 @@ Vector3 Matrix4x4::TransformForVector(const Vector3& vec) const
 	);
 }
 
+Matrix4x4 Matrix4x4::Identity()
+{
+	Matrix4x4 mat;
+
+	mat.x0_ = 1.0f;
+	mat.y1_ = 1.0f;
+	mat.z2_ = 1.0f;
+	mat.w3_ = 1.0f;
+
+	return mat;
+}
+
 //s—ñ‚ğDxlib—p‚É•ÏŠ·
 MATRIX Matrix4x4::ToDxLibMatrix()
 {

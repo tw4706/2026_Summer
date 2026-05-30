@@ -58,8 +58,10 @@ private:
 	/// </summary>
 	void UpdateAnimation(float dt);
 private:
-	int modelH_;								//モデル
+	int modelH_;							//プレイヤーのモデル
+	int katanaH_;							//刀のモデル
 	float moveAngle_;						//プレイヤーの向く角度
+	int handFrameIndex_;					//右手の刀を持つ手のフレームインデックス
 
 	Camera* pCamera_ = nullptr;				//カメラ
 	Animation animation_;					//アニメーション

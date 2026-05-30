@@ -41,13 +41,17 @@ Player::Player() :
 	GameObject(pos_, vel_, dir_),
 	moveAngle_(0.0f),
 	modelH_(-1),
+	katanaH_(-1),
+	handFrameIndex_(-1),
 	state_(PlayerState::Idle)
 {
 }
 
 Player::~Player()
 {
-
+	//モデルの削除
+	if (modelH_ != -1) MV1DeleteModel(modelH_);
+	if (katanaH_ != -1) MV1DeleteModel(katanaH_);
 }
 
 void Player::Init()
@@ -58,7 +62,10 @@ void Player::Init()
 	vel_ = { 0.0f,0.0f,0.0f };
 
 	//モデルのロード
-	modelH_ = MV1LoadModel("data/Player_Katana.mv1");
+	modelH_ = MV1LoadModel("data/Player.mv1");
+
+	katanaH_ = MV1LoadModel("data/Tachi.mv1");
+	handFrameIndex_ = MV1SearchFrame(modelH_, "mixamorig:RightHand");
 
 	//モデルの位置のセット
 	MV1SetPosition(modelH_, kFirstPos.ToDxlibVector());
@@ -95,12 +102,53 @@ void Player::Update(Input& input)
 
 	//モデルに行列をセット
 	MV1SetMatrix(modelH_, worldMat.ToDxLibMatrix());
+
+	DrawFormatString(0, 0, GetColor(255, 255, 255), "Hand Index: %d", handFrameIndex_);
 }
 
 void Player::Draw()
 {
 	//モデルの描画
 	MV1DrawModel(modelH_);
+	if (katanaH_ != -1 && handFrameIndex_ != -1)
+	{
+		// 1. 右手フレームのワールド行列を取得
+		MATRIX handMatrix = MV1GetFrameLocalWorldMatrix(modelH_, handFrameIndex_);
+
+		// 2. 刀用のベースとなるトランスフォーム変数を設定 (現在のサイズ 2.0f を維持)
+		Vector3 katanaScale = { 2.0f, 2.0f, 2.0f };
+		Vector3 katanaRot = { 0.0f, 0.0f, DX_PI_F/4.0f }; // 基本の回転度数
+		Vector3 katanaTrans = { 0.0f, 0.0f, 0.0f }; // 位置の微調整用
+
+		// 3. 【状態による分岐】Idle状態のときだけ特定の軸を90度曲げる
+		// ※ ここでは例として X 軸を回しています。モデルの向きに合わせて X, Y, Z のどこを回すか選んでください。
+		if (state_ == PlayerState::Idle)
+		{
+			katanaRot.z_ = DX_PI_F / 1.5f; // 90度（ラジアン）
+		}
+		else if (state_ == PlayerState::Run)
+		{
+			katanaRot.z_ = DX_PI_F/2.0f;           // 0度（真っ直ぐ）
+		}
+
+		// 4. 各オフセット行列の作成
+		Matrix4x4 sMat = Matrix4x4::Scale(katanaScale.x_, katanaScale.y_, katanaScale.z_);
+
+		// 回転 (X->Y->Zの順で合成)
+		Matrix4x4 rMat = Matrix4x4::RotateX(katanaRot.x_) * Matrix4x4::RotateY(katanaRot.y_) * Matrix4x4::RotateZ(katanaRot.z_);
+
+		Matrix4x4 tMat = Matrix4x4::Translate(katanaTrans.x_, katanaTrans.y_, katanaTrans.z_);
+
+		// 5. オフセット行列の合成 (拡縮 → 回転 → 移動 の順番が鉄則です)
+		Matrix4x4 offsetMat = sMat * rMat * tMat;
+
+		// 6. オフセット → 手のワールド行列 の順で合成
+		MATRIX finalSwordMatrix = MMult(offsetMat.ToDxLibMatrix(), handMatrix);
+
+		// 7. 刀に設定して描画
+		MV1SetMatrix(katanaH_, finalSwordMatrix);
+		MV1DrawModel(katanaH_);
+	}
 }
 
 Vector3 Player::GetCameraTarget() const
