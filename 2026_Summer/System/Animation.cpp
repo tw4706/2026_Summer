@@ -34,8 +34,6 @@ namespace
 
 	//アニメーションの進むスピード
 	constexpr float kAnimationSpeed = 30.0f;
-	//攻撃アニメーションの進むスピード
-	constexpr float kAttackAnimationSpeed = 60.0f;
 }
 
 Animation::Animation() :
@@ -62,7 +60,7 @@ Animation::~Animation()
 {
 }
 
-void Animation::Init(int modelHandle,AnimType type)
+void Animation::Init(int modelHandle, AnimType type)
 {
 	modelHandle_ = modelHandle;
 	type_ = type;
@@ -233,7 +231,7 @@ void Animation::ChangeState(AnimationState state)
 {
 	if (state_ == state && currentAttach_ != -1) return;
 
-	prevState_=state_;
+	prevState_ = state_;
 	state_ = state;
 
 	int animIndex = -1;
@@ -297,15 +295,10 @@ void Animation::ChangeState(AnimationState state)
 		float speed = kAnimationSpeed;
 
 		if (state_ == AnimationState::Attack ||
-			state_ == AnimationState::Death||
+			state_ == AnimationState::Death ||
 			state_ == AnimationState::Spawn)
 		{
 			loop = false;
-		}
-
-		if (state_ == AnimationState::Attack)
-		{
-			speed = kAttackAnimationSpeed;
 		}
 
 		Play(animIndex, speed, loop);
