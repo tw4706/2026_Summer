@@ -6,7 +6,7 @@ namespace
 {
 	//プレイヤーアニメーション
 	//Idle
-	const char* kPlayerIdle = "Player|Idle";
+	const char* kPlayerIdle = "Player| Idle";
 	//Run
 	const char* kPlayerRun = "Player|Run";
 	//Attack
@@ -15,6 +15,8 @@ namespace
 	const char* kPlayerHit = "Player|Hit";
 	//Death
 	const char* kPlayerDeath = "Player|Death";
+	//Jump
+	const char* kPlayerJump = "Player|Jump";
 
 	//敵アニメーション
 	//Spawn
@@ -255,6 +257,9 @@ void Animation::ChangeState(AnimationState state)
 			break;
 		case AnimationState::Death:
 			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerDeath);
+			break;
+		case AnimationState::Jump:
+			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerJump);
 			break;
 		}
 	}

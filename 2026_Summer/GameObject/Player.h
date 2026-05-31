@@ -12,6 +12,7 @@ public:
 	{
 		Idle,	//待機
 		Run,	//移動
+		Jump,	//ジャンプ
 	};
 
 	Player();
@@ -43,6 +44,12 @@ private:
 	void Move(Input& input);
 
 	/// <summary>
+	/// ジャンプ
+	/// </summary>
+	/// <param name="input">入力</param>
+	void Jump(Input&input);
+
+	/// <summary>
 	/// アナログスティックの更新
 	/// </summary>
 	/// <param name="input">入力</param>
@@ -62,6 +69,10 @@ private:
 	int katanaH_;							//刀のモデル
 	float moveAngle_;						//プレイヤーの向く角度
 	int handFrameIndex_;					//右手の刀を持つ手のフレームインデックス
+
+	float gravity_ = 0.5f;					//重力の強さ
+	float jumpPower_ = 12.0f;				//ジャンプ力
+	bool isGround_ = true;					//接地フラグ
 
 	Camera* pCamera_ = nullptr;				//カメラ
 	Animation animation_;					//アニメーション

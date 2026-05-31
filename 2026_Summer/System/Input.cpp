@@ -22,6 +22,8 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 						{PeripheralType::pad1,PAD_INPUT_A} };
 	inputTable_["dodge"] = { {PeripheralType::keyboard,KEY_INPUT_D},
 						{PeripheralType::pad1,PAD_INPUT_A} };
+	inputTable_["jump"] = { {PeripheralType::keyboard,KEY_INPUT_D},
+						{PeripheralType::pad1,PAD_INPUT_A} };
 	inputTable_["fallPlayer"] = { {PeripheralType::keyboard,KEY_INPUT_F},
 						{PeripheralType::pad1,PAD_INPUT_C} };
 

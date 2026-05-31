@@ -61,6 +61,8 @@ void Player::Init()
 
 	vel_ = { 0.0f,0.0f,0.0f };
 
+	isGround_ = true;
+
 	//モデルのロード
 	modelH_ = MV1LoadModel("data/Player.mv1");
 
@@ -82,6 +84,9 @@ void Player::Update(Input& input)
 {
 	//移動
 	Move(input);
+
+	//ジャンプ
+	Jump(input);
 
 	//状態遷移の更新
 	UpdateState();
@@ -203,6 +208,30 @@ void Player::Move(Input& input)
 	pos_ += vel_;
 }
 
+void Player::Jump(Input& input)
+{
+	if (isGround_ && input.IsTriggered("jump"))
+	{
+		vel_.y_ = jumpPower_; // 上昇速度を与える
+		isGround_ = false;    // 空中にいる状態にする
+	}
+
+	//空中にいる時の処理
+	if (!isGround_)
+	{
+		vel_.y_ -= gravity_; //重力を加算
+
+
+		//地面との設置判定
+		if (pos_.y_ + vel_.y_ <= 0.0f)
+		{
+			pos_.y_ = 0.0f;     //地面固定
+			vel_.y_ = 0.0f;     //速度をゼロにする
+			isGround_ = true;   //フラグを戻す
+		}
+	}
+}
+
 void Player::UpdateAnalogStick(Input& input)
 {
 	Vector3 stickL = input.GetStickLeft();
@@ -243,20 +272,23 @@ void Player::UpdateAnalogStick(Input& input)
 
 void Player::UpdateState()
 {
-	//idle状態またはRun状態の場合
-	if (state_ == PlayerState::Idle || state_ == PlayerState::Run)
+	if (!isGround_)
 	{
-		//速度ベクトルの平面上の長さを取得
-		float speedXZ = sqrtf(vel_.x_ * vel_.x_ + vel_.z_ * vel_.z_);
+		state_ = PlayerState::Jump;
+		return;
+	}
 
-		if (speedXZ > 0.5f)
-		{
-			state_ = PlayerState::Run;
-		}
-		else
-		{
-			state_ = PlayerState::Idle;
-		}
+	//速度ベクトルを求める
+	float speedVec = sqrtf(vel_.x_ * vel_.x_ + vel_.z_ * vel_.z_);
+
+	//速度ベクトルの長さに応じてアニメーションを変更
+	if (speedVec > 0.5f)
+	{
+		state_ = PlayerState::Run;
+	}
+	else
+	{
+		state_ = PlayerState::Idle;
 	}
 }
 
@@ -269,6 +301,7 @@ void Player::UpdateAnimation(float dt)
 	{
 	case PlayerState::Idle:		animState = AnimationState::Idle; break;
 	case PlayerState::Run:		animState = AnimationState::Run; break;
+	case PlayerState::Jump:		animState = AnimationState::Jump; break;
 	}
 
 	if (animation_.GetState() != animState)

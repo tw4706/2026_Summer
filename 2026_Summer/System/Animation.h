@@ -15,7 +15,8 @@ enum class AnimationState
     Attack,
     PrevAttack,
     Death,
-    Dodge
+    Dodge,
+    Jump,
 };
 
 class Animation
