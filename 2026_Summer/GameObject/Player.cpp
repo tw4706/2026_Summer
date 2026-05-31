@@ -12,6 +12,9 @@ namespace
 	//初期スケール
 	const Vector3 kFirstScale = { 1.0f, 1.0f, 1.0f };
 
+	//初期回転角度
+	const Vector3 kFirstRatate = { 0.0f, DX_PI_F, 0.0f };
+
 	//プレイヤーの移動速度
 	constexpr float kSpeed = 10.0f;
 
@@ -69,11 +72,14 @@ void Player::Init()
 	katanaH_ = MV1LoadModel("data/Tachi.mv1");
 	handFrameIndex_ = MV1SearchFrame(modelH_, "mixamorig:RightHand");
 
+	//モデルの拡大率
+	MV1SetScale(modelH_, kFirstScale.ToDxlibVector());
+
+	MV1SetRotationXYZ(modelH_, kFirstRatate.ToDxlibVector());
+
 	//モデルの位置のセット
 	MV1SetPosition(modelH_, kFirstPos.ToDxlibVector());
 
-	//モデルの拡大率
-	MV1SetScale(modelH_, kFirstScale.ToDxlibVector());
 
 	//アニメーションの初期化
 	animation_.Init(modelH_, AnimType::Player);
@@ -82,11 +88,14 @@ void Player::Init()
 
 void Player::Update(Input& input)
 {
-	//移動
+	//移動処理
 	Move(input);
 
-	//ジャンプ
+	//ジャンプ処理
 	Jump(input);
+
+	//攻撃処理
+	Attack(input);
 
 	//状態遷移の更新
 	UpdateState();
@@ -167,6 +176,13 @@ void Player::Move(Input& input)
 	if (input.IsPressed("left"))  inputDir.x_ -= 1.0f; //左
 	if (input.IsPressed("right")) inputDir.x_ += 1.0f; //右
 
+	//攻撃時は動かさない
+	if (state_ == PlayerState::Attack)
+	{
+		vel_ = { 0.0f,0.0f,0.0f };
+		return;
+	}
+
 	bool isKeyboardMoving = (fabs(inputDir.x_) > 0.01f || fabs(inputDir.z_) > kInputEpsilon);
 
 	//キーボードの入力があるとき
@@ -232,6 +248,19 @@ void Player::Jump(Input& input)
 	}
 }
 
+void Player::Attack(Input& input)
+{
+
+	if (input.IsTriggered("attack"))
+	{
+		isAttack_ = true;
+	}
+	if (animation_.IsEnd())
+	{
+		isAttack_ = false;
+	}
+}
+
 void Player::UpdateAnalogStick(Input& input)
 {
 	Vector3 stickL = input.GetStickLeft();
@@ -278,6 +307,12 @@ void Player::UpdateState()
 		return;
 	}
 
+	if (isAttack_)
+	{
+		state_ = PlayerState::Attack;
+		return;
+	}
+
 	//速度ベクトルを求める
 	float speedVec = sqrtf(vel_.x_ * vel_.x_ + vel_.z_ * vel_.z_);
 
@@ -302,6 +337,7 @@ void Player::UpdateAnimation(float dt)
 	case PlayerState::Idle:		animState = AnimationState::Idle; break;
 	case PlayerState::Run:		animState = AnimationState::Run; break;
 	case PlayerState::Jump:		animState = AnimationState::Jump; break;
+	case PlayerState::Attack:	animState = AnimationState::Attack; break;
 	}
 
 	if (animation_.GetState() != animState)

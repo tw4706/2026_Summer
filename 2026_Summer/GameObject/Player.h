@@ -13,6 +13,7 @@ public:
 		Idle,	//待機
 		Run,	//移動
 		Jump,	//ジャンプ
+		Attack,	//攻撃
 	};
 
 	Player();
@@ -50,6 +51,12 @@ private:
 	void Jump(Input&input);
 
 	/// <summary>
+	/// 攻撃
+	/// </summary>
+	/// <param name="input">入力</param>
+	void Attack(Input& input);
+
+	/// <summary>
 	/// アナログスティックの更新
 	/// </summary>
 	/// <param name="input">入力</param>
@@ -73,6 +80,7 @@ private:
 	float gravity_ = 0.5f;					//重力の強さ
 	float jumpPower_ = 12.0f;				//ジャンプ力
 	bool isGround_ = true;					//接地フラグ
+	bool isAttack_ = false;					//攻撃フラグ
 
 	Camera* pCamera_ = nullptr;				//カメラ
 	Animation animation_;					//アニメーション
