@@ -1,7 +1,7 @@
 #include "DxLib.h"
 #include "Game.h"
 #include "Input.h"
-#include "SceneMain.h"
+#include "GameScene.h"
 #include <memory>
 
 
@@ -26,7 +26,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	//ÉVÅ[ÉìÇÃçÏê¨
-	std::shared_ptr<SceneMain>pScene = std::make_shared<SceneMain>();
+	std::shared_ptr<GameScene>pScene = std::make_shared<GameScene>();
 	pScene->Init();
 	
 	Input input;

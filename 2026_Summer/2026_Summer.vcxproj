@@ -145,7 +145,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Common\Matrix4x4.cpp" />
     <ClCompile Include="GameObject\Player.cpp" />
-    <ClCompile Include="Scene\SceneMain.cpp" />
+    <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Common\Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,7 +156,7 @@
     <ClInclude Include="System\Input.h" />
     <ClInclude Include="Common\Matrix4x4.h" />
     <ClInclude Include="GameObject\Player.h" />
-    <ClInclude Include="Scene\SceneMain.h" />
+    <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Common\Vector3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

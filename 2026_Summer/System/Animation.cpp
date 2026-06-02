@@ -43,9 +43,9 @@ Animation::Animation() :
 	currentTime_(0.0f),
 	prevAttach_(-1),
 	blendTime_(0.0f),
-	blendDuration_(0.3f),
+	blendDuration_(0.0f),
 	isBlending_(false),
-	speed_(1.0f),
+	speed_(0.0f),
 	isLoop_(true),
 	isAnimEnd_(false),
 	totalTime_(0.0f),
@@ -64,6 +64,10 @@ void Animation::Init(int modelHandle, AnimType type)
 {
 	modelHandle_ = modelHandle;
 	type_ = type;
+
+	blendDuration_ = 0.3f;
+
+	speed_ = 1.0f;
 }
 
 void Animation::Update(float deltaTime)
@@ -299,6 +303,11 @@ void Animation::ChangeState(AnimationState state)
 			state_ == AnimationState::Spawn)
 		{
 			loop = false;
+		}
+
+		if (state_ == AnimationState::Attack)
+		{
+			speed = kAnimationSpeed * 2.0f;
 		}
 
 		Play(animIndex, speed, loop);

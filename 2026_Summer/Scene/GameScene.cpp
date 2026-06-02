@@ -1,4 +1,4 @@
-#include "SceneMain.h"
+#include "GameScene.h"
 #include "DxLib.h"
 #include "Player.h"
 #include "Camera.h"
@@ -7,19 +7,19 @@ namespace
 {
 }
 
-SceneMain::SceneMain() :
+GameScene::GameScene() :
 	m_frameCount(0)
 {
 	pPlayer_ = std::make_shared<Player>();
 	pCamera_ = std::make_shared<Camera>();
 }
 
-SceneMain::~SceneMain()
+GameScene::~GameScene()
 {
 	
 }
 
-void SceneMain::Init()
+void GameScene::Init()
 {
 	//カリングの設定（裏面のポリゴンは見えないようにする）
 	SetUseBackCulling(true);
@@ -35,7 +35,7 @@ void SceneMain::Init()
 	pCamera_->Init();
 }
 
-void SceneMain::Update(Input&input)
+void GameScene::Update(Input&input)
 {
 	m_frameCount++;
 
@@ -43,7 +43,7 @@ void SceneMain::Update(Input&input)
 	pCamera_->Update();
 }
 
-void SceneMain::Draw()
+void GameScene::Draw()
 {
 	DrawGrid();
 
@@ -53,7 +53,7 @@ void SceneMain::Draw()
 	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", m_frameCount);
 }
 
-void SceneMain::DrawGrid()
+void GameScene::DrawGrid()
 {
 	// 直線の始点と終点
 	VECTOR startPos;

@@ -4,11 +4,11 @@
 class Player;
 class Camera;
 class Input;
-class SceneMain
+class GameScene
 {
 public:
-	SceneMain();
-	~SceneMain();
+	GameScene();
+	~GameScene();
 
 	void Init();
 	void Update(Input& input);
