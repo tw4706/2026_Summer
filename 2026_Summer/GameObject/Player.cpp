@@ -228,8 +228,8 @@ void Player::Jump(Input& input)
 {
 	if (isGround_ && input.IsTriggered("jump"))
 	{
-		vel_.y_ = jumpPower_; // 上昇速度を与える
-		isGround_ = false;    // 空中にいる状態にする
+		vel_.y_ = jumpPower_;
+		isGround_ = false;
 	}
 
 	//空中にいる時の処理
@@ -238,7 +238,7 @@ void Player::Jump(Input& input)
 		vel_.y_ -= gravity_; //重力を加算
 
 
-		//地面との設置判定
+		//地面との接地判定
 		if (pos_.y_ + vel_.y_ <= 0.0f)
 		{
 			pos_.y_ = 0.0f;     //地面固定
