@@ -59,6 +59,9 @@ Player::~Player()
 
 void Player::Init()
 {
+	//ステートマシンの生成
+	playerStateBase_ = std::make_shared<PlayerStateIdle>(weak_from_this());
+
 	//ポジションと速度の初期化
 	pos_ = kFirstPos;
 
@@ -88,6 +91,12 @@ void Player::Init()
 
 void Player::Update(Input& input)
 {
+	//ステートマシンが存在している場合は更新する
+	if (playerStateBase_)
+	{
+		playerStateBase_->Update();
+	}
+
 	//移動処理
 	Move(input);
 
@@ -132,23 +141,23 @@ void Player::Draw()
 
 		//刀の行列を定義
 		Vector3 katanaScale = { 2.0f, 2.0f, 2.0f };
-		Vector3 katanaRot = { 0.0f, -DX_PI_F / 2.0f, DX_PI_F / 2.0f };
-		Vector3 katanaTrans = { 4.0f, 10.0f, 0.0f };
+		Vector3 katanaRotate = { 0.0f, -DX_PI_F / 2.0f, DX_PI_F / 2.0f };
+		Vector3 katanaTransform = { 4.0f, 10.0f, 0.0f };
 
 		//状態によって刀の角度を変更
 		if (state_ == PlayerState::Run)
 		{
-			katanaRot.x_ += DX_PI_F / 4.0f;
-			katanaRot.z_ += DX_PI_F / 3.0f;
+			katanaRotate.x_ += DX_PI_F / 4.0f;
+			katanaRotate.z_ += DX_PI_F / 3.0f;
 		}
 
 		//各行列の作成
 		Matrix4x4 scaleMat = Matrix4x4::Scale(katanaScale.x_, katanaScale.y_, katanaScale.z_);
 
 		//回転 (X->Y->Zの順で合成)
-		Matrix4x4 rotMat = Matrix4x4::RotateX(katanaRot.x_) * Matrix4x4::RotateY(katanaRot.y_) * Matrix4x4::RotateZ(katanaRot.z_);
+		Matrix4x4 rotMat = Matrix4x4::RotateX(katanaRotate.x_) * Matrix4x4::RotateY(katanaRotate.y_) * Matrix4x4::RotateZ(katanaRotate.z_);
 
-		Matrix4x4 transMat = Matrix4x4::Translate(katanaTrans.x_, katanaTrans.y_, katanaTrans.z_);
+		Matrix4x4 transMat = Matrix4x4::Translate(katanaTransform.x_, katanaTransform.y_, katanaTransform.z_);
 
 		//合成
 		Matrix4x4 mat = scaleMat * rotMat * transMat;
@@ -346,4 +355,12 @@ void Player::UpdateAnimation(float dt)
 	}
 
 	animation_.Update(dt);
+}
+
+void Player::ChangePlayerState(std::shared_ptr<PlayerStateBase> playerState)
+{
+	playerStateBase_->End();
+	playerStateBase_ = playerState;
+
+	playerStateBase_->Init();
 }

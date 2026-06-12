@@ -1,3 +1,8 @@
+C:\GitHub\2026_Summer\2026_Summer\GameObject\EnemyStateBase.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\EnemyStateBase.obj
+C:\GitHub\2026_Summer\2026_Summer\GameObject\CharactorStateBase.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\CharactorStateBase.obj
+C:\GitHub\2026_Summer\2026_Summer\GameObject\PlayerStateBase.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerStateBase.obj
+C:\GitHub\2026_Summer\2026_Summer\PlayerStateIdle.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerStateIdle.obj
+C:\GitHub\2026_Summer\2026_Summer\PlayerStateMove.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerStateMove.obj
 C:\GitHub\2026_Summer\2026_Summer\System\Animation.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Animation.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Camera.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Camera.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\GameObject.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\GameObject.obj
