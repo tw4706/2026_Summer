@@ -2,7 +2,10 @@
 #include"Input.h"
 #include"Camera.h"
 #include"Matrix4x4.h"
+#include "PlayerStateBase.h"
+#include "PlayerStateIdle.h"
 #include<Dxlib.h>
+#include<memory>
 
 namespace
 {
@@ -41,12 +44,11 @@ namespace
 }
 
 Player::Player() :
-	GameObject(pos_, vel_, dir_),
+	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{0.0f,0.0f,0.0f},0.0f),
 	moveAngle_(0.0f),
 	modelH_(-1),
 	katanaH_(-1),
-	handFrameIndex_(-1),
-	state_(PlayerState::Idle)
+	handFrameIndex_(-1)
 {
 }
 
@@ -89,20 +91,25 @@ void Player::Init()
 
 void Player::Update(Input& input)
 {
-	//移動処理
-	Move(input);
+	if (!pCurrentState_ && pCamera_)
+	{
+		auto sharedSelf = std::dynamic_pointer_cast<Player>(shared_from_this());
+		std::weak_ptr<Player> weakSelf = sharedSelf;
 
-	//ジャンプ処理
-	Jump(input);
+		Camera& cameraRef = *pCamera_;
 
-	//攻撃処理
-	Attack(input);
+		// ここは new のままで安全に生成
+		pCurrentState_ = std::shared_ptr<PlayerStateIdle>(new PlayerStateIdle(weakSelf, input, cameraRef));
 
-	//状態遷移の更新
-	UpdateState();
+		pCurrentState_->Enter();
+	}
 
-	//アニメーションの更新
-	UpdateAnimation(1.0f / 60.0f);
+	if (pCurrentState_)
+	{
+		pCurrentState_->Update();
+	}
+
+	animation_.Update(1.0f / 60.0f);
 
 	//行列を作成
 	//拡縮
@@ -137,7 +144,7 @@ void Player::Draw()
 		Vector3 katanaTransform = { 4.0f, 10.0f, 0.0f };
 
 		//状態によって刀の角度を変更
-		if (state_ == PlayerState::Run)
+		if (animation_.GetState() == AnimationState::Run)
 		{
 			katanaRotate.x_ += DX_PI_F / 4.0f;
 			katanaRotate.z_ += DX_PI_F / 3.0f;
@@ -168,183 +175,24 @@ Vector3 Player::GetCameraTarget() const
 	return pos_;
 }
 
-void Player::Move(Input& input)
+void Player::ChangeState(std::shared_ptr<PlayerStateBase> nextState)
 {
-	//入力から方向ベクトルを作る 
-	Vector3 inputDir = { 0.0f, 0.0f, 0.0f };
-	if (input.IsPressed("up"))    inputDir.z_ += 1.0f; //前
-	if (input.IsPressed("down"))  inputDir.z_ -= 1.0f; //後
-	if (input.IsPressed("left"))  inputDir.x_ -= 1.0f; //左
-	if (input.IsPressed("right")) inputDir.x_ += 1.0f; //右
+	if (!nextState) return;
 
-	//攻撃時は動かさない
-	if (state_ == PlayerState::Attack)
+	if (pCurrentState_)
 	{
-		vel_ = { 0.0f,0.0f,0.0f };
-		return;
+		pCurrentState_->Exit();
 	}
 
-	bool isKeyboardMoving = (fabs(inputDir.x_) > 0.01f || fabs(inputDir.z_) > kInputEpsilon);
-
-	//キーボードの入力があるとき
-	if (isKeyboardMoving)
-	{
-		float cameraYaw = pCamera_ ? pCamera_->GetYaw() : 0.0f;
-
-		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraYaw);
-		Vector3 playerDir = rotMat.TransformForVector(-inputDir).Normalize();
-
-		//キーボード移動もLerpを効かせる
-		Vector3 targetVel = playerDir * kSpeed;
-		vel_.x_ = Vector3::Lerp(vel_.x_, targetVel.x_, kMoveLerp);
-		vel_.z_ = Vector3::Lerp(vel_.z_, targetVel.z_, kMoveLerp);
-
-		//向きの更新
-		float playerAngle = atan2f(playerDir.x_, -playerDir.z_);
-		float diff = playerAngle - moveAngle_;
-
-		while (diff > DX_PI_F) diff -= DX_PI_F * 2;
-		while (diff < -DX_PI_F) diff += DX_PI_F * 2;
-
-		moveAngle_ += diff * kRotateLerpAnalogStick; //回転も滑らかに
-	}
-	//キーボード入力がないときはアナログスティックの更新
-	else
-	{
-		UpdateAnalogStick(input);
-	}
-
-	//カメラの回転
-	if (pCamera_)
-	{
-		Vector3 stickR = input.GetStickRight();
-		pCamera_->AddRotation(-stickR.x_ * kCameraSpeed, -stickR.z_ * kCameraSpeed);
-	}
-
-	//位置の反映
-	pos_ += vel_;
+	pCurrentState_ = nextState;
+	pCurrentState_->Enter();
 }
 
-void Player::Jump(Input& input)
+
+void Player::ChangeAnimation(AnimationState state)
 {
-	if (isGround_ && input.IsTriggered("jump"))
+	if (animation_.GetState() != state)
 	{
-		vel_.y_ = jumpPower_;
-		isGround_ = false;
+		animation_.ChangeState(state);
 	}
-
-	//空中にいる時の処理
-	if (!isGround_)
-	{
-		vel_.y_ -= gravity_; //重力を加算
-
-
-		//地面との接地判定
-		if (pos_.y_ + vel_.y_ <= 0.0f)
-		{
-			pos_.y_ = 0.0f;     //地面固定
-			vel_.y_ = 0.0f;     //速度をゼロにする
-			isGround_ = true;   //フラグを戻す
-		}
-	}
-}
-
-void Player::Attack(Input& input)
-{
-
-	if (input.IsTriggered("attack"))
-	{
-		isAttack_ = true;
-	}
-	if (animation_.IsEnd())
-	{
-		isAttack_ = false;
-	}
-}
-
-void Player::UpdateAnalogStick(Input& input)
-{
-	Vector3 stickL = input.GetStickLeft();
-
-	if (stickL.LengthSq() > kStickDeadZone)
-	{
-		float cameraYaw = pCamera_ ? pCamera_->GetYaw() : 0.0f;
-
-		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraYaw);
-		Vector3 playerDir = rotMat.TransformForVector(-stickL).Normalize();
-
-		//速度変化の影響を受けないよう、入力方向から先に角度を計算
-		float playerAngle = atan2f(playerDir.x_, -playerDir.z_);
-		float diff = playerAngle - moveAngle_;
-
-		while (diff > DX_PI_F) diff -= DX_PI_F * 2.0f;
-		while (diff < -DX_PI_F) diff += DX_PI_F * 2.0f;
-
-		moveAngle_ += diff * kRotateLerpAnalogStick;
-
-		//速度の線形補間
-		Vector3 targetVel = playerDir * kSpeed;
-		vel_.x_ = Vector3::Lerp(vel_.x_, targetVel.x_, kMoveLerp);
-		vel_.z_ = Vector3::Lerp(vel_.z_, targetVel.z_, kMoveLerp);
-	}
-	else
-	{
-		//入力がない場合は減速させる
-		vel_.x_ = Vector3::Lerp(vel_.x_, 0.0f, kStopLerp);
-		vel_.z_ = Vector3::Lerp(vel_.z_, 0.0f, kStopLerp);
-
-		//完全に停止させる
-		if (vel_.LengthSq() < 0.01f) {
-			vel_ = { 0.0f, 0.0f, 0.0f };
-		}
-	}
-}
-
-void Player::UpdateState()
-{
-	if (!isGround_)
-	{
-		state_ = PlayerState::Jump;
-		return;
-	}
-
-	if (isAttack_)
-	{
-		state_ = PlayerState::Attack;
-		return;
-	}
-
-	//速度ベクトルを求める
-	float speedVec = sqrtf(vel_.x_ * vel_.x_ + vel_.z_ * vel_.z_);
-
-	//速度ベクトルの長さに応じてアニメーションを変更
-	if (speedVec > 0.5f)
-	{
-		state_ = PlayerState::Run;
-	}
-	else
-	{
-		state_ = PlayerState::Idle;
-	}
-}
-
-void Player::UpdateAnimation(float dt)
-{
-	AnimationState animState = AnimationState::Idle;
-
-	//プレイヤーの状態とアニメーションの状態を紐づける
-	switch (state_)
-	{
-	case PlayerState::Idle:		animState = AnimationState::Idle; break;
-	case PlayerState::Run:		animState = AnimationState::Run; break;
-	case PlayerState::Jump:		animState = AnimationState::Jump; break;
-	case PlayerState::Attack:	animState = AnimationState::Attack; break;
-	}
-
-	if (animation_.GetState() != animState)
-	{
-		animation_.ChangeState(animState);
-	}
-
-	animation_.Update(dt);
 }

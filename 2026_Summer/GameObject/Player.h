@@ -1,21 +1,13 @@
 #pragma once
-#include "GameObject.h"
+#include "Charactor.h"
 #include "Animation.h"
 
 class Input;
 class Camera;
-class Player :public GameObject
+class PlayerStateBase;
+class Player :public Character
 {
 public:
-	//プレイヤーの状態
-	enum class PlayerState
-	{
-		Idle,	//待機
-		Run,	//移動
-		Jump,	//ジャンプ
-		Attack,	//攻撃
-	};
-
 	Player();
 	virtual~Player();
 
@@ -23,6 +15,9 @@ public:
 	void Update()override {};
 	void Update(Input& input);
 	void Draw()override;
+
+	void ChangeState(std::shared_ptr<PlayerStateBase> nextState);
+	void ChangeAnimation(AnimationState state);
 
 	/// <summary>
 	/// カメラの注視点の取得
@@ -36,41 +31,21 @@ public:
 	/// <param name="camera">カメラのポインタ</param>
 	void SetCamera(Camera* camera) { pCamera_ = camera; }
 
-private:
+	Vector3 GetPosition() const { return pos_; }
+	void AddPosition(const Vector3& offset) { pos_ += offset; }
 
-	/// <summary>
-	/// 移動処理
-	/// </summary>
-	/// <param name="input">入力</param>
-	void Move(Input& input);
+	Vector3 GetVelocity() const { return vel_; }
+	void SetVelocity(const Vector3& vel) { vel_ = vel; }
 
-	/// <summary>
-	/// ジャンプ
-	/// </summary>
-	/// <param name="input">入力</param>
-	void Jump(Input& input);
+	float GetMoveAngle() const { return moveAngle_; }
+	void SetMoveAngle(float angle) { moveAngle_ = angle; }
 
-	/// <summary>
-	/// 攻撃
-	/// </summary>
-	/// <param name="input">入力</param>
-	void Attack(Input& input);
+	bool GetIsGround() const { return isGround_; }
+	void SetIsGround(bool isGround) { isGround_ = isGround; }
 
-	/// <summary>
-	/// アナログスティックの更新
-	/// </summary>
-	/// <param name="input">入力</param>
-	void UpdateAnalogStick(Input& input);
-
-	/// <summary>
-	/// 状態遷移の更新
-	/// </summary>
-	void UpdateState();
-
-	/// <summary>
-	/// アニメーションの更新
-	/// </summary>
-	void UpdateAnimation(float dt);
+	float GetJumpPower() const { return jumpPower_; }
+	float GetGravity() const { return gravity_; }
+	bool IsAnimationEnd() const { return animation_.IsEnd(); }
 
 private:
 	int modelH_;							//プレイヤーのモデル
@@ -81,10 +56,10 @@ private:
 	float gravity_ = 0.5f;					//重力の強さ
 	float jumpPower_ = 12.0f;				//ジャンプ力
 	bool isGround_ = true;					//接地フラグ
-	bool isAttack_ = false;					//攻撃フラグ
 
 	Camera* pCamera_ = nullptr;				//カメラ
 	Animation animation_;					//アニメーション
-	PlayerState state_;						//プレイヤーの状態
+
+	std::shared_ptr<PlayerStateBase> pCurrentState_ = nullptr;//現在のステートを管理するポインタ
 };
 
