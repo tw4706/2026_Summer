@@ -1,18 +1,11 @@
 #pragma once
 #include "GameObject.h"
 #include "Animation.h"
-#include"PlayerStateBase.h"
-#include"PlayerStateIdle.h"
-#include"PlayerStateMove.h"
 
 class Input;
 class Camera;
-class Player :public GameObject, public std::enable_shared_from_this<Player>
+class Player :public GameObject
 {
-private:
-	friend class PlayerStateBase;
-	friend class PlayerStateIdle;
-	friend class PlayerStateMove;
 public:
 	//プレイヤーの状態
 	enum class PlayerState
@@ -28,7 +21,7 @@ public:
 
 	void Init()override;
 	void Update()override {};
-	void Update(Input&input);
+	void Update(Input& input);
 	void Draw()override;
 
 	/// <summary>
@@ -55,7 +48,7 @@ private:
 	/// ジャンプ
 	/// </summary>
 	/// <param name="input">入力</param>
-	void Jump(Input&input);
+	void Jump(Input& input);
 
 	/// <summary>
 	/// 攻撃
@@ -79,12 +72,6 @@ private:
 	/// </summary>
 	void UpdateAnimation(float dt);
 
-	/// <summary>
-	/// プレイヤーのステートマシーンの遷移
-	/// </summary>
-	/// <param name="playerState">プレイヤーのステート</param>
-	void ChangePlayerState(std::shared_ptr<PlayerStateBase> playerState);
-
 private:
 	int modelH_;							//プレイヤーのモデル
 	int katanaH_;							//刀のモデル
@@ -99,6 +86,5 @@ private:
 	Camera* pCamera_ = nullptr;				//カメラ
 	Animation animation_;					//アニメーション
 	PlayerState state_;						//プレイヤーの状態
-	std::shared_ptr<PlayerStateBase> playerStateBase_;//プレイヤーのステートマシン
 };
 

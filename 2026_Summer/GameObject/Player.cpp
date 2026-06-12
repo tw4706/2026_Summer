@@ -59,8 +59,6 @@ Player::~Player()
 
 void Player::Init()
 {
-	//ステートマシンの生成
-	playerStateBase_ = std::make_shared<PlayerStateIdle>(weak_from_this());
 
 	//ポジションと速度の初期化
 	pos_ = kFirstPos;
@@ -91,12 +89,6 @@ void Player::Init()
 
 void Player::Update(Input& input)
 {
-	//ステートマシンが存在している場合は更新する
-	if (playerStateBase_)
-	{
-		playerStateBase_->Update();
-	}
-
 	//移動処理
 	Move(input);
 
@@ -355,12 +347,4 @@ void Player::UpdateAnimation(float dt)
 	}
 
 	animation_.Update(dt);
-}
-
-void Player::ChangePlayerState(std::shared_ptr<PlayerStateBase> playerState)
-{
-	playerStateBase_->End();
-	playerStateBase_ = playerState;
-
-	playerStateBase_->Init();
 }

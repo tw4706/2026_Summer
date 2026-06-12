@@ -109,7 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Dxlib_h;$(ProjectDir)Common;$(ProjectDir)GameObject;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Dxlib_h;$(ProjectDir)Common;$(ProjectDir)GameObject;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)Player;$(ProjectDir)Enemy;$(ProjectDir)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -127,7 +127,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Dxlib_h;$(ProjectDir)Common;$(ProjectDir)GameObject;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Dxlib_h;$(ProjectDir)Common;$(ProjectDir)GameObject;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)Player;$(ProjectDir)Enemy;$(ProjectDir)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -138,11 +138,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GameObject\EnemyStateBase.cpp" />
-    <ClCompile Include="GameObject\CharactorStateBase.cpp" />
-    <ClCompile Include="GameObject\PlayerStateBase.cpp" />
-    <ClCompile Include="PlayerStateIdle.cpp" />
-    <ClCompile Include="PlayerStateMove.cpp" />
     <ClCompile Include="System\Animation.cpp" />
     <ClCompile Include="GameObject\Camera.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
@@ -154,11 +149,6 @@
     <ClCompile Include="Common\Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameObject\EnemyStateBase.h" />
-    <ClInclude Include="GameObject\CharactorStateBase.h" />
-    <ClInclude Include="GameObject\PlayerStateBase.h" />
-    <ClInclude Include="PlayerStateIdle.h" />
-    <ClInclude Include="PlayerStateMove.h" />
     <ClInclude Include="System\Animation.h" />
     <ClInclude Include="GameObject\Camera.h" />
     <ClInclude Include="Game.h" />
