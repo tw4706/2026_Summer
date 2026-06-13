@@ -2,6 +2,7 @@
 #include "PlayerStateRun.h"
 #include "PlayerStateJump.h"
 #include "PlayerStateAttack.h"
+#include "PlayerStateDodge.h"
 #include "Player.h"
 #include "Input.h"
 #include "Camera.h"
@@ -42,41 +43,40 @@ void PlayerStateIdle::Update()
     auto pPlayer = pPlayer_.lock();
     if (!pPlayer) return;
 
-    //ƒJƒƒ‰‚Ì‰ñ“]
-    Vector3 stickR = input_.GetStickRight();
-    camera_.AddRotation(-stickR.x_ * kCameraSpeed, -stickR.z_ * kCameraSpeed);
+	DrawFormatString(0, 0, GetColor(255, 255, 255), "IsGround: %d", pPlayer->GetIsGround());
+	DrawFormatString(0, 20, GetColor(255, 255, 255), "HasMoveInput: %d", input_.HasMoveInput());
 
-    //‹ó’†‚É‚¢‚é‚Æ‚«‚©ƒWƒƒƒ“ƒv‚ª‰Ÿ‚³‚ê‚½‚çJumpó‘Ô‚Ö‘JˆÚ
-    if (!pPlayer->GetIsGround() || input_.IsTriggered("jump"))
-    {
-        pPlayer->ChangeState(std::make_shared<PlayerStateJump>(pPlayer_, input_, camera_));
-        return;
-    }
+	// ƒJƒƒ‰‚Ì‰ñ“]
+	Vector3 stickR = input_.GetStickRight();
+	camera_.AddRotation(-stickR.x_ * kCameraSpeed, -stickR.z_ * kCameraSpeed);
 
-    //UŒ‚‚ª‰Ÿ‚³‚ê‚½‚çAttackó‘Ô‚Ö‘JˆÚ
-    if (input_.IsTriggered("attack"))
-    {
-        pPlayer->ChangeState(std::make_shared<PlayerStateAttack>(pPlayer_, input_, camera_));
-        return;
-    }
+	// ‹ó’†‚É‚¢‚é‚Æ‚«‚©ƒWƒƒƒ“ƒv‚ª‰Ÿ‚³‚ê‚½‚çJumpó‘Ô‚Ö‘JˆÚ
+	if (!pPlayer->GetIsGround() || input_.IsTriggered("jump"))
+	{
+		pPlayer->ChangeState(std::make_shared<PlayerStateJump>(pPlayer_, input_, camera_));
+		return;
+	}
 
-    //ƒL[ƒ{[ƒh‚©ƒAƒiƒƒOƒXƒeƒBƒbƒN‚Ì“ü—Í‚ª‚ ‚Á‚½‚çRunó‘Ô‚Ö‘JˆÚ
-    Vector3 inputDir = { 0.0f, 0.0f, 0.0f };
-    if (input_.IsPressed("up"))    inputDir.z_ += 1.0f;
-    if (input_.IsPressed("down"))  inputDir.z_ -= 1.0f;
-    if (input_.IsPressed("left"))  inputDir.x_ -= 1.0f;
-    if (input_.IsPressed("right")) inputDir.x_ += 1.0f;
-    bool isKeyboardMoving = (fabs(inputDir.x_) > kInputEpsilon || fabs(inputDir.z_) > kInputEpsilon);
+	// UŒ‚‚ª‰Ÿ‚³‚ê‚½‚çAttackó‘Ô‚Ö‘JˆÚ
+	if (input_.IsTriggered("attack"))
+	{
+		pPlayer->ChangeState(std::make_shared<PlayerStateAttack>(pPlayer_, input_, camera_));
+		return;
+	}
 
-    Vector3 stickL = input_.GetStickLeft();
-    bool isStickMoving = (stickL.LengthSq() > kStickDeadZone);
+	// ‰ñ”ð‚ª‰Ÿ‚³‚ê‚½‚çDodgeó‘Ô‚Ö‘JˆÚ
+	if (input_.IsTriggered("dodge"))
+	{
+		pPlayer->ChangeState(std::make_shared<PlayerStateDodge>(pPlayer_, input_, camera_));
+		return;
+	}
 
-    if (isKeyboardMoving || isStickMoving)
-    {
-        // “ü—Í‚ª“ü‚Á‚½uŠÔAŽÀÛ‚ÌˆÚ“®ŒvŽZE‰Á‘¬‚Í‚·‚×‚Ä Run ƒXƒe[ƒg‚ÉŠÛ“Š‚°‚·‚é
-        pPlayer->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_, input_, camera_));
-        return;
-    }
+	// ˆÚ“®“ü—Í‚ª‚ ‚Á‚½‚çRunó‘Ô‚Ö‘JˆÚ
+	if (input_.HasMoveInput())
+	{
+		pPlayer->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_, input_, camera_));
+		return;
+	}
 }
 
 void PlayerStateIdle::Exit()

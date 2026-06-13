@@ -31,8 +31,10 @@ public:
 	/// <param name="camera">カメラのポインタ</param>
 	void SetCamera(Camera* camera) { pCamera_ = camera; }
 
+	//各変数のゲッター・セッター
+
 	Vector3 GetPosition() const { return pos_; }
-	void AddPosition(const Vector3& offset) { pos_ += offset; }
+	void AddPosition(const Vector3& offset);
 
 	Vector3 GetVelocity() const { return vel_; }
 	void SetVelocity(const Vector3& vel) { vel_ = vel; }
@@ -42,6 +44,9 @@ public:
 
 	bool GetIsGround() const { return isGround_; }
 	void SetIsGround(bool isGround) { isGround_ = isGround; }
+
+	bool GetIsInvincible() const { return isInvincible_; }
+	void SetIsInvincible(bool isInvincible) { isInvincible_ = isInvincible; }
 
 	float GetJumpPower() const { return jumpPower_; }
 	float GetGravity() const { return gravity_; }
@@ -55,7 +60,8 @@ private:
 
 	float gravity_ = 0.5f;					//重力の強さ
 	float jumpPower_ = 12.0f;				//ジャンプ力
-	bool isGround_ = true;					//接地フラグ
+	bool isGround_ = true;					//地面についているかどうか
+	bool isInvincible_ = false;				//無敵中かどうか
 
 	Camera* pCamera_ = nullptr;				//カメラ
 	Animation animation_;					//アニメーション

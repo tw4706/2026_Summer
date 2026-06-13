@@ -18,14 +18,10 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 
 	inputTable_["attack"] = { {PeripheralType::keyboard,KEY_INPUT_Z},
 						{PeripheralType::pad1,PAD_INPUT_B} };
-	inputTable_["retry"] = { {PeripheralType::keyboard,KEY_INPUT_RETURN},
-						{PeripheralType::pad1,PAD_INPUT_A} };
 	inputTable_["dodge"] = { {PeripheralType::keyboard,KEY_INPUT_D},
-						{PeripheralType::pad1,PAD_INPUT_A} };
+						{PeripheralType::pad1,PAD_INPUT_C} };
 	inputTable_["jump"] = { {PeripheralType::keyboard,KEY_INPUT_SPACE},
 						{PeripheralType::pad1,PAD_INPUT_A} };
-	inputTable_["fallPlayer"] = { {PeripheralType::keyboard,KEY_INPUT_F},
-						{PeripheralType::pad1,PAD_INPUT_C} };
 
 	//変な値が入らないように枠を開けておく
 	for (const auto& input : inputTable_)
@@ -115,4 +111,46 @@ void Input::UpdateAnalogStick()
 	//線形補間(Lerp)
 	stickRight_.x_ = Vector3::Lerp(stickRight_.x_, targetRight.x_, 0.15f);
 	stickRight_.z_ = Vector3::Lerp(stickRight_.z_, targetRight.z_, 0.15f);
+}
+
+bool Input::HasMoveInput() const
+{
+	// 1. キーボードまたはパッドのデジタル方向キーのチェック
+	if (IsPressed("up") || IsPressed("down") || IsPressed("left") || IsPressed("right"))
+	{
+		return true;
+	}
+
+	// 2. 左アナログスティックのチェック
+	// すでに UpdateAnalogStick() でデッドゾーン以下の場合は {0,0,0} になっているため、
+	// 長さが 0 より大きければ入力されていると判定できます。
+	if (stickLeft_.LengthSq() > 0.01f)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+Vector3 Input::GetRawMoveInput() const
+{
+	// まず左アナログスティックの入力をベースにする
+	Vector3 inputDir = stickLeft_;
+
+	// アナログスティックが入力されていない（またはデッドゾーン内）なら、デジタルキーを合成する
+	if (inputDir.LengthSq() <= 0.0f)
+	{
+		if (IsPressed("up"))    inputDir.z_ += 1.0f;
+		if (IsPressed("down"))  inputDir.z_ -= 1.0f;
+		if (IsPressed("left"))  inputDir.x_ -= 1.0f;
+		if (IsPressed("right")) inputDir.x_ += 1.0f;
+
+		// 斜め移動の時に速くなりすぎないように正規化
+		if (inputDir.LengthSq() > 1.0f)
+		{
+			inputDir = inputDir.Normalize();
+		}
+	}
+
+	return inputDir;
 }

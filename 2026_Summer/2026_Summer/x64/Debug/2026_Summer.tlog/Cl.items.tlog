@@ -5,6 +5,7 @@ C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\PlayerStateBase.cpp;C:\Use
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\PlayerStateIdle.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerStateIdle.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\PlayerStateJump.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerStateJump.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\PlayerStateRun.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerStateRun.obj
+C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\PlayerStateDodge.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerStateDodge.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\System\Animation.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Animation.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Camera.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Camera.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\GameObject.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\GameObject.obj

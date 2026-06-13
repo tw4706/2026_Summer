@@ -35,6 +35,12 @@ public:
 	//アナログスティックの更新
 	void UpdateAnalogStick();
 
+	//移動の入力が現在あるかどうか
+	bool HasMoveInput() const;
+
+	//カメラの向きを考慮しない入力の向きと強さのベクトルを返す
+	Vector3 GetRawMoveInput() const;
+
 	//スティック情報の取得
 	Vector3 GetStickLeft()const { return stickLeft_; }
 	Vector3 GetStickRight()const { return stickRight_; }

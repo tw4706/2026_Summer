@@ -145,6 +145,7 @@
     <ClCompile Include="GameObject\PlayerStateIdle.cpp" />
     <ClCompile Include="GameObject\PlayerStateJump.cpp" />
     <ClCompile Include="GameObject\PlayerStateRun.cpp" />
+    <ClCompile Include="GameObject\PlayerStateDodge.cpp" />
     <ClCompile Include="System\Animation.cpp" />
     <ClCompile Include="GameObject\Camera.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="GameObject\PlayerStateIdle.h" />
     <ClInclude Include="GameObject\PlayerStateJump.h" />
     <ClInclude Include="GameObject\PlayerStateRun.h" />
+    <ClInclude Include="GameObject\PlayerStateDodge.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="System\Animation.h" />
     <ClInclude Include="GameObject\Camera.h" />

@@ -60,7 +60,6 @@ void Player::Init()
 	//モデルの位置のセット
 	MV1SetPosition(modelH_, kFirstPos.ToDxlibVector());
 
-
 	//アニメーションの初期化
 	animation_.Init(modelH_, AnimType::Player);
 	animation_.ChangeState(AnimationState::Idle);
@@ -150,6 +149,11 @@ void Player::Draw()
 Vector3 Player::GetCameraTarget() const
 {
 	return pos_;
+}
+
+void Player::AddPosition(const Vector3& offset)
+{
+	pos_ += offset;
 }
 
 void Player::ChangeState(std::shared_ptr<PlayerStateBase> nextState)
