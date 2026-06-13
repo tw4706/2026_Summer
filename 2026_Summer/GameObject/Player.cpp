@@ -16,31 +16,7 @@ namespace
 	const Vector3 kFirstScale = { 1.0f, 1.0f, 1.0f };
 
 	//初期回転角度
-	const Vector3 kFirstRatate = { 0.0f, DX_PI_F, 0.0f };
-
-	//プレイヤーの移動速度
-	constexpr float kSpeed = 10.0f;
-
-	//入力のしきい値
-	constexpr float kInputEpsilon = 0.01f;
-
-	//アナログスティックのデッドゾーン
-	constexpr float kStickDeadZone = 0.15f;
-
-	//停止する際の線形補間
-	constexpr float kStopLerp = 0.2f;
-
-	//カメラの回転速度
-	constexpr float kCameraSpeed = 0.03f;
-	constexpr float kCameraPitch = 0.3f;
-
-	constexpr float kRotateLerpAnalogStick = 0.3f;
-
-	//移動時の線形補間
-	constexpr float kMoveLerp = 0.15f;
-
-	//移動の入力のしきい値
-	constexpr float kRunEpsilon = 0.1f;
+	const Vector3 kFirstRotate = { 0.0f, DX_PI_F, 0.0f };
 }
 
 Player::Player() :
@@ -78,7 +54,8 @@ void Player::Init()
 	//モデルの拡大率
 	MV1SetScale(modelH_, kFirstScale.ToDxlibVector());
 
-	MV1SetRotationXYZ(modelH_, kFirstRatate.ToDxlibVector());
+	//モデルの回転
+	MV1SetRotationXYZ(modelH_, kFirstRotate.ToDxlibVector());
 
 	//モデルの位置のセット
 	MV1SetPosition(modelH_, kFirstPos.ToDxlibVector());
