@@ -14,7 +14,7 @@ namespace
 	constexpr float kDodgeDurataion = 0.3f;
 
 	//硬直時間
-	constexpr float kStiffnessDurataion = 0.08f;
+	constexpr float kStiffnessDurataion = 0.0f;
 
 	//フレームカウントの進める時間
 	constexpr float kFrameTime = 1.0f / 60.0f;

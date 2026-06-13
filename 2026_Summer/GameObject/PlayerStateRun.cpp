@@ -20,8 +20,10 @@ namespace
     constexpr float kCameraSpeed = 0.03f;
     constexpr float kCameraPitch = 0.3f;
 
+    //スティックの回転の線形補間
     constexpr float kRotateLerpAnalogStick = 0.3f;
 
+    //回転の線形補間
     constexpr float kRotateLerp = 0.3f;
 
     //移動の入力のしきい値
@@ -62,7 +64,7 @@ void PlayerStateRun::Update()
     //入力がある場合のみ移動・旋回を行う
     if (playerDir.LengthSq() > 0.001f)
     {
-        //ターゲット速度を計算して線形補間(Lerp)で滑らかに加速
+        //ターゲットの速度を計算して線形補間で滑らかに加速
         Vector3 targetVel = playerDir * kSpeed;
         currentVel.x_ = Vector3::Lerp(currentVel.x_, targetVel.x_, kMoveLerp);
         currentVel.z_ = Vector3::Lerp(currentVel.z_, targetVel.z_, kMoveLerp);
@@ -98,21 +100,21 @@ void PlayerStateRun::Update()
         return;
     }
 
-    //攻撃ボタンが押されたら攻撃へ
+    //攻撃ボタンが押されたら攻撃へ遷移
     if (input_.IsTriggered("attack"))
     {
         pPlayer->ChangeState(std::make_shared<PlayerStateAttack>(pPlayer_, input_, camera_));
         return;
     }
 
-    //回避ボタンが押されたら回避へ
+    //回避ボタンが押されたら回避へ遷移
     if (input_.IsTriggered("dodge"))
     {
         pPlayer->ChangeState(std::make_shared<PlayerStateDodge>(pPlayer_, input_, camera_));
         return;
     }
 
-    //移動入力が完全に無くなったらIdle（待機）へ戻る
+    //移動入力が完全に無くなったらIdleへ遷移
     if (!input_.HasMoveInput())
     {
         pPlayer->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, input_, camera_));
