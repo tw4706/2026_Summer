@@ -2,7 +2,7 @@
 #include "PlayerStateIdle.h"
 #include "Player.h"
 
-PlayerStateAttack::PlayerStateAttack(std::weak_ptr<Player> pPlayer, Input& input, Camera& camera) :
+PlayerStateAttack::PlayerStateAttack(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera) :
 	PlayerStateBase(pPlayer,input,camera)
 {
 }
@@ -24,10 +24,10 @@ void PlayerStateAttack::Update()
     auto pPlayer = pPlayer_.lock();
     if (!pPlayer) return;
 
-    // 攻撃中は移動入力を一切受け付けず、速度もゼロを維持する
+    //攻撃中は移動入力を一切受け付けず、速度もゼロを維持する
     pPlayer->SetVelocity({ 0.0f, 0.0f, 0.0f });
 
-    // ③ 状態遷移判定：アニメーションが終了したら Idle ステートへ戻る
+    //アニメーションが終了したらIdle状態へ戻る
     if (pPlayer->IsAnimationEnd())
     {
         pPlayer->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, input_, camera_));

@@ -4,7 +4,7 @@ class Player;
 class PlayerStateIdle :public PlayerStateBase
 {
 public:
-    PlayerStateIdle(std::weak_ptr<Player> pPlayer, Input& input, Camera& camera);
+    PlayerStateIdle(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera);
     ~PlayerStateIdle() = default;
 
     void Enter()  override;

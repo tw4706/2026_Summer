@@ -3,12 +3,12 @@
 
 class Player;
 class Input;
-class Camera;
+class CameraBase;
 class Vector3;
 class PlayerStateBase :public CharacterStateBase
 {
 public:
-    PlayerStateBase(std::weak_ptr<Player> pPlayer, Input& input, Camera& camera);
+    PlayerStateBase(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera);
     virtual ~PlayerStateBase() = default;
 
     virtual void Enter() = 0;
@@ -21,6 +21,6 @@ protected:
 protected:
     std::weak_ptr<Player> pPlayer_;
     Input& input_;
-    Camera& camera_;
+    CameraBase& camera_;
 };
 

@@ -1,8 +1,10 @@
 #include "GameScene.h"
 #include "DxLib.h"
 #include "Player/Player.h"
-#include "Camera.h"
+#include "Camera/CameraManager.h"
+#include "Camera/PlayerCamera.h"
 #include "GameObject.h"
+#include"Input.h"
 #include <algorithm>
 
 namespace
@@ -13,7 +15,11 @@ GameScene::GameScene() :
 	frameCount_(0)
 {
 	pPlayer_ = std::make_shared<Player>();
-	pCamera_ = std::make_shared<Camera>();
+	pCameraManager_ = std::make_unique<CameraManager>();
+
+	//カメラの登録
+	auto playerCamera = std::make_shared<PlayerCamera>();
+	pCameraManager_->RegisterCamera("PlayerCamera", playerCamera);
 
 	//ゲームオブジェクトの登録
 	//プレイヤーの登録
@@ -34,12 +40,20 @@ void GameScene::Init(Input&input)
 	SetUseZBuffer3D(true);		//Zバッファを使う
 	SetWriteZBuffer3D(true);	//Zバッファ書き込み
 
+	//現在のアクティブカメラを取得
+	auto activeCam = pCameraManager_->GetActiveCamera();
+
 	pPlayer_->SetInput(&input);
-	pPlayer_->SetCamera(pCamera_.get());
+	pPlayer_->SetCamera(activeCam.get());
 	pPlayer_->Init();
 
-	pCamera_->SetPlayer(pPlayer_);
-	pCamera_->Init();
+	//プレイヤーカメラへのセット
+	auto playerCam = std::dynamic_pointer_cast<PlayerCamera>(activeCam);
+	if (playerCam)
+	{
+		playerCam->SetPlayer(pPlayer_);
+		playerCam->Init();
+	}
 }
 
 void GameScene::Update(Input& input)
@@ -57,7 +71,15 @@ void GameScene::Update(Input& input)
 				return a->GetPriority() < b->GetPriority();
 			});
 	}
-	pCamera_->Update();
+	auto playerCam = std::dynamic_pointer_cast<PlayerCamera>(pCameraManager_->GetActiveCamera());
+	if (playerCam)
+	{
+		Vector3 stickR = input.GetStickRight();
+		playerCam->AddRotation(-stickR.x_ * 0.03f, -stickR.z_ * 0.03f);
+	}
+
+	//カメラマネージャーの更新
+	pCameraManager_->Update();
 
 	for (auto& obj : gameObjects_) {
 		if (!obj->IsDead())

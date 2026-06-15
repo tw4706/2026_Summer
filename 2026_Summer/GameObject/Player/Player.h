@@ -3,7 +3,7 @@
 #include "Animation.h"
 
 class Input;
-class Camera;
+class CameraBase;
 class PlayerStateBase;
 class Player :public Character
 {
@@ -32,7 +32,7 @@ public:
 	/// カメラのセット
 	/// </summary>
 	/// <param name="camera">カメラのポインタ</param>
-	void SetCamera(Camera* camera) { pCamera_ = camera; }
+	void SetCamera(CameraBase* camera) { pCamera_ = camera; }
 
 	void SetInput(Input* input) { pInput_ = input; }
 
@@ -66,7 +66,7 @@ private:
 	bool isGround_ = true;					//地面についているかどうか
 	bool isInvincible_ = false;				//無敵中かどうか
 
-	Camera* pCamera_ = nullptr;				//カメラ
+	CameraBase* pCamera_ = nullptr;				//カメラ
 	Input* pInput_ = nullptr;				//インプット入力
 	Animation animation_;					//アニメーション
 

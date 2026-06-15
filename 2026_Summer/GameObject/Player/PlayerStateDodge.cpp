@@ -1,14 +1,13 @@
 #include "PlayerStateDodge.h"
 #include "Player.h"
 #include "Input.h"
-#include "Camera.h"
 #include "PlayerStateIdle.h"
 #include "PlayerStateRun.h"
 
 namespace
 {
 	//回避速度
-	constexpr float kDodgeSpeed = 2.0f;
+	constexpr float kDodgeSpeed = 15.0f;
 
 	//無敵時間
 	constexpr float kDodgeDurataion = 0.3f;
@@ -20,7 +19,7 @@ namespace
 	constexpr float kFrameTime = 1.0f / 60.0f;
 }
 
-PlayerStateDodge::PlayerStateDodge(std::weak_ptr<Player> pPlayer, Input& input, Camera& camera):
+PlayerStateDodge::PlayerStateDodge(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera):
 	PlayerStateBase(pPlayer,input,camera),
 	invincibleTimer_(0.0f)
 {
@@ -34,23 +33,28 @@ void PlayerStateDodge::Enter()
 	//無敵時間のセット
 	player->SetIsInvincible(true);
 
-	Vector3 moveDir = player->GetVelocity();
-	if (moveDir.Length() < 0.001f)
+	//現在カメラ基準の入力方向を直接取得する
+	Vector3 moveDir = GetCameraLookMoveDirection();
+
+	//入力がない、または直立状態ならプレイヤーの向いている正面方向にする
+	if (moveDir.LengthSq() < 0.001f)
 	{
-		//現在のプレイヤーが向いている角度を取得し向いている前方向に
-		//回避を行う
 		float angle = player->GetMoveAngle();
 		moveDir = Vector3(sinf(angle), 0.0f, cosf(angle));
 	}
+
 	//正規化
-	moveDir.Normalize();
+	moveDir = moveDir.Normalize();
 
-	//回避速度を設定する
-	player->SetVelocity(moveDir * kDodgeSpeed);
+	//回避速度をセット
+	player->SetVelocity(Vector3(moveDir.x_ * kDodgeSpeed, 0.0f, moveDir.z_ * kDodgeSpeed));
 
-	//タイマーをリセット
+	//回避を始めた瞬プレイヤーのモデルの向きも回避方向に一瞬で同期
+	float targetAngle = atan2f(moveDir.x_, -moveDir.z_);
+	player->SetMoveAngle(targetAngle);
+
+	// タイマーをリセット
 	invincibleTimer_ = 0.0f;
-
 }
 
 void PlayerStateDodge::Update()
@@ -76,6 +80,10 @@ void PlayerStateDodge::Update()
 	}
 	else
 	{
+		//モデルが回避終了後ガクガクするため今モデルが向いている向きを再度設定する
+		float currentAngle = player->GetMoveAngle();
+		player->SetMoveAngle(currentAngle);
+
 		if (input_.HasMoveInput())
 		{
 			player->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_, input_, camera_));

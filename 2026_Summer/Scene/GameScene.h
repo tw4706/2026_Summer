@@ -3,9 +3,9 @@
 #include <vector>
 
 class Player;
-class Camera;
 class Input;
 class GameObject;
+class CameraManager;
 class GameScene
 {
 public:
@@ -33,8 +33,8 @@ private:
 	//プレイヤー
 	std::shared_ptr<Player>pPlayer_;
 
-	//カメラ
-	std::shared_ptr<Camera>pCamera_;
+	//カメラ(シーンが所有しているためuniqueptrで持つ)
+	std::unique_ptr<CameraManager>pCameraManager_;
 
 	//ゲームオブジェクトを管理する用のリスト
 	std::vector<std::shared_ptr<GameObject>>gameObjects_;

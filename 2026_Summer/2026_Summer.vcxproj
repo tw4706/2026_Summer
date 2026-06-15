@@ -138,6 +138,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameObject\Camera\CameraManager.cpp" />
+    <ClCompile Include="GameObject\Camera\CameraBase.cpp" />
     <ClCompile Include="GameObject\CharacterStateBase.cpp" />
     <ClCompile Include="GameObject\Character.cpp" />
     <ClCompile Include="GameObject\Player\PlayerStateAttack.cpp" />
@@ -146,8 +148,8 @@
     <ClCompile Include="GameObject\Player\PlayerStateJump.cpp" />
     <ClCompile Include="GameObject\Player\PlayerStateRun.cpp" />
     <ClCompile Include="GameObject\Player\PlayerStateDodge.cpp" />
+    <ClCompile Include="GameObject\Camera\PlayerCamera.cpp" />
     <ClCompile Include="System\Animation.cpp" />
-    <ClCompile Include="GameObject\Camera.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
     <ClCompile Include="System\Input.cpp" />
     <ClCompile Include="main.cpp" />
@@ -157,6 +159,8 @@
     <ClCompile Include="Common\Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameObject\Camera\CameraManager.h" />
+    <ClInclude Include="GameObject\Camera\CameraBase.h" />
     <ClInclude Include="GameObject\CharacterStateBase.h" />
     <ClInclude Include="GameObject\Character.h" />
     <ClInclude Include="GameObject\Player\PlayerStateAttack.h" />
@@ -165,9 +169,9 @@
     <ClInclude Include="GameObject\Player\PlayerStateJump.h" />
     <ClInclude Include="GameObject\Player\PlayerStateRun.h" />
     <ClInclude Include="GameObject\Player\PlayerStateDodge.h" />
+    <ClInclude Include="GameObject\Camera\PlayerCamera.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="System\Animation.h" />
-    <ClInclude Include="GameObject\Camera.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject\GameObject.h" />
     <ClInclude Include="System\Input.h" />

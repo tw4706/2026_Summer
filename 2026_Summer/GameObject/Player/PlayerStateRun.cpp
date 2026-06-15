@@ -5,7 +5,7 @@
 #include "PlayerStateDodge.h"
 #include "Player.h"
 #include "Input.h"
-#include "Camera.h"
+#include "Camera/CameraBase.h"
 #include "Matrix4x4.h"
 
 namespace
@@ -36,7 +36,7 @@ namespace
     constexpr float kStickDeadZone = 0.15f;
 }
 
-PlayerStateRun::PlayerStateRun(std::weak_ptr<Player> pPlayer, Input& input, Camera& camera) :
+PlayerStateRun::PlayerStateRun(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera) :
     PlayerStateBase(pPlayer,input,camera)
 {
 }

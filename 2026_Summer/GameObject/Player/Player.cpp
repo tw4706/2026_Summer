@@ -1,6 +1,6 @@
 #include "Player.h"
 #include"Input.h"
-#include"Camera.h"
+#include"Camera/CameraBase.h"
 #include"Matrix4x4.h"
 #include "PlayerStateBase.h"
 #include "PlayerStateIdle.h"
@@ -83,7 +83,7 @@ void Player::Update()
 		std::weak_ptr<Player> weakSelf = sharedSelf;
 
 		//今持っているポインタを参照する
-		Camera& camera = *pCamera_;
+		CameraBase& camera = *pCamera_;
 		Input& input = *pInput_;
 
 		// ここは new のままで安全に生成

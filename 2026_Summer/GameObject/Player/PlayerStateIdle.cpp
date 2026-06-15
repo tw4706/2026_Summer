@@ -5,7 +5,7 @@
 #include "PlayerStateDodge.h"
 #include "Player.h"
 #include "Input.h"
-#include "Camera.h"
+#include "Camera/CameraBase.h"
 
 namespace
 {
@@ -22,7 +22,7 @@ namespace
     constexpr float kCameraSpeed = 0.03f;
 }
 
-PlayerStateIdle::PlayerStateIdle(std::weak_ptr<Player> pPlayer, Input& input, Camera& camera) :
+PlayerStateIdle::PlayerStateIdle(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera) :
 	PlayerStateBase(pPlayer,input,camera)
 {
 }
