@@ -17,6 +17,16 @@ namespace
 
 	//‰Šú‰ñ“]Šp“x
 	const Vector3 kFirstRotate = { 0.0f, DX_PI_F, 0.0f };
+
+	///“‚Ìƒ‚ƒfƒ‹ŠÖ˜A
+	//“‚ÌŠg‘å—¦
+	const Vector3 kKatanaScale = { 2.0f, 2.0f, 2.0f };
+
+	//“‚Ì‰ñ“]
+	const Vector3 kKatanaRotate = { 0.0f, -DX_PI_F / 2.0f, DX_PI_F / 2.0f };
+
+	//“‚ÌˆÚ“®
+	const Vector3 kKatanaTransform = { 20.0f, 10.0f, 0.0f };
 }
 
 Player::Player() :
@@ -115,9 +125,9 @@ void Player::Draw()
 		MATRIX handMat = MV1GetFrameLocalWorldMatrix(modelH_, handFrameIndex_);
 
 		//“‚Ìs—ñ‚ğ’è‹`
-		Vector3 katanaScale = { 2.0f, 2.0f, 2.0f };
-		Vector3 katanaRotate = { 0.0f, -DX_PI_F / 2.0f, DX_PI_F / 2.0f };
-		Vector3 katanaTransform = { 4.0f, 10.0f, 0.0f };
+		Vector3 katanaScale = kKatanaScale;
+		Vector3 katanaRotate = kKatanaRotate;
+		Vector3 katanaTransform = kKatanaTransform;
 
 		//ó‘Ô‚É‚æ‚Á‚Ä“‚ÌŠp“x‚ğ•ÏX
 		if (animation_.GetState() == AnimationState::Run)

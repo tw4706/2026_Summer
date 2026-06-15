@@ -8,7 +8,7 @@
 namespace
 {
 	//‰ñ”ð‘¬“x
-	constexpr float kDodgeSpeed = 1.5f;
+	constexpr float kDodgeSpeed = 2.0f;
 
 	//–³“GŽžŠÔ
 	constexpr float kDodgeDurataion = 0.3f;
