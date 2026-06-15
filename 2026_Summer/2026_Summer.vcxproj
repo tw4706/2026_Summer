@@ -139,7 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GameObject\CharacterStateBase.cpp" />
-    <ClCompile Include="GameObject\Charactor.cpp" />
+    <ClCompile Include="GameObject\Character.cpp" />
     <ClCompile Include="GameObject\Player\PlayerStateAttack.cpp" />
     <ClCompile Include="GameObject\Player\PlayerStateBase.cpp" />
     <ClCompile Include="GameObject\Player\PlayerStateIdle.cpp" />
@@ -158,7 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject\CharacterStateBase.h" />
-    <ClInclude Include="GameObject\Charactor.h" />
+    <ClInclude Include="GameObject\Character.h" />
     <ClInclude Include="GameObject\Player\PlayerStateAttack.h" />
     <ClInclude Include="GameObject\Player\PlayerStateBase.h" />
     <ClInclude Include="GameObject\Player\PlayerStateIdle.h" />

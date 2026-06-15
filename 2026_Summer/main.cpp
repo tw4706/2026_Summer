@@ -26,10 +26,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	//ƒV[ƒ“‚Ìì¬
-	std::shared_ptr<GameScene>pScene = std::make_shared<GameScene>();
-	pScene->Init();
-	
 	Input input;
+	std::shared_ptr<GameScene>pScene = std::make_shared<GameScene>();
+	pScene->Init(input);
+	
 
 	
 	while (ProcessMessage() != -1)

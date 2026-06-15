@@ -1,5 +1,5 @@
 #pragma once
-#include "Charactor.h"
+#include "Character.h"
 #include "Animation.h"
 
 class Input;
@@ -12,13 +12,16 @@ public:
 	virtual~Player();
 
 	void Init()override;
-	void Update()override {};
-	void Update(Input& input);
+	void Update()override;
 	void Draw()override;
 
 	void ChangeState(std::shared_ptr<PlayerStateBase> nextState);
 	void ChangeAnimation(AnimationState state);
 
+	/// ==============================
+	/// ゲッター・セッター
+	/// ==============================
+	
 	/// <summary>
 	/// カメラの注視点の取得
 	/// </summary>
@@ -31,7 +34,7 @@ public:
 	/// <param name="camera">カメラのポインタ</param>
 	void SetCamera(Camera* camera) { pCamera_ = camera; }
 
-	//各変数のゲッター・セッター
+	void SetInput(Input* input) { pInput_ = input; }
 
 	Vector3 GetPosition() const { return pos_; }
 	void AddPosition(const Vector3& offset);
@@ -64,6 +67,7 @@ private:
 	bool isInvincible_ = false;				//無敵中かどうか
 
 	Camera* pCamera_ = nullptr;				//カメラ
+	Input* pInput_ = nullptr;				//インプット入力
 	Animation animation_;					//アニメーション
 
 	std::shared_ptr<PlayerStateBase> pCurrentState_ = nullptr;//現在のステートを管理するポインタ

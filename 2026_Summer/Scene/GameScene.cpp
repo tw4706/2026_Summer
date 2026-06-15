@@ -2,24 +2,30 @@
 #include "DxLib.h"
 #include "Player/Player.h"
 #include "Camera.h"
+#include "GameObject.h"
+#include <algorithm>
 
 namespace
 {
 }
 
 GameScene::GameScene() :
-	m_frameCount(0)
+	frameCount_(0)
 {
 	pPlayer_ = std::make_shared<Player>();
 	pCamera_ = std::make_shared<Camera>();
+
+	//ゲームオブジェクトの登録
+	//プレイヤーの登録
+	RegisterGameObject(pPlayer_);
 }
 
 GameScene::~GameScene()
 {
-	
+
 }
 
-void GameScene::Init()
+void GameScene::Init(Input&input)
 {
 	//カリングの設定（裏面のポリゴンは見えないようにする）
 	SetUseBackCulling(true);
@@ -28,6 +34,7 @@ void GameScene::Init()
 	SetUseZBuffer3D(true);		//Zバッファを使う
 	SetWriteZBuffer3D(true);	//Zバッファ書き込み
 
+	pPlayer_->SetInput(&input);
 	pPlayer_->SetCamera(pCamera_.get());
 	pPlayer_->Init();
 
@@ -35,22 +42,59 @@ void GameScene::Init()
 	pCamera_->Init();
 }
 
-void GameScene::Update(Input&input)
+void GameScene::Update(Input& input)
 {
-	m_frameCount++;
+	frameCount_++;
 
-	pPlayer_->Update(input);
+	if (!reserveObjList_.empty())
+	{
+		gameObjects_.insert(gameObjects_.end(), reserveObjList_.begin(), reserveObjList_.end());
+		reserveObjList_.clear();
+
+		//描画優先度順で並び替える
+		std::sort(gameObjects_.begin(), gameObjects_.end(), [](const auto& a, const auto& b)
+			{
+				return a->GetPriority() < b->GetPriority();
+			});
+	}
 	pCamera_->Update();
+
+	for (auto& obj : gameObjects_) {
+		if (!obj->IsDead())
+		{
+			obj->Update();
+		}
+	}
+
+	//死んでいるゲームオブジェクトの削除
+	gameObjects_.erase(
+		std::remove_if(gameObjects_.begin(), gameObjects_.end(), [](const auto& obj) {
+			return obj->IsDead();
+			}),
+		gameObjects_.end()
+	);
 }
 
 void GameScene::Draw()
 {
 	DrawGrid();
 
-	pPlayer_->Draw();
+	for (auto& obj : gameObjects_)
+	{
+		if (!obj->IsDead())
+		{
+			obj->Draw();
+		}
+	}
 
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
-	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", m_frameCount);
+	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", frameCount_);
+}
+
+void GameScene::RegisterGameObject(std::shared_ptr<GameObject> obj)
+{
+	//予約リストへの追加
+	reserveObjList_.push_back(obj);
 }
 
 void GameScene::DrawGrid()

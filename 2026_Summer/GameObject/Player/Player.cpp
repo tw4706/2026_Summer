@@ -75,17 +75,19 @@ void Player::Init()
 	animation_.ChangeState(AnimationState::Idle);
 }
 
-void Player::Update(Input& input)
+void Player::Update()
 {
-	if (!pCurrentState_ && pCamera_)
+	if (!pCurrentState_ && pCamera_&&pInput_)
 	{
 		auto sharedSelf = std::dynamic_pointer_cast<Player>(shared_from_this());
 		std::weak_ptr<Player> weakSelf = sharedSelf;
 
-		Camera& cameraRef = *pCamera_;
+		//今持っているポインタを参照する
+		Camera& camera = *pCamera_;
+		Input& input = *pInput_;
 
 		// ここは new のままで安全に生成
-		pCurrentState_ = std::shared_ptr<PlayerStateIdle>(new PlayerStateIdle(weakSelf, input, cameraRef));
+		pCurrentState_ = std::shared_ptr<PlayerStateIdle>(new PlayerStateIdle(weakSelf, input, camera));
 
 		pCurrentState_->Enter();
 	}

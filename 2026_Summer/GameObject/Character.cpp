@@ -1,4 +1,4 @@
-#include "Charactor.h"
+#include "Character.h"
 #include "CharacterStateBase.h"
 
 Character::Character(Vector3 pos, Vector3 vel, float dir):
