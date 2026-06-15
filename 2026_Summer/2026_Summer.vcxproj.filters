@@ -39,7 +39,7 @@
     <ClCompile Include="GameObject\GameObject.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Player.cpp">
+    <ClCompile Include="GameObject\Player\Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\CharacterStateBase.cpp">
@@ -48,22 +48,22 @@
     <ClCompile Include="GameObject\Charactor.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\PlayerStateBase.cpp">
+    <ClCompile Include="GameObject\Player\PlayerStateBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\PlayerStateIdle.cpp">
+    <ClCompile Include="GameObject\Player\PlayerStateIdle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\PlayerStateRun.cpp">
+    <ClCompile Include="GameObject\Player\PlayerStateRun.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\PlayerStateAttack.cpp">
+    <ClCompile Include="GameObject\Player\PlayerStateAttack.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\PlayerStateJump.cpp">
+    <ClCompile Include="GameObject\Player\PlayerStateJump.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\PlayerStateDodge.cpp">
+    <ClCompile Include="GameObject\Player\PlayerStateDodge.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,7 +86,7 @@
     <ClInclude Include="System\Animation.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Player.h">
+    <ClInclude Include="GameObject\Player\Player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\GameObject.h">
@@ -104,22 +104,22 @@
     <ClInclude Include="GameObject\Charactor.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\PlayerStateBase.h">
+    <ClInclude Include="GameObject\Player\PlayerStateBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\PlayerStateIdle.h">
+    <ClInclude Include="GameObject\Player\PlayerStateIdle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\PlayerStateRun.h">
+    <ClInclude Include="GameObject\Player\PlayerStateRun.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\PlayerStateAttack.h">
+    <ClInclude Include="GameObject\Player\PlayerStateAttack.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\PlayerStateJump.h">
+    <ClInclude Include="GameObject\Player\PlayerStateJump.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\PlayerStateDodge.h">
+    <ClInclude Include="GameObject\Player\PlayerStateDodge.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

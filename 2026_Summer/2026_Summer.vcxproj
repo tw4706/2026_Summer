@@ -140,31 +140,31 @@
   <ItemGroup>
     <ClCompile Include="GameObject\CharacterStateBase.cpp" />
     <ClCompile Include="GameObject\Charactor.cpp" />
-    <ClCompile Include="GameObject\PlayerStateAttack.cpp" />
-    <ClCompile Include="GameObject\PlayerStateBase.cpp" />
-    <ClCompile Include="GameObject\PlayerStateIdle.cpp" />
-    <ClCompile Include="GameObject\PlayerStateJump.cpp" />
-    <ClCompile Include="GameObject\PlayerStateRun.cpp" />
-    <ClCompile Include="GameObject\PlayerStateDodge.cpp" />
+    <ClCompile Include="GameObject\Player\PlayerStateAttack.cpp" />
+    <ClCompile Include="GameObject\Player\PlayerStateBase.cpp" />
+    <ClCompile Include="GameObject\Player\PlayerStateIdle.cpp" />
+    <ClCompile Include="GameObject\Player\PlayerStateJump.cpp" />
+    <ClCompile Include="GameObject\Player\PlayerStateRun.cpp" />
+    <ClCompile Include="GameObject\Player\PlayerStateDodge.cpp" />
     <ClCompile Include="System\Animation.cpp" />
     <ClCompile Include="GameObject\Camera.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
     <ClCompile Include="System\Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Common\Matrix4x4.cpp" />
-    <ClCompile Include="GameObject\Player.cpp" />
+    <ClCompile Include="GameObject\Player\Player.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Common\Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject\CharacterStateBase.h" />
     <ClInclude Include="GameObject\Charactor.h" />
-    <ClInclude Include="GameObject\PlayerStateAttack.h" />
-    <ClInclude Include="GameObject\PlayerStateBase.h" />
-    <ClInclude Include="GameObject\PlayerStateIdle.h" />
-    <ClInclude Include="GameObject\PlayerStateJump.h" />
-    <ClInclude Include="GameObject\PlayerStateRun.h" />
-    <ClInclude Include="GameObject\PlayerStateDodge.h" />
+    <ClInclude Include="GameObject\Player\PlayerStateAttack.h" />
+    <ClInclude Include="GameObject\Player\PlayerStateBase.h" />
+    <ClInclude Include="GameObject\Player\PlayerStateIdle.h" />
+    <ClInclude Include="GameObject\Player\PlayerStateJump.h" />
+    <ClInclude Include="GameObject\Player\PlayerStateRun.h" />
+    <ClInclude Include="GameObject\Player\PlayerStateDodge.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="System\Animation.h" />
     <ClInclude Include="GameObject\Camera.h" />
@@ -172,7 +172,7 @@
     <ClInclude Include="GameObject\GameObject.h" />
     <ClInclude Include="System\Input.h" />
     <ClInclude Include="Common\Matrix4x4.h" />
-    <ClInclude Include="GameObject\Player.h" />
+    <ClInclude Include="GameObject\Player\Player.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Common\Vector3.h" />
   </ItemGroup>

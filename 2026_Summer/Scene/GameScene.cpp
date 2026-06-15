@@ -1,6 +1,6 @@
 #include "GameScene.h"
 #include "DxLib.h"
-#include "Player.h"
+#include "Player/Player.h"
 #include "Camera.h"
 
 namespace
