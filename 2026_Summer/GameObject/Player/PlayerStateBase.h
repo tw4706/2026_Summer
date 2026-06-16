@@ -8,7 +8,7 @@ class Vector3;
 class PlayerStateBase :public CharacterStateBase
 {
 public:
-    PlayerStateBase(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera);
+    PlayerStateBase(Player* pPlayer, Input& input, CameraBase& camera);
     virtual ~PlayerStateBase() = default;
 
     virtual void Enter() = 0;
@@ -19,7 +19,7 @@ protected:
     Vector3 GetCameraLookMoveDirection()const;
 
 protected:
-    std::weak_ptr<Player> pPlayer_;
+    Player* pPlayer_;
     Input& input_;
     CameraBase& camera_;
 };

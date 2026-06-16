@@ -36,30 +36,28 @@ namespace
     constexpr float kStickDeadZone = 0.15f;
 }
 
-PlayerStateRun::PlayerStateRun(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera) :
+PlayerStateRun::PlayerStateRun(Player* pPlayer, Input& input, CameraBase& camera) :
     PlayerStateBase(pPlayer,input,camera)
 {
 }
 
 void PlayerStateRun::Enter()
 {
-    auto pPlayer = pPlayer_.lock();
-    if (!pPlayer) return;
+    if (!pPlayer_) return;
 
-    pPlayer->ChangeAnimation(AnimationState::Run);
+    pPlayer_->ChangeAnimation(AnimationState::Run);
 }
 
 void PlayerStateRun::Update()
 {
-    auto pPlayer = pPlayer_.lock();
-    if (!pPlayer) return;
+    if (!pPlayer_) return;
 
     Vector3 playerDir = GetCameraLookMoveDirection();
 
     DrawFormatString(0, 200, GetColor(255, 255, 255), "playerDir: %.2f, %.2f, %.2f", playerDir.x_, playerDir.y_, playerDir.z_);
 
-    Vector3 currentVel = pPlayer->GetVelocity();
-    float currentAngle = pPlayer->GetMoveAngle();
+    Vector3 currentVel = pPlayer_->GetVelocity();
+    float currentAngle = pPlayer_->GetMoveAngle();
 
     //入力がある場合のみ移動・旋回を行う
     if (playerDir.LengthSq() > 0.001f)
@@ -79,45 +77,39 @@ void PlayerStateRun::Update()
     }
 
     //計算した速度と角度をPlayerに適用し、移動させる
-    pPlayer->SetVelocity(currentVel);
-    pPlayer->SetMoveAngle(currentAngle);
-    pPlayer->AddPosition(currentVel);
+    pPlayer_->SetVelocity(currentVel);
+    pPlayer_->SetMoveAngle(currentAngle);
+    pPlayer_->AddPosition(currentVel);
 
     //カメラの回転処理
     Vector3 stickR = input_.GetStickRight();
     camera_.AddRotation(-stickR.x_ * kCameraSpeed, -stickR.z_ * kCameraSpeed);
 
-    //ジャンプボタンが押されたらジャンプへ
-    if (input_.IsTriggered("jump"))
+    //ジャンプボタンが押されたらまたは地面に接地していなかったらジャンプ状態へ
+    if (input_.IsTriggered("jump")|| !pPlayer_->GetIsGround())
     {
-        pPlayer->ChangeState(std::make_shared<PlayerStateJump>(pPlayer_, input_, camera_));
-        return;
-    }
-
-    if (!pPlayer->GetIsGround())
-    {
-        pPlayer->ChangeState(std::make_shared<PlayerStateJump>(pPlayer_, input_, camera_));
+        pPlayer_->ChangeState(std::make_shared<PlayerStateJump>(pPlayer_, input_, camera_));
         return;
     }
 
     //攻撃ボタンが押されたら攻撃へ遷移
     if (input_.IsTriggered("attack"))
     {
-        pPlayer->ChangeState(std::make_shared<PlayerStateAttack>(pPlayer_, input_, camera_));
+        pPlayer_->ChangeState(std::make_shared<PlayerStateAttack>(pPlayer_, input_, camera_));
         return;
     }
 
     //回避ボタンが押されたら回避へ遷移
     if (input_.IsTriggered("dodge"))
     {
-        pPlayer->ChangeState(std::make_shared<PlayerStateDodge>(pPlayer_, input_, camera_));
+        pPlayer_->ChangeState(std::make_shared<PlayerStateDodge>(pPlayer_, input_, camera_));
         return;
     }
 
     //移動入力が完全に無くなったらIdleへ遷移
     if (!input_.HasMoveInput())
     {
-        pPlayer->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, input_, camera_));
+        pPlayer_->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, input_, camera_));
         return;
     }
 }

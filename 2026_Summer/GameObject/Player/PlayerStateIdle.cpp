@@ -22,28 +22,27 @@ namespace
     constexpr float kCameraSpeed = 0.03f;
 }
 
-PlayerStateIdle::PlayerStateIdle(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera) :
+PlayerStateIdle::PlayerStateIdle(Player* pPlayer, Input& input, CameraBase& camera) :
 	PlayerStateBase(pPlayer,input,camera)
 {
 }
 
 void PlayerStateIdle::Enter()
 {
-    auto pPlayer = pPlayer_.lock();
-    if (!pPlayer) return;
+    if (!pPlayer_) return;
 
-    pPlayer->ChangeAnimation(AnimationState::Idle);
+	//Idleó‘Ô‚É‘JˆÚ
+    pPlayer_->ChangeAnimation(AnimationState::Idle);
 
     //‘¬“x‚ð0‚É‚·‚é
-    pPlayer->SetVelocity({ 0.0f, 0.0f, 0.0f });
+    pPlayer_->SetVelocity({ 0.0f, 0.0f, 0.0f });
 }
 
 void PlayerStateIdle::Update()
-{
-    auto pPlayer = pPlayer_.lock();
-    if (!pPlayer) return;
+{;
+    if (!pPlayer_) return;
 
-	DrawFormatString(0, 0, GetColor(255, 255, 255), "IsGround: %d", pPlayer->GetIsGround());
+	DrawFormatString(0, 0, GetColor(255, 255, 255), "IsGround: %d", pPlayer_->GetIsGround());
 	DrawFormatString(0, 20, GetColor(255, 255, 255), "HasMoveInput: %d", input_.HasMoveInput());
 
 	// ƒJƒƒ‰‚Ì‰ñ“]
@@ -51,30 +50,30 @@ void PlayerStateIdle::Update()
 	camera_.AddRotation(-stickR.x_ * kCameraSpeed, -stickR.z_ * kCameraSpeed);
 
 	// ‹ó’†‚É‚¢‚é‚Æ‚«‚©ƒWƒƒƒ“ƒv‚ª‰Ÿ‚³‚ê‚½‚çJumpó‘Ô‚Ö‘JˆÚ
-	if (!pPlayer->GetIsGround() || input_.IsTriggered("jump"))
+	if (!pPlayer_->GetIsGround() || input_.IsTriggered("jump"))
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateJump>(pPlayer_, input_, camera_));
+		pPlayer_->ChangeState(std::make_shared<PlayerStateJump>(pPlayer_, input_, camera_));
 		return;
 	}
 
 	// UŒ‚‚ª‰Ÿ‚³‚ê‚½‚çAttackó‘Ô‚Ö‘JˆÚ
 	if (input_.IsTriggered("attack"))
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateAttack>(pPlayer_, input_, camera_));
+		pPlayer_->ChangeState(std::make_shared<PlayerStateAttack>(pPlayer_, input_, camera_));
 		return;
 	}
 
 	// ‰ñ”ð‚ª‰Ÿ‚³‚ê‚½‚çDodgeó‘Ô‚Ö‘JˆÚ
-	if (input_.IsTriggered("dodge"))
-	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateDodge>(pPlayer_, input_, camera_));
-		return;
-	}
+	//if (input_.IsTriggered("dodge"))
+	//{
+	//	pPlayer->ChangeState(std::make_shared<PlayerStateDodge>(pPlayer_, input_, camera_));
+	//	return;
+	//}
 
 	// ˆÚ“®“ü—Í‚ª‚ ‚Á‚½‚çRunó‘Ô‚Ö‘JˆÚ
 	if (input_.HasMoveInput())
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_, input_, camera_));
+		pPlayer_->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_, input_, camera_));
 		return;
 	}
 }

@@ -5,7 +5,7 @@ class Character;
 class CharacterStateBase
 {
 public:
-    CharacterStateBase(std::weak_ptr<Character> pCharacter);
+    CharacterStateBase(Character* pCharacter);
 
     virtual ~CharacterStateBase() = default;
 
@@ -14,6 +14,6 @@ public:
     virtual void Exit()abstract;
 
 protected:
-    std::weak_ptr<Character> pCharacter_;
+    Character* pCharacter_;
 };
 

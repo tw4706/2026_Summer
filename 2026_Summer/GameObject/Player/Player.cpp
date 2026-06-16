@@ -47,7 +47,6 @@ Player::~Player()
 
 void Player::Init()
 {
-
 	//ポジションと速度の初期化
 	pos_ = kFirstPos;
 
@@ -73,25 +72,19 @@ void Player::Init()
 	//アニメーションの初期化
 	animation_.Init(modelH_, AnimType::Player);
 	animation_.ChangeState(AnimationState::Idle);
+	if (!pCurrentState_ && pCamera_ && pInput_)
+	{
+		//今持っているポインタを参照して
+		//ステートパターンを生成
+		pCurrentState_ = std::shared_ptr<PlayerStateIdle>(new PlayerStateIdle(this, *pInput_, *pCamera_));
+
+		pCurrentState_->Enter();
+	}
 }
 
 void Player::Update()
 {
-	if (!pCurrentState_ && pCamera_&&pInput_)
-	{
-		auto sharedSelf = std::dynamic_pointer_cast<Player>(shared_from_this());
-		std::weak_ptr<Player> weakSelf = sharedSelf;
-
-		//今持っているポインタを参照する
-		CameraBase& camera = *pCamera_;
-		Input& input = *pInput_;
-
-		// ここは new のままで安全に生成
-		pCurrentState_ = std::shared_ptr<PlayerStateIdle>(new PlayerStateIdle(weakSelf, input, camera));
-
-		pCurrentState_->Enter();
-	}
-
+	//現在の状態の更新をする
 	if (pCurrentState_)
 	{
 		pCurrentState_->Update();
@@ -180,7 +173,6 @@ void Player::ChangeState(std::shared_ptr<PlayerStateBase> nextState)
 	pCurrentState_ = nextState;
 	pCurrentState_->Enter();
 }
-
 
 void Player::ChangeAnimation(AnimationState state)
 {

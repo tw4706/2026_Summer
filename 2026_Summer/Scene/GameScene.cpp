@@ -62,25 +62,21 @@ void GameScene::Update(Input& input)
 
 	if (!reserveObjList_.empty())
 	{
+		//insertはinsert(追加したい場所,追加したいデータの先頭、追加したいデータの末尾)
 		gameObjects_.insert(gameObjects_.end(), reserveObjList_.begin(), reserveObjList_.end());
 		reserveObjList_.clear();
 
-		//描画優先度順で並び替える
+		//オブジェクトを指定した優先度順で並び替える
 		std::sort(gameObjects_.begin(), gameObjects_.end(), [](const auto& a, const auto& b)
 			{
 				return a->GetPriority() < b->GetPriority();
 			});
 	}
-	auto playerCam = std::dynamic_pointer_cast<PlayerCamera>(pCameraManager_->GetActiveCamera());
-	if (playerCam)
-	{
-		Vector3 stickR = input.GetStickRight();
-		playerCam->AddRotation(-stickR.x_ * 0.03f, -stickR.z_ * 0.03f);
-	}
 
 	//カメラマネージャーの更新
-	pCameraManager_->Update();
+	pCameraManager_->Update(input);
 
+	//すべてのゲームオブジェクトの更新
 	for (auto& obj : gameObjects_) {
 		if (!obj->IsDead())
 		{
@@ -101,6 +97,7 @@ void GameScene::Draw()
 {
 	DrawGrid();
 
+	//すべてのゲームオブジェクトの描画
 	for (auto& obj : gameObjects_)
 	{
 		if (!obj->IsDead())
@@ -109,8 +106,10 @@ void GameScene::Draw()
 		}
 	}
 
+#ifdef _DEBUG
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
 	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", frameCount_);
+#endif
 }
 
 void GameScene::RegisterGameObject(std::shared_ptr<GameObject> obj)

@@ -1,6 +1,7 @@
 #include "PlayerCamera.h"
 #include "Player/Player.h"
 #include "Matrix4x4.h"
+#include"Input.h"
 #include <DxLib.h>
 #include <algorithm>
 
@@ -37,11 +38,18 @@ void PlayerCamera::Init()
     ApplyToDxLib();
 }
 
-void PlayerCamera::Update()
+void PlayerCamera::Update(Input&input)
 {
     if (!pPlayer_) return;
 
     // プレイヤーの注視点を取得
+    cameraTarget_ = pPlayer_->GetCameraTarget();
+
+    //右スティックの取得
+    Vector3 stickR = input.GetStickRight();
+
+    AddRotation(-stickR.x_ * 0.03f, -stickR.z_ * 0.03f);
+
     cameraTarget_ = pPlayer_->GetCameraTarget();
 
     // 回転から位置を計算

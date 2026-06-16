@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <string>
 
+class Input;
 class CameraBase;
 class CameraManager
 {
@@ -23,7 +24,7 @@ public:
 	/// <summary>
 	/// 現在アクティブなカメラの更新
 	/// </summary>
-	void Update();
+	void Update(Input&input);
 
 	/// <summary>
 	/// 現在アクティブなカメラを取得
