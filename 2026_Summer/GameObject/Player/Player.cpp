@@ -30,7 +30,7 @@ namespace
 }
 
 Player::Player() :
-	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{0.0f,0.0f,0.0f},0.0f),
+	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f),
 	moveAngle_(0.0f),
 	modelH_(-1),
 	katanaH_(-1),
@@ -77,7 +77,7 @@ void Player::Init()
 
 void Player::Update()
 {
-	if (!pCurrentState_ && pCamera_&&pInput_)
+	if (!pCurrentState_ && pCamera_ && pInput_)
 	{
 		auto sharedSelf = std::dynamic_pointer_cast<Player>(shared_from_this());
 		std::weak_ptr<Player> weakSelf = sharedSelf;
