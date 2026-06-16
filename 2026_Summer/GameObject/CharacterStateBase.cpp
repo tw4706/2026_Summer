@@ -1,6 +1,6 @@
 #include "CharacterStateBase.h"
 
-CharacterStateBase::CharacterStateBase(Character* pCharacter):
+CharacterStateBase::CharacterStateBase(std::weak_ptr<Character> pCharacter):
 	pCharacter_(pCharacter)
 {
 }

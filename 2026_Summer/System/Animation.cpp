@@ -13,8 +13,6 @@ namespace
 	const char* kPlayerAttack = "Player|Attack";
 	//Hit
 	const char* kPlayerHit = "Player|Hit";
-	//Dodge
-	const char* kPlayerDodge = "Player|Dodge";
 	//Death
 	const char* kPlayerDeath = "Player|Death";
 	//Jump
@@ -259,9 +257,6 @@ void Animation::ChangeState(AnimationState state)
 		case AnimationState::Hit:
 			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerHit);
 			break;
-		case AnimationState::Dodge:
-			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerDodge);
-			break;
 		case AnimationState::Death:
 			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerDeath);
 			break;
@@ -304,7 +299,7 @@ void Animation::ChangeState(AnimationState state)
 		float speed = kAnimationSpeed;
 
 		if (state_ == AnimationState::Attack ||
-			state_ == AnimationState::Death  ||
+			state_ == AnimationState::Death ||
 			state_ == AnimationState::Spawn)
 		{
 			loop = false;

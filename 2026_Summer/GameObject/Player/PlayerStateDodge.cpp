@@ -19,7 +19,7 @@ namespace
 	constexpr float kFrameTime = 1.0f / 60.0f;
 }
 
-PlayerStateDodge::PlayerStateDodge(Player* pPlayer, Input& input, CameraBase& camera):
+PlayerStateDodge::PlayerStateDodge(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera):
 	PlayerStateBase(pPlayer,input,camera),
 	invincibleTimer_(0.0f)
 {
@@ -27,10 +27,11 @@ PlayerStateDodge::PlayerStateDodge(Player* pPlayer, Input& input, CameraBase& ca
 
 void PlayerStateDodge::Enter()
 {
-	if (!pPlayer_)return;
+	auto player = pPlayer_.lock();
+	if (!player)return;
 
 	//無敵時間のセット
-	pPlayer_->SetIsInvincible(true);
+	player->SetIsInvincible(true);
 
 	//現在カメラ基準の入力方向を直接取得する
 	Vector3 moveDir = GetCameraLookMoveDirection();
@@ -38,7 +39,7 @@ void PlayerStateDodge::Enter()
 	//入力がない、または直立状態ならプレイヤーの向いている正面方向にする
 	if (moveDir.LengthSq() < 0.001f)
 	{
-		float angle = pPlayer_->GetMoveAngle();
+		float angle = player->GetMoveAngle();
 		moveDir = Vector3(sinf(angle), 0.0f, cosf(angle));
 	}
 
@@ -46,19 +47,20 @@ void PlayerStateDodge::Enter()
 	moveDir = moveDir.Normalize();
 
 	//回避速度をセット
-	pPlayer_->SetVelocity(Vector3(moveDir.x_ * kDodgeSpeed, 0.0f, moveDir.z_ * kDodgeSpeed));
+	player->SetVelocity(Vector3(moveDir.x_ * kDodgeSpeed, 0.0f, moveDir.z_ * kDodgeSpeed));
 
 	//回避を始めた瞬プレイヤーのモデルの向きも回避方向に一瞬で同期
 	float targetAngle = atan2f(moveDir.x_, -moveDir.z_);
-	pPlayer_->SetMoveAngle(targetAngle);
+	player->SetMoveAngle(targetAngle);
 
-	//タイマーをリセット
+	// タイマーをリセット
 	invincibleTimer_ = 0.0f;
 }
 
 void PlayerStateDodge::Update()
 {
-	if (!pPlayer_) return;
+	auto player = pPlayer_.lock();
+	if (!player) return;
 
 	//タイマーを進める
 	invincibleTimer_ += kFrameTime;
@@ -69,38 +71,39 @@ void PlayerStateDodge::Update()
 	}
 	else if(invincibleTimer_<(kDodgeDurataion+ kStiffnessDurataion))
 	{
-		//無敵中ならフラグを返して速度を0にする
-		if (pPlayer_->GetIsInvincible())
+		//無敵中ならフラグを返して速度を0にする(今急停止すると思うので後々だんだんと止まるよう修正)
+		if (player->GetIsInvincible())
 		{
-			pPlayer_->SetIsInvincible(false);
-			pPlayer_->SetVelocity(Vector3(0.0f, 0.0f, 0.0f));
+			player->SetIsInvincible(false);
+			player->SetVelocity(Vector3(0.0f, 0.0f, 0.0f));
 		}
 	}
 	else
 	{
 		//モデルが回避終了後ガクガクするため今モデルが向いている向きを再度設定する
-		float currentAngle = pPlayer_->GetMoveAngle();
-		pPlayer_->SetMoveAngle(currentAngle);
+		float currentAngle = player->GetMoveAngle();
+		player->SetMoveAngle(currentAngle);
 
 		if (input_.HasMoveInput())
 		{
-			pPlayer_->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_, input_, camera_));
+			player->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_, input_, camera_));
 		}
 		else
 		{
-			pPlayer_->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, input_, camera_));
+			player->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, input_, camera_));
 		}
 		return;
 	}
 
-	//座標の更新
-	pPlayer_->AddPosition(pPlayer_->GetVelocity());
+	// 座標の更新
+	player->AddPosition(player->GetVelocity());
 }
 
 void PlayerStateDodge::Exit()
 {
-	if (!pPlayer_) return;
+	auto player = pPlayer_.lock();
+	if (!player) return;
 
 	//ここでも一応のために無敵を解除しておく
-	pPlayer_->SetIsInvincible(false);
+	player->SetIsInvincible(false);
 }

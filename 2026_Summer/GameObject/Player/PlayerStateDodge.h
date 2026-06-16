@@ -4,7 +4,7 @@ class Player;
 class PlayerStateDodge :public PlayerStateBase
 {
 public:
-	PlayerStateDodge(Player* pPlayer, Input& input, CameraBase& camera);
+	PlayerStateDodge(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera);
 	~PlayerStateDodge() = default;
 
 	void Enter()  override;
