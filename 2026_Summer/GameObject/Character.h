@@ -17,10 +17,10 @@ public:
     /// <summary>
     /// 状態の切り替え
     /// </summary>
-    void ChangeState(std::shared_ptr<CharacterStateBase> pNextState);
+    virtual void ChangeState(std::shared_ptr<CharacterStateBase> pNextState);
 
 protected:
     int hp_;
-    std::shared_ptr<CharacterStateBase> pState_;
+    std::shared_ptr<CharacterStateBase> pCurrentState_=nullptr;//現在のステートを管理するポインタ
 };
 

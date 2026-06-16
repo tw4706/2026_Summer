@@ -6,6 +6,7 @@
 #include "PlayerStateIdle.h"
 #include<Dxlib.h>
 #include<memory>
+#include "Enemy/EnemyBase.h"
 
 namespace
 {
@@ -168,19 +169,10 @@ void Player::AddPosition(const Vector3& offset)
 	pos_ += offset;
 }
 
-void Player::ChangeState(std::shared_ptr<PlayerStateBase> nextState)
+void Player::ChangeState(std::shared_ptr<CharacterStateBase> nextState)
 {
-	if (!nextState) return;
-
-	if (pCurrentState_)
-	{
-		pCurrentState_->Exit();
-	}
-
-	pCurrentState_ = nextState;
-	pCurrentState_->Enter();
+	Character::ChangeState(nextState);
 }
-
 
 void Player::ChangeAnimation(AnimationState state)
 {

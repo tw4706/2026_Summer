@@ -138,6 +138,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameObject\Enemy\EnemyBase.cpp" />
+    <ClCompile Include="GameObject\Enemy\EnemyStateBase.cpp" />
     <ClCompile Include="GameObject\Camera\CameraManager.cpp" />
     <ClCompile Include="GameObject\Camera\CameraBase.cpp" />
     <ClCompile Include="GameObject\CharacterStateBase.cpp" />
@@ -159,6 +161,8 @@
     <ClCompile Include="Common\Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameObject\Enemy\EnemyBase.h" />
+    <ClInclude Include="GameObject\Enemy\EnemyStateBase.h" />
     <ClInclude Include="GameObject\Camera\CameraManager.h" />
     <ClInclude Include="GameObject\Camera\CameraBase.h" />
     <ClInclude Include="GameObject\CharacterStateBase.h" />

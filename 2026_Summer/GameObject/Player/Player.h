@@ -4,7 +4,7 @@
 
 class Input;
 class CameraBase;
-class PlayerStateBase;
+class CharacterStateBase;
 class Player :public Character
 {
 public:
@@ -15,7 +15,7 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	void ChangeState(std::shared_ptr<PlayerStateBase> nextState);
+	void ChangeState(std::shared_ptr<CharacterStateBase> nextState)override;
 	void ChangeAnimation(AnimationState state);
 
 	/// ==============================
@@ -69,7 +69,5 @@ private:
 	CameraBase* pCamera_ = nullptr;				//カメラ
 	Input* pInput_ = nullptr;				//インプット入力
 	Animation animation_;					//アニメーション
-
-	std::shared_ptr<PlayerStateBase> pCurrentState_ = nullptr;//現在のステートを管理するポインタ
 };
 
