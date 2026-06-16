@@ -176,8 +176,5 @@ void Player::ChangeState(std::shared_ptr<CharacterStateBase> nextState)
 
 void Player::ChangeAnimation(AnimationState state)
 {
-	if (animation_.GetState() != state)
-	{
-		animation_.ChangeState(state);
-	}
+	Character::ChangeAnimation(state);
 }

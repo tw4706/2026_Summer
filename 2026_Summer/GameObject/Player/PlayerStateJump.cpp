@@ -65,7 +65,7 @@ void PlayerStateJump::Update()
     }
 
     //重力・位置更新処理
-    Vector3 pos = pPlayer->GetPosition();
+    Vector3 pos = pPlayer->GetPos();
     currentVel.y_ -= pPlayer->GetGravity(); //重力をY軸に適用
 
     //地面との接地判定

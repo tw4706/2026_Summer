@@ -23,3 +23,11 @@ void Character::ChangeState(std::shared_ptr<CharacterStateBase> pNextState)
 	pCurrentState_ = pNextState;
 	pCurrentState_->Enter();
 }
+
+void Character::ChangeAnimation(AnimationState state)
+{
+	if (animation_.GetState() != state)
+	{
+		animation_.ChangeState(state);
+	}
+}

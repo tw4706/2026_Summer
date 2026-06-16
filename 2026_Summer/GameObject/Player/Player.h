@@ -16,7 +16,8 @@ public:
 	void Draw()override;
 
 	void ChangeState(std::shared_ptr<CharacterStateBase> nextState)override;
-	void ChangeAnimation(AnimationState state);
+
+	void ChangeAnimation(AnimationState state)override;
 
 	/// ==============================
 	/// ゲッター・セッター
@@ -36,7 +37,7 @@ public:
 
 	void SetInput(Input* input) { pInput_ = input; }
 
-	Vector3 GetPosition() const { return pos_; }
+
 	void AddPosition(const Vector3& offset);
 
 	Vector3 GetVelocity() const { return vel_; }
@@ -66,8 +67,7 @@ private:
 	bool isGround_ = true;					//地面についているかどうか
 	bool isInvincible_ = false;				//無敵中かどうか
 
-	CameraBase* pCamera_ = nullptr;				//カメラ
+	CameraBase* pCamera_ = nullptr;			//カメラ
 	Input* pInput_ = nullptr;				//インプット入力
-	Animation animation_;					//アニメーション
 };
 

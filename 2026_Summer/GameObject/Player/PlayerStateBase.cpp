@@ -6,8 +6,8 @@
 #include "Matrix4x4.h"
 #include<Dxlib.h>
 
-PlayerStateBase::PlayerStateBase(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera)
-    : CharacterStateBase(pPlayer),
+PlayerStateBase::PlayerStateBase(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera):
+	CharacterStateBase(pPlayer),
     pPlayer_(pPlayer),
     input_(input),
     camera_(camera)
