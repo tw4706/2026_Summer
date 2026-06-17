@@ -25,8 +25,21 @@ public:
     /// <param name="state">アニメーションの状態</param>
     virtual void ChangeAnimation(AnimationState state);
 
+    /// <summary>
+    /// アニメーションが終了したかどうかを判定します。
+    /// </summary>
+    /// <returns>アニメーションが終了している場合はtrueを、そうでない場合はfalseを返す。</returns>
+    bool IsAnimationEnd() const { return animation_.IsEnd(); }
+
+    bool GetIsGround() const { return isGround_; }
+    void SetIsGround(bool isGround) { isGround_ = isGround; }
+
+    float GetGravity() const { return gravity_; }
+
 protected:
     int hp_;
+    bool isGround_ = true;					//地面についているかどうか
+    float gravity_ = 0.0f;					//重力の強さ
 
     Animation animation_;
     std::shared_ptr<CharacterStateBase> pCurrentState_=nullptr;//現在のステートを管理するポインタ

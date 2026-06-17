@@ -19,8 +19,8 @@ namespace
 	constexpr float kFrameTime = 1.0f / 60.0f;
 }
 
-PlayerStateDodge::PlayerStateDodge(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera):
-	PlayerStateBase(pPlayer,input,camera),
+PlayerStateDodge::PlayerStateDodge(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera) :
+	PlayerStateBase(pPlayer, input, camera),
 	invincibleTimer_(0.0f)
 {
 }
@@ -49,11 +49,11 @@ void PlayerStateDodge::Enter()
 	//回避速度をセット
 	player->SetVelocity(Vector3(moveDir.x_ * kDodgeSpeed, 0.0f, moveDir.z_ * kDodgeSpeed));
 
-	//回避を始めた瞬プレイヤーのモデルの向きも回避方向に一瞬で同期
+	//回避をするときにモデルも回避方向に向くように調整する
 	float targetAngle = atan2f(moveDir.x_, -moveDir.z_);
 	player->SetMoveAngle(targetAngle);
 
-	// タイマーをリセット
+	//タイマーをリセット
 	invincibleTimer_ = 0.0f;
 }
 
@@ -65,37 +65,36 @@ void PlayerStateDodge::Update()
 	//タイマーを進める
 	invincibleTimer_ += kFrameTime;
 
+	//無敵時間のタイマーが回避時間より短い場合
 	if (invincibleTimer_ < kDodgeDurataion)
 	{
 
 	}
-	else if(invincibleTimer_<(kDodgeDurataion+ kStiffnessDurataion))
-	{
-		//無敵中ならフラグを返して速度を0にする(今急停止すると思うので後々だんだんと止まるよう修正)
-		if (player->GetIsInvincible())
-		{
-			player->SetIsInvincible(false);
-			player->SetVelocity(Vector3(0.0f, 0.0f, 0.0f));
-		}
-	}
+	//回避時間が終了したら
 	else
 	{
-		//モデルが回避終了後ガクガクするため今モデルが向いている向きを再度設定する
-		float currentAngle = player->GetMoveAngle();
-		player->SetMoveAngle(currentAngle);
+		//無敵フラグを解除
+		player->SetIsInvincible(false);
 
+		//入力の有無に応じて状態遷移を行う
 		if (input_.HasMoveInput())
 		{
-			player->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_, input_, camera_));
+			auto nextState = std::make_shared<PlayerStateRun>(pPlayer_, input_, camera_);
+			player->ChangeState(nextState);
+			nextState->Update();
 		}
 		else
 		{
-			player->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, input_, camera_));
+			//止まっている場合のみ速度を0にする
+			player->SetVelocity(Vector3(0.0f, 0.0f, 0.0f));
+			auto nextState = std::make_shared<PlayerStateIdle>(pPlayer_, input_, camera_);
+			player->ChangeState(nextState);
+			nextState->Update();
 		}
 		return;
 	}
 
-	// 座標の更新
+	//座標の更新
 	player->AddPosition(player->GetVelocity());
 }
 

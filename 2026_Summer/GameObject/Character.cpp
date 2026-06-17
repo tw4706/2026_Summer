@@ -3,7 +3,9 @@
 
 Character::Character(Vector3 pos, Vector3 vel, float dir):
 	GameObject(pos,vel,dir),
-	hp_(0)
+	hp_(0),
+	isGround_(true),
+	gravity_(0.5f)
 {
 }
 

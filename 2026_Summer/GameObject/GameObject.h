@@ -31,18 +31,36 @@ public :
 	const Vector3& GetPos() const { return pos_; }
 
 	/// <summary>
+	/// 速度の取得
+	/// </summary>
+	/// <returns>速度</returns>
+	Vector3 GetVelocity() const { return vel_; }
+
+	///セッター
+	/// <summary>
+	/// 速度のセット
+	/// </summary>
+	/// <param name="vel">速度</param>
+	void SetVelocity(const Vector3& vel) { vel_ = vel; }
+
+	/// <summary>
 	/// 優先度の取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>優先度</returns>
 	int GetPriority()const { return priority_; }
 
+	/// <summary>
+	/// 位置の更新
+	/// </summary>
+	/// <param name="pos">座標</param>
+	void AddPosition(const Vector3& pos) { pos_ += pos; }
+
 protected:
-	Vector3 pos_;//座標
-	Vector3 vel_;//速度
-	float dir_;//向き
+	Vector3 pos_;	//座標
+	Vector3 vel_;	//速度
+	float dir_;		//向き
 
 	bool isDead_;	//死亡フラグ
 	int priority_;	//優先度
-
 };
 

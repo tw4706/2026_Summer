@@ -37,34 +37,23 @@ public:
 
 	void SetInput(Input* input) { pInput_ = input; }
 
-
 	void AddPosition(const Vector3& offset);
-
-	Vector3 GetVelocity() const { return vel_; }
-	void SetVelocity(const Vector3& vel) { vel_ = vel; }
 
 	float GetMoveAngle() const { return moveAngle_; }
 	void SetMoveAngle(float angle) { moveAngle_ = angle; }
-
-	bool GetIsGround() const { return isGround_; }
-	void SetIsGround(bool isGround) { isGround_ = isGround; }
 
 	bool GetIsInvincible() const { return isInvincible_; }
 	void SetIsInvincible(bool isInvincible) { isInvincible_ = isInvincible; }
 
 	float GetJumpPower() const { return jumpPower_; }
-	float GetGravity() const { return gravity_; }
-	bool IsAnimationEnd() const { return animation_.IsEnd(); }
+
 
 private:
 	int modelH_;							//プレイヤーのモデル
 	int katanaH_;							//刀のモデル
 	float moveAngle_;						//プレイヤーの向く角度
 	int handFrameIndex_;					//右手の刀を持つ手のフレームインデックス
-
-	float gravity_ = 0.5f;					//重力の強さ
 	float jumpPower_ = 12.0f;				//ジャンプ力
-	bool isGround_ = true;					//地面についているかどうか
 	bool isInvincible_ = false;				//無敵中かどうか
 
 	CameraBase* pCamera_ = nullptr;			//カメラ
