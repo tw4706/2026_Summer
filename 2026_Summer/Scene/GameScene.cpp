@@ -3,6 +3,7 @@
 #include "Player/Player.h"
 #include "Camera/CameraManager.h"
 #include "Camera/PlayerCamera.h"
+#include"Enemy/Oni.h"
 #include "GameObject.h"
 #include"Input.h"
 #include <algorithm>
@@ -20,6 +21,10 @@ GameScene::GameScene() :
 	//カメラの登録
 	auto playerCamera = std::make_shared<PlayerCamera>();
 	pCameraManager_->RegisterCamera("PlayerCamera", playerCamera);
+
+	//敵の登録
+	auto pOni = std::make_shared<Oni>();
+	RegisterGameObject(pOni);
 
 	//ゲームオブジェクトの登録
 	//プレイヤーの登録
@@ -43,10 +48,6 @@ void GameScene::Init(Input&input)
 	//現在のアクティブカメラを取得
 	auto activeCam = pCameraManager_->GetActiveCamera();
 
-	pPlayer_->SetInput(&input);
-	pPlayer_->SetCamera(activeCam.get());
-	pPlayer_->Init();
-
 	//プレイヤーカメラへのセット
 	auto playerCam = std::dynamic_pointer_cast<PlayerCamera>(activeCam);
 	if (playerCam)
@@ -54,6 +55,26 @@ void GameScene::Init(Input&input)
 		playerCam->SetPlayer(pPlayer_);
 		playerCam->Init();
 	}
+
+	if (!reserveObjList_.empty())
+	{
+		gameObjects_.insert(gameObjects_.end(), reserveObjList_.begin(), reserveObjList_.end());
+		reserveObjList_.clear();
+	}
+
+	// 登録されたすべてのオブジェクトを初期化
+	for (auto& obj : gameObjects_)
+	{
+		if (auto player = std::dynamic_pointer_cast<Player>(obj)) {
+			player->SetInput(&input);
+			player->SetCamera(activeCam.get());
+			player->Init();
+		}
+		else if (auto oni = std::dynamic_pointer_cast<Oni>(obj)) {
+			oni->Init(); //鬼の初期化
+		}
+	}
+
 }
 
 void GameScene::Update(Input& input)

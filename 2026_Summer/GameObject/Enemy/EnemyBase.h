@@ -9,8 +9,8 @@ public:
 	EnemyBase();
 	virtual~EnemyBase();
 
-	void Init()override;
-	void Update()override;
-	void Draw()override;
+	virtual void Init()override;
+	virtual void Update()override;
+	virtual void Draw()override;
 };
 
