@@ -152,6 +152,7 @@
     <ClCompile Include="GameObject\Player\PlayerStateRun.cpp" />
     <ClCompile Include="GameObject\Player\PlayerStateDodge.cpp" />
     <ClCompile Include="GameObject\Camera\PlayerCamera.cpp" />
+    <ClCompile Include="GameObject\Enemy\Oni.cpp" />
     <ClCompile Include="System\Animation.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
     <ClCompile Include="System\Input.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="GameObject\Player\PlayerStateRun.h" />
     <ClInclude Include="GameObject\Player\PlayerStateDodge.h" />
     <ClInclude Include="GameObject\Camera\PlayerCamera.h" />
+    <ClInclude Include="GameObject\Enemy\Oni.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="System\Animation.h" />
     <ClInclude Include="Game.h" />
