@@ -33,17 +33,13 @@ namespace
 Player::Player() :
 	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f),
 	moveAngle_(0.0f),
-	modelH_(-1),
-	katanaH_(-1),
 	handFrameIndex_(-1)
 {
 }
 
 Player::~Player()
 {
-	//モデルの削除
-	if (modelH_ != -1) MV1DeleteModel(modelH_);
-	if (katanaH_ != -1) MV1DeleteModel(katanaH_);
+	Character::~Character();
 }
 
 void Player::Init()
@@ -57,22 +53,12 @@ void Player::Init()
 	isGround_ = true;
 
 	//モデルのロード
-	modelH_ = MV1LoadModel("data/Player.mv1");
-
-	katanaH_ = MV1LoadModel("data/Tachi.mv1");
-	handFrameIndex_ = MV1SearchFrame(modelH_, "mixamorig:RightHand");
-
-	//モデルの拡大率
-	MV1SetScale(modelH_, kFirstScale.ToDxlibVector());
-
-	//モデルの回転
-	MV1SetRotationXYZ(modelH_, kFirstRotate.ToDxlibVector());
-
-	//モデルの位置のセット
-	MV1SetPosition(modelH_, kFirstPos.ToDxlibVector());
+	model_.Load("data/Player.mv1");
+	katanaModel_.Load("data/Tachi.mv1");
+	handFrameIndex_ = model_.SearchFrame("mixamorig:RightHand");
 
 	//アニメーションの初期化
-	animation_.Init(modelH_, AnimType::Player);
+	animation_.Init(model_.GetHandle(), AnimType::Player);
 	animation_.ChangeState(AnimationState::Idle);
 }
 
@@ -112,20 +98,19 @@ void Player::Update()
 	Matrix4x4 worldMat = scaleMat * rotMat * transMat;
 
 	//モデルに行列をセット
-	MV1SetMatrix(modelH_, worldMat.ToDxLibMatrix());
+	model_.SetMatrix(worldMat);
 
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "Hand Index: %d", handFrameIndex_);
 }
 
 void Player::Draw()
 {
-	//モデルの描画
-	MV1DrawModel(modelH_);
+	model_.Draw();
 
-	if (katanaH_ != -1 && handFrameIndex_ != -1)
+	if (katanaModel_.GetHandle() != -1 && handFrameIndex_ != -1)
 	{
 		//右手フレームのワールド行列を取得
-		MATRIX handMat = MV1GetFrameLocalWorldMatrix(modelH_, handFrameIndex_);
+		MATRIX handMat = MV1GetFrameLocalWorldMatrix(model_.GetHandle(), handFrameIndex_);
 
 		//刀の行列を定義
 		Vector3 katanaScale = kKatanaScale;
@@ -154,8 +139,8 @@ void Player::Draw()
 		MATRIX swordMat = MMult(mat.ToDxLibMatrix(), handMat);
 
 		//刀に設定して描画
-		MV1SetMatrix(katanaH_, swordMat);
-		MV1DrawModel(katanaH_);
+		katanaModel_.SetMatrix(swordMat);
+		katanaModel_.Draw();
 	}
 }
 

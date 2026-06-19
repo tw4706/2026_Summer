@@ -138,6 +138,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Application.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyStateIdle.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyBase.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyStateBase.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="GameObject\Player\PlayerStateDodge.cpp" />
     <ClCompile Include="GameObject\Camera\PlayerCamera.cpp" />
     <ClCompile Include="GameObject\Enemy\Oni.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="System\Animation.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
     <ClCompile Include="System\Input.cpp" />
@@ -163,6 +165,7 @@
     <ClCompile Include="Common\Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Application.h" />
     <ClInclude Include="GameObject\Enemy\EnemyStateIdle.h" />
     <ClInclude Include="GameObject\Enemy\EnemyBase.h" />
     <ClInclude Include="GameObject\Enemy\EnemyStateBase.h" />
@@ -178,6 +181,7 @@
     <ClInclude Include="GameObject\Player\PlayerStateDodge.h" />
     <ClInclude Include="GameObject\Camera\PlayerCamera.h" />
     <ClInclude Include="GameObject\Enemy\Oni.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="System\Animation.h" />
     <ClInclude Include="Game.h" />

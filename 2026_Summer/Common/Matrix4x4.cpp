@@ -206,7 +206,7 @@ Matrix4x4 Matrix4x4::Identity()
 }
 
 //s—ñ‚ğDxlib—p‚É•ÏŠ·
-MATRIX Matrix4x4::ToDxLibMatrix()
+MATRIX Matrix4x4::ToDxLibMatrix()const
 {
 	MATRIX m{};
 

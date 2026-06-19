@@ -1,5 +1,6 @@
 #pragma once
 #include "Character.h"
+#include "Model.h"
 #include "Animation.h"
 
 class Input;
@@ -47,8 +48,6 @@ public:
 
 
 private:
-	int modelH_;							//プレイヤーのモデル
-	int katanaH_;							//刀のモデル
 	float moveAngle_;						//プレイヤーの向く角度
 	int handFrameIndex_;					//右手の刀を持つ手のフレームインデックス
 	float jumpPower_ = 12.0f;				//ジャンプ力
@@ -56,5 +55,6 @@ private:
 
 	CameraBase* pCamera_ = nullptr;			//カメラ
 	Input* pInput_ = nullptr;				//インプット入力
+	Model katanaModel_;						//刀のモデル
 };
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Animation.h"
+#include "Model.h"
 #include <memory>
 
 class CharacterStateBase;
@@ -41,7 +42,8 @@ protected:
     bool isGround_ = true;					//地面についているかどうか
     float gravity_ = 0.0f;					//重力の強さ
 
-    Animation animation_;
+    Model model_;                           //モデル
+    Animation animation_;                   //アニメーション
     std::shared_ptr<CharacterStateBase> pCurrentState_=nullptr;//現在のステートを管理するポインタ
 };
 

@@ -12,7 +12,6 @@ public:
 	void Draw()override;
 
 private:
-	int modelH_;//モデルハンドル
 	float moveAngle_;//向いている角度
 };
 

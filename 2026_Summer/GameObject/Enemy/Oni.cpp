@@ -17,14 +17,13 @@ namespace
 
 Oni::Oni() :
 	EnemyBase(),
-	modelH_(-1),
 	moveAngle_(0.0f)
 {
 }
 
 Oni::~Oni()
 {
-	MV1DeleteModel(modelH_);
+	Character::~Character();
 }
 
 void Oni::Init()
@@ -35,12 +34,8 @@ void Oni::Init()
 	moveAngle_ = -DX_PI_F;
 
 	//モデルのロード
-	modelH_ = MV1LoadModel("data/oni.mv1");
-	assert(modelH_ >= 0);
-
-	//モデルの拡大率・位置の設定
-	MV1SetScale(modelH_, kFirstScale.ToDxlibVector());
-	MV1SetPosition(modelH_, pos_.ToDxlibVector());
+	model_.Load("data/oni.mv1");
+	assert(model_.GetHandle() >= 0);
 }
 
 void Oni::Update()
@@ -56,11 +51,11 @@ void Oni::Update()
 	Matrix4x4 worldMat = scaleMat * rotMat * transMat;
 
 	//モデルに行列をセット
-	MV1SetMatrix(modelH_, worldMat.ToDxLibMatrix());
+	model_.SetMatrix(worldMat);
 }
 
 void Oni::Draw()
 {
 	//モデルの描画
-	MV1DrawModel(modelH_);
+	model_.Draw();
 }

@@ -11,6 +11,7 @@ Character::Character(Vector3 pos, Vector3 vel, float dir):
 
 Character::~Character()
 {
+	model_.Release();
 }
 
 void Character::ChangeState(std::shared_ptr<CharacterStateBase> pNextState)

@@ -46,7 +46,7 @@ public:
 	//’PˆÊs—ñ
 	static Matrix4x4 Identity();
 
-	// DxLib‚ÌMatrix‚É•ÏŠ·
-	MATRIX ToDxLibMatrix(); // Œ^‚Íg‚Á‚Ä‚é‘¤‚É‡‚í‚¹‚é
+	//DxLib‚ÌMatrix‚É•ÏŠ·
+	MATRIX ToDxLibMatrix()const;
 };
 
