@@ -76,10 +76,13 @@ void PlayerStateJump::Update()
         pPlayer->SetIsGround(true);
     }
 
+    //現在のプレイヤーの速度を更新
+    pPlayer->GetVelocity() = currentVel;
+
     //計算結果を反映
     pPlayer->SetVelocity(currentVel);
     pPlayer->SetMoveAngle(currentAngle); //変更した向きを適用
-    pPlayer->AddPosition(currentVel);
+    pPlayer->AddPosition();
 
     //カメラ回転
     Vector3 stickR = input_.GetStickRight();

@@ -164,11 +164,6 @@ Vector3 Player::GetCameraTarget() const
 	return pos_;
 }
 
-void Player::AddPosition(const Vector3& offset)
-{
-	pos_ += offset;
-}
-
 void Player::ChangeState(std::shared_ptr<CharacterStateBase> nextState)
 {
 	Character::ChangeState(nextState);

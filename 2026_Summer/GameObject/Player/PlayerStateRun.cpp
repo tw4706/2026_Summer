@@ -81,7 +81,7 @@ void PlayerStateRun::Update()
     //計算した速度と角度をPlayerに適用し、移動させる
     pPlayer->SetVelocity(currentVel);
     pPlayer->SetMoveAngle(currentAngle);
-    pPlayer->AddPosition(currentVel);
+    pPlayer->AddPosition();
 
     //カメラの回転処理
     Vector3 stickR = input_.GetStickRight();

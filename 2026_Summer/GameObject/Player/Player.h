@@ -37,8 +37,6 @@ public:
 
 	void SetInput(Input* input) { pInput_ = input; }
 
-	void AddPosition(const Vector3& offset);
-
 	float GetMoveAngle() const { return moveAngle_; }
 	void SetMoveAngle(float angle) { moveAngle_ = angle; }
 

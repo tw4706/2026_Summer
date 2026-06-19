@@ -53,7 +53,7 @@ public :
 	/// 位置の更新
 	/// </summary>
 	/// <param name="pos">座標</param>
-	void AddPosition(const Vector3& pos) { pos_ += pos; }
+	void AddPosition() { pos_ += vel_; }
 
 protected:
 	Vector3 pos_;	//座標

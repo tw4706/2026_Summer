@@ -95,7 +95,7 @@ void PlayerStateDodge::Update()
 	}
 
 	//À•W‚ÌXV
-	player->AddPosition(player->GetVelocity());
+	player->AddPosition();
 }
 
 void PlayerStateDodge::Exit()
