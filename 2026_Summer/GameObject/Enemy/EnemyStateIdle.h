@@ -7,8 +7,8 @@ public:
 	EnemyStateIdle(std::weak_ptr<EnemyBase> pEnemy);
 	~EnemyStateIdle() = default;
 
-	void Enter()  override;
-	void Update() override;
-	void Exit()   override;
+	virtual void Enter()  override;
+	virtual void Update() override;
+	virtual void Exit()   override;
 };
 
