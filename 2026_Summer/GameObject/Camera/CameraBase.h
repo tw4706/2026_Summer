@@ -8,7 +8,7 @@ public:
 	virtual~CameraBase();
 
 	virtual void Init()abstract;
-	virtual void Update()abstract;
+	virtual void Update();
 
 	/// <summary>
 	/// カメラの回転
@@ -48,20 +48,17 @@ public:
 	/// <returns>ヨー角</returns>
 	virtual float GetYaw() const { return 0.0f; }
 
-protected:
-
+private:
 	/// <summary>
 	/// カメラシェイクの更新
 	/// </summary>
 	/// <returns>シェイク後のカメラ座標</returns>
 	Vector3 UpdateShake();
 
-
-
 	/// <summary>
-	/// 派生したクラスで計算したカメラの位置と注視点をDxLibに適用させる関数
+	/// 最新の計算したカメラの位置と注視点を適用する関数
 	/// </summary>
-	void ApplyToDxLib();
+	void UpdateRenderSystem();
 
 protected:
 	Vector3 pos_;          //座標

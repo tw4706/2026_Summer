@@ -27,6 +27,12 @@ CameraBase::~CameraBase()
 {
 }
 
+void CameraBase::Update()
+{
+    //カメラの位置・注視店の計算
+    UpdateRenderSystem();
+}
+
 void CameraBase::Shake(float time, float power) {
     shakeTime_ = time;
     shakePower_ = power;
@@ -36,7 +42,8 @@ void CameraBase::StartZoom(float fov) {
     fovTarget_ = fov;
 }
 
-Vector3 CameraBase::UpdateShake() {
+Vector3 CameraBase::UpdateShake() 
+{
     if (shakeTime_ <= 0.0f) return Vector3(0, 0, 0);
     shakeTime_ -= kDeltaTime;
 
@@ -47,11 +54,12 @@ Vector3 CameraBase::UpdateShake() {
     return Vector3(rx * shakePower_, ry * shakePower_, rz * shakePower_);
 }
 
-void CameraBase::ApplyToDxLib() {
+void CameraBase::UpdateRenderSystem() 
+{
     //シェイクを加算した最終的な描画座標
     Vector3 cameraPos = pos_ + UpdateShake();
 
-    //DxLibのカメラに座標と注視点を反映
+    //カメラに座標と注視点を反映
     SetCameraPositionAndTarget_UpVecY(cameraPos.ToDxlibVector(), cameraTarget_.ToDxlibVector());
     SetupCamera_Perspective(fov_);
     SetCameraNearFar(kCameraNear, kCameraFar);

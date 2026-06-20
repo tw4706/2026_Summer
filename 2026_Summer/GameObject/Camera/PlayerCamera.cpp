@@ -33,8 +33,6 @@ void PlayerCamera::Init()
     Matrix4x4 rot = Matrix4x4::RotateY(yaw_) * Matrix4x4::RotateX(pitch_);
     Vector3 offset = rot.TransformForVector(kTargetToCamera);
     pos_ = cameraTarget_ + offset;
-
-    ApplyToDxLib();
 }
 
 void PlayerCamera::Update()
@@ -55,8 +53,8 @@ void PlayerCamera::Update()
     //カメラの移動(線形補間で行う）
     pos_ = Vector3::Lerp(pos_, targetCamPos, 0.5f);
 
-    // DxLibに反映
-    ApplyToDxLib();
+    //親クラスの更新処理
+    CameraBase::Update();
 }
 
 void PlayerCamera::AddRotation(float yaw, float pitch)
