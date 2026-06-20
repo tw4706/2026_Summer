@@ -6,31 +6,31 @@ namespace
 {
 	//プレイヤーアニメーション
 	//Idle
-	const char* kPlayerIdle = "Player| Idle";
+	const wchar_t* kPlayerIdle = L"Player| Idle";
 	//Run
-	const char* kPlayerRun = "Player|Run";
+	const wchar_t* kPlayerRun = L"Player|Run";
 	//Attack
-	const char* kPlayerAttack = "Player|Attack";
+	const wchar_t* kPlayerAttack = L"Player|Attack";
 	//Hit
-	const char* kPlayerHit = "Player|Hit";
+	const wchar_t* kPlayerHit = L"Player|Hit";
 	//Death
-	const char* kPlayerDeath = "Player|Death";
+	const wchar_t* kPlayerDeath = L"Player|Death";
 	//Jump
-	const char* kPlayerJump = "Player|Jump";
+	const wchar_t* kPlayerJump = L"Player|Jump";
 
 	//敵アニメーション
 	//Spawn
-	const char* kEnemySpawn = "MonsterArmature|Jump";
+	const wchar_t* kEnemySpawn = L"MonsterArmature|Jump";
 	//Idle
-	const char* kEnemyIdle = "MonsterArmature|Idle";
+	const wchar_t* kEnemyIdle = L"Armature|Idle";
 	//Run
-	const char* kEnemyRun = "MonsterArmature|Dance";
+	const wchar_t* kEnemyRun = L"MonsterArmature|Dance";
 	//Attack
-	const char* kEnemyAttack = "MonsterArmature|Bite_Front";
+	const wchar_t* kEnemyAttack = L"Armature|Attack";
 	//PrevAttack
-	const char* kEnemyPrevAttack = "MonsterArmature|No";
+	const wchar_t* kEnemyPrevAttack = L"MonsterArmature|No";
 	//Death
-	const char* kEnemyDeath = "MonsterArmature|Death";
+	const wchar_t* kEnemyDeath = L"MonsterArmature|Death";
 
 	//アニメーションの進むスピード
 	constexpr float kAnimationSpeed = 30.0f;

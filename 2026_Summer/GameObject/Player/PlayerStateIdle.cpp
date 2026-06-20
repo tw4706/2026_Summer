@@ -5,7 +5,7 @@
 #include "PlayerStateDodge.h"
 #include "Player.h"
 #include "Input.h"
-#include "Camera/CameraBase.h"
+#include "Camera/PlayerCamera.h"
 
 namespace
 {
@@ -22,7 +22,7 @@ namespace
     constexpr float kCameraSpeed = 0.03f;
 }
 
-PlayerStateIdle::PlayerStateIdle(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera) :
+PlayerStateIdle::PlayerStateIdle(std::weak_ptr<Player> pPlayer, Input& input, PlayerCamera& camera) :
 	PlayerStateBase(pPlayer,input,camera)
 {
 }
@@ -43,8 +43,8 @@ void PlayerStateIdle::Update()
     auto pPlayer = pPlayer_.lock();
     if (!pPlayer) return;
 
-	DrawFormatString(0, 0, GetColor(255, 255, 255), "IsGround: %d", pPlayer->GetIsGround());
-	DrawFormatString(0, 20, GetColor(255, 255, 255), "HasMoveInput: %d", input_.HasMoveInput());
+	DrawFormatString(0, 0, GetColor(255, 255, 255), L"IsGround: %d", pPlayer->GetIsGround());
+	DrawFormatString(0, 20, GetColor(255, 255, 255), L"HasMoveInput: %d", input_.HasMoveInput());
 
 	// ƒJƒƒ‰‚Ì‰ñ“]
 	Vector3 stickR = input_.GetStickRight();

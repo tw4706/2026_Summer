@@ -5,7 +5,7 @@
 #include "PlayerStateDodge.h"
 #include "Player.h"
 #include "Input.h"
-#include "Camera/CameraBase.h"
+#include "Camera/PlayerCamera.h"
 #include "Matrix4x4.h"
 
 namespace
@@ -36,7 +36,7 @@ namespace
     constexpr float kStickDeadZone = 0.15f;
 }
 
-PlayerStateRun::PlayerStateRun(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera) :
+PlayerStateRun::PlayerStateRun(std::weak_ptr<Player> pPlayer, Input& input, PlayerCamera& camera) :
     PlayerStateBase(pPlayer,input,camera)
 {
 }
@@ -56,7 +56,7 @@ void PlayerStateRun::Update()
 
     Vector3 playerDir = GetCameraLookMoveDirection();
 
-    DrawFormatString(0, 200, GetColor(255, 255, 255), "playerDir: %.2f, %.2f, %.2f", playerDir.x_, playerDir.y_, playerDir.z_);
+    DrawFormatString(0, 200, GetColor(255, 255, 255), L"playerDir: %.2f, %.2f, %.2f", playerDir.x_, playerDir.y_, playerDir.z_);
 
     Vector3 currentVel = pPlayer->GetVelocity();
     float currentAngle = pPlayer->GetMoveAngle();

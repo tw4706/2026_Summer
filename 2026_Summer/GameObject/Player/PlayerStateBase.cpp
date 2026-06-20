@@ -2,11 +2,11 @@
 #include "Player.h"
 #include "Vector3.h"
 #include "Input.h"
-#include "Camera/CameraBase.h"
+#include "Camera/PlayerCamera.h"
 #include "Matrix4x4.h"
 #include<Dxlib.h>
 
-PlayerStateBase::PlayerStateBase(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera):
+PlayerStateBase::PlayerStateBase(std::weak_ptr<Player> pPlayer, Input& input, PlayerCamera& camera):
 	CharacterStateBase(pPlayer),
     pPlayer_(pPlayer),
     input_(input),

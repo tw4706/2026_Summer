@@ -12,7 +12,7 @@ Model::~Model()
 	Release();
 }
 
-void Model::Load(const char* path)
+void Model::Load(const wchar_t* path)
 {
 	//ƒSƒ~‚ª‚ ‚é‰Â”\«‚ª‚ ‚é‚½‚ß”O‚Ì‚½‚ß‰ğ•ú‚µ‚Ä‚¨‚­
 	Release();
@@ -53,7 +53,7 @@ void Model::SetMatrix(const MATRIX& mat)
 	MV1SetMatrix(modelH_, mat);
 }
 
-int Model::SearchFrame(const char* frameName) const
+int Model::SearchFrame(const wchar_t* frameName) const
 {
 	return MV1SearchFrame(modelH_, frameName);
 }

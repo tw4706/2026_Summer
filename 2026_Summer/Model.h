@@ -6,7 +6,7 @@ public:
 	Model();
 	virtual~Model();
 
-	void Load(const char* path);
+	void Load(const wchar_t* path);
 	void Release();
 	void Draw();
 
@@ -25,7 +25,7 @@ public:
 	/// <summary>
 	/// フレームサーチ
 	/// </summary>
-	int SearchFrame(const char*frameName)const;
+	int SearchFrame(const wchar_t*frameName)const;
 
 	/// <summary>
 	/// ハンドルの取得

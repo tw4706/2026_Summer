@@ -2,7 +2,7 @@
 #include "PlayerStateIdle.h"
 #include "Player.h"
 
-PlayerStateAttack::PlayerStateAttack(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera) :
+PlayerStateAttack::PlayerStateAttack(std::weak_ptr<Player> pPlayer, Input& input, PlayerCamera& camera) :
 	PlayerStateBase(pPlayer,input,camera)
 {
 }
@@ -12,10 +12,10 @@ void PlayerStateAttack::Enter()
     auto pPlayer = pPlayer_.lock();
     if (!pPlayer) return;
 
-    // ‡@ UŒ‚ƒAƒjƒ[ƒVƒ‡ƒ“‚ÉØ‚è‘Ö‚¦
+    //UŒ‚ƒAƒjƒ[ƒVƒ‡ƒ“‚É‘JˆÚ
     pPlayer->ChangeAnimation(AnimationState::Attack);
 
-    // ‡A UŒ‚ŠJŽnŽž‚ÉˆÚ“®‘¬“x‚ðŠ®‘S‚Éƒ[ƒ‚É‚·‚é (Œ³‚Ì Player::Move “à‚Ìˆ—‚ðˆÚA)
+    //UŒ‚ŠJŽnŽž‚ÉˆÚ“®‘¬“x‚ð0‚É‚·‚é
     pPlayer->SetVelocity({ 0.0f, 0.0f, 0.0f });
 }
 

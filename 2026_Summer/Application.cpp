@@ -23,7 +23,7 @@ bool Application::Init()
 	//ウィンドウモード設定
 	ChangeWindowMode(true);
 	//ウィンドウのタイトル変更
-	SetMainWindowText("ゲーム名");
+	SetMainWindowText(L"SamuraiAdapt");
 	//画面のサイズ変更
 	SetGraphMode(Game::kScreenWidth, Game::kScreenHeight, Game::kColorBitNum);
 
@@ -33,6 +33,10 @@ bool Application::Init()
 	}
 
 	SetDrawScreen(DX_SCREEN_BACK);
+
+	//Zバッファの設定
+	SetUseZBuffer3D(true);		//Zバッファを使う
+	SetWriteZBuffer3D(true);	//Zバッファ書き込み
 
 	return true;
 }

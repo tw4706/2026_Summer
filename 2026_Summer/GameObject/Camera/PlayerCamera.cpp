@@ -41,18 +41,18 @@ void PlayerCamera::Update()
 {
     if (!pPlayer_) return;
 
-    // プレイヤーの注視点を取得
+    //プレイヤーの注視点を取得
     cameraTarget_ = pPlayer_->GetCameraTarget();
 
-    // 回転から位置を計算
+    //行列を用いて位置を計算
     Matrix4x4 rot = Matrix4x4::RotateY(yaw_) * Matrix4x4::RotateX(pitch_);
     Vector3 offset = rot.TransformForVector(kTargetToCamera);
     Vector3 targetCamPos = cameraTarget_ + offset;
 
-    // 地面にめり込まないようにY座標を制限
+    //地面にめり込まないよう制限
     targetCamPos.y_ = (std::max)(targetCamPos.y_, 50.0f);
 
-    // カメラの滑らかな移動（補間）
+    //カメラの移動(線形補間で行う）
     pos_ = Vector3::Lerp(pos_, targetCamPos, 0.5f);
 
     // DxLibに反映

@@ -19,7 +19,7 @@ namespace
 	constexpr float kFrameTime = 1.0f / 60.0f;
 }
 
-PlayerStateDodge::PlayerStateDodge(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera) :
+PlayerStateDodge::PlayerStateDodge(std::weak_ptr<Player> pPlayer, Input& input, PlayerCamera& camera) :
 	PlayerStateBase(pPlayer, input, camera),
 	invincibleTimer_(0.0f)
 {
@@ -40,7 +40,7 @@ void PlayerStateDodge::Enter()
 	if (moveDir.LengthSq() < 0.001f)
 	{
 		float angle = player->GetMoveAngle();
-		moveDir = Vector3(sinf(angle), 0.0f, cosf(angle));
+		moveDir = Vector3(sinf(angle), 0.0f, -cosf(angle));
 	}
 
 	//ê≥ãKâª

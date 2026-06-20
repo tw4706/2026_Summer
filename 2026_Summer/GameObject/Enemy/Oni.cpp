@@ -34,12 +34,19 @@ void Oni::Init()
 	moveAngle_ = -DX_PI_F;
 
 	//モデルのロード
-	model_.Load("data/oni.mv1");
+	model_.Load(L"data/oni.mv1");
 	assert(model_.GetHandle() >= 0);
+
+	//アニメーションの初期化
+	animation_.Init(model_.GetHandle(), AnimType::Enemy);
+	animation_.ChangeState(AnimationState::Idle);
 }
 
 void Oni::Update()
 {
+	//アニメーションの更新
+	animation_.Update(1.0f / 60.0f);
+
 	//拡縮行列
 	Matrix4x4 scaleMat = Matrix4x4::Scale(kFirstScale.x_, kFirstScale.y_, kFirstScale.z_);
 	//回転行列

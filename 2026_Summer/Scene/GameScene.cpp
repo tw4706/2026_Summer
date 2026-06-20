@@ -41,10 +41,6 @@ void GameScene::Init(Input&input)
 	//カリングの設定（裏面のポリゴンは見えないようにする）
 	SetUseBackCulling(true);
 
-	//Zバッファの設定
-	SetUseZBuffer3D(true);		//Zバッファを使う
-	SetWriteZBuffer3D(true);	//Zバッファ書き込み
-
 	//現在のアクティブカメラを取得
 	auto activeCam = pCameraManager_->GetActiveCamera();
 
@@ -67,7 +63,7 @@ void GameScene::Init(Input&input)
 	{
 		if (auto player = std::dynamic_pointer_cast<Player>(obj)) {
 			player->SetInput(&input);
-			player->SetCamera(activeCam.get());
+			player->SetCamera(playerCam.get());
 			player->Init();
 		}
 		else if (auto oni = std::dynamic_pointer_cast<Oni>(obj)) {
@@ -120,7 +116,6 @@ void GameScene::Update(Input& input)
 
 void GameScene::Draw()
 {
-	DrawGrid();
 
 	for (auto& obj : gameObjects_)
 	{
@@ -130,8 +125,12 @@ void GameScene::Draw()
 		}
 	}
 
-	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
-	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", frameCount_);
+	DrawGrid();
+
+#ifdef _DEBUG
+	DrawString(0, 0, L"SceneMain", GetColor(255, 255, 255));
+	DrawFormatString(0, 16, GetColor(255, 255, 255), L"FRAME:%d", frameCount_);
+#endif
 }
 
 void GameScene::RegisterGameObject(std::shared_ptr<GameObject> obj)

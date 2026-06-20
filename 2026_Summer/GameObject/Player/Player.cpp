@@ -1,6 +1,6 @@
 #include "Player.h"
 #include"Input.h"
-#include"Camera/CameraBase.h"
+#include"Camera/PlayerCamera.h"
 #include"Matrix4x4.h"
 #include "PlayerStateBase.h"
 #include "PlayerStateIdle.h"
@@ -53,9 +53,9 @@ void Player::Init()
 	isGround_ = true;
 
 	//モデルのロード
-	model_.Load("data/Player.mv1");
-	katanaModel_.Load("data/Tachi.mv1");
-	handFrameIndex_ = model_.SearchFrame("mixamorig:RightHand");
+	model_.Load(L"data/Player.mv1");
+	katanaModel_.Load(L"data/Tachi.mv1");
+	handFrameIndex_ = model_.SearchFrame(L"mixamorig:RightHand");
 
 	//アニメーションの初期化
 	animation_.Init(model_.GetHandle(), AnimType::Player);
@@ -70,10 +70,10 @@ void Player::Update()
 		std::weak_ptr<Player> weakSelf = sharedSelf;
 
 		//今持っているポインタを参照する
-		CameraBase& camera = *pCamera_;
+		PlayerCamera& camera = *pCamera_;
 		Input& input = *pInput_;
 
-		// ここは new のままで安全に生成
+		//ステートパターンの生成
 		pCurrentState_ = std::shared_ptr<PlayerStateIdle>(new PlayerStateIdle(weakSelf, input, camera));
 
 		pCurrentState_->Enter();
@@ -100,7 +100,7 @@ void Player::Update()
 	//モデルに行列をセット
 	model_.SetMatrix(worldMat);
 
-	DrawFormatString(0, 0, GetColor(255, 255, 255), "Hand Index: %d", handFrameIndex_);
+	DrawFormatString(0, 0, GetColor(255, 255, 255), L"Hand Index: %d", handFrameIndex_);
 }
 
 void Player::Draw()

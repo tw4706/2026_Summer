@@ -4,7 +4,7 @@
 #include "Animation.h"
 
 class Input;
-class CameraBase;
+class PlayerCamera;
 class CharacterStateBase;
 class Player :public Character
 {
@@ -34,7 +34,7 @@ public:
 	/// カメラのセット
 	/// </summary>
 	/// <param name="camera">カメラのポインタ</param>
-	void SetCamera(CameraBase* camera) { pCamera_ = camera; }
+	void SetCamera(PlayerCamera* camera) { pCamera_ = camera; }
 
 	void SetInput(Input* input) { pInput_ = input; }
 
@@ -53,7 +53,7 @@ private:
 	float jumpPower_ = 12.0f;				//ジャンプ力
 	bool isInvincible_ = false;				//無敵中かどうか
 
-	CameraBase* pCamera_ = nullptr;			//カメラ
+	PlayerCamera* pCamera_ = nullptr;			//カメラ
 	Input* pInput_ = nullptr;				//インプット入力
 	Model katanaModel_;						//刀のモデル
 };

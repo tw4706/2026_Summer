@@ -3,10 +3,10 @@
 #include "PlayerStateRun.h"
 #include "Player.h"
 #include "Input.h"
-#include "Camera/CameraBase.h"
+#include "Camera/PlayerCamera.h"
 #include "Matrix4x4.h"
 
-PlayerStateJump::PlayerStateJump(std::weak_ptr<Player> pPlayer, Input& input, CameraBase& camera) :
+PlayerStateJump::PlayerStateJump(std::weak_ptr<Player> pPlayer, Input& input, PlayerCamera& camera) :
     PlayerStateBase(pPlayer, input, camera)
 {
 }
