@@ -15,10 +15,6 @@ EnemyStateRun::EnemyStateRun(std::weak_ptr<EnemyBase> pEnemy) :
 {
 }
 
-EnemyStateRun::~EnemyStateRun()
-{
-}
-
 void EnemyStateRun::Enter()
 {
     auto pEnemy = pEnemy_.lock();

@@ -7,10 +7,6 @@
 
 namespace
 {
-	//敵アニメーション
-	//Idle
-	const wchar_t* kOniIdle = L"Armature|Idle";
-
 	//鬼の初期位置
 	const Vector3 kFirstPos = { 200.0f, 0.0f, -100.0f };
 
@@ -21,7 +17,7 @@ namespace
 	const Vector3 kFirstRotate = { 0.0f, -DX_PI_F, 0.0f };
 
 	//索敵半径
-	const float kDebugSearchRadius = 100.0f; 
+	const float kDebugSearchRadius = 200.0f; 
 }
 
 Oni::Oni() :
@@ -32,7 +28,6 @@ Oni::Oni() :
 
 Oni::~Oni()
 {
-	Character::~Character();
 }
 
 void Oni::Init()
@@ -40,7 +35,7 @@ void Oni::Init()
 	//初期化
 	pos_ = kFirstPos;
 	vel_ = { 0.0f, 0.0f, 0.0f };
-	moveAngle_ = -DX_PI_F;
+	moveAngle_ = kFirstRotate.y_;
 
 	//モデルのロード
 	model_.Load(L"data/oni.mv1");
@@ -56,6 +51,7 @@ void Oni::Update()
 	{
 		auto sharedEnemy = std::dynamic_pointer_cast<EnemyBase>(shared_from_this());
 		std::weak_ptr<EnemyBase> weakEnemy = sharedEnemy;
+
 		pCurrentState_ = std::shared_ptr<EnemyStateIdle>(new EnemyStateIdle(weakEnemy));
 		pCurrentState_->Enter();
 	}
@@ -80,12 +76,6 @@ void Oni::Update()
 
 	//モデルに行列をセット
 	model_.SetMatrix(worldMat);
-
-	if (pCurrentState_)
-	{
-		// 今のステートのメモリアドレスを表示してみる
-		DrawFormatString(0, 200, GetColor(255, 255, 255), L"Enemy State Address: %p", pCurrentState_.get());
-	}
 }
 
 void Oni::Draw()

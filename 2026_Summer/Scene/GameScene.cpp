@@ -101,7 +101,9 @@ void GameScene::Update(Input& input)
 	//カメラマネージャーの更新
 	pCameraManager_->Update();
 
-	for (auto& obj : gameObjects_) {
+	for (auto& obj : gameObjects_) 
+	{
+
 		if (!obj->IsDead())
 		{
 			obj->Update();

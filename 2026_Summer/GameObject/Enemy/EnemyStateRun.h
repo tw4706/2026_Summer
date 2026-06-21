@@ -4,7 +4,7 @@ class EnemyStateRun :public EnemyStateBase
 {
 public:
 	EnemyStateRun(std::weak_ptr<EnemyBase> pEnemy);
-	virtual~EnemyStateRun();
+	~EnemyStateRun()=default;
 
 	void Enter()override;
 	void Update()override;

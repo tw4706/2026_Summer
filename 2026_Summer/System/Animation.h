@@ -3,6 +3,7 @@
 
 enum class AnimationState
 {
+    None,
     Spawn,
     Idle,
     Run,

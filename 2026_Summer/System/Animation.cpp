@@ -21,8 +21,8 @@ Animation::Animation() :
 	isLoop_(true),
 	isAnimEnd_(false),
 	totalTime_(0.0f),
-	state_(AnimationState::Idle),
-	prevState_(AnimationState::Idle)
+	state_(AnimationState::None),
+	prevState_(AnimationState::None)
 {
 
 }

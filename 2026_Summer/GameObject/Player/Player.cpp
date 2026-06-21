@@ -10,10 +10,6 @@
 
 namespace
 {
-	//プレイヤーアニメーション
-	//Idle
-	const wchar_t* kPlayerIdle = L"Player| Idle";
-
 	//初期位置
 	const Vector3 kFirstPos = { 0.0f, 0.0f, 0.0f };
 
@@ -63,7 +59,6 @@ void Player::Init()
 
 	//アニメーションの初期化
 	animation_.Init(model_.GetHandle());
-	animation_.ChangeState(AnimationState::Idle, kPlayerIdle);
 }
 
 void Player::Update()
