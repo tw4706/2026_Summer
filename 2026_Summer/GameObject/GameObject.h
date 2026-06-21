@@ -31,6 +31,12 @@ public :
 	const Vector3& GetPos() const { return pos_; }
 
 	/// <summary>
+	/// 位置の設定
+	/// </summary>
+	/// <param name="pos">設定する位置</param>
+	void SetPos(const Vector3& pos){ pos_ = pos; }
+
+	/// <summary>
 	/// 速度の取得
 	/// </summary>
 	/// <returns>速度</returns>

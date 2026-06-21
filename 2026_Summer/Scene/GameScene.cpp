@@ -62,11 +62,14 @@ void GameScene::Init(Input&input)
 	for (auto& obj : gameObjects_)
 	{
 		if (auto player = std::dynamic_pointer_cast<Player>(obj)) {
+
 			player->SetInput(&input);
 			player->SetCamera(playerCam.get());
 			player->Init();
 		}
-		else if (auto oni = std::dynamic_pointer_cast<Oni>(obj)) {
+		else if (auto oni = std::dynamic_pointer_cast<Oni>(obj))
+		{
+			oni->SetPlayer(pPlayer_);
 			oni->Init(); //‹S‚Ì‰Šú‰»
 		}
 	}

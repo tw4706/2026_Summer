@@ -7,7 +7,7 @@
 namespace
 {
     //ターゲットからのカメラの座標
-    const Vector3 kTargetToCamera = { 0.0f, 0.0f,400.0f };
+    const Vector3 kTargetToCamera = { 0.0f, 60.0f,380.0f };
 
     //限界の角度
     const float kLimitPitch = DX_PI_F / 4.0f;

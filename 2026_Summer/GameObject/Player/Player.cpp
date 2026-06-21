@@ -4,9 +4,9 @@
 #include"Matrix4x4.h"
 #include "PlayerStateBase.h"
 #include "PlayerStateIdle.h"
+#include "Enemy/EnemyBase.h"
 #include<Dxlib.h>
 #include<memory>
-#include "Enemy/EnemyBase.h"
 
 namespace
 {
@@ -150,5 +150,5 @@ void Player::Draw()
 
 Vector3 Player::GetCameraTarget() const
 {
-	return Vector3{ pos_.x_ - 30.0f,pos_.y_ + 150.0f,pos_.z_ };
+	return Vector3{ pos_.x_,pos_.y_ + 200.0f,pos_.z_ };
 }
