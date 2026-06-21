@@ -27,10 +27,10 @@ void Character::ChangeState(std::shared_ptr<CharacterStateBase> pNextState)
 	pCurrentState_->Enter();
 }
 
-void Character::ChangeAnimation(AnimationState state)
+void Character::ChangeAnimation(AnimationState state,const std::wstring&animName)
 {
 	if (animation_.GetState() != state)
 	{
-		animation_.ChangeState(state);
+		animation_.ChangeState(state,animName.c_str());
 	}
 }

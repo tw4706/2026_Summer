@@ -2,6 +2,12 @@
 #include "PlayerStateIdle.h"
 #include "Player.h"
 
+namespace
+{
+    //Attack
+    const wchar_t* kPlayerAttack = L"Player|Attack";
+}
+
 PlayerStateAttack::PlayerStateAttack(std::weak_ptr<Player> pPlayer, Input& input, PlayerCamera& camera) :
 	PlayerStateBase(pPlayer,input,camera)
 {
@@ -13,7 +19,7 @@ void PlayerStateAttack::Enter()
     if (!pPlayer) return;
 
     //攻撃アニメーションに遷移
-    pPlayer->ChangeAnimation(AnimationState::Attack);
+    pPlayer->ChangeAnimation(AnimationState::Attack, kPlayerAttack);
 
     //攻撃開始時に移動速度を0にする
     pPlayer->SetVelocity({ 0.0f, 0.0f, 0.0f });

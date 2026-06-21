@@ -10,6 +10,10 @@
 
 namespace
 {
+	//プレイヤーアニメーション
+	//Idle
+	const wchar_t* kPlayerIdle = L"Player| Idle";
+
 	//初期位置
 	const Vector3 kFirstPos = { 0.0f, 0.0f, 0.0f };
 
@@ -58,8 +62,8 @@ void Player::Init()
 	handFrameIndex_ = model_.SearchFrame(L"mixamorig:RightHand");
 
 	//アニメーションの初期化
-	animation_.Init(model_.GetHandle(), AnimType::Player);
-	animation_.ChangeState(AnimationState::Idle);
+	animation_.Init(model_.GetHandle());
+	animation_.ChangeState(AnimationState::Idle, kPlayerIdle);
 }
 
 void Player::Update()
@@ -146,15 +150,5 @@ void Player::Draw()
 
 Vector3 Player::GetCameraTarget() const
 {
-	return pos_;
-}
-
-void Player::ChangeState(std::shared_ptr<CharacterStateBase> nextState)
-{
-	Character::ChangeState(nextState);
-}
-
-void Player::ChangeAnimation(AnimationState state)
-{
-	Character::ChangeAnimation(state);
+	return Vector3{ pos_.x_ - 30.0f,pos_.y_ + 150.0f,pos_.z_ };
 }

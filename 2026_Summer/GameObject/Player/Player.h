@@ -16,10 +16,6 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	void ChangeState(std::shared_ptr<CharacterStateBase> nextState)override;
-
-	void ChangeAnimation(AnimationState state)override;
-
 	/// ==============================
 	/// ゲッター・セッター
 	/// ==============================
@@ -45,7 +41,6 @@ public:
 	void SetIsInvincible(bool isInvincible) { isInvincible_ = isInvincible; }
 
 	float GetJumpPower() const { return jumpPower_; }
-
 
 private:
 	float moveAngle_;						//プレイヤーの向く角度

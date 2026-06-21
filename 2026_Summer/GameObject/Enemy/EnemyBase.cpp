@@ -9,18 +9,3 @@ EnemyBase::EnemyBase() :
 EnemyBase::~EnemyBase()
 {
 }
-
-void EnemyBase::Init()
-{
-
-}
-
-void EnemyBase::Update()
-{
-
-}
-
-void EnemyBase::Draw()
-{
-
-}

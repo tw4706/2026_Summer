@@ -5,6 +5,10 @@
 
 namespace
 {
+	//敵アニメーション
+	//Idle
+	const wchar_t* kOniIdle = L"Armature|Idle";
+
 	//鬼の初期位置
 	const Vector3 kFirstPos = { 200.0f, 0.0f, -100.0f };
 
@@ -38,8 +42,8 @@ void Oni::Init()
 	assert(model_.GetHandle() >= 0);
 
 	//アニメーションの初期化
-	animation_.Init(model_.GetHandle(), AnimType::Enemy);
-	animation_.ChangeState(AnimationState::Idle);
+	animation_.Init(model_.GetHandle());
+	animation_.ChangeState(AnimationState::Idle, kOniIdle);
 }
 
 void Oni::Update()

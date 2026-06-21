@@ -1,10 +1,5 @@
 #pragma once
-
-enum class AnimType
-{
-    Player,
-    Enemy
-};
+#include<string>
 
 enum class AnimationState
 {
@@ -25,17 +20,18 @@ public:
 	Animation();
 	~Animation();
 
-	void Init(int modelHandle,AnimType type);
+	void Init(int modelHandle);
     void Update(float deltaTime);
 
 	//モデルのアニメーションの再生
 	void Play(int animIndex, float speed, bool isLoop);
 
     /// <summary>
-    /// アニメーションの状態遷移
+    /// アニメーションの状態を変更します。
     /// </summary>
-    /// <param name="state">状態名</param>
-    void ChangeState(AnimationState state);
+    /// <param name="state">アニメーションの状態</param>
+    /// <param name="animName">変更するアニメーション名</param>
+    void ChangeState(AnimationState state,const std::wstring&animName);
 
     /// <summary>
     /// アニメーション状態の取得
@@ -51,24 +47,23 @@ public:
 
 
 private:
-	int modelHandle_;
+	int modelHandle_;           //モデルハンドル
 
     //現在アニメ
-    int currentAttach_;
-    int currentAnim_;
-    float currentTime_;
+    int currentAttachAnim_;     //アタッチされるアニメーション
+    int currentAnim_;           //現在のアニメーション
+    float currentTime_;         //現在の時間
+    int prevAttach_;            //前のアニメ
 
-    int prevAttach_;      // 前のアニメ
-    float blendTime_;     // 経過時間
-    float blendDuration_; // ブレンド時間
-    bool isBlending_;
-    float speed_;
-    bool isLoop_;
-    bool isAnimEnd_;
-    float totalTime_;
+    float blendTime_;           //経過時間
+    float blendDuration_;       //ブレンド時間
+    bool isBlending_;           //ブレンドされているか
+    float speed_;               //スピード
+    bool isLoop_;               //ループするかどうか
+    bool isAnimEnd_;            //アニメーションが終わったかどうか
+    float totalTime_;           //アニメーションのトータルタイム
 
-    AnimationState state_;
-    AnimationState prevState_;
-    AnimType type_;
+    AnimationState state_;      //アニメーションの状態
+    AnimationState prevState_;  //アニメーションの前の状態
 };
 

@@ -10,6 +10,9 @@
 
 namespace
 {
+    //Run
+    const wchar_t* kPlayerRun = L"Player|Run";
+
     //プレイヤーの移動速度
     constexpr float kSpeed = 10.0f;
 
@@ -46,7 +49,8 @@ void PlayerStateRun::Enter()
     auto pPlayer = pPlayer_.lock();
     if (!pPlayer) return;
 
-    pPlayer->ChangeAnimation(AnimationState::Run);
+    //Runアニメーションに遷移
+    pPlayer->ChangeAnimation(AnimationState::Run, kPlayerRun);
 }
 
 void PlayerStateRun::Update()
@@ -54,10 +58,12 @@ void PlayerStateRun::Update()
     auto pPlayer = pPlayer_.lock();
     if (!pPlayer) return;
 
+    //プレイヤーの方向ベクトルを取得
     Vector3 playerDir = GetCameraLookMoveDirection();
-
+#ifdef _DEBUG
     DrawFormatString(0, 200, GetColor(255, 255, 255), L"playerDir: %.2f, %.2f, %.2f", playerDir.x_, playerDir.y_, playerDir.z_);
-
+#endif
+    //現在の速度・向きの取得
     Vector3 currentVel = pPlayer->GetVelocity();
     float currentAngle = pPlayer->GetMoveAngle();
 

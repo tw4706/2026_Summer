@@ -4,41 +4,13 @@
 
 namespace
 {
-	//プレイヤーアニメーション
-	//Idle
-	const wchar_t* kPlayerIdle = L"Player| Idle";
-	//Run
-	const wchar_t* kPlayerRun = L"Player|Run";
-	//Attack
-	const wchar_t* kPlayerAttack = L"Player|Attack";
-	//Hit
-	const wchar_t* kPlayerHit = L"Player|Hit";
-	//Death
-	const wchar_t* kPlayerDeath = L"Player|Death";
-	//Jump
-	const wchar_t* kPlayerJump = L"Player|Jump";
-
-	//敵アニメーション
-	//Spawn
-	const wchar_t* kEnemySpawn = L"MonsterArmature|Jump";
-	//Idle
-	const wchar_t* kEnemyIdle = L"Armature|Idle";
-	//Run
-	const wchar_t* kEnemyRun = L"MonsterArmature|Dance";
-	//Attack
-	const wchar_t* kEnemyAttack = L"Armature|Attack";
-	//PrevAttack
-	const wchar_t* kEnemyPrevAttack = L"MonsterArmature|No";
-	//Death
-	const wchar_t* kEnemyDeath = L"MonsterArmature|Death";
-
 	//アニメーションの進むスピード
 	constexpr float kAnimationSpeed = 30.0f;
 }
 
 Animation::Animation() :
 	modelHandle_(-1),
-	currentAttach_(-1),
+	currentAttachAnim_(-1),
 	currentAnim_(-1),
 	currentTime_(0.0f),
 	prevAttach_(-1),
@@ -50,8 +22,7 @@ Animation::Animation() :
 	isAnimEnd_(false),
 	totalTime_(0.0f),
 	state_(AnimationState::Idle),
-	prevState_(AnimationState::Idle),
-	type_(AnimType::Player)
+	prevState_(AnimationState::Idle)
 {
 
 }
@@ -60,25 +31,22 @@ Animation::~Animation()
 {
 }
 
-void Animation::Init(int modelHandle, AnimType type)
+void Animation::Init(int modelHandle)
 {
 	modelHandle_ = modelHandle;
-	type_ = type;
-
 	blendDuration_ = 0.3f;
-
 	speed_ = 1.0f;
 }
 
 void Animation::Update(float deltaTime)
 {
-	if (currentAttach_ != -1 && totalTime_ == 0.0f)
+	if (currentAttachAnim_ != -1 && totalTime_ == 0.0f)
 	{
-		totalTime_ = MV1GetAttachAnimTotalTime(modelHandle_, currentAttach_);
+		totalTime_ = MV1GetAttachAnimTotalTime(modelHandle_, currentAttachAnim_);
 	}
 
 	//アニメーションの更新
-	if (currentAttach_ != -1)
+	if (currentAttachAnim_ != -1)
 	{
 		//アニメーションの時間を進行
 		currentTime_ += deltaTime * speed_;
@@ -108,7 +76,7 @@ void Animation::Update(float deltaTime)
 		}
 
 		//アニメーションの時間をセット
-		MV1SetAttachAnimTime(modelHandle_, currentAttach_, currentTime_);
+		MV1SetAttachAnimTime(modelHandle_, currentAttachAnim_, currentTime_);
 
 		//旧アニメーションも同様に時間を進行させる(ブレンド中は新旧両方のアニメーションが再生されるため)
 		if (prevAttach_ != -1)
@@ -156,16 +124,16 @@ void Animation::Update(float deltaTime)
 		//tが1.0fを超えないようにする
 		if (t > 1.0f) t = 1.0f;
 
-		//新アニメ
-		MV1SetAttachAnimBlendRate(modelHandle_, currentAttach_, t);
+		//新しいアニメーション
+		MV1SetAttachAnimBlendRate(modelHandle_, currentAttachAnim_, t);
 
-		//旧アニメ
+		//古いアニメーション
 		if (prevAttach_ != -1)
 		{
 			MV1SetAttachAnimBlendRate(modelHandle_, prevAttach_, 1.0f - t);
 		}
 
-		//アニメーションのブレンドが完了したら旧アニメをデタッチする
+		//アニメーションのブレンドが完了したら古いアニメをデタッチ
 		if (t >= 1.0f)
 		{
 			if (prevAttach_ != -1)
@@ -180,8 +148,7 @@ void Animation::Update(float deltaTime)
 
 void Animation::Play(int animIndex, float speed, bool isLoop)
 {
-
-	if (currentAnim_ == animIndex && currentAttach_ != -1) return;
+	if (currentAnim_ == animIndex && currentAttachAnim_ != -1) return;
 
 	isAnimEnd_ = false;
 	speed_ = speed;
@@ -197,29 +164,29 @@ void Animation::Play(int animIndex, float speed, bool isLoop)
 	//現在再生しているアニメーションを保存(生成状態の時はブレンドさせない)
 	if (prevState_ == AnimationState::Spawn)
 	{
-		if (currentAttach_ != -1)
+		if (currentAttachAnim_ != -1)
 		{
-			MV1DetachAnim(modelHandle_, currentAttach_);
+			MV1DetachAnim(modelHandle_, currentAttachAnim_);
 		}
 
 		prevAttach_ = -1; //ブレンドなし
 	}
 	else
 	{
-		prevAttach_ = currentAttach_;
+		prevAttach_ = currentAttachAnim_;
 	}
 
 	currentAnim_ = animIndex;
 	currentTime_ = 0.0f;
 
-	currentAttach_ = MV1AttachAnim(modelHandle_, currentAnim_);
-	totalTime_ = MV1GetAttachAnimTotalTime(modelHandle_, currentAttach_);
+	currentAttachAnim_ = MV1AttachAnim(modelHandle_, currentAnim_);
+	totalTime_ = MV1GetAttachAnimTotalTime(modelHandle_, currentAttachAnim_);
 
 	blendTime_ = 0.0f;
 	isBlending_ = true;
 
-	//ブレンドの比率の初期化
-	MV1SetAttachAnimBlendRate(modelHandle_, currentAttach_, 0.0f);
+	//ブレンド比率の初期化
+	MV1SetAttachAnimBlendRate(modelHandle_, currentAttachAnim_, 0.0f);
 
 	if (prevAttach_ != -1)
 	{
@@ -228,68 +195,18 @@ void Animation::Play(int animIndex, float speed, bool isLoop)
 	}
 
 	//アニメーションの動きに応じてブレンド率を適用
-	MV1SetAttachAnimTime(modelHandle_, currentAttach_, currentTime_);
+	MV1SetAttachAnimTime(modelHandle_, currentAttachAnim_, currentTime_);
 }
 
-void Animation::ChangeState(AnimationState state)
+void Animation::ChangeState(AnimationState state,const std::wstring&animName)
 {
-	if (state_ == state && currentAttach_ != -1) return;
+	if (state_ == state && currentAttachAnim_ != -1) return;
 
 	prevState_ = state_;
 	state_ = state;
 
-	int animIndex = -1;
-
-	//状態ごとのアニメーションインデックスの取得
-	if (type_ == AnimType::Player)
-	{
-		switch (state_)
-		{
-		case AnimationState::Idle:
-			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerIdle);
-			break;
-		case AnimationState::Run:
-			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerRun);
-			break;
-		case AnimationState::Attack:
-			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerAttack);
-			break;
-		case AnimationState::Hit:
-			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerHit);
-			break;
-		case AnimationState::Death:
-			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerDeath);
-			break;
-		case AnimationState::Jump:
-			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerJump);
-			break;
-		}
-	}
-	//敵も同様
-	else if (type_ == AnimType::Enemy)
-	{
-		switch (state_)
-		{
-		case AnimationState::Idle:
-			animIndex = MV1GetAnimIndex(modelHandle_, kEnemyIdle);
-			break;
-		case AnimationState::Run:
-			animIndex = MV1GetAnimIndex(modelHandle_, kEnemyRun);
-			break;
-		case AnimationState::Attack:
-			animIndex = MV1GetAnimIndex(modelHandle_, kEnemyAttack);
-			break;
-		case AnimationState::PrevAttack:
-			animIndex = MV1GetAnimIndex(modelHandle_, kEnemyPrevAttack);
-			break;
-		case AnimationState::Death:
-			animIndex = MV1GetAnimIndex(modelHandle_, kEnemyDeath);
-			break;
-		case AnimationState::Spawn:
-			animIndex = MV1GetAnimIndex(modelHandle_, kEnemySpawn);
-			break;
-		}
-	}
+	//animNameで受け取ったアニメーション名で直接探す
+	int animIndex = MV1GetAnimIndex(modelHandle_, animName.c_str());
 
 	//アニメーションの再生
 	if (animIndex != -1)

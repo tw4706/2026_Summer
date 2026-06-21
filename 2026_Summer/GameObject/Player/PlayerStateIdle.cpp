@@ -9,6 +9,10 @@
 
 namespace
 {
+	//プレイヤーアニメーション
+	//Idle
+	const wchar_t* kPlayerIdle = L"Player| Idle";
+
     //入力のしきい値
     constexpr float kInputEpsilon = 0.01f;
 
@@ -32,7 +36,7 @@ void PlayerStateIdle::Enter()
     auto pPlayer = pPlayer_.lock();
     if (!pPlayer) return;
 
-    pPlayer->ChangeAnimation(AnimationState::Idle);
+    pPlayer->ChangeAnimation(AnimationState::Idle, kPlayerIdle);
 
     //速度を0にする
     pPlayer->SetVelocity({ 0.0f, 0.0f, 0.0f });

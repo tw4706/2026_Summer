@@ -6,6 +6,12 @@
 #include "Camera/PlayerCamera.h"
 #include "Matrix4x4.h"
 
+namespace
+{
+    //Jump
+    const wchar_t* kPlayerJump = L"Player|Jump";
+}
+
 PlayerStateJump::PlayerStateJump(std::weak_ptr<Player> pPlayer, Input& input, PlayerCamera& camera) :
     PlayerStateBase(pPlayer, input, camera)
 {
@@ -17,7 +23,7 @@ void PlayerStateJump::Enter()
     if (!pPlayer) return;
 
     // アニメーションをジャンプに切り替える
-    pPlayer->ChangeAnimation(AnimationState::Jump);
+    pPlayer->ChangeAnimation(AnimationState::Jump, kPlayerJump);
 
     if (pPlayer->GetIsGround())
     {
