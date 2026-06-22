@@ -139,6 +139,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="GameObject\Collider\Collidable.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyStateRun.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyStateIdle.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyBase.cpp" />
@@ -167,6 +169,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Collidable.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="GameObject\Enemy\EnemyStateRun.h" />
     <ClInclude Include="GameObject\Enemy\EnemyStateIdle.h" />
     <ClInclude Include="GameObject\Enemy\EnemyBase.h" />

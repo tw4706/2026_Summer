@@ -29,7 +29,7 @@ void EnemyStateIdle::Update()
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
 
-	if (PlayerSearchDistance(200.0f))
+	if (PlayerSearchDistance(300.0f))
 	{
 		//ŒŸ’m”ÍˆÍ‚É“ü‚Á‚½‚çRunó‘Ô‚Ö‘JˆÚ
 		auto nextState = std::make_shared<EnemyStateRun>(pEnemy_);
