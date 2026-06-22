@@ -46,6 +46,8 @@ void Oni::Init()
 
 void Oni::Update()
 {
+	Collidable::Update();
+
 	if (!pCurrentState_)
 	{
 		//EnemyBase へのダイナミックキャストをやめ、Character の shared_ptr として直接受け取る

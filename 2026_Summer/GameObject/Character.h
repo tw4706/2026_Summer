@@ -1,11 +1,11 @@
 #pragma once
-#include "GameObject.h"
+#include "Collider/Collidable.h"
 #include "Animation.h"
 #include "Model.h"
 #include <memory>
 
 class CharacterStateBase;
-class Character : public GameObject, public std::enable_shared_from_this<Character>
+class Character : public Collidable, public std::enable_shared_from_this<Character>
 {
 public:
 	Character(Vector3 pos, Vector3 vel, float dir);
@@ -14,6 +14,12 @@ public:
 	virtual void Init()abstract;
 	virtual void Update()abstract;
 	virtual void Draw()abstract;
+
+	/// <summary>
+	/// 衝突判定
+	/// </summary>
+	/// <param name="obj">衝突したゲームオブジェクト</param>
+	virtual void OnCollision(GameObject* obj)override abstract;
 
 	/// <summary>
 	/// 状態の切り替え

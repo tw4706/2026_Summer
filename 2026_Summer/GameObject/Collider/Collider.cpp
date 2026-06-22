@@ -8,4 +8,5 @@ Collider::Collider(ColliderType type):
 
 void Collider::SetOwner(Collidable* owner)
 {
+	pOwner_ = owner;
 }

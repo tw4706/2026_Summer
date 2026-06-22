@@ -15,6 +15,12 @@ public:
 	virtual void Draw()override {};
 
 	/// <summary>
+	/// 衝突判定
+	/// </summary>
+	/// <param name="obj">衝突したゲームオブジェクト</param>
+	void OnCollision(GameObject* obj)override {};
+
+	/// <summary>
 	/// プレイヤーの位置の取得
 	/// </summary>
 	/// <returns>PlayerのPos</returns>

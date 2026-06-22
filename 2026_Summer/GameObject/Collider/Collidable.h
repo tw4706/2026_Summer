@@ -8,6 +8,8 @@ public:
 	Collidable(Vector3 pos, Vector3 vel, float dir);
 	virtual~Collidable();
 
+	void Update();
+
 	/// <summary>
 	/// コライダーの登録
 	/// </summary>

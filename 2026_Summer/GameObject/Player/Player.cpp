@@ -63,6 +63,8 @@ void Player::Init()
 
 void Player::Update()
 {
+	Collidable::Update();
+
 	if (!pCurrentState_ && pCamera_ && pInput_)
 	{
 		auto sharedSelf = std::dynamic_pointer_cast<Player>(shared_from_this());
