@@ -15,11 +15,12 @@ namespace
 
 	//‰Šú‰ñ“]Šp“x
 	const Vector3 kFirstRotate = { 0.0f, -DX_PI_F, 0.0f };
+
+	const float kDebugSearchRadius = 200.0f;
 }
 
 Oni::Oni() :
-	EnemyBase(),
-	moveAngle_(0.0f)
+	EnemyBase()
 {
 }
 
@@ -85,4 +86,21 @@ void Oni::Draw()
 {
 	//ƒ‚ƒfƒ‹‚Ì•`‰æ
 	model_.Draw();
+
+#ifdef _DEBUG
+	VECTOR center = VGet(pos_.x_, pos_.y_, pos_.z_);
+
+	Vector3 playerPos = GetPlayerPos();
+	Vector3 toPlayer = playerPos - pos_;
+
+	float distSq = (toPlayer.x_ * toPlayer.x_) + (toPlayer.y_ * toPlayer.y_) + (toPlayer.z_ * toPlayer.z_);
+
+	unsigned int color = GetColor(0, 255, 0);
+	if (distSq <= kDebugSearchRadius * kDebugSearchRadius)
+	{
+		color = GetColor(255, 0, 0);
+	}
+
+	DrawSphere3D(center, kDebugSearchRadius, 8, color, GetColor(0, 0, 0), FALSE);
+#endif
 }

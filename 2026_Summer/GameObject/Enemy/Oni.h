@@ -10,8 +10,5 @@ public:
 	void Init()override;
 	void Update()override;
 	void Draw()override;
-
-private:
-	float moveAngle_;//Œü‚¢‚Ä‚¢‚éŠp“x
 };
 

@@ -29,7 +29,7 @@ public:
 	float GetMoveAngle() const { return moveAngle_; }
 	void SetMoveAngle(float angle) { moveAngle_ = angle; }
 
-private:
+protected:
 	//Œü‚¢‚Ä‚¢‚éŠp“x
 	float moveAngle_;
 
