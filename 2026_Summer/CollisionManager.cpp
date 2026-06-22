@@ -1,0 +1,227 @@
+#include "CollisionManager.h"
+#include "Collider/CapsuleCollider.h"
+#include "Collider/Collidable.h"
+#include <cmath>
+
+CollisionManager::CollisionManager()
+{
+}
+
+CollisionManager::~CollisionManager()
+{
+	//要素のクリア
+	pAllColliders_.clear();
+}
+
+void CollisionManager::RegisterCollider(Collider* pCollider)
+{
+	if (!pCollider) return;
+
+	//登録だけなので追加するだけ
+	pAllColliders_.push_back(pCollider);
+}
+
+void CollisionManager::UnRegisterCollider(Collider* pCollider)
+{
+	//配列から削除する
+	for (auto it = pAllColliders_.begin(); it != pAllColliders_.end(); ++it)
+	{
+		if (*it == pCollider)
+		{
+			pAllColliders_.erase(it);
+			break;
+		}
+	}
+}
+
+void CollisionManager::UpdateCheckCollision()
+{
+	//コライダーの更新を行う
+	for (auto pCollider : pAllColliders_)
+	{
+		if (pCollider) pCollider->Update();
+	}
+
+	for (size_t i = 0; i < pAllColliders_.size(); ++i)
+	{
+		for (size_t j = i + 1; j < pAllColliders_.size(); ++j)
+		{
+			Collider* pColA = pAllColliders_[i];
+			Collider* pColB = pAllColliders_[j];
+
+			// 同じオブジェクト（自分自身）のコライダー同士ならスキップ
+			if (pColA->GetOwner() == pColB->GetOwner()) continue;
+
+			//球と球
+			if (pColA->GetType() == ColliderType::Sphere && pColB->GetType() == ColliderType::Sphere)
+			{
+				CheckSphereVsSphere(pColA, pColB);
+			}
+			//球とカプセル
+			else if (pColA->GetType() == ColliderType::Sphere && pColB->GetType() == ColliderType::Capsule)
+			{
+				CheckSphereVsCapsule(pColA, pColB);
+			}
+			//カプセルと球
+			else if (pColA->GetType() == ColliderType::Capsule && pColB->GetType() == ColliderType::Sphere)
+			{
+				CheckSphereVsCapsule(pColB, pColA); // 引数を入れ替えて同じ関数を使い回す
+			}
+			//カプセルとカプセル
+			else if (pColA->GetType() == ColliderType::Capsule && pColB->GetType() == ColliderType::Capsule)
+			{
+				CheckCapsuleVsCapsule(pColA, pColB);
+			}
+		}
+	}
+}
+
+void CollisionManager::CheckSphereVsCapsule(Collider* pSphere, Collider* pCapsule)
+{
+	//扱いやすいようにそれぞれの型にキャスト
+	Vector3 sphereCenter = pSphere->GetOwner()->GetPos();
+	float sphereRadius = 0.5f;
+
+	CapsuleCollider* pCap = static_cast<CapsuleCollider*>(pCapsule);
+	Vector3 capA = pCap->GetWorldA();
+	Vector3 capB = pCap->GetWorldB();
+	float capRadius = pCap->GetRadius();
+
+	//ベクトルを計算
+	Vector3 ab = { capB.x_ - capA.x_, capB.y_ - capA.y_, capB.z_ - capA.z_ }; // カプセルの芯（軸）
+	Vector3 ap = { sphereCenter.x_ - capA.x_, sphereCenter.y_ - capA.y_, sphereCenter.z_ - capA.z_ };
+
+	//線分abに対するベクトルapの射影比率 t を求める
+	// t = (ap ・ ab) / |ab|^2
+	float dot = ap.x_ * ab.x_ + ap.y_ * ab.y_ + ap.z_ * ab.z_; // 内積 (ap ・ ab)
+	float abLenSq = ab.x_ * ab.x_ + ab.y_ * ab.y_ + ab.z_ * ab.z_; // カプセル軸の長さの2乗 |ab|^2
+
+	//カプセルの高さが0（ありえないが安全のため）ならt=0
+	float t = (abLenSq > 0.0f) ? (dot / abLenSq) : 0.0f;
+
+	//クランプ処理
+	if (t < 0.0f) t = 0.0f;
+	if (t > 1.0f) t = 1.0f;
+
+	//線分ab上で、球の中心に最も近い「最短点C」を割り出す
+	Vector3 closestPointC;
+	closestPointC.x_ = capA.x_ + t * ab.x_;
+	closestPointC.y_ = capA.y_ + t * ab.y_;
+	closestPointC.z_ = capA.z_ + t * ab.z_;
+
+	//最短点C」と「球の中心P」の距離の2乗を計算
+	float dx = sphereCenter.x_ - closestPointC.x_;
+	float dy = sphereCenter.y_ - closestPointC.y_;
+	float dz = sphereCenter.z_ - closestPointC.z_;
+	float distSq = dx * dx + dy * dy + dz * dz;
+
+	//衝突判定
+	float radSum = sphereRadius + capRadius;
+	if (distSq <= (radSum * radSum))
+	{
+		//衝突イベントを通知
+		Collidable* pObjA = pSphere->GetOwner();
+		Collidable* pObjB = pCapsule->GetOwner();
+
+		if (pObjA) pObjA->OnCollision(pObjB);
+		if (pObjB) pObjB->OnCollision(pObjA);
+	}
+}
+
+void CollisionManager::CheckSphereVsSphere(Collider* pSphereA, Collider* pSphereB)
+{
+	Vector3 posA = pSphereA->GetOwner()->GetPos();
+	Vector3 posB = pSphereB->GetOwner()->GetPos();
+	float radA = 0.5f;
+	float radB = 0.5f;
+
+	float dx = posA.x_ - posB.x_;
+	float dy = posA.y_ - posB.y_;
+	float dz = posA.z_ - posB.z_;
+	float distSq = dx * dx + dy * dy + dz * dz;
+
+	float radSum = radA + radB;
+	if (distSq <= (radSum * radSum))
+	{
+		Collidable* pObjA = pSphereA->GetOwner();
+		Collidable* pObjB = pSphereB->GetOwner();
+		if (pObjA) pObjA->OnCollision(pObjB);
+		if (pObjB) pObjB->OnCollision(pObjA);
+	}
+}
+
+void CollisionManager::CheckCapsuleVsCapsule(Collider* pCapsuleA, Collider* pCapsuleB)
+{
+	CapsuleCollider* pCapA = static_cast<CapsuleCollider*>(pCapsuleA);
+	CapsuleCollider* pCapB = static_cast<CapsuleCollider*>(pCapsuleB);
+
+	// カプセルAの線分
+	Vector3 a1 = pCapA->GetWorldA();
+	Vector3 a2 = pCapA->GetWorldB();
+	// カプセルBの線分
+	Vector3 b1 = pCapB->GetWorldA();
+	Vector3 b2 = pCapB->GetWorldB();
+
+	// 各種方向ベクトル
+	Vector3 d1 = { a2.x_ - a1.x_, a2.y_ - a1.y_, a2.z_ - a1.z_ }; // 線分Aのベクトル
+	Vector3 d2 = { b2.x_ - b1.x_, b2.y_ - b1.y_, b2.z_ - b1.z_ }; // 線分Bのベクトル
+	Vector3 r = { a1.x_ - b1.x_, a1.y_ - b1.y_, a1.z_ - b1.z_ }; // A1からB1へのベクトル
+
+	// 内積を利用した最短詰めの計算用パラメーター
+	float f11 = d1.x_ * d1.x_ + d1.y_ * d1.y_ + d1.z_ * d1.z_; // |d1|^2
+	float f22 = d2.x_ * d2.x_ + d2.y_ * d2.y_ + d2.z_ * d2.z_; // |d2|^2
+	float f12 = d1.x_ * d2.x_ + d1.y_ * d2.y_ + d1.z_ * d2.z_; // d1 ・ d2
+
+	float g1 = d1.x_ * r.x_ + d1.y_ * r.y_ + d1.z_ * r.z_; // d1 ・ r
+	float g2 = d2.x_ * r.x_ + d2.y_ * r.y_ + d2.z_ * r.z_; // d2 ・ r
+
+	// 線分A上の比率 s, 線分B上の比率 t
+	float s = 0.0f;
+	float t = 0.0f;
+
+	float denom = f11 * f22 - f12 * f12; // 行列式のような分母
+
+	// 2つの線分が平行でない場合
+	if (denom != 0.0f)
+	{
+		s = (f12 * g2 - f22 * g1) / denom;
+		if (s < 0.0f) s = 0.0f;
+		if (s > 1.0f) s = 1.0f;
+
+		t = (f12 * s + g2) / f22;
+	}
+	else
+	{
+		// 平行な場合は適当に端点を基準にする
+		s = 0.0f;
+		t = g2 / f22;
+	}
+
+	// クランプ処理（線分の内側に収める）
+	if (t < 0.0f) { t = 0.0f; s = -g1 / f11; }
+	else if (t > 1.0f) { t = 1.0f; s = (f12 - g1) / f11; }
+
+	if (s < 0.0f) s = 0.0f;
+	if (s > 1.0f) s = 1.0f;
+
+	// 線分A上の最短点 P
+	Vector3 pointP = { a1.x_ + s * d1.x_, a1.y_ + s * d1.y_, a1.z_ + s * d1.z_ };
+	// 線分B上の最短点 Q
+	Vector3 pointQ = { b1.x_ + t * d2.x_, b1.y_ + t * d2.y_, b1.z_ + t * d2.z_ };
+
+	// 点Pと点Qの距離の2乗
+	float dx = pointP.x_ - pointQ.x_;
+	float dy = pointP.y_ - pointQ.y_;
+	float dz = pointP.z_ - pointQ.z_;
+	float distSq = dx * dx + dy * dy + dz * dz;
+
+	// 半径の合計の2乗と比較
+	float radSum = pCapA->GetRadius() + pCapB->GetRadius();
+	if (distSq <= (radSum * radSum))
+	{
+		Collidable* pObjA = pCapsuleA->GetOwner();
+		Collidable* pObjB = pCapsuleB->GetOwner();
+		if (pObjA) pObjA->OnCollision(pObjB);
+		if (pObjB) pObjB->OnCollision(pObjA);
+	}
+}

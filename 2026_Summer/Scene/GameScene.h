@@ -2,10 +2,12 @@
 #include<memory>
 #include <vector>
 
+class Oni;
 class Player;
 class Input;
 class GameObject;
 class CameraManager;
+class CollisionManager;
 class GameScene
 {
 public:
@@ -26,15 +28,20 @@ private:
 	void DrawGrid();
 
 private:
-
 	//フレームカウンタ
 	int frameCount_;
 
 	//プレイヤー
 	std::shared_ptr<Player>pPlayer_;
 
-	//カメラ(シーンが所有しているためuniqueptrで持つ)
+	//鬼
+	std::shared_ptr<Oni> pOni_;
+
+	//カメラ(シーンが所有しているためunique_ptrで持つ)
 	std::unique_ptr<CameraManager>pCameraManager_;
+
+	//コリジョンマネージャー
+	std::unique_ptr<CollisionManager>pCollisionManager_;
 
 	//ゲームオブジェクトを管理する用のリスト
 	std::vector<std::shared_ptr<GameObject>>gameObjects_;

@@ -10,5 +10,7 @@ public:
 	void Init()override;
 	void Update()override;
 	void Draw()override;
+
+	void OnCollision(GameObject* obj)override;
 };
 

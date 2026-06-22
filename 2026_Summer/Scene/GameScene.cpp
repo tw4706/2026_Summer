@@ -3,18 +3,17 @@
 #include "Player/Player.h"
 #include "Camera/CameraManager.h"
 #include "Camera/PlayerCamera.h"
+#include "CollisionManager.h"
 #include"Enemy/Oni.h"
 #include "GameObject.h"
 #include"Input.h"
 #include <algorithm>
 
-namespace
-{
-}
-
 GameScene::GameScene() :
 	frameCount_(0)
 {
+	pCollisionManager_ = std::make_unique<CollisionManager>();
+
 	pPlayer_ = std::make_shared<Player>();
 	pCameraManager_ = std::make_unique<CameraManager>();
 
@@ -23,8 +22,8 @@ GameScene::GameScene() :
 	pCameraManager_->RegisterCamera("PlayerCamera", playerCamera);
 
 	//敵の登録
-	auto pOni = std::make_shared<Oni>();
-	RegisterGameObject(pOni);
+	pOni_ = std::make_shared<Oni>();
+	RegisterGameObject(pOni_);
 
 	//ゲームオブジェクトの登録
 	//プレイヤーの登録
@@ -33,7 +32,10 @@ GameScene::GameScene() :
 
 GameScene::~GameScene()
 {
-
+	gameObjects_.clear();
+	reserveObjList_.clear();
+	pPlayer_ = nullptr;
+	pOni_ = nullptr;
 }
 
 void GameScene::Init(Input&input)
@@ -66,11 +68,23 @@ void GameScene::Init(Input&input)
 			player->SetInput(&input);
 			player->SetCamera(playerCam.get());
 			player->Init();
+
+			//コライダーの登録
+			for (const auto& pCollider : player->GetColliders())
+			{
+				pCollisionManager_->RegisterCollider(pCollider.get());
+			}
 		}
 		else if (auto oni = std::dynamic_pointer_cast<Oni>(obj))
 		{
 			oni->SetPlayer(pPlayer_);
 			oni->Init(); //鬼の初期化
+
+			//コライダーの登録
+			for (const auto& pCollider : oni->GetColliders())
+			{
+				pCollisionManager_->RegisterCollider(pCollider.get());
+			}
 		}
 	}
 
@@ -108,6 +122,28 @@ void GameScene::Update(Input& input)
 		if (!obj->IsDead())
 		{
 			obj->Update();
+		}
+	}
+
+	//当たり判定の更新
+	if (pCollisionManager_)
+	{
+		pCollisionManager_->UpdateCheckCollision();
+	}
+
+	//死んだオブジェクトのコライダーは、配列から消える前にコリジョンマネージャーから外す
+	for (auto& obj : gameObjects_)
+	{
+		if (obj->IsDead())
+		{
+			//Collidable型にキャストできればコライダーを外す
+			if (auto collidableObj = std::dynamic_pointer_cast<Collidable>(obj))
+			{
+				for (const auto& pCollider : collidableObj->GetColliders())
+				{
+					pCollisionManager_->UnRegisterCollider(pCollider.get());
+				}
+			}
 		}
 	}
 

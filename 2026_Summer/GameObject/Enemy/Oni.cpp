@@ -2,6 +2,7 @@
 #include "Matrix4x4.h"
 #include"CharacterStateBase.h"
 #include"EnemyStateidle.h"
+#include "Collider/CapsuleCollider.h"
 #include<Dxlib.h>
 #include<cassert>
 
@@ -42,10 +43,18 @@ void Oni::Init()
 
 	//アニメーションの初期化
 	animation_.Init(model_.GetHandle());
+
+	//コライダーの登録
+	Vector3 colOffset = { 0.0f, 95.0f, 0.0f };
+	auto pCapsule = std::make_unique<CapsuleCollider>(55.0f, 180.0f, colOffset);
+
+	this->AddCollider(std::move(pCapsule));
 }
 
 void Oni::Update()
 {
+	isHit_ = false;
+
 	Collidable::Update();
 
 	if (!pCurrentState_)
@@ -105,5 +114,28 @@ void Oni::Draw()
 	}
 
 	DrawSphere3D(center, kDebugSearchRadius, 8, color, GetColor(0, 0, 0), FALSE);
+
+	//当たり判定の描画
+	if (!colliders_.empty())
+	{
+		CapsuleCollider* pCap = static_cast<CapsuleCollider*>(colliders_[0].get());
+
+		if (pCap)
+		{
+			VECTOR top = VGet(pCap->GetWorldB().x_, pCap->GetWorldB().y_, pCap->GetWorldB().z_);
+			VECTOR bottom = VGet(pCap->GetWorldA().x_, pCap->GetWorldA().y_, pCap->GetWorldA().z_);
+
+			//当たっていたら赤（255,0,0）、通常時は水色
+			unsigned int lineColor = isHit_ ? GetColor(255, 0, 0) : GetColor(0, 255, 255);
+
+			//描画
+			DrawCapsule3D(top, bottom, pCap->GetRadius(), 8, lineColor, GetColor(0, 0, 0), FALSE);
+		}
+	}
 #endif
+}
+
+void Oni::OnCollision(GameObject* obj)
+{
+	isHit_ = true;
 }

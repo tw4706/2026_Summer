@@ -8,20 +8,12 @@ Collidable::Collidable(Vector3 pos, Vector3 vel, float dir):
 
 Collidable::~Collidable()
 {
-	//コライダーの削除
-	for (auto pCollider : colliders_)
-	{
-		delete pCollider;
-	}
-
-	//コライダーのクリア
-	colliders_.clear();
 }
 
 void Collidable::Update()
 {
 	//各コライダーの更新
-	for (auto pCollider : colliders_)
+	for (auto& pCollider : colliders_)
 	{
 		if (pCollider)
 		{
@@ -30,15 +22,15 @@ void Collidable::Update()
 	}
 }
 
-void Collidable::AddCollider(Collider* pCollider)
+void Collidable::AddCollider(std::unique_ptr<Collider> pCollider)
 {
 	if (!pCollider)return;
 
 	pCollider->SetOwner(this);
-	colliders_.push_back(pCollider);
+	colliders_.push_back(std::move(pCollider));
 }
 
-const std::vector<Collider*>& Collidable::GetColliders() const
+const std::vector<std::unique_ptr<Collider>>& Collidable::GetColliders() const
 {
 	return colliders_;
 }

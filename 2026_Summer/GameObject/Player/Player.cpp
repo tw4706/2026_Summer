@@ -5,6 +5,7 @@
 #include "PlayerStateBase.h"
 #include "PlayerStateIdle.h"
 #include "Enemy/EnemyBase.h"
+#include "Collider/CapsuleCollider.h"
 #include<Dxlib.h>
 #include<memory>
 
@@ -39,7 +40,6 @@ Player::Player() :
 
 Player::~Player()
 {
-	Character::~Character();
 }
 
 void Player::Init()
@@ -59,10 +59,18 @@ void Player::Init()
 
 	//アニメーションの初期化
 	animation_.Init(model_.GetHandle());
+
+	//コライダーの登録
+	Vector3 colOffset = { 0.0f, 80.0f, 0.0f };
+	auto pCapsule = std::make_unique<CapsuleCollider>(40.0f, 160.0f, colOffset);
+	//所有権をCollidableに渡す
+	this->AddCollider(std::move(pCapsule));
 }
 
 void Player::Update()
 {
+	isHit_ = false;
+
 	Collidable::Update();
 
 	if (!pCurrentState_ && pCamera_ && pInput_)
@@ -143,6 +151,30 @@ void Player::Draw()
 		katanaModel_.SetMatrix(swordMat);
 		katanaModel_.Draw();
 	}
+
+#ifdef _DEBUG
+	if (!colliders_.empty())
+	{
+		CapsuleCollider* pCap = static_cast<CapsuleCollider*>(colliders_[0].get());
+
+		if (pCap)
+		{
+			VECTOR top = VGet(pCap->GetWorldB().x_, pCap->GetWorldB().y_, pCap->GetWorldB().z_);
+			VECTOR bottom = VGet(pCap->GetWorldA().x_, pCap->GetWorldA().y_, pCap->GetWorldA().z_);
+
+			//当たっていたら赤（255,0,0）、通常時は水色
+			unsigned int lineColor = isHit_ ? GetColor(255, 0, 0) : GetColor(0, 255, 255);
+
+			//描画
+			DrawCapsule3D(top, bottom, pCap->GetRadius(), 8, lineColor, GetColor(0, 0, 0), FALSE);
+		}
+	}
+#endif
+}
+
+void Player::OnCollision(GameObject* obj)
+{
+	isHit_ = true;
 }
 
 Vector3 Player::GetCameraTarget() const

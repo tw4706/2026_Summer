@@ -1,6 +1,8 @@
 #pragma once
 #include "GameObject.h"
 #include<vector>
+#include <memory>
+
 class Collider;
 class Collidable :public GameObject
 {
@@ -14,7 +16,7 @@ public:
 	/// コライダーの登録
 	/// </summary>
 	/// <param name="pCollider">コライダーのポインタ</param>
-	void AddCollider(Collider* pCollider);
+	void AddCollider(std::unique_ptr<Collider> pCollider);
 
 	/// <summary>
 	/// 衝突判定
@@ -26,10 +28,10 @@ public:
 	/// コライダーの取得
 	/// </summary>
 	/// <returns></returns>
-	const std::vector<Collider*>& GetColliders()const;
+	const std::vector<std::unique_ptr<Collider>>& GetColliders()const;
 
 protected:
 	//コライダーの配列
-	std::vector<Collider*>colliders_;
+	std::vector<std::unique_ptr<Collider>>colliders_;
 };
 

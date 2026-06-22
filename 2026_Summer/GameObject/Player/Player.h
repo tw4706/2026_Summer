@@ -20,7 +20,7 @@ public:
 	/// 衝突判定
 	/// </summary>
 	/// <param name="obj">衝突したゲームオブジェクト</param>
-	void OnCollision(GameObject* obj)override {};
+	void OnCollision(GameObject* obj)override;
 
 	/// ==============================
 	/// ゲッター・セッター

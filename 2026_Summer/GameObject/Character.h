@@ -47,6 +47,7 @@ protected:
 	int hp_;
 	bool isGround_ = true;					//地面についているかどうか
 	float gravity_ = 0.0f;					//重力の強さ
+	bool isHit_=false;						//当たっているかどうか
 
 	Model model_;                           //モデル
 	Animation animation_;                   //アニメーション
