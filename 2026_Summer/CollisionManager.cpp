@@ -1,6 +1,7 @@
 #include "CollisionManager.h"
 #include "Collider/CapsuleCollider.h"
 #include "Collider/Collidable.h"
+#include"Player/Player.h"
 #include <cmath>
 
 CollisionManager::CollisionManager()
@@ -223,5 +224,45 @@ void CollisionManager::CheckCapsuleVsCapsule(Collider* pCapsuleA, Collider* pCap
 		Collidable* pObjB = pCapsuleB->GetOwner();
 		if (pObjA) pObjA->OnCollision(pObjB);
 		if (pObjB) pObjB->OnCollision(pObjA);
+
+		// 最短点同士の実際の距離を計算（平方根）
+		float dist = std::sqrt(distSq);
+
+		// 完全に中心が一致してしまっている場合の安全対策（0除算の防止）
+		if (dist > 0.0f)
+		{
+			// めり込んでいる深さ（長さ）を計算
+			float overlap = radSum - dist;
+
+			// ★ Aから見たBへの方向、Bから見たAへの方向をそれぞれ定義しておく
+			Vector3 dirBtoA = {
+				(pointP.x_ - pointQ.x_) / dist,
+				(pointP.y_ - pointQ.y_) / dist,
+				(pointP.z_ - pointQ.z_) / dist
+			};
+			Vector3 dirAtoB = { -dirBtoA.x_, -dirBtoA.y_, -dirBtoA.z_ };
+
+			// ==========================================================
+			// ★ 動かすのは「プレイヤー」だけに限定する
+			// ==========================================================
+
+			// パターン①: pObjA が プレイヤー だった場合
+			// (※ dynamic_cast や、お持ちの tag_ == "Player" などで判定してください)
+			if (dynamic_cast<Player*>(pObjA))
+			{
+				Vector3 posA = pObjA->GetPos();
+				posA.x_ += dirBtoA.x_ * overlap;
+				posA.z_ += dirBtoA.z_ * overlap;
+				pObjA->SetPos(posA);
+			}
+			// パターン②: pObjB が プレイヤー だった場合（ペアが逆のとき）
+			else if (dynamic_cast<Player*>(pObjB))
+			{
+				Vector3 posB = pObjB->GetPos();
+				posB.x_ += dirAtoB.x_ * overlap;
+				posB.z_ += dirAtoB.z_ * overlap;
+				pObjB->SetPos(posB);
+			}
+		}
 	}
 }
