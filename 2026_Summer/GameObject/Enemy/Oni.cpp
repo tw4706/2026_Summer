@@ -15,9 +15,6 @@ namespace
 
 	//初期回転角度
 	const Vector3 kFirstRotate = { 0.0f, -DX_PI_F, 0.0f };
-
-	//索敵半径
-	const float kDebugSearchRadius = 200.0f; 
 }
 
 Oni::Oni() :
@@ -38,7 +35,7 @@ void Oni::Init()
 	moveAngle_ = kFirstRotate.y_;
 
 	//モデルのロード
-	model_.Load(L"data/oni.mv1");
+	model_.Load(L"data/Oni.mv1");
 	assert(model_.GetHandle() >= 0);
 
 	//アニメーションの初期化
@@ -49,11 +46,17 @@ void Oni::Update()
 {
 	if (!pCurrentState_)
 	{
-		auto sharedEnemy = std::dynamic_pointer_cast<EnemyBase>(shared_from_this());
+		//EnemyBase へのダイナミックキャストをやめ、Character の shared_ptr として直接受け取る
+		std::shared_ptr<Character> sharedSelf = shared_from_this();
+
+		// 弱参照にする
+		std::weak_ptr<Character> weakSelf = sharedSelf;
+
+		//EnemyStateIdle 側が Character の weak_ptr も受け取れるように、
+		auto sharedEnemy = std::dynamic_pointer_cast<Oni>(sharedSelf);
 		std::weak_ptr<EnemyBase> weakEnemy = sharedEnemy;
 
-		pCurrentState_ = std::shared_ptr<EnemyStateIdle>(new EnemyStateIdle(weakEnemy));
-		pCurrentState_->Enter();
+		ChangeState(std::make_shared<EnemyStateIdle>(weakEnemy));
 	}
 
 	if (pCurrentState_)
@@ -82,27 +85,4 @@ void Oni::Draw()
 {
 	//モデルの描画
 	model_.Draw();
-
-#ifdef _DEBUG
-	VECTOR center = VGet(pos_.x_, pos_.y_, pos_.z_);
-
-	//プレイヤーの位置を取得
-	Vector3 playerPos = GetPlayerPos();
-
-	//敵からプレイヤーへのベクトルを計算
-	Vector3 toPlayer = playerPos - pos_;
-
-	//距離の二乗を計算
-	float distSq = (toPlayer.x_ * toPlayer.x_) + (toPlayer.y_ * toPlayer.y_) + (toPlayer.z_ * toPlayer.z_);
-
-	//範囲内なら赤色、範囲外なら緑色
-	unsigned int color = GetColor(0, 255, 0);
-	if (distSq <= kDebugSearchRadius * kDebugSearchRadius)
-	{
-		color = GetColor(255, 0, 0);
-	}
-
-	DrawSphere3D(center, kDebugSearchRadius, 8, color, GetColor(0, 0, 0), FALSE);
-#endif
-
 }

@@ -4,7 +4,8 @@
 #include "Camera/CameraBase.h"
 
 EnemyStateBase::EnemyStateBase(std::weak_ptr<EnemyBase> pEnemy):
-	CharacterStateBase(pEnemy)
+	CharacterStateBase(pEnemy),
+	pEnemy_(pEnemy)
 {
 }
 

@@ -4,7 +4,7 @@
 namespace
 {
     //敵の走りアニメーション
-    const wchar_t* kEnemyRun = L"Oni|Walk";
+    const wchar_t* kEnemyRun = L"Oni|Run";
 
     //線形補間の割合
     const float kLerpRate = 0.05f;

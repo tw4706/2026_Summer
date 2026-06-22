@@ -26,7 +26,13 @@ public:
 	/// <param name="pPlayer">プレイヤーのポインタ</param>
 	void SetPlayer(std::weak_ptr<Player>pPlayer);
 
+	float GetMoveAngle() const { return moveAngle_; }
+	void SetMoveAngle(float angle) { moveAngle_ = angle; }
+
 private:
+	//向いている角度
+	float moveAngle_;
+
 	//プレイヤーの弱参照
 	std::weak_ptr<Player>pPlayer_;
 };

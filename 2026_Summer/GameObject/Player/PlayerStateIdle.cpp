@@ -47,9 +47,6 @@ void PlayerStateIdle::Update()
     auto pPlayer = pPlayer_.lock();
     if (!pPlayer) return;
 
-	DrawFormatString(0, 0, GetColor(255, 255, 255), L"IsGround: %d", pPlayer->GetIsGround());
-	DrawFormatString(0, 20, GetColor(255, 255, 255), L"HasMoveInput: %d", input_.HasMoveInput());
-
 	// ƒJƒƒ‰‚Ì‰ñ“]
 	Vector3 stickR = input_.GetStickRight();
 	camera_.AddRotation(-stickR.x_ * kCameraSpeed, -stickR.z_ * kCameraSpeed);

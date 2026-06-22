@@ -29,18 +29,6 @@ void EnemyStateIdle::Update()
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
 
-#ifdef _DEBUG
-	DrawFormatString(0, 220, GetColor(255, 255, 255), L"EnemyState: Idle");
-	Vector3 ePos = enemy->GetPos();
-	Vector3 pPos = enemy->GetPlayerPos();
-	float dist = sqrtf((pPos.x_ - ePos.x_) * (pPos.x_ - ePos.x_) +
-		(pPos.y_ - ePos.y_) * (pPos.y_ - ePos.y_) +
-		(pPos.z_ - ePos.z_) * (pPos.z_ - ePos.z_));
-	DrawFormatString(0, 240, GetColor(255, 255, 255), L"EnemyPos: %.2f,%.2f,%.2f", ePos.x_, ePos.y_, ePos.z_);
-	DrawFormatString(0, 260, GetColor(255, 255, 255), L"PlayerPos: %.2f,%.2f,%.2f", pPos.x_, pPos.y_, pPos.z_);
-	DrawFormatString(0, 280, GetColor(255, 255, 255), L"Distance: %.2f", dist);
-#endif
-
 	if (PlayerSearchDistance(200.0f))
 	{
 		//åüímîÕàÕÇ…ì¸Ç¡ÇΩÇÁRunèÛë‘Ç÷ëJà⁄

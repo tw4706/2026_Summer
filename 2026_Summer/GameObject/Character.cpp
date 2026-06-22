@@ -18,10 +18,10 @@ void Character::ChangeState(std::shared_ptr<CharacterStateBase> pNextState)
 {
 	if (!pNextState) return;
 
-	if (pCurrentState_)
-	{
-		pCurrentState_->Exit();
-	}
+	//if (pCurrentState_)
+	//{
+	//	pCurrentState_->Exit();
+	//}
 
 	pCurrentState_ = pNextState;
 	pCurrentState_->Enter();
