@@ -46,6 +46,10 @@ public:
     /// <returns>アニメーションが終了したかどうか</returns>
     bool IsEnd()const { return isAnimEnd_; }
 
+    /// <summary>
+    /// アニメーションのリセット
+    /// </summary>
+    void ResetAnimation();
 
 private:
 	int modelHandle_;           //モデルハンドル

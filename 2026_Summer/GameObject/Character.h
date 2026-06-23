@@ -38,6 +38,17 @@ public:
 	/// <returns>アニメーションが終了している場合はtrueを、そうでない場合はfalseを返す。</returns>
 	bool IsAnimationEnd() const { return animation_.IsEnd(); }
 
+	/// <summary>
+	/// 当たっているかどうかあ
+	/// </summary>
+	/// <returns>オブジェクトと当たっているかどうかを返す</returns>
+	bool IsHit()const { return isHit_; }
+
+	/// <summary>
+	/// 当たり判定の衝突更新を行うためのヒットフラグのリセット
+	/// </summary>
+	void ResetHitFlag() { isHit_ = false; }
+
 	bool GetIsGround() const { return isGround_; }
 	void SetIsGround(bool isGround) { isGround_ = isGround; }
 

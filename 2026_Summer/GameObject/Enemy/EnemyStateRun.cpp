@@ -1,5 +1,6 @@
 #include "EnemyStateRun.h"
 #include "EnemyStateIdle.h"
+#include "EnemyStateAttack.h"
 #include "EnemyBase.h"
 #include<cmath>
 
@@ -37,10 +38,21 @@ void EnemyStateRun::Update()
 	auto enemy = pEnemy_.lock();
 	if (!enemy) return;
 
-	if (PlayerSearchDistance(300.0f) == false)
+	//索敵の範囲に入ってなかったら
+	if (PlayerSearchDistance(200.0f) == false)
 	{
 		//検知範囲に入ったらRun状態へ遷移
 		auto nextState = std::make_shared<EnemyStateIdle>(pEnemy_);
+		enemy->ChangeState(nextState);
+		return;
+	}
+
+	//敵と当たってたら(今後は攻撃に変える可能性あり)
+	if (enemy->IsHit())
+	{
+		//ヒットフラグをリセット
+		enemy->ResetHitFlag();
+		auto nextState = std::make_shared<EnemyStateAttack>(pEnemy_);
 		enemy->ChangeState(nextState);
 		return;
 	}
@@ -60,12 +72,16 @@ void EnemyStateRun::Update()
 	//正規化
 	toPlayer.Normalize();
 
-	//移動速度
-	Vector3 moveVec = { toPlayer.x_ * kMoveSpeed * kDeltaTime, 0.0f, toPlayer.z_ * kMoveSpeed * kDeltaTime };
-
-	//計算した位置を適応
-	Vector3 nextPos = enemyPos + moveVec;
-	enemy->SetPos(nextPos);
+	//もしプレイヤーとぶつかっていない場合
+	if (!enemy->IsHit())
+	{
+		//移動速度を設定
+		Vector3 moveVec = { toPlayer.x_ * kMoveSpeed * kDeltaTime, 0.0f, toPlayer.z_ * kMoveSpeed * kDeltaTime };
+		//計算した位置を適応
+		Vector3 nextPos = enemyPos + moveVec;
+		//位置のセット
+		enemy->SetPos(nextPos);
+	}
 
 	//進行方向の角度
 	float targetAngle = std::atan2f(toPlayer.x_, -toPlayer.z_);
@@ -74,7 +90,17 @@ void EnemyStateRun::Update()
 	float currentAngle = enemy->GetMoveAngle();
 
 	//次の目標の角度
-	float nextAngle = currentAngle + (targetAngle - currentAngle) * kRotateLerpRate;
+	float nextAngle = currentAngle;
+
+	if (distance < 5.0f)
+	{
+		nextAngle = targetAngle; //完全にプレイヤーの方向を向く
+	}
+	else
+	{
+		//遠くにいるときは、滑らかに回転する
+		nextAngle = currentAngle + (targetAngle - currentAngle) * kRotateLerpRate;
+	}
 
 	//計算した角度を適用
 	enemy->SetMoveAngle(nextAngle);

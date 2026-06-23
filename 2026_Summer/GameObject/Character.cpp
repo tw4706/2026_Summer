@@ -34,4 +34,8 @@ void Character::ChangeAnimation(AnimationState state,const std::wstring&animName
 	{
 		animation_.ChangeState(state,animName.c_str());
 	}
+	else if(state==AnimationState::Attack)
+	{
+		animation_.ResetAnimation();
+	}
 }

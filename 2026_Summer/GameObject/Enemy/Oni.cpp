@@ -18,7 +18,7 @@ namespace
 	const Vector3 kFirstRotate = { 0.0f, -DX_PI_F, 0.0f };
 
 	//索敵範囲の半径
-	const float kDebugSearchRadius = 300.0f;
+	const float kDebugSearchRadius = 200.0f;
 }
 
 Oni::Oni() :
@@ -36,6 +36,7 @@ void Oni::Init()
 	pos_ = kFirstPos;
 	vel_ = { 0.0f, 0.0f, 0.0f };
 	moveAngle_ = kFirstRotate.y_;
+	isHit_ = false;
 
 	//モデルのロード
 	model_.Load(L"data/Oni.mv1");
@@ -53,8 +54,6 @@ void Oni::Init()
 
 void Oni::Update()
 {
-	isHit_ = false;
-
 	Collidable::Update();
 
 	if (!pCurrentState_)
@@ -125,7 +124,7 @@ void Oni::Draw()
 			VECTOR top = VGet(pCap->GetWorldB().x_, pCap->GetWorldB().y_, pCap->GetWorldB().z_);
 			VECTOR bottom = VGet(pCap->GetWorldA().x_, pCap->GetWorldA().y_, pCap->GetWorldA().z_);
 
-			//当たっていたら赤（255,0,0）、通常時は水色
+			//当たっていたら赤、通常は水色
 			unsigned int lineColor = isHit_ ? GetColor(255, 0, 0) : GetColor(0, 255, 255);
 
 			//描画

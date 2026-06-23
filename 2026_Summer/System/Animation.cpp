@@ -215,8 +215,7 @@ void Animation::ChangeState(AnimationState state,const std::wstring&animName)
 
 		float speed = kAnimationSpeed;
 
-		if (state_ == AnimationState::Attack ||
-			state_ == AnimationState::Death ||
+		if (state_ == AnimationState::Death ||
 			state_ == AnimationState::Spawn)
 		{
 			loop = false;
@@ -229,4 +228,10 @@ void Animation::ChangeState(AnimationState state,const std::wstring&animName)
 
 		Play(animIndex, speed, loop);
 	}
+}
+
+void Animation::ResetAnimation()
+{
+	currentTime_ = 0.0f;
+	isAnimEnd_ = false;
 }
