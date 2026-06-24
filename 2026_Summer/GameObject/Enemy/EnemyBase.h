@@ -20,6 +20,8 @@ public:
 	/// <param name="obj">衝突したゲームオブジェクト</param>
 	void OnCollision(GameObject* obj)override {};
 
+	void OnDamage(int damage);
+
 	/// <summary>
 	/// プレイヤーの位置の取得
 	/// </summary>

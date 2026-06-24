@@ -36,6 +36,7 @@ void Oni::Init()
 	pos_ = kFirstPos;
 	vel_ = { 0.0f, 0.0f, 0.0f };
 	moveAngle_ = kFirstRotate.y_;
+	hp_ = 50;
 	isHit_ = false;
 
 	//ƒ‚ƒfƒ‹‚Ìƒ[ƒh
@@ -55,6 +56,8 @@ void Oni::Init()
 void Oni::Update()
 {
 	Collidable::Update();
+
+	isHit_ = false;
 
 	if (!pCurrentState_)
 	{

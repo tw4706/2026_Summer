@@ -3,6 +3,7 @@
 #include "Collider/Collidable.h"
 #include"Player/Player.h"
 #include "Character.h"
+#include "Katana.h"
 #include <cmath>
 
 CollisionManager::CollisionManager()
@@ -64,6 +65,16 @@ void CollisionManager::UpdateCheckCollision()
 
 			// 同じオブジェクトのコライダー同士ならスキップ
 			if (pColA->GetOwner() == pColB->GetOwner()) continue;
+
+			//刀と、その刀の持ち主との衝突はスキップ
+			if (Katana* pKatanaA = dynamic_cast<Katana*>(pColA->GetOwner()))
+			{
+				if (pKatanaA->GetOwnerCharacter() == pColB->GetOwner()) continue;
+			}
+			if (Katana* pKatanaB = dynamic_cast<Katana*>(pColB->GetOwner()))
+			{
+				if (pKatanaB->GetOwnerCharacter() == pColA->GetOwner()) continue;
+			}
 
 			//球と球
 			if (pColA->GetType() == ColliderType::Sphere && pColB->GetType() == ColliderType::Sphere)
@@ -237,6 +248,14 @@ void CollisionManager::CheckCapsuleVsCapsule(Collider* pCapsuleA, Collider* pCap
 		Collidable* pObjB = pCapsuleB->GetOwner();
 		if (pObjA) pObjA->OnCollision(pObjB);
 		if (pObjB) pObjB->OnCollision(pObjA);
+
+		//刀と敵の場合の当たり判定の押し戻しはスキップする
+		bool isKatanaInvolved = (dynamic_cast<Katana*>(pObjA) != nullptr) ||
+								(dynamic_cast<Katana*>(pObjB) != nullptr);
+		if (isKatanaInvolved)
+		{
+			return;
+		}
 
 		//平方根を求める
 		float dist = std::sqrt(distSq);

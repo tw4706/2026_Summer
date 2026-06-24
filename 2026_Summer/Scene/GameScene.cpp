@@ -1,5 +1,4 @@
 #include "GameScene.h"
-#include "DxLib.h"
 #include "Player/Player.h"
 #include "Camera/CameraManager.h"
 #include "Camera/PlayerCamera.h"
@@ -7,6 +6,8 @@
 #include"Enemy/Oni.h"
 #include "GameObject.h"
 #include"Input.h"
+#include"Katana.h"
+#include <DxLib.h>
 #include <algorithm>
 
 GameScene::GameScene() :
@@ -73,6 +74,15 @@ void GameScene::Init(Input&input)
 			for (const auto& pCollider : player->GetColliders())
 			{
 				pCollisionManager_->RegisterCollider(pCollider.get());
+			}
+
+			//“‚Ì“o˜^
+			if (auto pKatana = player->GetKatana())
+			{
+				for (const auto& pCollider : pKatana->GetColliders())
+				{
+					pCollisionManager_->RegisterCollider(pCollider.get());
+				}
 			}
 		}
 		else if (auto oni = std::dynamic_pointer_cast<Oni>(obj))

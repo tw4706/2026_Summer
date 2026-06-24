@@ -17,6 +17,7 @@ CapsuleCollider::~CapsuleCollider()
 
 void CapsuleCollider::Update()
 {
+	if (useWorldPos_) return;
 	if (!pOwner_) return;
 
 	//親オブジェクトのワールド座標を取得
@@ -46,4 +47,9 @@ void CapsuleCollider::SetWorldPos(const Vector3& worldA, const Vector3& worldB)
 {
 	worldA_ = worldA;
 	worldB_ = worldB;
+}
+
+bool CapsuleCollider::SetUseWorldPos(bool useWPos)
+{
+	return useWorldPos_ = useWPos;
 }

@@ -3,12 +3,24 @@
 
 
 EnemyBase::EnemyBase() :
-	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f)
+	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f),
+	moveAngle_(0.0f)
 {
 }
 
 EnemyBase::~EnemyBase()
 {
+}
+
+void EnemyBase::OnDamage(int damage)
+{
+	hp_ -= damage;
+
+	if (hp_ <= 0)
+	{
+		hp_ = 0;
+		Destory();
+	}
 }
 
 Vector3 EnemyBase::GetPlayerPos() const

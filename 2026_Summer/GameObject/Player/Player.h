@@ -53,6 +53,12 @@ public:
 	/// </summary>
 	void SetKatanaColliderEnabled(bool isEnabled);
 
+	/// <summary>
+	/// 刀のポインタを取得
+	/// </summary>
+	/// <returns>刀のポインタ</returns>
+	Katana* GetKatana() const { return pKatana_.get(); }
+
 private:
 	float moveAngle_;						//プレイヤーの向く角度
 	int handFrameIndex_;					//右手の刀を持つ手のフレームインデックス
