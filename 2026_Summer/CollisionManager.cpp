@@ -4,7 +4,9 @@
 #include"Player/Player.h"
 #include "Character.h"
 #include "Katana.h"
+#include "Stage.h"
 #include <cmath>
+#include <Dxlib.h>
 
 CollisionManager::CollisionManager()
 {
@@ -37,7 +39,7 @@ void CollisionManager::UnRegisterCollider(Collider* pCollider)
 	}
 }
 
-void CollisionManager::UpdateCheckCollision()
+void CollisionManager::UpdateCheckCollision(Stage* pStage)
 {
 	//コライダーの更新を行う
 	for (auto pCollider : pAllColliders_)
@@ -53,8 +55,6 @@ void CollisionManager::UpdateCheckCollision()
 			}
 		}
 	}
-
-
 
 	for (size_t i = 0; i < pAllColliders_.size(); ++i)
 	{
@@ -251,7 +251,7 @@ void CollisionManager::CheckCapsuleVsCapsule(Collider* pCapsuleA, Collider* pCap
 
 		//刀と敵の場合の当たり判定の押し戻しはスキップする
 		bool isKatanaInvolved = (dynamic_cast<Katana*>(pObjA) != nullptr) ||
-								(dynamic_cast<Katana*>(pObjB) != nullptr);
+			(dynamic_cast<Katana*>(pObjB) != nullptr);
 		if (isKatanaInvolved)
 		{
 			return;

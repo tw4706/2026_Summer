@@ -4,6 +4,7 @@ enum class ColliderType
 {
 	Sphere,
 	Capsule,
+	Polygon
 };
 
 class Collidable;

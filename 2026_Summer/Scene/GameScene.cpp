@@ -150,7 +150,7 @@ void GameScene::Update(Input& input)
 	//当たり判定の更新
 	if (pCollisionManager_)
 	{
-		pCollisionManager_->UpdateCheckCollision();
+		pCollisionManager_->UpdateCheckCollision(pStage_.get());
 	}
 
 	//死んだオブジェクトのコライダーは、配列から消える前にコリジョンマネージャーから外す

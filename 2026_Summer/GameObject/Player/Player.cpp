@@ -36,7 +36,6 @@ Player::~Player()
 
 void Player::Init()
 {
-
 	//ポジションと速度の初期化
 	pos_ = kFirstPos;
 
@@ -52,7 +51,7 @@ void Player::Init()
 	animation_.Init(model_.GetHandle());
 
 	//コライダーの登録
-	Vector3 colOffset = { 0.0f, 80.0f, 0.0f };
+	Vector3 colOffset = { 0.0f, 120.0f, 0.0f };
 	auto pCapsule = std::make_unique<CapsuleCollider>(40.0f, 160.0f, colOffset);
 	//所有権をCollidableに渡す
 	this->AddCollider(std::move(pCapsule));
@@ -117,6 +116,12 @@ void Player::Update()
 
 void Player::Draw()
 {
+	Matrix4x4 scaleMat = Matrix4x4::Scale(kFirstScale.x_, kFirstScale.y_, kFirstScale.z_);
+	Matrix4x4 rotMat = Matrix4x4::RotateY(moveAngle_);
+	Matrix4x4 transMat = Matrix4x4::Translate(pos_.x_, pos_.y_, pos_.z_);
+	Matrix4x4 worldMat = scaleMat * rotMat * transMat;
+	model_.SetMatrix(worldMat);
+
 	model_.Draw();
 
 	//刀の描画

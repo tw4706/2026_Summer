@@ -1,7 +1,9 @@
 #pragma once
 #include<vector>
 
+class Stage;
 class Collider;
+class Character;
 class CollisionManager
 {
 public:
@@ -23,7 +25,8 @@ public:
 	/// <summary>
 	/// 衝突判定の更新
 	/// </summary>
-	void UpdateCheckCollision();
+	/// <param name="pStage">ステージのポインタ</param>
+	void UpdateCheckCollision(Stage* pStage);
 
 private:
 	/// <summary>
@@ -46,7 +49,6 @@ private:
 	/// <param name="pCapsuleA">最初のカプセルコライダーのポインタ</param>
 	/// <param name="pCapsuleB">2つめのカプセルコライダーのポインタ</param>
 	void CheckCapsuleVsCapsule(Collider* pCapsuleA, Collider* pCapsuleB);
-
 private:
 	// ゲーム内に存在する全コライダーのポインタ配列
 	std::vector<Collider*> pAllColliders_;

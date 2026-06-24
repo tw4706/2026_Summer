@@ -47,7 +47,7 @@ void Oni::Init()
 	animation_.Init(model_.GetHandle());
 
 	//コライダーの登録
-	Vector3 colOffset = { 0.0f, 95.0f, 0.0f };
+	Vector3 colOffset = { 0.0f, 145.0f, 0.0f };
 	auto pCapsule = std::make_unique<CapsuleCollider>(55.0f, 180.0f, colOffset);
 
 	this->AddCollider(std::move(pCapsule));
@@ -98,6 +98,12 @@ void Oni::Update()
 
 void Oni::Draw()
 {
+	Matrix4x4 scaleMat = Matrix4x4::Scale(kFirstScale.x_, kFirstScale.y_, kFirstScale.z_);
+	Matrix4x4 rotMat = Matrix4x4::RotateY(moveAngle_);
+	Matrix4x4 transMat = Matrix4x4::Translate(pos_.x_, pos_.y_, pos_.z_);
+	Matrix4x4 worldMat = scaleMat * rotMat * transMat;
+	model_.SetMatrix(worldMat);
+
 	//モデルの描画
 	model_.Draw();
 

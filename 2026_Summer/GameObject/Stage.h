@@ -11,6 +11,12 @@ public:
 	void Init();
 	void Update();
 	void Draw();
+
+	/// <summary>
+	/// ハンドルの取得
+	/// </summary>
+	/// <returns>ハンドルを返す</returns>
+	int GetHandle()const { return stageModel_.GetHandle(); }
 private:
 	Model stageModel_;
 };
