@@ -41,3 +41,9 @@ void CapsuleCollider::Update()
 	worldB_.y_ = baseCenter.y_ + halfHeight;
 	worldB_.z_ = baseCenter.z_;
 }
+
+void CapsuleCollider::SetWorldPos(const Vector3& worldA, const Vector3& worldB)
+{
+	worldA_ = worldA;
+	worldB_ = worldB;
+}

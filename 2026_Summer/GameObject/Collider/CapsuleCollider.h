@@ -19,6 +19,13 @@ public:
 	Vector3 GetWorldB()const { return worldB_; }
 	float GetRadius()const { return radius_; }
 
+	/// <summary>
+	/// ワールド座標のセット
+	/// </summary>
+	/// <param name="worldA">ワールド座標A</param>
+	/// <param name="worldb">ワールド座標B</param>
+	void SetWorldPos(const Vector3& worldA, const Vector3& worldB);
+
 private:
 	float radius_;           //半径
 	float height_;           //筒の高さ

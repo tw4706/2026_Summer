@@ -18,7 +18,7 @@ namespace
 	const Vector3 kFirstRotate = { 0.0f, -DX_PI_F, 0.0f };
 
 	//õ“G”ÍˆÍ‚Ì”¼Œa
-	const float kDebugSearchRadius = 200.0f;
+	const float kDebugSearchRadius = 500.0f;
 }
 
 Oni::Oni() :

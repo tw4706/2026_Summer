@@ -18,6 +18,7 @@ enum class AnimationState
 class Animation
 {
 public:
+
 	Animation();
 	~Animation();
 

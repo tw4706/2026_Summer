@@ -30,6 +30,7 @@ void EnemyStateAttack::Update()
 	//攻撃アニメーションが終了したら
 	if (enemy->IsAnimationEnd())
 	{
+		//ぶつかっていたら
 		if (enemy->IsHit())
 		{
 			//ヒットフラグを戻す

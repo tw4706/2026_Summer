@@ -18,13 +18,9 @@ void Character::ChangeState(std::shared_ptr<CharacterStateBase> pNextState)
 {
 	if (!pNextState) return;
 
-	//念のため前の状態の終了処理を呼び出す
-	if (pCurrentState_)
-	{
-		pCurrentState_->Exit();
-	}
-
+	//次のステートを更新
 	pCurrentState_ = pNextState;
+	//初期化処理を行う
 	pCurrentState_->Enter();
 }
 

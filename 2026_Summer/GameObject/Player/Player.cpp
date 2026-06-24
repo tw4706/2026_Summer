@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Katana.h"
 #include"Input.h"
 #include"Camera/PlayerCamera.h"
 #include"Matrix4x4.h"
@@ -19,22 +20,13 @@ namespace
 
 	//初期回転角度
 	const Vector3 kFirstRotate = { 0.0f, DX_PI_F, 0.0f };
-
-	///刀のモデル関連
-	//刀の拡大率
-	const Vector3 kKatanaScale = { 2.0f, 2.0f, 2.0f };
-
-	//刀の回転
-	const Vector3 kKatanaRotate = { 0.0f, -DX_PI_F / 2.0f, DX_PI_F / 2.0f };
-
-	//刀の移動
-	const Vector3 kKatanaTransform = { 20.0f, 10.0f, 0.0f };
 }
 
 Player::Player() :
 	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f),
 	moveAngle_(0.0f),
-	handFrameIndex_(-1)
+	handFrameIndex_(-1),
+	pKatana_(nullptr)
 {
 }
 
@@ -54,7 +46,6 @@ void Player::Init()
 
 	//モデルのロード
 	model_.Load(L"data/Player.mv1");
-	katanaModel_.Load(L"data/Tachi.mv1");
 	handFrameIndex_ = model_.SearchFrame(L"mixamorig:RightHand");
 
 	//アニメーションの初期化
@@ -65,6 +56,10 @@ void Player::Init()
 	auto pCapsule = std::make_unique<CapsuleCollider>(40.0f, 160.0f, colOffset);
 	//所有権をCollidableに渡す
 	this->AddCollider(std::move(pCapsule));
+
+	//刀の生成・初期化
+	pKatana_ = std::make_unique<Katana>(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f);
+	pKatana_->Init();
 }
 
 void Player::Update()
@@ -109,6 +104,13 @@ void Player::Update()
 	//モデルに行列をセット
 	model_.SetMatrix(worldMat);
 
+	//刀の更新（手のフレーム行列を渡す）
+	if (handFrameIndex_ != -1 && pKatana_)
+	{
+		MATRIX handMat = MV1GetFrameLocalWorldMatrix(model_.GetHandle(), handFrameIndex_);
+		pKatana_->Update(handMat, animation_.GetState());
+	}
+
 	DrawFormatString(0, 0, GetColor(255, 255, 255), L"Hand Index: %d", handFrameIndex_);
 }
 
@@ -116,42 +118,11 @@ void Player::Draw()
 {
 	model_.Draw();
 
-	if (katanaModel_.GetHandle() != -1 && handFrameIndex_ != -1)
+	//刀の描画
+	if (pKatana_)
 	{
-		//右手フレームのワールド行列を取得
-		MATRIX handMat = MV1GetFrameLocalWorldMatrix(model_.GetHandle(), handFrameIndex_);
-
-		//刀の行列を定義
-		Vector3 katanaScale = kKatanaScale;
-		Vector3 katanaRotate = kKatanaRotate;
-		Vector3 katanaTransform = kKatanaTransform;
-
-		//状態によって刀の角度を変更
-		if (animation_.GetState() == AnimationState::Run)
-		{
-			katanaRotate.x_ += DX_PI_F / 4.0f;
-			katanaRotate.z_ += DX_PI_F / 3.0f;
-		}
-
-		//各行列の作成
-		Matrix4x4 scaleMat = Matrix4x4::Scale(katanaScale.x_, katanaScale.y_, katanaScale.z_);
-
-		//回転 (X->Y->Zの順で合成)
-		Matrix4x4 rotMat = Matrix4x4::RotateX(katanaRotate.x_) * Matrix4x4::RotateY(katanaRotate.y_) * Matrix4x4::RotateZ(katanaRotate.z_);
-
-		Matrix4x4 transMat = Matrix4x4::Translate(katanaTransform.x_, katanaTransform.y_, katanaTransform.z_);
-
-		//合成
-		Matrix4x4 mat = scaleMat * rotMat * transMat;
-
-		//最終的な刀の位置の合成
-		MATRIX swordMat = MMult(mat.ToDxLibMatrix(), handMat);
-
-		//刀に設定して描画
-		katanaModel_.SetMatrix(swordMat);
-		katanaModel_.Draw();
+		pKatana_->Draw();
 	}
-
 #ifdef _DEBUG
 	if (!colliders_.empty())
 	{
@@ -180,4 +151,12 @@ void Player::OnCollision(GameObject* obj)
 Vector3 Player::GetCameraTarget() const
 {
 	return Vector3{ pos_.x_,pos_.y_ + 200.0f,pos_.z_ };
+}
+
+void Player::SetKatanaColliderEnabled(bool isEnabled)
+{
+	if (pKatana_)
+	{
+		pKatana_->SetEnabled(isEnabled);
+	}
 }

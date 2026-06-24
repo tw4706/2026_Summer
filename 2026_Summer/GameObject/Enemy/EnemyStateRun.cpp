@@ -17,6 +17,9 @@ namespace
 
 	//üŒ`•âŠÔ‚ÌŠ„‡
 	const float kRotateLerpRate = 0.1f;
+
+	//õ“G”ÍˆÍ‚Ì”¼Œa
+	const float kDebugSearchRadius = 500.0f;
 }
 
 EnemyStateRun::EnemyStateRun(std::weak_ptr<EnemyBase> pEnemy) :
@@ -39,7 +42,7 @@ void EnemyStateRun::Update()
 	if (!enemy) return;
 
 	//õ“G‚Ì”ÍˆÍ‚É“ü‚Á‚Ä‚È‚©‚Á‚½‚ç
-	if (PlayerSearchDistance(200.0f) == false)
+	if (PlayerSearchDistance(kDebugSearchRadius) == false)
 	{
 		//ŒŸ’m”ÍˆÍ‚É“ü‚Á‚½‚çRunó‘Ô‚Ö‘JˆÚ
 		auto nextState = std::make_shared<EnemyStateIdle>(pEnemy_);

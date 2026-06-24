@@ -140,6 +140,8 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="GameObject\Enemy\EnemyStateDamage.cpp" />
+    <ClCompile Include="GameObject\Enemy\EnemyStateDeath.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyStateAttack.cpp" />
     <ClCompile Include="GameObject\Collider\CapsuleCollider.cpp" />
     <ClCompile Include="GameObject\Collider\Collidable.cpp" />
@@ -160,6 +162,7 @@
     <ClCompile Include="GameObject\Player\PlayerStateDodge.cpp" />
     <ClCompile Include="GameObject\Camera\PlayerCamera.cpp" />
     <ClCompile Include="GameObject\Enemy\Oni.cpp" />
+    <ClCompile Include="GameObject\Katana.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="System\Animation.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
@@ -173,6 +176,8 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="GameObject\Enemy\EnemyStateDamage.h" />
+    <ClInclude Include="GameObject\Enemy\EnemyStateDeath.h" />
     <ClInclude Include="GameObject\Enemy\EnemyStateAttack.h" />
     <ClInclude Include="GameObject\Collider\CapsuleCollider.h" />
     <ClInclude Include="GameObject\Collider\Collidable.h" />
@@ -193,6 +198,7 @@
     <ClInclude Include="GameObject\Player\PlayerStateDodge.h" />
     <ClInclude Include="GameObject\Camera\PlayerCamera.h" />
     <ClInclude Include="GameObject\Enemy\Oni.h" />
+    <ClInclude Include="GameObject\Katana.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="System\Animation.h" />

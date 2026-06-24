@@ -6,6 +6,9 @@ namespace
 	//“GƒAƒjƒ[ƒVƒ‡ƒ“
 	//Idle
 	const wchar_t* kEnemyIdle = L"Oni|Idle";
+
+	//õ“G”ÍˆÍ‚Ì”¼Œa
+	const float kDebugSearchRadius = 500.0f;
 }
 
 
@@ -30,9 +33,9 @@ void EnemyStateIdle::Update()
 	if (!enemy)return;
 
 	//õ“G”ÍˆÍ‚©‚Â‚Ü‚¾“–‚½‚Á‚Ä‚¢‚È‚©‚Á‚½‚ç
-	if (PlayerSearchDistance(200.0f)&&!enemy->IsHit())
+	if (PlayerSearchDistance(kDebugSearchRadius))
 	{
-		//ŒŸ’m”ÍˆÍ‚É“ü‚Á‚½‚çRunó‘Ô‚Ö‘JˆÚ
+		//Runó‘Ô‚Ö‘JˆÚ
 		auto nextState = std::make_shared<EnemyStateRun>(pEnemy_);
 		enemy->ChangeState(nextState);
 		return;

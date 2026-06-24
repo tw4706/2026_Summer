@@ -13,7 +13,7 @@ bool EnemyStateBase::PlayerSearchDistance(float radius) const
 {
 	//敵の参照
 	auto enemy = pEnemy_.lock();
-	//敵が存在しない場合はfalseを返す
+	//敵が存在しない場合はreturn
 	if (!enemy) return false;
 
 	//敵・プレイヤーそれぞれの位置を取得

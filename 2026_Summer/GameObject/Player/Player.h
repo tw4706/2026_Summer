@@ -4,6 +4,7 @@
 #include "Animation.h"
 
 class Input;
+class Katana;
 class PlayerCamera;
 class CharacterStateBase;
 class Player :public Character
@@ -47,14 +48,19 @@ public:
 
 	float GetJumpPower() const { return jumpPower_; }
 
+	/// <summary>
+	/// 刀の当たり判定の有効/無効を設定する
+	/// </summary>
+	void SetKatanaColliderEnabled(bool isEnabled);
+
 private:
 	float moveAngle_;						//プレイヤーの向く角度
 	int handFrameIndex_;					//右手の刀を持つ手のフレームインデックス
 	float jumpPower_ = 12.0f;				//ジャンプ力
 	bool isInvincible_ = false;				//無敵中かどうか
 
-	PlayerCamera* pCamera_ = nullptr;			//カメラ
+	PlayerCamera* pCamera_ = nullptr;		//カメラ
 	Input* pInput_ = nullptr;				//インプット入力
-	Model katanaModel_;						//刀のモデル
+	std::unique_ptr<Katana> pKatana_;		//刀
 };
 
