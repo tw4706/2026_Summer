@@ -164,6 +164,7 @@
     <ClCompile Include="GameObject\Enemy\Oni.cpp" />
     <ClCompile Include="GameObject\Katana.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="GameObject\Stage.cpp" />
     <ClCompile Include="System\Animation.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
     <ClCompile Include="System\Input.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="GameObject\Katana.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="GameObject\Stage.h" />
     <ClInclude Include="System\Animation.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject\GameObject.h" />

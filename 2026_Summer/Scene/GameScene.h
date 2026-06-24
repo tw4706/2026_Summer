@@ -5,6 +5,7 @@
 class Oni;
 class Player;
 class Input;
+class Stage;
 class GameObject;
 class CameraManager;
 class CollisionManager;
@@ -30,6 +31,9 @@ private:
 private:
 	//フレームカウンタ
 	int frameCount_;
+
+	//ステージ
+	std::shared_ptr<Stage>pStage_;
 
 	//プレイヤー
 	std::shared_ptr<Player>pPlayer_;

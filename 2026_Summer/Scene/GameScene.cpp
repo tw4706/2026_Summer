@@ -1,12 +1,13 @@
 #include "GameScene.h"
-#include "Player/Player.h"
-#include "Camera/CameraManager.h"
-#include "Camera/PlayerCamera.h"
-#include "CollisionManager.h"
-#include"Enemy/Oni.h"
-#include "GameObject.h"
+#include"Stage.h"
 #include"Input.h"
 #include"Katana.h"
+#include"Enemy/Oni.h"
+#include "GameObject.h"
+#include "Player/Player.h"
+#include "CollisionManager.h"
+#include "Camera/PlayerCamera.h"
+#include "Camera/CameraManager.h"
 #include <DxLib.h>
 #include <algorithm>
 
@@ -18,17 +19,23 @@ GameScene::GameScene() :
 	pPlayer_ = std::make_shared<Player>();
 	pCameraManager_ = std::make_unique<CameraManager>();
 
+	//ゲームオブジェクトの登録
 	//カメラの登録
 	auto playerCamera = std::make_shared<PlayerCamera>();
 	pCameraManager_->RegisterCamera("PlayerCamera", playerCamera);
+
+	//ステージの登録
+	pStage_ = std::make_shared<Stage>(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f);
+	RegisterGameObject(pStage_);
 
 	//敵の登録
 	pOni_ = std::make_shared<Oni>();
 	RegisterGameObject(pOni_);
 
-	//ゲームオブジェクトの登録
 	//プレイヤーの登録
 	RegisterGameObject(pPlayer_);
+
+
 }
 
 GameScene::~GameScene()
@@ -39,7 +46,7 @@ GameScene::~GameScene()
 	pOni_ = nullptr;
 }
 
-void GameScene::Init(Input&input)
+void GameScene::Init(Input& input)
 {
 	//カリングの設定（裏面のポリゴンは見えないようにする）
 	SetUseBackCulling(true);
@@ -64,7 +71,11 @@ void GameScene::Init(Input&input)
 	// 登録されたすべてのオブジェクトを初期化
 	for (auto& obj : gameObjects_)
 	{
-		if (auto player = std::dynamic_pointer_cast<Player>(obj)) {
+		if (auto stage = std::dynamic_pointer_cast<Stage>(obj))
+		{
+			stage->Init();
+		}
+		else if (auto player = std::dynamic_pointer_cast<Player>(obj)) {
 
 			player->SetInput(&input);
 			player->SetCamera(playerCam.get());
@@ -96,6 +107,7 @@ void GameScene::Init(Input&input)
 				pCollisionManager_->RegisterCollider(pCollider.get());
 			}
 		}
+
 	}
 
 }
@@ -126,7 +138,7 @@ void GameScene::Update(Input& input)
 	pCameraManager_->Update();
 
 	//すべてのゲームオブジェクトの更新
-	for (auto& obj : gameObjects_) 
+	for (auto& obj : gameObjects_)
 	{
 
 		if (!obj->IsDead())

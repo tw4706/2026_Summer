@@ -12,9 +12,8 @@ public:
 
 	void Update();
 
-
 	/// <summary>
-	/// 当たっているかどうかあ
+	/// 当たっているかどうか
 	/// </summary>
 	/// <returns>オブジェクトと当たっているかどうかを返す</returns>
 	bool IsHit()const { return isHit_; }
