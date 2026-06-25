@@ -33,13 +33,14 @@ public:
 	/// 衝突判定
 	/// </summary>
 	/// <param name="obj">ゲームオブジェクト</param>
-	virtual void OnCollision(GameObject* obj)abstract;
+	virtual void OnCollision(Collidable* coll)abstract;
 
 	/// <summary>
 	/// 当たり判定の有効/無効を設定する
 	/// </summary>
 	/// <param name="isEnabled">trueなら当たり判定有効</param>
 	void SetEnabled(bool isEnabled) { isEnabled_ = isEnabled; }
+
 	/// <summary>
 	/// 当たり判定が有効かどうかを取得する
 	/// </summary>

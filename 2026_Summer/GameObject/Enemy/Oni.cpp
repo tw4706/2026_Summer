@@ -1,7 +1,8 @@
 #include "Oni.h"
+#include "Katana.h"
 #include "Matrix4x4.h"
-#include"CharacterStateBase.h"
 #include"EnemyStateidle.h"
+#include"CharacterStateBase.h"
 #include "Collider/CapsuleCollider.h"
 #include<Dxlib.h>
 #include<cassert>
@@ -57,23 +58,22 @@ void Oni::Update()
 {
 	Collidable::Update();
 
-	isHit_ = false;
-
 	if (!pCurrentState_)
 	{
-		//EnemyBase へのダイナミックキャストをやめ、Character の shared_ptr として直接受け取る
+		//Characterのshared_ptrとして直接受け取る
 		std::shared_ptr<Character> sharedSelf = shared_from_this();
 
-		// 弱参照にする
+		//弱参照にする
 		std::weak_ptr<Character> weakSelf = sharedSelf;
 
-		//EnemyStateIdle 側が Character の weak_ptr も受け取れるように、
+		//EnemyStateIdle 側が Character の weak_ptr も受け取る
 		auto sharedEnemy = std::dynamic_pointer_cast<Oni>(sharedSelf);
 		std::weak_ptr<EnemyBase> weakEnemy = sharedEnemy;
 
 		ChangeState(std::make_shared<EnemyStateIdle>(weakEnemy));
 	}
 
+	//ステートの更新
 	if (pCurrentState_)
 	{
 		pCurrentState_->Update();
@@ -108,6 +108,8 @@ void Oni::Draw()
 	model_.Draw();
 
 #ifdef _DEBUG
+	DrawFormatString(200, 200, GetColor(255, 255, 255), L"Oni HP: %d", hp_);
+
 	VECTOR center = VGet(pos_.x_, pos_.y_, pos_.z_);
 
 	Vector3 playerPos = GetPlayerPos();
@@ -143,7 +145,14 @@ void Oni::Draw()
 #endif
 }
 
-void Oni::OnCollision(GameObject* obj)
+void Oni::OnCollision(Collidable* coll)
 {
+	//相手が刀だった場合は何もしない
+	if (dynamic_cast<Katana*>(coll))
+	{
+		return;
+	}
+
+	//刀以外が当たった場合は普通にフラグを返す
 	isHit_ = true;
 }

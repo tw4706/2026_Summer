@@ -149,7 +149,7 @@ void Player::Draw()
 #endif
 }
 
-void Player::OnCollision(GameObject* obj)
+void Player::OnCollision(Collidable* coll)
 {
 	isHit_ = true;
 }
@@ -163,6 +163,6 @@ void Player::SetKatanaColliderEnabled(bool isEnabled)
 {
 	if (pKatana_)
 	{
-		pKatana_->SetEnabled(isEnabled);
+		pKatana_->SetColliderEnabled(isEnabled);
 	}
 }

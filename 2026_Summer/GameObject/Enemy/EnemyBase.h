@@ -18,7 +18,7 @@ public:
 	/// 衝突判定
 	/// </summary>
 	/// <param name="obj">衝突したゲームオブジェクト</param>
-	void OnCollision(GameObject* obj)override {};
+	void OnCollision(Collidable* coll)override {};
 
 	void OnDamage(int damage);
 
@@ -34,11 +34,20 @@ public:
 	/// <param name="pPlayer">プレイヤーのポインタ</param>
 	void SetPlayer(std::weak_ptr<Player>pPlayer);
 
+	/// <summary>
+	/// 移動時の角度の取得
+	/// </summary>
+	/// <returns>角度を返す</returns>
 	float GetMoveAngle() const { return moveAngle_; }
+
+	/// <summary>
+	/// 移動時の角度の設定
+	/// </summary>
+	/// <param name="angle">角度</param>
 	void SetMoveAngle(float angle) { moveAngle_ = angle; }
 
 protected:
-	//向いている角度
+	//移動の際に向いている角度
 	float moveAngle_;
 
 	//プレイヤーの弱参照

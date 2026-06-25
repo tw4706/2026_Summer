@@ -22,8 +22,10 @@ void EnemyStateIdle::Enter()
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
 
+	//Idleアニメーションに切り替える
 	enemy->ChangeAnimation(AnimationState::Idle, kEnemyIdle);
 
+	//速度をゼロにする
 	enemy->SetVelocity(Vector3{ 0.0f,0.0f,0.0f });
 }
 

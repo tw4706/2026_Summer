@@ -32,7 +32,7 @@ void EnemyStateRun::Enter()
 	auto pEnemy = pEnemy_.lock();
 	if (!pEnemy) return;
 
-	//Runアニメーションに遷移
+	//Runアニメーションに切り替える
 	pEnemy->ChangeAnimation(AnimationState::Run, kEnemyRun);
 }
 
@@ -41,21 +41,23 @@ void EnemyStateRun::Update()
 	auto enemy = pEnemy_.lock();
 	if (!enemy) return;
 
-	//索敵の範囲に入ってなかったら
-	if (PlayerSearchDistance(kDebugSearchRadius) == false)
-	{
-		//検知範囲に入ったらRun状態へ遷移
-		auto nextState = std::make_shared<EnemyStateIdle>(pEnemy_);
-		enemy->ChangeState(nextState);
-		return;
-	}
-
-	//敵と当たってたら(今後は攻撃に変える可能性あり)
+	//敵と当たってたら
 	if (enemy->IsHit())
 	{
 		//ヒットフラグをリセット
 		enemy->ResetHitFlag();
+		//攻撃状態に遷移
 		auto nextState = std::make_shared<EnemyStateAttack>(pEnemy_);
+		enemy->ChangeState(nextState);
+		
+		return;
+	}
+
+	//索敵の範囲に入ってなかったら
+	if (PlayerSearchDistance(kDebugSearchRadius) == false&&!enemy->IsHit())
+	{
+		//検知範囲に入ったらRun状態へ遷移
+		auto nextState = std::make_shared<EnemyStateIdle>(pEnemy_);
 		enemy->ChangeState(nextState);
 		return;
 	}
@@ -70,7 +72,15 @@ void EnemyStateRun::Update()
 
 	//距離の計算
 	float distance = std::sqrt(toPlayer.x_ * toPlayer.x_ + toPlayer.z_ * toPlayer.z_);
-	if (distance < 0.1f) return;
+
+	//距離が0.1f(誤差)だった場合は何も行わない
+	if (distance < 0.1f)
+	{
+		auto nextState = std::make_shared<EnemyStateAttack>(pEnemy_);
+		enemy->ChangeState(nextState);
+		printfDx(L"攻撃に遷移した！");
+		return;
+	}
 
 	//正規化
 	toPlayer.Normalize();
@@ -88,22 +98,13 @@ void EnemyStateRun::Update()
 
 	//進行方向の角度
 	float targetAngle = std::atan2f(toPlayer.x_, -toPlayer.z_);
-
 	//現在の角度
 	float currentAngle = enemy->GetMoveAngle();
-
 	//次の目標の角度
 	float nextAngle = currentAngle;
 
-	if (distance < 5.0f)
-	{
-		nextAngle = targetAngle; //完全にプレイヤーの方向を向く
-	}
-	else
-	{
-		//遠くにいるときは、滑らかに回転する
-		nextAngle = currentAngle + (targetAngle - currentAngle) * kRotateLerpRate;
-	}
+	//線形補間を用いて滑らかに回転する
+	nextAngle = currentAngle + (targetAngle - currentAngle) * kRotateLerpRate;
 
 	//計算した角度を適用
 	enemy->SetMoveAngle(nextAngle);

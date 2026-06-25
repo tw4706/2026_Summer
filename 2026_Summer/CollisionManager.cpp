@@ -47,13 +47,13 @@ void CollisionManager::UpdateCheckCollision(Stage* pStage)
 		if (pCollider) pCollider->Update();
 
 		//衝突判定フラグのリセット
-		if (pCollider->GetOwner())
-		{
-			if (auto pChar = dynamic_cast<Character*>(pCollider->GetOwner()))
-			{
-				pChar->ResetHitFlag();
-			}
-		}
+		//if (pCollider->GetOwner())
+		//{
+		//	if (auto pChar = dynamic_cast<Character*>(pCollider->GetOwner()))
+		//	{
+		//		pChar->ResetHitFlag();
+		//	}
+		//}
 	}
 
 	for (size_t i = 0; i < pAllColliders_.size(); ++i)
@@ -192,7 +192,7 @@ void CollisionManager::CheckCapsuleVsCapsule(Collider* pCapsuleA, Collider* pCap
 	Vector3 d2 = { b2.x_ - b1.x_, b2.y_ - b1.y_, b2.z_ - b1.z_ }; //線分Bのベクトル
 	Vector3 r = { a1.x_ - b1.x_, a1.y_ - b1.y_, a1.z_ - b1.z_ }; //A1からB1へのベクトル
 
-	//内積を利用した最短詰めの計算用パラメーター
+	//内積を利用した最短詰めの計算用パラメータ
 	float f11 = d1.x_ * d1.x_ + d1.y_ * d1.y_ + d1.z_ * d1.z_; // |d1|^2
 	float f22 = d2.x_ * d2.x_ + d2.y_ * d2.y_ + d2.z_ * d2.z_; // |d2|^2
 	float f12 = d1.x_ * d2.x_ + d1.y_ * d2.y_ + d1.z_ * d2.z_; // d1 ・ d2
@@ -246,12 +246,14 @@ void CollisionManager::CheckCapsuleVsCapsule(Collider* pCapsuleA, Collider* pCap
 	{
 		Collidable* pObjA = pCapsuleA->GetOwner();
 		Collidable* pObjB = pCapsuleB->GetOwner();
+
 		if (pObjA) pObjA->OnCollision(pObjB);
 		if (pObjB) pObjB->OnCollision(pObjA);
 
-		//刀と敵の場合の当たり判定の押し戻しはスキップする
-		bool isKatanaInvolved = (dynamic_cast<Katana*>(pObjA) != nullptr) ||
-			(dynamic_cast<Katana*>(pObjB) != nullptr);
+		//当たり判定を行うオブジェクトどちらか一方が刀型の場合スキップ
+		bool isKatanaInvolved = (dynamic_cast<Katana*>(pObjA) != nullptr ||
+			dynamic_cast<Katana*>(pObjB) != nullptr);
+
 		if (isKatanaInvolved)
 		{
 			return;

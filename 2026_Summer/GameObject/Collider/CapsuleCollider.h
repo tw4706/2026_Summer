@@ -31,7 +31,6 @@ public:
 	/// </summary>
 	/// <param name="useWPos">ワールド座標を使用するかどうか</param>
 	bool SetUseWorldPos(bool useWPos);
-
 private:
 	float radius_;           //半径
 	float height_;           //筒の高さ

@@ -11,6 +11,6 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	void OnCollision(GameObject* obj)override;
+	void OnCollision(Collidable* coll)override;
 };
 

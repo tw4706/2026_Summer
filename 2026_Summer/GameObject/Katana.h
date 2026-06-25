@@ -20,8 +20,8 @@ public:
 	/// <summary>
 	/// Õ“Ë”»’è
 	/// </summary>
-	/// <param name="obj"></param>
-	void OnCollision(GameObject* obj) override;
+	/// <param name="coll"></param>
+	void OnCollision(Collidable* coll)override;
 
 	/// <summary>
 	/// “‚Ì“–‚½‚è”»’è‚Ì—LŒø/–³Œø‚ğİ’è‚·‚é

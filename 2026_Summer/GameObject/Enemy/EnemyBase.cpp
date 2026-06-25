@@ -27,7 +27,7 @@ Vector3 EnemyBase::GetPlayerPos() const
 {
 	auto pPlayer = pPlayer_.lock();
 
-	//もしプレイヤーが存在しない場合は0にする
+	//もしプレイヤーが存在しない場合は0を返す
 	if (!pPlayer)
 	{
 		return Vector3{ 0.0f,0.0f,0.0f };

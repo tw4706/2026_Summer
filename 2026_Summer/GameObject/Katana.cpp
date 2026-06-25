@@ -55,7 +55,7 @@ void Katana::Update(const MATRIX& handMat, AnimationState ownerState)
 		katanaRotate.z_ += DX_PI_F / 3.0f;
 	}
 
-	// 行列計算（今までPlayer::Drawにあったロジックをそのまま移動）
+	// 行列を用いた計算
 	Matrix4x4 scaleMat = Matrix4x4::Scale(katanaScale.x_, katanaScale.y_, katanaScale.z_);
 	Matrix4x4 rotMat = Matrix4x4::RotateX(katanaRotate.x_) * Matrix4x4::RotateY(katanaRotate.y_) * Matrix4x4::RotateZ(katanaRotate.z_);
 	Matrix4x4 transMat = Matrix4x4::Translate(katanaTransform.x_, katanaTransform.y_, katanaTransform.z_);
@@ -64,7 +64,7 @@ void Katana::Update(const MATRIX& handMat, AnimationState ownerState)
 	worldMat_ = MMult(mat.ToDxLibMatrix(), handMat);
 	katanaModel_.SetMatrix(worldMat_);
 
-	//当たり判定の更新：worldMat_を使って自分のpos_を刀の根本位置に同期させる
+	//当たり判定の更新：worldMat_を使って自分のpos_を刀の位置に合成させる
 	//ローカル座標での始点と終点
 	VECTOR localStart = VGet(0.0f, -30.0f, 0.0f);
 	VECTOR localEnd = VGet(0.0f, 70.0f, 0.0f);
@@ -86,8 +86,8 @@ void Katana::Update(const MATRIX& handMat, AnimationState ownerState)
 
 void Katana::Draw()
 {
+	//モデルの描画
 	katanaModel_.Draw();
-
 #ifdef _DEBUG
 	if (!colliders_.empty())
 	{
@@ -122,10 +122,8 @@ void Katana::Draw()
 #endif
 }
 
-void Katana::OnCollision(GameObject* obj)
+void Katana::OnCollision(Collidable* coll)
 {
-	printfDx(L"衝突相手のアドレス: %p\n", obj);
-
 	//当たり判定が無効な時は何もしない
 	if (!IsEnabled())return;
 
@@ -136,7 +134,7 @@ void Katana::OnCollision(GameObject* obj)
 	isHit_ = true;
 
 	//敵かどうかを判定してダメージを与える
-	EnemyBase* pEnemy = dynamic_cast<EnemyBase*>(obj);
+	EnemyBase* pEnemy = dynamic_cast<EnemyBase*>(coll);
 	if (pEnemy)
 	{
 		pEnemy->OnDamage(kAttackDamage);

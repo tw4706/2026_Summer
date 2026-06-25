@@ -19,7 +19,7 @@ public:
 	/// 衝突判定
 	/// </summary>
 	/// <param name="obj">衝突したゲームオブジェクト</param>
-	virtual void OnCollision(GameObject* obj)override abstract;
+	virtual void OnCollision(Collidable* coll)override abstract;
 
 	/// <summary>
 	/// 状態の切り替え
@@ -38,9 +38,22 @@ public:
 	/// <returns>アニメーションが終了している場合はtrueを、そうでない場合はfalseを返す。</returns>
 	bool IsAnimationEnd() const { return animation_.IsEnd(); }
 
+	/// <summary>
+	/// 地面との設置判定フラグの取得
+	/// </summary>
+	/// <returns>地面と接地しているかどうか</returns>
 	bool GetIsGround() const { return isGround_; }
+
+	/// <summary>
+	/// 地面との設置判定の設定
+	/// </summary>
+	/// <param name="isGround">地面に触れているかどうかのフラグ</param>
 	void SetIsGround(bool isGround) { isGround_ = isGround; }
 
+	/// <summary>
+	/// 重力の取得
+	/// </summary>
+	/// <returns>重力を返す</returns>
 	float GetGravity() const { return gravity_; }
 
 protected:

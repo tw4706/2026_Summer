@@ -3,7 +3,7 @@
 namespace 
 {
     //カメラのNear・Far
-    constexpr float kCameraNear = 1.0f;
+    constexpr float kCameraNear = 100.0f;
     constexpr float kCameraFar = 5000.0f;
 
     //経過時間
@@ -29,7 +29,7 @@ CameraBase::~CameraBase()
 
 void CameraBase::Update()
 {
-    //カメラの位置・注視店の計算
+    //カメラの位置・注視点の計算
     UpdateRenderSystem();
 }
 
