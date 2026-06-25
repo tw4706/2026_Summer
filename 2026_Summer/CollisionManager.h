@@ -2,8 +2,9 @@
 #include<vector>
 
 class Stage;
+class Vector3;
 class Collider;
-class Character;
+class Collidable;
 class CollisionManager
 {
 public:
@@ -32,26 +33,17 @@ private:
 	/// <summary>
 	/// 球とカプセルの当たり判定
 	/// </summary>
-	/// <param name="pSphere">球のコライダーのポインタ</param>
-	/// <param name="pCapsule">カプセルコライダーのポインタ</param>
-	void CheckSphereVsCapsule(Collider* pSphere, Collider* pCapsule);
+	bool CheckSphereVsCapsule(Collidable* pSphereObj, Collidable* pCapsuleObj);
 
 	/// <summary>
 	/// 2つの球体コライダーの当たり判定
 	/// </summary>
-	/// <param name="pSphereA">最初の球体コライダーのポインタ。</param>
-	/// <param name="pSphereB">2個目の球体コライダーのポインタ。</param>
-	void CheckSphereVsSphere(Collider* pSphereA, Collider* pSphereB);
+	bool CheckSphereVsSphere(Collidable* pSphereObjA, Collidable* pSphereObjB);
 
 	/// <summary>
-	/// 2角カプセルコライダーの当たり判定
+	/// 2つのカプセルコライダーの当たり判定
 	/// </summary>
-	/// <param name="pCapsuleA">最初のカプセルコライダーのポインタ</param>
-	/// <param name="pCapsuleB">2つめのカプセルコライダーのポインタ</param>
-	void CheckCapsuleVsCapsule(Collider* pCapsuleA, Collider* pCapsuleB);
-
-
-	void CheckCapsuleVsPolygon(Collider* pCapsule, Stage* pStage);
+	bool CheckCapsuleVsCapsule(Collidable* pCapsuleObjA, Collidable* pCapsuleObjB);
 private:
 	// ゲーム内に存在する全コライダーのポインタ配列
 	std::vector<Collider*> pAllColliders_;

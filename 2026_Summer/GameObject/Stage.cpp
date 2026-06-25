@@ -1,7 +1,7 @@
 #include "Stage.h"
 
 Stage::Stage(Vector3 pos,Vector3 vel,float dir):
-	GameObject(pos,vel,dir)
+	Collidable(pos,vel,dir)
 {
 }
 

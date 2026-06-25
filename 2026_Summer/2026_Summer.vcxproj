@@ -109,7 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Dxlib_h;$(ProjectDir)Common;$(ProjectDir)GameObject;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)Player;$(ProjectDir)Enemy;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Dxlib_h;$(ProjectDir)Math;$(ProjectDir)GameObject;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)Player;$(ProjectDir)Enemy;$(ProjectDir)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -169,10 +169,10 @@
     <ClCompile Include="GameObject\GameObject.cpp" />
     <ClCompile Include="System\Input.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Common\Matrix4x4.cpp" />
+    <ClCompile Include="Math\Matrix4x4.cpp" />
     <ClCompile Include="GameObject\Player\Player.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
-    <ClCompile Include="Common\Vector3.cpp" />
+    <ClCompile Include="Math\Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -207,10 +207,10 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject\GameObject.h" />
     <ClInclude Include="System\Input.h" />
-    <ClInclude Include="Common\Matrix4x4.h" />
+    <ClInclude Include="Math\Matrix4x4.h" />
     <ClInclude Include="GameObject\Player\Player.h" />
     <ClInclude Include="Scene\GameScene.h" />
-    <ClInclude Include="Common\Vector3.h" />
+    <ClInclude Include="Math\Vector3.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="2026_Summer.rc" />

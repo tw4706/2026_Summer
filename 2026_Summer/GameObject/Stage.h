@@ -1,8 +1,8 @@
 #pragma once
-#include "GameObject.h"
+#include "Collider/Collidable.h"
 #include "Model.h"
 
-class Stage :public GameObject
+class Stage :public Collidable
 {
 public:
 	Stage(Vector3 pos, Vector3 vel, float dir);
@@ -11,6 +11,12 @@ public:
 	void Init();
 	void Update();
 	void Draw();
+
+	/// <summary>
+	/// Õ“Ë”»’è
+	/// </summary>
+	/// <param name="coll"></param>
+	void OnCollision(Collidable* coll)override {}
 
 	/// <summary>
 	/// ƒnƒ“ƒhƒ‹‚Ìæ“¾
