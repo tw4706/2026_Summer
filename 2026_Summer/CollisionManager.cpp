@@ -321,8 +321,8 @@ void CollisionManager::CheckCapsuleVsPolygon(Collider* pCapsule, Stage* pStage)
 
 	//この範囲を地面とみなす
 	const float kCheckRange = 10.0f;
-	VECTOR start = VGet(capA.x_, capA.y_ - kCheckRange, capA.z_);
-	VECTOR end = VGet(capB.x_, capB.y_ + kCheckRange, capB.z_);
+	VECTOR start = VGet(capA.x_, capA.y_ + kCheckRange, capA.z_);
+	VECTOR end = VGet(capB.x_, capB.y_ - kCheckRange, capB.z_);
 
 	//DXライブラリの関数を用いて線分とポリゴンの当たり判定をチェックする
 	MV1_COLL_RESULT_POLY result = MV1CollCheck_Line(pStage->GetHandle(), -1, start, end);
@@ -339,9 +339,25 @@ void CollisionManager::CheckCapsuleVsPolygon(Collider* pCapsule, Stage* pStage)
 
 		//位置の補正
 		float offsetY = currentPos.y_ - capA.y_;
-		currentPos.y_ = groundY + offsetY;
+		float correctedPosY = groundY + offsetY + pCap->GetRadius();
 
 		//位置の適用
-		pOwner->SetPos(currentPos);
+		if (currentPos.y_ <= correctedPosY)
+		{
+			currentPos.y_ = correctedPosY;
+			pOwner->SetPos(currentPos);
+
+			//接地判定をtrueにする
+			pOwner->SetIsGround(true);
+
+			//Yの速度を0にする
+			Vector3 vel = pOwner->GetVelocity();
+			vel.y_ = 0.0f;
+			pOwner->SetVelocity(vel);
+		}
+		else
+		{
+			pOwner->SetIsGround(false);
+		}
 	}
 }

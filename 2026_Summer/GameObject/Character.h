@@ -39,18 +39,6 @@ public:
 	bool IsAnimationEnd() const { return animation_.IsEnd(); }
 
 	/// <summary>
-	/// 地面との設置判定フラグの取得
-	/// </summary>
-	/// <returns>地面と接地しているかどうか</returns>
-	bool GetIsGround() const { return isGround_; }
-
-	/// <summary>
-	/// 地面との設置判定の設定
-	/// </summary>
-	/// <param name="isGround">地面に触れているかどうかのフラグ</param>
-	void SetIsGround(bool isGround) { isGround_ = isGround; }
-
-	/// <summary>
 	/// 重力の取得
 	/// </summary>
 	/// <returns>重力を返す</returns>
@@ -58,7 +46,6 @@ public:
 
 protected:
 	int hp_;
-	bool isGround_ = true;					//地面についているかどうか
 	float gravity_ = 0.0f;					//重力の強さ
 
 	Model model_;                           //モデル

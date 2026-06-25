@@ -47,6 +47,18 @@ public:
 	bool IsEnabled() const { return isEnabled_; }
 
 	/// <summary>
+	/// 地面との設置判定フラグの取得
+	/// </summary>
+	/// <returns>地面と接地しているかどうか</returns>
+	bool GetIsGround() const { return isGround_; }
+
+	/// <summary>
+	/// 地面との設置判定の設定
+	/// </summary>
+	/// <param name="isGround">地面に触れているかどうかのフラグ</param>
+	void SetIsGround(bool isGround) { isGround_ = isGround; }
+
+	/// <summary>
 	/// コライダーの取得
 	/// </summary>
 	/// <returns></returns>
@@ -55,6 +67,7 @@ public:
 protected:
 	bool isHit_ = false;						//当たっているかどうか
 	bool isEnabled_ = false;					//有効かどうか
+	bool isGround_ = true;						//地面についているかどうか
 
 	//コライダーの配列
 	std::vector<std::unique_ptr<Collider>>colliders_;

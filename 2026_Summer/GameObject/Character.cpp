@@ -4,7 +4,6 @@
 Character::Character(Vector3 pos, Vector3 vel, float dir):
 	Collidable(pos,vel,dir),
 	hp_(0),
-	isGround_(true),
 	gravity_(0.5f)
 {
 }
