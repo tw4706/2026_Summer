@@ -49,6 +49,9 @@ private:
 	/// <param name="pCapsuleA">最初のカプセルコライダーのポインタ</param>
 	/// <param name="pCapsuleB">2つめのカプセルコライダーのポインタ</param>
 	void CheckCapsuleVsCapsule(Collider* pCapsuleA, Collider* pCapsuleB);
+
+
+	void CheckCapsuleVsPolygon(Collider* pCapsule, Stage* pStage);
 private:
 	// ゲーム内に存在する全コライダーのポインタ配列
 	std::vector<Collider*> pAllColliders_;

@@ -28,10 +28,11 @@ void PlayerStateJump::Enter()
     if (pPlayer->GetIsGround())
     {
         Vector3 vel = pPlayer->GetVelocity();
-        vel.y_ = pPlayer->GetJumpPower(); //初速をセット
+        vel.y_ = pPlayer->GetJumpPower();   //初速をセット
         pPlayer->SetVelocity(vel);
 
-        pPlayer->SetIsGround(false); //接地フラグを返す
+        //接地フラグを返す
+        pPlayer->SetIsGround(false);        
     }
 }
 

@@ -45,15 +45,15 @@ void CollisionManager::UpdateCheckCollision(Stage* pStage)
 	for (auto pCollider : pAllColliders_)
 	{
 		if (pCollider) pCollider->Update();
+	}
 
-		//衝突判定フラグのリセット
-		//if (pCollider->GetOwner())
-		//{
-		//	if (auto pChar = dynamic_cast<Character*>(pCollider->GetOwner()))
-		//	{
-		//		pChar->ResetHitFlag();
-		//	}
-		//}
+	//キャラクターとステージの当たり判定
+	for (auto pCollider : pAllColliders_)
+	{
+		if (pCollider->GetType() == ColliderType::Capsule)
+		{
+			CheckCapsuleVsPolygon(pCollider, pStage);
+		}
 	}
 
 	for (size_t i = 0; i < pAllColliders_.size(); ++i)
@@ -310,5 +310,38 @@ void CollisionManager::CheckCapsuleVsCapsule(Collider* pCapsuleA, Collider* pCap
 				pObjB->SetPos(posB);
 			}
 		}
+	}
+}
+
+void CollisionManager::CheckCapsuleVsPolygon(Collider* pCapsule, Stage* pStage)
+{
+	CapsuleCollider* pCap = static_cast<CapsuleCollider*>(pCapsule);
+	Vector3 capA = pCap->GetWorldA();
+	Vector3 capB = pCap->GetWorldB();
+
+	//この範囲を地面とみなす
+	const float kCheckRange = 10.0f;
+	VECTOR start = VGet(capA.x_, capA.y_ - kCheckRange, capA.z_);
+	VECTOR end = VGet(capB.x_, capB.y_ + kCheckRange, capB.z_);
+
+	//DXライブラリの関数を用いて線分とポリゴンの当たり判定をチェックする
+	MV1_COLL_RESULT_POLY result = MV1CollCheck_Line(pStage->GetHandle(), -1, start, end);
+
+	Collidable* pOwner = pCapsule->GetOwner();
+	if (!pOwner)return;
+
+	if (result.HitFlag)
+	{
+		float groundY = result.HitPosition.y;
+
+		//現在位置を取得
+		Vector3 currentPos = pOwner->GetPos();
+
+		//位置の補正
+		float offsetY = currentPos.y_ - capA.y_;
+		currentPos.y_ = groundY + offsetY;
+
+		//位置の適用
+		pOwner->SetPos(currentPos);
 	}
 }
