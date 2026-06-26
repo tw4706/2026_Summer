@@ -73,7 +73,7 @@ void EnemyStateRun::Update()
 	//‹——£‚ÌŒvZ
 	float distance = std::sqrt(toPlayer.x_ * toPlayer.x_ + toPlayer.z_ * toPlayer.z_);
 
-	//‹——£‚ª0.1f(Œë·)‚¾‚Á‚½ê‡‚Í‰½‚às‚í‚È‚¢
+	//‹——£‚ª0.1f‚¾‚Á‚½ê‡‚Í‰½‚às‚í‚È‚¢
 	if (distance < 0.1f)
 	{
 		auto nextState = std::make_shared<EnemyStateAttack>(pEnemy_);

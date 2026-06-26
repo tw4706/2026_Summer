@@ -60,13 +60,10 @@ void CollisionManager::UpdateCheckCollision()
 		{
 			Collider* pColA = pAllColliders_[i];
 			Collider* pColB = pAllColliders_[j];
-
 			if (!pColA || !pColB) continue;
 
 			Collidable* pObjA = pColA->GetOwner();
 			Collidable* pObjB = pColB->GetOwner();
-
-			//同じオブジェクトのコライダー同士ならスキップ
 			if (pObjA == pObjB) continue;
 
 			//刀と、その刀の持ち主との衝突はスキップ
@@ -79,41 +76,48 @@ void CollisionManager::UpdateCheckCollision()
 				if (pKatanaB->GetOwnerCharacter() == pObjA) continue;
 			}
 
-			//球と球
-			if (pColA->GetType() == ColliderType::Sphere && pColB->GetType() == ColliderType::Sphere)
+			ColliderType typeA = pColA->GetType();
+			ColliderType typeB = pColB->GetType();
+
+			switch (typeA)
 			{
-				CheckSphereVsSphere(pObjA, pObjB);
-			}
-			//球とカプセル
-			else if (pColA->GetType() == ColliderType::Sphere && pColB->GetType() == ColliderType::Capsule)
-			{
-				CheckSphereVsCapsule(pObjA, pObjB);
-			}
-			//カプセルと球
-			else if (pColA->GetType() == ColliderType::Capsule && pColB->GetType() == ColliderType::Sphere)
-			{
-				CheckSphereVsCapsule(pObjB, pObjA);
-			}
-			//カプセルとカプセル
-			else if (pColA->GetType() == ColliderType::Capsule && pColB->GetType() == ColliderType::Capsule)
-			{
-				CheckCapsuleVsCapsule(pObjA, pObjB);
-			}
-			//カプセルとポリゴン
-			else if (pColA->GetType() == ColliderType::Capsule && pColB->GetType() == ColliderType::Polygon)
-			{
-				CheckCapsuleVsPolygon(pObjA, pObjB);
-			}
-			//ポリゴンとカプセル
-			else if (pColA->GetType() == ColliderType::Polygon && pColB->GetType() == ColliderType::Capsule)
-			{
-				CheckCapsuleVsPolygon(pObjB, pObjA);
+			case ColliderType::Sphere:
+				switch (typeB)
+				{
+				case ColliderType::Sphere:
+					CheckSphereVsSphere(pObjA, pObjB);
+					break;
+				case ColliderType::Capsule:
+					CheckSphereVsCapsule(pObjA, pObjB);
+					break;
+				}
+				break;
+
+			case ColliderType::Capsule:
+				switch (typeB)
+				{
+				case ColliderType::Sphere:
+					CheckSphereVsCapsule(pObjB, pObjA);
+					break;
+				case ColliderType::Capsule:
+					CheckCapsuleVsCapsule(pObjA, pObjB);
+					break;
+				case ColliderType::Polygon:
+					CheckCapsuleVsPolygon(pObjA, pObjB);
+					break;
+				}
+				break;
+
+			case ColliderType::Polygon:
+				if (typeB == ColliderType::Capsule)
+					CheckCapsuleVsPolygon(pObjB, pObjA);
+				break;
 			}
 		}
 	}
 }
 
-bool CollisionManager::CheckSphereVsCapsule(Collidable* pSphereObj, Collidable* pCapsuleObj)
+bool CollisionManager::CheckSphereVsCapsule(const std::shared_ptr<Collidable> pSphereObj, const std::shared_ptr<Collidable> pCapsuleObj)
 {
 	if (!pSphereObj || !pCapsuleObj) return false;
 
@@ -129,26 +133,24 @@ bool CollisionManager::CheckSphereVsCapsule(Collidable* pSphereObj, Collidable* 
 	Vector3 capB = pCap->GetWorldB();
 	float capRadius = pCap->GetRadius();
 
-	// ベクトルを計算
-	Vector3 ab = { capB.x_ - capA.x_, capB.y_ - capA.y_, capB.z_ - capA.z_ };
-	Vector3 ap = { sphereCenter.x_ - capA.x_, sphereCenter.y_ - capA.y_, sphereCenter.z_ - capA.z_ };
+	//ベクトルを計算
+	Vector3 ab = capB - capA;
+	Vector3 ap = sphereCenter - capA;
 
-	float dot = ap.x_ * ab.x_ + ap.y_ * ab.y_ + ap.z_ * ab.z_;
-	float abLenSq = ab.x_ * ab.x_ + ab.y_ * ab.y_ + ab.z_ * ab.z_;
+	//内積の計算
+	float dot = ap.Dot(ab);
+
+	//長さの二乗の計算
+	float abLenSq = ab.LengthSq();
 
 	float t = (abLenSq > 0.0f) ? (dot / abLenSq) : 0.0f;
 	if (t < 0.0f) t = 0.0f;
 	if (t > 1.0f) t = 1.0f;
 
-	Vector3 closestPointC;
-	closestPointC.x_ = capA.x_ + t * ab.x_;
-	closestPointC.y_ = capA.y_ + t * ab.y_;
-	closestPointC.z_ = capA.z_ + t * ab.z_;
+	Vector3 closestPointC = capA + (ab * t);
 
-	float dx = sphereCenter.x_ - closestPointC.x_;
-	float dy = sphereCenter.y_ - closestPointC.y_;
-	float dz = sphereCenter.z_ - closestPointC.z_;
-	float distSq = dx * dx + dy * dy + dz * dz;
+	float distSq = (sphereCenter - closestPointC).LengthSq();
+	float radSum = sphereRadius + capRadius;
 
 	float radSum = sphereRadius + capRadius;
 
@@ -162,7 +164,7 @@ bool CollisionManager::CheckSphereVsCapsule(Collidable* pSphereObj, Collidable* 
 	return true;
 }
 
-bool CollisionManager::CheckSphereVsSphere(Collidable* pSphereObjA, Collidable* pSphereObjB)
+bool CollisionManager::CheckSphereVsSphere(const std::shared_ptr<Collidable> pSphereObjA, const std::shared_ptr<Collidable> pSphereObjB)
 {
 	if (!pSphereObjA || !pSphereObjB) return false;
 
@@ -171,14 +173,11 @@ bool CollisionManager::CheckSphereVsSphere(Collidable* pSphereObjA, Collidable* 
 	float radA = 0.5f;
 	float radB = 0.5f;
 
-	float dx = posA.x_ - posB.x_;
-	float dy = posA.y_ - posB.y_;
-	float dz = posA.z_ - posB.z_;
-	float distSq = dx * dx + dy * dy + dz * dz;
-
+	//ABベクトルの距離とその2乗を求める
+	float distSq = (posA - posB).LengthSq();
 	float radSum = radA + radB;
 
-	// 当たっていなければ終了
+	//当たっていなければ終了
 	if (distSq > (radSum * radSum)) return false;
 
 	pSphereObjA->OnCollision(pSphereObjB);
@@ -187,7 +186,7 @@ bool CollisionManager::CheckSphereVsSphere(Collidable* pSphereObjA, Collidable* 
 	return true;
 }
 
-bool CollisionManager::CheckCapsuleVsCapsule(Collidable* pCapsuleObjA, Collidable* pCapsuleObjB)
+bool CollisionManager::CheckCapsuleVsCapsule(const std::shared_ptr<Collidable> pCapsuleObjA, const std::shared_ptr<Collidable> pCapsuleObjB)
 {
 	if (!pCapsuleObjA || !pCapsuleObjB) return false;
 
@@ -203,52 +202,61 @@ bool CollisionManager::CheckCapsuleVsCapsule(Collidable* pCapsuleObjA, Collidabl
 	Vector3 b1 = pCapB->GetWorldA();
 	Vector3 b2 = pCapB->GetWorldB();
 
-	Vector3 d1 = { a2.x_ - a1.x_, a2.y_ - a1.y_, a2.z_ - a1.z_ };
-	Vector3 d2 = { b2.x_ - b1.x_, b2.y_ - b1.y_, b2.z_ - b1.z_ };
-	Vector3 r = { a1.x_ - b1.x_, a1.y_ - b1.y_, a1.z_ - b1.z_ };
-
-	float f11 = d1.x_ * d1.x_ + d1.y_ * d1.y_ + d1.z_ * d1.z_;
-	float f22 = d2.x_ * d2.x_ + d2.y_ * d2.y_ + d2.z_ * d2.z_;
-	float f12 = d1.x_ * d2.x_ + d1.y_ * d2.y_ + d1.z_ * d2.z_;
-
-	float g1 = d1.x_ * r.x_ + d1.y_ * r.y_ + d1.z_ * r.z_;
-	float g2 = d2.x_ * r.x_ + d2.y_ * r.y_ + d2.z_ * r.z_;
-
-	float s = 0.0f;
-	float t = 0.0f;
-	float denom = f11 * f22 - f12 * f12;
-
-	if (denom != 0.0f)
-	{
-		s = (f12 * g2 - f22 * g1) / denom;
-		if (s < 0.0f) s = 0.0f;
-		if (s > 1.0f) s = 1.0f;
-		t = (f12 * s + g2) / f22;
-	}
-	else
-	{
-		s = 0.0f;
-		t = g2 / f22;
-	}
-
-	if (t < 0.0f) { t = 0.0f; s = -g1 / f11; }
-	else if (t > 1.0f) { t = 1.0f; s = (f12 - g1) / f11; }
-
-	if (s < 0.0f) s = 0.0f;
-	if (s > 1.0f) s = 1.0f;
-
-	Vector3 pointP = { a1.x_ + s * d1.x_, a1.y_ + s * d1.y_, a1.z_ + s * d1.z_ };
-	Vector3 pointQ = { b1.x_ + t * d2.x_, b1.y_ + t * d2.y_, b1.z_ + t * d2.z_ };
-
-	float dx = pointP.x_ - pointQ.x_;
-	float dy = pointP.y_ - pointQ.y_;
-	float dz = pointP.z_ - pointQ.z_;
-	float distSq = dx * dx + dy * dy + dz * dz;
-
 	float radSum = pCapA->GetRadius() + pCapB->GetRadius();
 
-	// 当たっていなければ即 false を返す
-	if (distSq > (radSum * radSum)) return false;
+	//最小距離の二乗を記憶する変数
+	float minDistanceSq = 1000000.0f;
+	Vector3 pointP, pointQ; //最終的なお互いの最近接点
+
+	//垂線チェックループ
+	for (int i = 0; i < 2; ++i)
+	{
+		// i=0 の時は線分B(b1->b2)に対して、カプセルAの端点を下ろす
+		// i=1 の時は線分A(a1->a2)に対して、カプセルBの端点を下ろす
+		Vector3 lineStart = (i == 0) ? b1 : a1;
+		Vector3 lineEnd = (i == 0) ? b2 : a2;
+		Vector3 ab = lineEnd - lineStart;
+		float abSqMag = ab.LengthSq();
+
+		for (int j = 0; j < 2; ++j)
+		{
+			//調べる対象の点（カプセルの端点）
+			Vector3 checkPoint;
+			if (i == 0) checkPoint = (j == 0) ? a1 : a2;
+			else        checkPoint = (j == 0) ? b1 : b2;
+
+			//点から線分の始点へのベクトル
+			Vector3 ap = checkPoint - lineStart;
+
+			//内積から垂線の位置 t を計算してクランプ
+			float t = (abSqMag > 0.0f) ? ap.Dot(ab) / abSqMag : 0.0f;
+			if (t < 0.0f) t = 0.0f;
+			if (t > 1.0f) t = 1.0f;
+
+			//線分上の最短座標
+			Vector3 minPos = lineStart + (ab * t);
+			float distSq = (checkPoint - minPos).LengthSq();
+
+			//記録されている最小距離より短ければ更新
+			if (distSq < minDistanceSq)
+			{
+				minDistanceSq = distSq;
+				if (i == 0)
+				{
+					pointP = checkPoint; //カプセルA上の点
+					pointQ = minPos;     //カプセルB上の点
+				}
+				else
+				{
+					pointP = minPos;     //カプセルA上の点
+					pointQ = checkPoint; //カプセルB上の点
+				}
+			}
+		}
+	}
+
+	//当たっていなければ終了
+	if (minDistanceSq > (radSum * radSum)) return false;
 
 	// 衝突イベントを通知
 	pCapsuleObjA->OnCollision(pCapsuleObjB);
@@ -258,17 +266,16 @@ bool CollisionManager::CheckCapsuleVsCapsule(Collidable* pCapsuleObjA, Collidabl
 	bool isKatanaInvolved = (dynamic_cast<Katana*>(pCapsuleObjA) != nullptr || dynamic_cast<Katana*>(pCapsuleObjB) != nullptr);
 	if (isKatanaInvolved) return true;
 
-	float dist = std::sqrt(distSq);
+	float dist = std::sqrt(minDistanceSq);
 	if (dist > 0.0f)
 	{
 		float overlap = radSum - dist;
-		Vector3 dirBtoA = { (pointP.x_ - pointQ.x_) / dist, (pointP.y_ - pointQ.y_) / dist, (pointP.z_ - pointQ.z_) / dist };
-		Vector3 dirAtoB = { -dirBtoA.x_, -dirBtoA.y_, -dirBtoA.z_ };
+		Vector3 dirBtoA = (pointP - pointQ).Normalize();
 
 		float weightA = 0.5f;
 		float weightB = 0.5f;
 
-		// GetOwner()を経由せず、直接キャストを判定できる
+		//直接キャストを判定する
 		if (dynamic_cast<Player*>(pCapsuleObjA)) { weightA = 1.0f; weightB = 0.0f; }
 		else if (dynamic_cast<Player*>(pCapsuleObjB)) { weightA = 0.0f; weightB = 1.0f; }
 
@@ -278,15 +285,15 @@ bool CollisionManager::CheckCapsuleVsCapsule(Collidable* pCapsuleObjA, Collidabl
 		pCapsuleObjA->SetPos(posA);
 
 		Vector3 posB = pCapsuleObjB->GetPos();
-		posB.x_ += dirAtoB.x_ * overlap * weightB;
-		posB.z_ += dirAtoB.z_ * overlap * weightB;
+		posB.x_ -= dirBtoA.x_ * overlap * weightB;
+		posB.z_ -= dirBtoA.z_ * overlap * weightB;
 		pCapsuleObjB->SetPos(posB);
 	}
 
 	return true;
 }
 
-bool CollisionManager::CheckCapsuleVsPolygon(Collidable* pCapsuleObj, Collidable* pPolygonObj)
+bool CollisionManager::CheckCapsuleVsPolygon(const std::shared_ptr<Collidable> pCapsuleObj, const std::shared_ptr<Collidable> pPolygonObj)
 {
 	//コライダーが存在しない場合はfalseを返して何もしない
 	if (!pCapsuleObj || !pPolygonObj) return false;
@@ -311,16 +318,11 @@ bool CollisionManager::CheckCapsuleVsPolygon(Collidable* pCapsuleObj, Collidable
 	int modelHandle = pPoly->GetModelHandle();
 	if (modelHandle < 0) return false;
 
-	printfDx(L"capA=(%.2f, %.2f, %.2f) capB=(%.2f, %.2f, %.2f) radius=%.2f\n",
-		capA.x_, capA.y_, capA.z_,
-		capB.x_, capB.y_, capB.z_,
-		capRadius);
-
 	//Dxライブラリの関数でカプセルとポリゴンの当たり判定のチェックを行う
 	MV1_COLL_RESULT_POLY_DIM result = MV1CollCheck_Capsule(
 		modelHandle, -1,
-		VGet(capA.x_, capA.y_, capA.z_),
-		VGet(capB.x_, capB.y_, capB.z_),
+		capA.ToDxlibVector(),
+		capB.ToDxlibVector(),
 		capRadius);
 
 	bool isHit = (result.HitNum > 0);
@@ -339,10 +341,11 @@ bool CollisionManager::CheckCapsuleVsPolygon(Collidable* pCapsuleObj, Collidable
 		for (int i = 0; i < result.HitNum; ++i)
 		{
 			MV1_COLL_RESULT_POLY& poly = result.Dim[i];
-			VECTOR normal = poly.Normal;
+			Vector3 normal = poly.Normal;
 
 			//法線のY咆哮の傾きで床か壁かを判定する
-			if (normal.y > 0.1f)
+			//床の場合
+			if (normal.y_ > 0.1f)
 			{
 				float targetCapAY = poly.HitPosition.y + capRadius;
 				float diffY = targetCapAY - capA.y_;
@@ -351,47 +354,44 @@ bool CollisionManager::CheckCapsuleVsPolygon(Collidable* pCapsuleObj, Collidable
 				capB.y_ += diffY;
 				pCapsuleObj->SetIsGround(true);
 			}
+			//壁の場合
 			else
 			{
-				//カプセル軸上で、このヒット位置に最も近い点を求める
-				Vector3 ab = { capB.x_ - capA.x_, capB.y_ - capA.y_, capB.z_ - capA.z_ };
-				Vector3 hitPos = { poly.HitPosition.x, poly.HitPosition.y, poly.HitPosition.z };
-				Vector3 ah = { hitPos.x_ - capA.x_, hitPos.y_ - capA.y_, hitPos.z_ - capA.z_ };
+				//壁の押し戻し
+				Vector3 norm(normal.x_, 0.0f, normal.z_);
+				float normLen = norm.Length();
+				if (normLen < 0.0001f) continue;
+				norm = norm / normLen;
 
-				float abLenSq = ab.x_ * ab.x_ + ab.y_ * ab.y_ + ab.z_ * ab.z_;
-				float t = (abLenSq > 0.0f) ? ((ah.x_ * ab.x_ + ah.y_ * ab.y_ + ah.z_ * ab.z_) / abLenSq) : 0.0f;
-				if (t < 0.0f) t = 0.0f;
-				if (t > 1.0f) t = 1.0f;
+				// 法線方向への移動量がめり込み量
+				Vector3 vel = pCapsuleObj->GetVelocity();
+				float moveAlongNormal = -(vel.Dot(norm));
 
-				Vector3 closest;
-				closest.x_ = capA.x_ + t * ab.x_;
-				closest.y_ = capA.y_ + t * ab.y_;
-				closest.z_ = capA.z_ + t * ab.z_;
-
-				float dx = closest.x_ - hitPos.x_;
-				float dy = closest.y_ - hitPos.y_;
-				float dz = closest.z_ - hitPos.z_;
-				float distAlongNormal = dx * normal.x + dy * normal.y + dz * normal.z;
-				float penetration = capRadius - distAlongNormal;
-
-				if (penetration > 0.0f)
+				if (moveAlongNormal > 0.0f)
 				{
-					pos.x_ += normal.x * penetration;
-					pos.z_ += normal.z * penetration;
-					capA.x_ += normal.x * penetration;
-					capA.z_ += normal.z * penetration;
-					capB.x_ += normal.x * penetration;
-					capB.z_ += normal.z * penetration;
+					Vector3 pushVec = norm * moveAlongNormal;
+					pos += pushVec;
+					capA += pushVec;
+					capB += pushVec;
+
+					//壁方向の速度をゼロにする
+					Vector3 v = pCapsuleObj->GetVelocity();
+					float vDotN = v.Dot(norm);
+					if (vDotN < 0.0f)
+					{
+						v -= norm * vDotN;
+						pCapsuleObj->SetVelocity(v);
+					}
 				}
 			}
+
+			//位置の適用
+			pCapsuleObj->SetPos(pos);
 		}
+		//メモリの解放を行う
+		MV1CollResultPolyDimTerminate(result);
 
-		//位置の適用
-		pCapsuleObj->SetPos(pos);
+		//当たっているかどうかを返す
+		return isHit;
 	}
-	//メモリの解放を行う
-	MV1CollResultPolyDimTerminate(result);
-
-	//当たっているかどうかを返す
-	return isHit;
 }

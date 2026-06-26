@@ -33,22 +33,22 @@ private:
 	/// <summary>
 	/// 球とカプセルの当たり判定
 	/// </summary>
-	bool CheckSphereVsCapsule(Collidable* pSphereObj, Collidable* pCapsuleObj);
+	bool CheckSphereVsCapsule(const std::shared_ptr<Collidable> pSphereObj, const std::shared_ptr<Collidable> pCapsuleObj);
 
 	/// <summary>
 	/// 2つの球体コライダーの当たり判定
 	/// </summary>
-	bool CheckSphereVsSphere(Collidable* pSphereObjA, Collidable* pSphereObjB);
+	bool CheckSphereVsSphere(const std::shared_ptr<Collidable> pSphereObjA, const std::shared_ptr<Collidable> pSphereObjB);
 
 	/// <summary>
 	/// 2つのカプセルコライダーの当たり判定
 	/// </summary>
-	bool CheckCapsuleVsCapsule(Collidable* pCapsuleObjA, Collidable* pCapsuleObjB);
+	bool CheckCapsuleVsCapsule(const std::shared_ptr<Collidable> pCapsuleObjA, const std::shared_ptr<Collidable> pCapsuleObjB);
 
 	/// <summary>
 	/// カプセルとポリゴンの当たり判定
 	/// </summary>
-	bool CheckCapsuleVsPolygon(Collidable* pCapsuleObj, Collidable* pPolygonObj);
+	bool CheckCapsuleVsPolygon(const std::shared_ptr<Collidable> pCapsuleObj, Collidable* pPolygonObj);
 private:
 	// ゲーム内に存在する全コライダーのポインタ配列
 	std::vector<Collider*> pAllColliders_;
