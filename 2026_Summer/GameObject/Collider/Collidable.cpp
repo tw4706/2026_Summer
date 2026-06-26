@@ -26,7 +26,7 @@ void Collidable::AddCollider(std::unique_ptr<Collider> pCollider)
 {
 	if (!pCollider)return;
 
-	pCollider->SetOwner(this);
+	pCollider->SetOwner(*this);
 	colliders_.push_back(std::move(pCollider));
 }
 

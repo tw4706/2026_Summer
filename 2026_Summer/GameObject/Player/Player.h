@@ -21,7 +21,7 @@ public:
 	/// 衝突判定
 	/// </summary>
 	/// <param name="obj">衝突したゲームオブジェクト</param>
-	void OnCollision(Collidable* coll)override;
+	void OnCollision(Collidable& coll)override;
 
 	/// ==============================
 	/// ゲッター・セッター

@@ -1,5 +1,6 @@
 #pragma once
 #include<vector>
+#include<memory>
 
 class Stage;
 class Vector3;
@@ -33,22 +34,22 @@ private:
 	/// <summary>
 	/// 球とカプセルの当たり判定
 	/// </summary>
-	bool CheckSphereVsCapsule(const std::shared_ptr<Collidable> pSphereObj, const std::shared_ptr<Collidable> pCapsuleObj);
+	bool CheckSphereVsCapsule(Collidable& sphereObj, Collidable& capsuleObj);
 
 	/// <summary>
 	/// 2つの球体コライダーの当たり判定
 	/// </summary>
-	bool CheckSphereVsSphere(const std::shared_ptr<Collidable> pSphereObjA, const std::shared_ptr<Collidable> pSphereObjB);
+	bool CheckSphereVsSphere(Collidable& sphereObj, Collidable& capsuleObj);
 
 	/// <summary>
 	/// 2つのカプセルコライダーの当たり判定
 	/// </summary>
-	bool CheckCapsuleVsCapsule(const std::shared_ptr<Collidable> pCapsuleObjA, const std::shared_ptr<Collidable> pCapsuleObjB);
+	bool CheckCapsuleVsCapsule(Collidable& pCapsuleObjA, Collidable& pCapsuleObjB);
 
 	/// <summary>
 	/// カプセルとポリゴンの当たり判定
 	/// </summary>
-	bool CheckCapsuleVsPolygon(const std::shared_ptr<Collidable> pCapsuleObj, Collidable* pPolygonObj);
+	bool CheckCapsuleVsPolygon(Collidable& pCapsuleObj, Collidable& pPolygonObj);
 private:
 	// ゲーム内に存在する全コライダーのポインタ配列
 	std::vector<Collider*> pAllColliders_;

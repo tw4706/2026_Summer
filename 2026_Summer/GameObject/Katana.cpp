@@ -122,7 +122,7 @@ void Katana::Draw()
 #endif
 }
 
-void Katana::OnCollision(Collidable* coll)
+void Katana::OnCollision(Collidable& coll)
 {
 	//“–‚½‚è”»’è‚ª–³Œø‚È‚Í‰½‚à‚µ‚È‚¢
 	if (!IsEnabled())return;
@@ -134,7 +134,7 @@ void Katana::OnCollision(Collidable* coll)
 	isHit_ = true;
 
 	//“G‚©‚Ç‚¤‚©‚ğ”»’è‚µ‚Äƒ_ƒ[ƒW‚ğ—^‚¦‚é
-	EnemyBase* pEnemy = dynamic_cast<EnemyBase*>(coll);
+	EnemyBase* pEnemy = dynamic_cast<EnemyBase*>(&coll);
 	if (pEnemy)
 	{
 		pEnemy->OnDamage(kAttackDamage);

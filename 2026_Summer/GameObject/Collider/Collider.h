@@ -26,13 +26,13 @@ public:
 	/// コライダーの持ち主のセット
 	/// </summary>
 	/// <param name="owner">コライダーを持つオブジェクト</param>
-	void SetOwner(Collidable* owner);
+	void SetOwner(Collidable& owner);
 
 	/// <summary>
 	///	コライダーの持ち主の取得
 	/// </summary>
-	/// <returns>持ち主を返す</returns>
-	Collidable* GetOwner()const { return pOwner_; }
+	/// <returns>コライダーの持ち主</returns>
+	Collidable& GetOwner()const { return *pOwner_; }
 
 protected:
 	ColliderType type_;		//コライダーの種類

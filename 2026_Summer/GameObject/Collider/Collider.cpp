@@ -6,7 +6,7 @@ Collider::Collider(ColliderType type):
 {
 }
 
-void Collider::SetOwner(Collidable* owner)
+void Collider::SetOwner(Collidable& owner)
 {
-	pOwner_ = owner;
+	pOwner_ = &owner;
 }

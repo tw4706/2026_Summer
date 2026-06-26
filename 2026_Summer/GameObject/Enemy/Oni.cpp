@@ -143,10 +143,10 @@ void Oni::Draw()
 #endif
 }
 
-void Oni::OnCollision(Collidable* coll)
+void Oni::OnCollision(Collidable& coll)
 {
 	//‘Šè‚ÌŒ^‚ª“‚¾‚Á‚½ê‡‚Í‰½‚à‚µ‚È‚¢
-	if (dynamic_cast<Katana*>(coll))
+	if (dynamic_cast<Katana*>(&coll))
 	{
 		return;
 	}

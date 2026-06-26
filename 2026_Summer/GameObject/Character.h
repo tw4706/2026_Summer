@@ -16,12 +16,6 @@ public:
 	virtual void Draw()abstract;
 
 	/// <summary>
-	/// 衝突判定
-	/// </summary>
-	/// <param name="obj">衝突したゲームオブジェクト</param>
-	virtual void OnCollision(Collidable* coll)override abstract;
-
-	/// <summary>
 	/// 状態の切り替え
 	/// </summary>
 	void ChangeState(std::shared_ptr<CharacterStateBase> pNextState);

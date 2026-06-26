@@ -48,8 +48,7 @@ void CollisionManager::UpdateCheckCollision()
 	{
 		if (pCollider)
 		{
-			Collidable* pOwner = pCollider->GetOwner();
-			if (pOwner) pOwner->SetIsGround(false);
+			pCollider->GetOwner().SetIsGround(false);
 			pCollider->Update();
 		}
 	}
@@ -62,18 +61,18 @@ void CollisionManager::UpdateCheckCollision()
 			Collider* pColB = pAllColliders_[j];
 			if (!pColA || !pColB) continue;
 
-			Collidable* pObjA = pColA->GetOwner();
-			Collidable* pObjB = pColB->GetOwner();
-			if (pObjA == pObjB) continue;
+			Collidable& pObjA = pColA->GetOwner();
+			Collidable& pObjB = pColB->GetOwner();
+			if (&pObjA == &pObjB) continue;
 
 			//刀と、その刀の持ち主との衝突はスキップ
-			if (Katana* pKatanaA = dynamic_cast<Katana*>(pObjA))
+			if (Katana* pKatanaA = dynamic_cast<Katana*>(&pObjA))
 			{
-				if (pKatanaA->GetOwnerCharacter() == pObjB) continue;
+				if (pKatanaA->GetOwnerCharacter() == &pObjB) continue;
 			}
-			if (Katana* pKatanaB = dynamic_cast<Katana*>(pObjB))
+			if (Katana* pKatanaB = dynamic_cast<Katana*>(&pObjB))
 			{
-				if (pKatanaB->GetOwnerCharacter() == pObjA) continue;
+				if (pKatanaB->GetOwnerCharacter() == &pObjA) continue;
 			}
 
 			ColliderType typeA = pColA->GetType();
@@ -117,15 +116,15 @@ void CollisionManager::UpdateCheckCollision()
 	}
 }
 
-bool CollisionManager::CheckSphereVsCapsule(const std::shared_ptr<Collidable> pSphereObj, const std::shared_ptr<Collidable> pCapsuleObj)
+bool CollisionManager::CheckSphereVsCapsule(Collidable& pSphereObj, Collidable& pCapsuleObj)
 {
-	if (!pSphereObj || !pCapsuleObj) return false;
+	if (!&pSphereObj || !&pCapsuleObj) return false;
 
 	// 各オブジェクトから必要なコライダーデータを取得
-	Vector3 sphereCenter = pSphereObj->GetPos();
+	Vector3 sphereCenter = pSphereObj.GetPos();
 	float sphereRadius = 0.5f;
 
-	const auto& colliders = pCapsuleObj->GetColliders();
+	const auto& colliders = pCapsuleObj.GetColliders();
 	if (colliders.empty()) return false;
 	CapsuleCollider* pCap = static_cast<CapsuleCollider*>(colliders[0].get());
 
@@ -152,24 +151,22 @@ bool CollisionManager::CheckSphereVsCapsule(const std::shared_ptr<Collidable> pS
 	float distSq = (sphereCenter - closestPointC).LengthSq();
 	float radSum = sphereRadius + capRadius;
 
-	float radSum = sphereRadius + capRadius;
-
 	// 当たっていなければ終了
 	if (distSq > (radSum * radSum)) return false;
 
 	// 衝突時の通知
-	pSphereObj->OnCollision(pCapsuleObj);
-	pCapsuleObj->OnCollision(pSphereObj);
+	pSphereObj.OnCollision(pCapsuleObj);
+	pCapsuleObj.OnCollision(pSphereObj);
 
 	return true;
 }
 
-bool CollisionManager::CheckSphereVsSphere(const std::shared_ptr<Collidable> pSphereObjA, const std::shared_ptr<Collidable> pSphereObjB)
+bool CollisionManager::CheckSphereVsSphere(Collidable& pSphereObjA, Collidable& pSphereObjB)
 {
-	if (!pSphereObjA || !pSphereObjB) return false;
+	if (!&pSphereObjA || !&pSphereObjB) return false;
 
-	Vector3 posA = pSphereObjA->GetPos();
-	Vector3 posB = pSphereObjB->GetPos();
+	Vector3 posA = pSphereObjA.GetPos();
+	Vector3 posB = pSphereObjB.GetPos();
 	float radA = 0.5f;
 	float radB = 0.5f;
 
@@ -180,18 +177,18 @@ bool CollisionManager::CheckSphereVsSphere(const std::shared_ptr<Collidable> pSp
 	//当たっていなければ終了
 	if (distSq > (radSum * radSum)) return false;
 
-	pSphereObjA->OnCollision(pSphereObjB);
-	pSphereObjB->OnCollision(pSphereObjA);
+	pSphereObjA.OnCollision(pSphereObjB);
+	pSphereObjB.OnCollision(pSphereObjA);
 
 	return true;
 }
 
-bool CollisionManager::CheckCapsuleVsCapsule(const std::shared_ptr<Collidable> pCapsuleObjA, const std::shared_ptr<Collidable> pCapsuleObjB)
+bool CollisionManager::CheckCapsuleVsCapsule(Collidable& pCapsuleObjA, Collidable& pCapsuleObjB)
 {
-	if (!pCapsuleObjA || !pCapsuleObjB) return false;
+	if (!&pCapsuleObjA || !&pCapsuleObjB) return false;
 
-	const auto& colsA = pCapsuleObjA->GetColliders();
-	const auto& colsB = pCapsuleObjB->GetColliders();
+	const auto& colsA = pCapsuleObjA.GetColliders();
+	const auto& colsB = pCapsuleObjB.GetColliders();
 	if (colsA.empty() || colsB.empty()) return false;
 
 	CapsuleCollider* pCapA = static_cast<CapsuleCollider*>(colsA[0].get());
@@ -259,11 +256,11 @@ bool CollisionManager::CheckCapsuleVsCapsule(const std::shared_ptr<Collidable> p
 	if (minDistanceSq > (radSum * radSum)) return false;
 
 	// 衝突イベントを通知
-	pCapsuleObjA->OnCollision(pCapsuleObjB);
-	pCapsuleObjB->OnCollision(pCapsuleObjA);
+	pCapsuleObjA.OnCollision(pCapsuleObjB);
+	pCapsuleObjB.OnCollision(pCapsuleObjA);
 
 	// 刀が絡んでいる場合は押し戻しをスキップして終了
-	bool isKatanaInvolved = (dynamic_cast<Katana*>(pCapsuleObjA) != nullptr || dynamic_cast<Katana*>(pCapsuleObjB) != nullptr);
+	bool isKatanaInvolved = (dynamic_cast<Katana*>(&pCapsuleObjA) != nullptr || dynamic_cast<Katana*>(&pCapsuleObjB) != nullptr);
 	if (isKatanaInvolved) return true;
 
 	float dist = std::sqrt(minDistanceSq);
@@ -276,33 +273,33 @@ bool CollisionManager::CheckCapsuleVsCapsule(const std::shared_ptr<Collidable> p
 		float weightB = 0.5f;
 
 		//直接キャストを判定する
-		if (dynamic_cast<Player*>(pCapsuleObjA)) { weightA = 1.0f; weightB = 0.0f; }
-		else if (dynamic_cast<Player*>(pCapsuleObjB)) { weightA = 0.0f; weightB = 1.0f; }
+		if (dynamic_cast<Player*>(&pCapsuleObjA)) { weightA = 1.0f; weightB = 0.0f; }
+		else if (dynamic_cast<Player*>(&pCapsuleObjB)) { weightA = 0.0f; weightB = 1.0f; }
 
-		Vector3 posA = pCapsuleObjA->GetPos();
+		Vector3 posA = pCapsuleObjA.GetPos();
 		posA.x_ += dirBtoA.x_ * overlap * weightA;
 		posA.z_ += dirBtoA.z_ * overlap * weightA;
-		pCapsuleObjA->SetPos(posA);
+		pCapsuleObjA.SetPos(posA);
 
-		Vector3 posB = pCapsuleObjB->GetPos();
+		Vector3 posB = pCapsuleObjB.GetPos();
 		posB.x_ -= dirBtoA.x_ * overlap * weightB;
 		posB.z_ -= dirBtoA.z_ * overlap * weightB;
-		pCapsuleObjB->SetPos(posB);
+		pCapsuleObjB.SetPos(posB);
 	}
 
 	return true;
 }
 
-bool CollisionManager::CheckCapsuleVsPolygon(const std::shared_ptr<Collidable> pCapsuleObj, const std::shared_ptr<Collidable> pPolygonObj)
+bool CollisionManager::CheckCapsuleVsPolygon(Collidable& pCapsuleObj, Collidable& pPolygonObj)
 {
 	//コライダーが存在しない場合はfalseを返して何もしない
-	if (!pCapsuleObj || !pPolygonObj) return false;
+	if (!&pCapsuleObj || !&pPolygonObj) return false;
 
-	if (dynamic_cast<Stage*>(pCapsuleObj)) return false;
+	if (dynamic_cast<Stage*>(&pCapsuleObj)) return false;
 
 	//コライダーの配列を取得
-	const auto& capCols = pCapsuleObj->GetColliders();
-	const auto& polyCols = pPolygonObj->GetColliders();
+	const auto& capCols = pCapsuleObj.GetColliders();
+	const auto& polyCols = pPolygonObj.GetColliders();
 	if (capCols.empty() || polyCols.empty()) return false;
 
 	//コライダーのポインタをキャストして取得
@@ -331,12 +328,12 @@ bool CollisionManager::CheckCapsuleVsPolygon(const std::shared_ptr<Collidable> p
 	if (isHit)
 	{
 		//衝突処理
-		pCapsuleObj->OnCollision(pPolygonObj);
-		pPolygonObj->OnCollision(pCapsuleObj);
+		//pCapsuleObj.OnCollision(pPolygonObj);
+		//pPolygonObj.OnCollision(pCapsuleObj);
 
 		//押し戻し処理
 		//各ヒットポリゴンの法線方向に押し戻しを行う
-		Vector3 pos = pCapsuleObj->GetPos();
+		Vector3 pos = pCapsuleObj.GetPos();
 
 		for (int i = 0; i < result.HitNum; ++i)
 		{
@@ -352,7 +349,7 @@ bool CollisionManager::CheckCapsuleVsPolygon(const std::shared_ptr<Collidable> p
 				pos.y_ += diffY;
 				capA.y_ += diffY;
 				capB.y_ += diffY;
-				pCapsuleObj->SetIsGround(true);
+				pCapsuleObj.SetIsGround(true);
 			}
 			//壁の場合
 			else
@@ -364,7 +361,7 @@ bool CollisionManager::CheckCapsuleVsPolygon(const std::shared_ptr<Collidable> p
 				norm = norm / normLen;
 
 				// 法線方向への移動量がめり込み量
-				Vector3 vel = pCapsuleObj->GetVelocity();
+				Vector3 vel = pCapsuleObj.GetVelocity();
 				float moveAlongNormal = -(vel.Dot(norm));
 
 				if (moveAlongNormal > 0.0f)
@@ -375,18 +372,18 @@ bool CollisionManager::CheckCapsuleVsPolygon(const std::shared_ptr<Collidable> p
 					capB += pushVec;
 
 					//壁方向の速度をゼロにする
-					Vector3 v = pCapsuleObj->GetVelocity();
+					Vector3 v = pCapsuleObj.GetVelocity();
 					float vDotN = v.Dot(norm);
 					if (vDotN < 0.0f)
 					{
 						v -= norm * vDotN;
-						pCapsuleObj->SetVelocity(v);
+						pCapsuleObj.SetVelocity(v);
 					}
 				}
 			}
 
 			//位置の適用
-			pCapsuleObj->SetPos(pos);
+			pCapsuleObj.SetPos(pos);
 		}
 		//メモリの解放を行う
 		MV1CollResultPolyDimTerminate(result);

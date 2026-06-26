@@ -147,7 +147,7 @@ void Player::Draw()
 #endif
 }
 
-void Player::OnCollision(Collidable* coll)
+void Player::OnCollision(Collidable& coll)
 {
 	isHit_ = true;
 }
