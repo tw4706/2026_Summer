@@ -74,6 +74,12 @@ void GameScene::Init(Input& input)
 		if (auto stage = std::dynamic_pointer_cast<Stage>(obj))
 		{
 			stage->Init();
+
+			//コライダーの登録
+			for (const auto& pCollider : stage->GetColliders())
+			{
+				pCollisionManager_->RegisterCollider(pCollider.get());
+			}
 		}
 		else if (auto player = std::dynamic_pointer_cast<Player>(obj)) {
 
@@ -150,7 +156,7 @@ void GameScene::Update(Input& input)
 	//当たり判定の更新
 	if (pCollisionManager_)
 	{
-		pCollisionManager_->UpdateCheckCollision(pStage_.get());
+		pCollisionManager_->UpdateCheckCollision();
 	}
 
 	//死んだオブジェクトのコライダーは、配列から消える前にコリジョンマネージャーから外す

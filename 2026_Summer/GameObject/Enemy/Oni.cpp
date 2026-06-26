@@ -49,9 +49,7 @@ void Oni::Init()
 
 	//コライダーの登録
 	Vector3 colOffset = { 0.0f, 145.0f, 0.0f };
-	auto pCapsule = std::make_unique<CapsuleCollider>(55.0f, 180.0f, colOffset);
-
-	this->AddCollider(std::move(pCapsule));
+	this->CreateCollider<CapsuleCollider>(55.0f, 180.0f, colOffset);
 }
 
 void Oni::Update()
@@ -147,7 +145,7 @@ void Oni::Draw()
 
 void Oni::OnCollision(Collidable* coll)
 {
-	//相手が刀だった場合は何もしない
+	//相手の型が刀だった場合は何もしない
 	if (dynamic_cast<Katana*>(coll))
 	{
 		return;

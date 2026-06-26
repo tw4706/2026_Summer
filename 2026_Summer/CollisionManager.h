@@ -27,7 +27,7 @@ public:
 	/// 衝突判定の更新
 	/// </summary>
 	/// <param name="pStage">ステージのポインタ</param>
-	void UpdateCheckCollision(Stage* pStage);
+	void UpdateCheckCollision();
 
 private:
 	/// <summary>
@@ -44,6 +44,11 @@ private:
 	/// 2つのカプセルコライダーの当たり判定
 	/// </summary>
 	bool CheckCapsuleVsCapsule(Collidable* pCapsuleObjA, Collidable* pCapsuleObjB);
+
+	/// <summary>
+	/// カプセルとポリゴンの当たり判定
+	/// </summary>
+	bool CheckCapsuleVsPolygon(Collidable* pCapsuleObj, Collidable* pPolygonObj);
 private:
 	// ゲーム内に存在する全コライダーのポインタ配列
 	std::vector<Collider*> pAllColliders_;

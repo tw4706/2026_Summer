@@ -13,7 +13,7 @@
 namespace
 {
 	//初期位置
-	const Vector3 kFirstPos = { 0.0f, 0.0f, 0.0f };
+	const Vector3 kFirstPos = { 0.0f, -60.0f, 0.0f };
 
 	//初期スケール
 	const Vector3 kFirstScale = { 1.0f, 1.0f, 1.0f };
@@ -52,9 +52,7 @@ void Player::Init()
 
 	//コライダーの登録
 	Vector3 colOffset = { 0.0f, 120.0f, 0.0f };
-	auto pCapsule = std::make_unique<CapsuleCollider>(40.0f, 160.0f, colOffset);
-	//所有権をCollidableに渡す
-	this->AddCollider(std::move(pCapsule));
+	this->CreateCollider<CapsuleCollider>(40.0f, 160.0f, colOffset);
 
 	//刀の生成・初期化
 	pKatana_ = std::make_unique<Katana>(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f);

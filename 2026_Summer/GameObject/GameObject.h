@@ -4,8 +4,8 @@
 class Collider;
 class GameObject
 {
-public :
-	GameObject(Vector3 pos,Vector3 vel,float dir);
+public:
+	GameObject(Vector3 pos, Vector3 vel, float dir);
 	virtual~GameObject();
 
 	virtual void Init()abstract;
@@ -34,7 +34,7 @@ public :
 	/// 位置の設定
 	/// </summary>
 	/// <param name="pos">設定する位置</param>
-	void SetPos(const Vector3& pos){ pos_ = pos; }
+	void SetPos(const Vector3& pos) { pos_ = pos; }
 
 	/// <summary>
 	/// 速度の取得
@@ -59,7 +59,7 @@ public :
 	/// 位置の更新
 	/// </summary>
 	/// <param name="pos">座標</param>
-	void AddPosition() { pos_ += vel_; }
+	void AddPosition();
 
 protected:
 	Vector3 pos_;	//座標

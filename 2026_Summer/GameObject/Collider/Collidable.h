@@ -30,6 +30,21 @@ public:
 	void AddCollider(std::unique_ptr<Collider> pCollider);
 
 	/// <summary>
+	/// コライダーを生成して登録を行うテンプレート
+	/// </summary>
+	/// <typeparam name="T">Colliderの派生クラス</typeparam>
+	/// <param name="args">Tのコンストラクタ引数</param>
+	/// <returns>生成したコライダーへのポインタ(所有権はCollidableのまま)</returns>
+	template<typename T, typename... Args>
+	T* CreateCollider(Args&&... args)
+	{
+		auto pCollider = std::make_unique<T>(std::forward<Args>(args)...);
+		T* pRawPtr = pCollider.get();
+		AddCollider(std::move(pCollider));
+		return pRawPtr;
+	}
+
+	/// <summary>
 	/// 衝突判定
 	/// </summary>
 	/// <param name="obj">ゲームオブジェクト</param>
@@ -67,7 +82,7 @@ public:
 protected:
 	bool isHit_ = false;						//当たっているかどうか
 	bool isEnabled_ = false;					//有効かどうか
-	bool isGround_ = true;						//地面についているかどうか
+	bool isGround_ = false;						//地面についているかどうか
 
 	//コライダーの配列
 	std::vector<std::unique_ptr<Collider>>colliders_;
