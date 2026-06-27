@@ -11,7 +11,7 @@ namespace
 {
 	//プレイヤーアニメーション
 	//Idle
-	const wchar_t* kPlayerIdle = L"Player| Idle";
+	const wchar_t* kPlayerIdle = L"Player|Idle";
 
     //入力のしきい値
     constexpr float kInputEpsilon = 0.01f;

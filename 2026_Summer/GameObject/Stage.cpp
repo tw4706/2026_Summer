@@ -15,6 +15,7 @@ void Stage::Init()
 	//モデルのロード
 	stageModel_.Load(L"data/Stage.mv1");
 
+	MV1SetRotationXYZ(stageModel_.GetHandle(), VGet(0.0f, -DX_PI_F / 2.0f, 0.0f));
 	MV1SetPosition(stageModel_.GetHandle(), VGet(0.0f, -100.0f, 0.0f));
 
 	//モデルの総ポリゴン当たり判定データを構築

@@ -34,7 +34,7 @@ void Katana::Init()
 	//“ƒ‚ƒfƒ‹‚Ìƒ[ƒh
 	katanaModel_.Load(L"data/Tachi.mv1");
 	
-	auto pCapsule = std::make_unique<CapsuleCollider>(15.0f, 80.0f, Vector3{ 0.0f, 0.0f, 0.0f });
+	auto pCapsule = std::make_unique<CapsuleCollider>(10.0f, 60.0f, Vector3{ 0.0f, 0.0f, 0.0f });
 	pCapsule->SetUseWorldPos(true);
 	this->AddCollider(std::move(pCapsule));
 }
@@ -138,6 +138,7 @@ void Katana::OnCollision(Collidable& coll)
 	if (pEnemy)
 	{
 		pEnemy->OnDamage(kAttackDamage);
+		pEnemy->OnCollision(*this);
 		isAttacked_ = true;
 	}
 }

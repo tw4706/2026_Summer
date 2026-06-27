@@ -124,10 +124,21 @@ void GameScene::Update(Input& input)
 
 	if (!reserveObjList_.empty())
 	{
+		// 結合する前に、新しく入ってきたオブジェクトのコライダーをここで確実に登録する！
+		for (auto& obj : reserveObjList_)
+		{
+			if (auto collidableObj = std::dynamic_pointer_cast<Collidable>(obj))
+			{
+				for (const auto& pCollider : collidableObj->GetColliders())
+				{
+					pCollisionManager_->RegisterCollider(pCollider.get());
+				}
+			}
+		}
+
 		gameObjects_.insert(gameObjects_.end(), reserveObjList_.begin(), reserveObjList_.end());
 		reserveObjList_.clear();
 
-		//描画優先度順で並び替える
 		std::sort(gameObjects_.begin(), gameObjects_.end(), [](const auto& a, const auto& b)
 			{
 				return a->GetPriority() < b->GetPriority();

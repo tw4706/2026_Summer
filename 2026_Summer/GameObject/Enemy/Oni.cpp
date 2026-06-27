@@ -48,8 +48,8 @@ void Oni::Init()
 	animation_.Init(model_.GetHandle());
 
 	//ƒRƒ‰ƒCƒ_[‚Ì“o˜^
-	Vector3 colOffset = { 0.0f, 145.0f, 0.0f };
-	this->CreateCollider<CapsuleCollider>(55.0f, 180.0f, colOffset);
+	Vector3 colOffset = { 0.0f, 120.0f, 0.0f };
+	this->CreateCollider<CapsuleCollider>(70.0f, 120.0f, colOffset);
 }
 
 void Oni::Update()
