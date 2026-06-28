@@ -24,6 +24,13 @@ void EnemyStateDeath::Update()
 {
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
+
+	//死亡アニメーションが終了したら
+	if (enemy->IsAnimationEnd())
+	{
+		//敵を削除
+		enemy->Destory();
+	}
 }
 
 void EnemyStateDeath::Exit()

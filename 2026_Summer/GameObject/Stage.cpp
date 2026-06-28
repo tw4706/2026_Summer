@@ -1,6 +1,17 @@
 #include "Stage.h"
 #include "Collider/PolygonCollider.h"
 
+namespace
+{
+	//ナビゲーショングリッドを生成する範囲
+	const float kGridMinX = -500.0f;
+	const float kGridMaxX = 500.0f;
+	const float kGridMinZ = -500.0f;
+	const float kGridMaxZ = 500.0f;
+	//グリッド1マスのサイズ
+	const float kGridCellSize = 50.0f;
+}
+
 Stage::Stage(Vector3 pos,Vector3 vel,float dir):
 	Collidable(pos,vel,dir)
 {
@@ -24,6 +35,11 @@ void Stage::Init()
 
 	//コライダーの生成
 	this->CreateCollider<PolygonCollider>(stageModel_.GetHandle());
+
+	//ナビゲーショングリッドの生成
+	navGrid_.SetExpectedGroundY(-100.0f);
+	navGrid_.CreateGrid(stageModel_.GetHandle(), kGridMinX, kGridMaxX, kGridMinZ, kGridMaxZ, kGridCellSize);
+
 }
 
 void Stage::Update()
@@ -35,4 +51,29 @@ void Stage::Draw()
 {
 	//モデルの描画
 	stageModel_.Draw();
+
+#ifdef _DEBUG
+	DrawNavGridDebug();
+#endif
+}
+
+
+void Stage::DrawNavGridDebug() const
+{
+	for (int z = 0; z < navGrid_.GetHeight(); ++z)
+	{
+		for (int x = 0; x < navGrid_.GetWidth(); ++x)
+		{
+			const NavigationGrid::NodeData* node = navGrid_.GetNode(x, z);
+			if (!node) continue;
+
+			//地面に埋まって見えなくなるのを防ぐため少し浮かせる
+			VECTOR pos = VGet(node->pos.x_, node->pos.y_ + 5.0f, node->pos.z_);
+
+			//歩行可能なら緑、不可能なら赤
+			unsigned int color = node->iswalked ? GetColor(0, 255, 0) : GetColor(255, 0, 0);
+
+			DrawSphere3D(pos, 5.0f, 6, color, color, TRUE);
+		}
+	}
 }

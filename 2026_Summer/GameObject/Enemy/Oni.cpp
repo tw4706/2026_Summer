@@ -10,7 +10,7 @@
 namespace
 {
 	//鬼の初期位置
-	const Vector3 kFirstPos = { 200.0f, 0.0f, -100.0f };
+	const Vector3 kFirstPos = { 200.0f, 0.0f, -1500.0f };
 
 	//初期スケール
 	const Vector3 kFirstScale = { 1.0f, 1.0f, 1.0f };
@@ -35,63 +35,18 @@ void Oni::Init()
 {
 	//初期化
 	pos_ = kFirstPos;
-	vel_ = { 0.0f, 0.0f, 0.0f };
 	moveAngle_ = kFirstRotate.y_;
 	hp_ = 50;
-	isHit_ = false;
 
 	//モデルのロード
 	model_.Load(L"data/Oni.mv1");
 	assert(model_.GetHandle() >= 0);
 
-	//アニメーションの初期化
-	animation_.Init(model_.GetHandle());
-
 	//コライダーの登録
 	Vector3 colOffset = { 0.0f, 120.0f, 0.0f };
 	this->CreateCollider<CapsuleCollider>(70.0f, 120.0f, colOffset);
-}
 
-void Oni::Update()
-{
-	Collidable::Update();
-
-	if (!pCurrentState_)
-	{
-		//Characterのshared_ptrとして直接受け取る
-		std::shared_ptr<Character> sharedSelf = shared_from_this();
-
-		//弱参照にする
-		std::weak_ptr<Character> weakSelf = sharedSelf;
-
-		//EnemyStateIdle 側が Character の weak_ptr も受け取る
-		auto sharedEnemy = std::dynamic_pointer_cast<Oni>(sharedSelf);
-		std::weak_ptr<EnemyBase> weakEnemy = sharedEnemy;
-
-		ChangeState(std::make_shared<EnemyStateIdle>(weakEnemy));
-	}
-
-	//ステートの更新
-	if (pCurrentState_)
-	{
-		pCurrentState_->Update();
-	}
-
-	//アニメーションの更新
-	animation_.Update(1.0f / 60.0f);
-
-	//拡縮行列
-	Matrix4x4 scaleMat = Matrix4x4::Scale(kFirstScale.x_, kFirstScale.y_, kFirstScale.z_);
-	//回転行列
-	Matrix4x4 rotMat = Matrix4x4::RotateY(moveAngle_);
-	//移動行列
-	Matrix4x4 transMat = Matrix4x4::Translate(pos_.x_, pos_.y_, pos_.z_);
-
-	//行列の合成
-	Matrix4x4 worldMat = scaleMat * rotMat * transMat;
-
-	//モデルに行列をセット
-	model_.SetMatrix(worldMat);
+	EnemyBase::Init();
 }
 
 void Oni::Draw()
@@ -141,16 +96,4 @@ void Oni::Draw()
 		}
 	}
 #endif
-}
-
-void Oni::OnCollision(Collidable& coll)
-{
-	//相手の型が刀だった場合は何もしない
-	if (dynamic_cast<Katana*>(&coll))
-	{
-		return;
-	}
-
-	//刀以外が当たった場合は普通にフラグを返す
-	isHit_ = true;
 }

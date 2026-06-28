@@ -161,7 +161,7 @@ void Animation::Play(int animIndex, float speed, bool isLoop)
 		prevAttach_ = -1;
 	}
 
-	//現在再生しているアニメーションを保存(生成状態の時はブレンドさせない)
+	//現在再生しているアニメーションを保存
 	if (prevState_ == AnimationState::Spawn)
 	{
 		if (currentAttachAnim_ != -1)
@@ -216,7 +216,8 @@ void Animation::ChangeState(AnimationState state,const std::wstring&animName)
 		float speed = kAnimationSpeed;
 
 		if (state_ == AnimationState::Attack ||
-			state_ == AnimationState::Death ||
+			state_ == AnimationState::Damage ||
+			state_ == AnimationState::Death  ||
 			state_ == AnimationState::Spawn)
 		{
 			loop = false;

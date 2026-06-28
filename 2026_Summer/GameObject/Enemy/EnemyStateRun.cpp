@@ -100,11 +100,16 @@ void EnemyStateRun::Update()
 	float targetAngle = std::atan2f(toPlayer.x_, -toPlayer.z_);
 	//Œ»Ý‚ÌŠp“x
 	float currentAngle = enemy->GetMoveAngle();
-	//ŽŸ‚Ì–Ú•W‚ÌŠp“x
-	float nextAngle = currentAngle;
 
+	float angleDiff = targetAngle - currentAngle;
+
+	//·•ª‚ð-ƒÎ‚©‚çƒÎ‚Ì”ÍˆÍ‚É³‹K‰»iÅ’ZŒo˜H‚Å‰ñ“]‚³‚¹‚½‚¢‚Ì‚Åj
+	while (angleDiff > DX_PI_F)  angleDiff -= 2.0f * DX_PI_F;
+	while (angleDiff < -DX_PI_F) angleDiff += 2.0f * DX_PI_F;
+
+	//ŽŸ‚Ì–Ú•W‚ÌŠp“x‚ð
 	//üŒ`•âŠÔ‚ð—p‚¢‚ÄŠŠ‚ç‚©‚É‰ñ“]‚·‚é
-	nextAngle = currentAngle + (targetAngle - currentAngle) * kRotateLerpRate;
+	float nextAngle = currentAngle + angleDiff * kRotateLerpRate;
 
 	//ŒvŽZ‚µ‚½Šp“x‚ð“K—p
 	enemy->SetMoveAngle(nextAngle);

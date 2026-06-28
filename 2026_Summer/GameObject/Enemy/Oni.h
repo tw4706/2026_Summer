@@ -8,9 +8,8 @@ public:
 	virtual~Oni();
 
 	void Init()override;
-	void Update()override;
 	void Draw()override;
 
-	void OnCollision(Collidable& coll)override;
+	//void OnCollision(Collidable& coll)override;
 };
 

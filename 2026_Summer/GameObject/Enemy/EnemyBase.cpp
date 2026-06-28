@@ -2,8 +2,10 @@
 #include "Player/Player.h"
 #include "Katana.h"
 #include "EnemyStateDamage.h"
+#include "EnemyStateDeath.h"
 #include "EnemyStateIdle.h"
 #include"Collider/CapsuleCollider.h"
+#include<cassert>
 
 
 EnemyBase::EnemyBase() :
@@ -15,6 +17,15 @@ EnemyBase::EnemyBase() :
 
 EnemyBase::~EnemyBase()
 {
+}
+
+void EnemyBase::Init()
+{
+	vel_ = { 0.0f, 0.0f, 0.0f };
+	isHit_ = false;
+
+	//アニメーションの初期化
+	animation_.Init(model_.GetHandle());
 }
 
 void EnemyBase::Update()
@@ -77,6 +88,18 @@ void EnemyBase::OnCollision(Collidable& coll)
 	//衝突相手の型が刀かどうかをチェック
 	if (Katana* pKatana = dynamic_cast<Katana*>(&coll))
 	{
+		//すでにダメージ状態なら何もしない
+		if (std::dynamic_pointer_cast<EnemyStateDamage>(pCurrentState_))
+		{
+			return;
+		}
+
+		//すでに死亡状態なら何もしない
+		if (std::dynamic_pointer_cast<EnemyStateDeath>(pCurrentState_))
+		{
+			return;
+		}
+
 		auto enemy = std::dynamic_pointer_cast<EnemyBase>(shared_from_this());
 
 		//ダメージ状態に遷移する
@@ -96,7 +119,12 @@ void EnemyBase::OnDamage(int damage)
 	if (hp_ <= 0)
 	{
 		hp_ = 0;
-		Destory();
+
+		auto enemy = std::dynamic_pointer_cast<EnemyBase>(shared_from_this());
+
+		//ダメージ状態に遷移する
+		auto nextState = std::make_shared<EnemyStateDeath>(enemy);
+		ChangeState(nextState);
 	}
 }
 
