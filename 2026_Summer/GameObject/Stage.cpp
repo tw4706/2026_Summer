@@ -10,10 +10,13 @@ namespace
 	const float kGridMaxZ = 500.0f;
 	//グリッド1マスのサイズ
 	const float kGridCellSize = 50.0f;
+
+	//バウンディングボックスを作成する際の余白
+	const float kBoundsMargin = 50.0f;
 }
 
-Stage::Stage(Vector3 pos,Vector3 vel,float dir):
-	Collidable(pos,vel,dir)
+Stage::Stage(Vector3 pos, Vector3 vel, float dir) :
+	Collidable(pos, vel, dir)
 {
 }
 
@@ -56,7 +59,6 @@ void Stage::Draw()
 	DrawNavGridDebug();
 #endif
 }
-
 
 void Stage::DrawNavGridDebug() const
 {

@@ -1,6 +1,8 @@
 #pragma once
 #include "Character.h"
 #include "Animation.h"
+#include "AStarPathFinder.h"
+#include "PathFollower.h"
 
 class Player;
 class EnemyStateBase;
@@ -46,14 +48,53 @@ public:
 	/// <param name="angle">角度</param>
 	void SetMoveAngle(float angle) { moveAngle_ = angle; }
 
+	/// <summary>
+/// ステージモデルハンドルの取得(視線判定のRayに使う)
+/// </summary>
+	int GetStageModelHandle() const { return stageModelHandle_; }
+
+	/// <summary>
+	/// ステージモデルハンドルのセット
+	/// </summary>
+	void SetStageModelHandle(int handle) { stageModelHandle_ = handle; }
+
+	/// <summary>
+	/// A*の取得
+	/// </summary>
+	/// <returns>A*の参照を返す</returns>
+	AStarPathFinder& GetPathFinder() { return pathFinder_; }
+
+	/// <summary>
+	/// パスフォロワーオブジェクトへの参照を取得
+	/// </summary>
+	/// <returns>pathFollower_の参照を返す</returns>
+	PathFollower& GetPathFollower() { return pathFollower_; }
+
+	/// <summary>
+	/// ナビゲーショングリッドの設定
+	/// </summary>
+	/// <param name="pNavGrid">設定するナビゲーショングリッドのポインタ</param>
+	void SetNavigationGrid(const NavigationGrid* pNavGrid);
+
 protected:
 	//移動の際に向いている角度
 	float moveAngle_;
+
+	//ステージのモデルハンドル(視線判定用)
+	int stageModelHandle_ = -1; 
 
 	//モデルの拡大率
 	Vector3 scale_;
 
 	//プレイヤーの弱参照
 	std::weak_ptr<Player>pPlayer_;
+
+	//A*
+	AStarPathFinder pathFinder_;
+	//パスフォロワー
+	PathFollower pathFollower_;
+
+	//ナビゲーショングリッド
+	const NavigationGrid* pNaviGrid_ = nullptr;
 };
 

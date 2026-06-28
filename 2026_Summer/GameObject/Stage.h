@@ -25,14 +25,18 @@ public:
 	/// <returns>ハンドルを返す</returns>
 	int GetHandle()const { return stageModel_.GetHandle(); }
 
-
-
-private:
 	/// <summary>
 	/// ナビゲーショングリッドの取得
 	/// </summary>
-	/// <returns>NavigationGridの参照</returns>
-	const NavigationGrid& GetNavGrid() const { return navGrid_; }
+	/// <returns>NavigationGridのポインタ</returns>
+	const NavigationGrid* GetNaviGrid() const { return &navGrid_; }
+
+private:
+
+	/// <summary>
+	/// モデルの頂点情報からステージの範囲(XZ平面の最大最小)を計算する
+	/// </summary>
+	void CalculateStageBounds(int modelHandle, float& outMinX, float& outMaxX, float& outMinZ, float& outMaxZ);
 
 	/// <summary>
 	/// デバッグ用のナビゲーショングリッドの描画

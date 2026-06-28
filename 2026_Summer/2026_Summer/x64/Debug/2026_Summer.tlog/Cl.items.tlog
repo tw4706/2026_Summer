@@ -1,4 +1,5 @@
 C:\Users\yongy\git\2026_Summer\2026_Summer\Application.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Application.obj
+C:\Users\yongy\git\2026_Summer\2026_Summer\AStarPathFinder.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\AStarPathFinder.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\CollisionManager.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\CollisionManager.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Enemy\EnemyStateDamage.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\EnemyStateDamage.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Enemy\EnemyStateDeath.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\EnemyStateDeath.obj
@@ -26,6 +27,7 @@ C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Katana.cpp;C:\Users\yongy\
 C:\Users\yongy\git\2026_Summer\2026_Summer\Model.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Model.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Stage.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Stage.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Collider\PolygonCollider.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PolygonCollider.obj
+C:\Users\yongy\git\2026_Summer\2026_Summer\PathFollower.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PathFollower.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\System\NavigationGrid.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\NavigationGrid.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\System\Animation.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Animation.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\GameObject.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\GameObject.obj

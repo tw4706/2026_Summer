@@ -11,7 +11,8 @@
 EnemyBase::EnemyBase() :
 	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f),
 	moveAngle_(0.0f),
-	scale_({1.0f,1.0f,1.0f})
+	scale_({1.0f,1.0f,1.0f}),
+	pathFinder_()
 {
 }
 
@@ -88,6 +89,12 @@ void EnemyBase::OnCollision(Collidable& coll)
 	//衝突相手の型が刀かどうかをチェック
 	if (Katana* pKatana = dynamic_cast<Katana*>(&coll))
 	{
+		//刀の当たり判定が無効な場合は何もしない
+		if (!pKatana->IsEnabled())
+		{
+			return;
+		}
+
 		//すでにダメージ状態なら何もしない
 		if (std::dynamic_pointer_cast<EnemyStateDamage>(pCurrentState_))
 		{
@@ -145,4 +152,10 @@ Vector3 EnemyBase::GetPlayerPos() const
 void EnemyBase::SetPlayer(std::weak_ptr<Player> pPlayer)
 {
 	pPlayer_ = pPlayer;
+}
+
+void EnemyBase::SetNavigationGrid(const NavigationGrid* pNavGrid)
+{
+	pNaviGrid_ = pNavGrid;
+	pathFinder_.SetNavigationGrid(pNavGrid);
 }

@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="AStarPathFinder.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyStateDamage.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyStateDeath.cpp" />
@@ -166,6 +167,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="GameObject\Stage.cpp" />
     <ClCompile Include="GameObject\Collider\PolygonCollider.cpp" />
+    <ClCompile Include="PathFollower.cpp" />
     <ClCompile Include="System\NavigationGrid.cpp" />
     <ClCompile Include="System\Animation.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
@@ -178,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="AStarPathFinder.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="GameObject\Enemy\EnemyStateDamage.h" />
     <ClInclude Include="GameObject\Enemy\EnemyStateDeath.h" />
@@ -204,6 +207,7 @@
     <ClInclude Include="GameObject\Katana.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="GameObject\Collider\PolygonCollider.h" />
+    <ClInclude Include="PathFollower.h" />
     <ClInclude Include="System\NavigationGrid.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="GameObject\Stage.h" />

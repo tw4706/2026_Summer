@@ -20,6 +20,20 @@ namespace
 
 	//索敵範囲の半径
 	const float kDebugSearchRadius = 500.0f;
+
+	const float kEyeHeight = 50.0f;
+
+	//2点間に障害物があるかどうかをRayで判定する
+	//hitしていなければ視線が通っている(=true)
+	bool HasLineOfSight(int stageModelHandle, const Vector3& from, const Vector3& to)
+	{
+		VECTOR start = VGet(from.x_, from.y_ + kEyeHeight, from.z_);
+		VECTOR end = VGet(to.x_, to.y_ + kEyeHeight, to.z_);
+
+		MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(stageModelHandle, -1, start, end);
+
+		return hit.HitFlag == FALSE;
+	}
 }
 
 EnemyStateRun::EnemyStateRun(std::weak_ptr<EnemyBase> pEnemy) :
@@ -65,6 +79,42 @@ void EnemyStateRun::Update()
 	//敵とプレイヤーの位置を取得
 	Vector3 enemyPos = enemy->GetPos();
 	Vector3 playerPos = enemy->GetPlayerPos();
+
+	//---移動先(targetPos)を決定する---
+	//プレイヤーへの視線が通っているかどうかを判定
+	bool hasLineOfSight = HasLineOfSight(enemy->GetStageModelHandle(), enemyPos, playerPos);
+
+	Vector3 targetPos;
+
+	if (hasLineOfSight)
+	{
+		//視線が通っている場合は経路追従をやめて直進する
+		if (enemy->GetPathFollower().HasPath())
+		{
+			enemy->GetPathFollower().ClearPath();
+		}
+		targetPos = playerPos;
+	}
+	else
+	{
+		//視線が遮られている場合は経路探索を使う
+
+		//まだ経路を持っていない場合のみ新しく探索する(毎フレーム探索すると重いため)
+		if (!enemy->GetPathFollower().HasPath())
+		{
+			std::vector<Vector3> path = enemy->GetPathFinder().FindPath(enemyPos, playerPos);
+			enemy->GetPathFollower().SetPath(path);
+		}
+
+		//経路が見つからなかった場合は、その場で待機(移動しない)
+		if (!enemy->GetPathFollower().HasPath())
+		{
+			return;
+		}
+
+		//現在向かうべき経路上の目標点を取得
+		targetPos = enemy->GetPathFollower().GetCurrentTarget(enemyPos);
+	}
 
 	//敵からプレイヤーまでのベクトルを計算
 	Vector3 toPlayer = playerPos - enemyPos;

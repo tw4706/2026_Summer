@@ -107,6 +107,10 @@ void GameScene::Init(Input& input)
 			oni->SetPlayer(pPlayer_);
 			oni->Init(); //鬼の初期化
 
+			//ナビゲーショングリッドとステージのモデルハンドルをセット
+			oni->SetNavigationGrid(pStage_->GetNaviGrid());
+			oni->SetStageModelHandle(pStage_->GetHandle());
+
 			//コライダーの登録
 			for (const auto& pCollider : oni->GetColliders())
 			{
