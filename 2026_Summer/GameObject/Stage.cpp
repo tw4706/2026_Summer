@@ -27,7 +27,7 @@ Stage::~Stage()
 void Stage::Init()
 {
 	//ƒ‚ƒfƒ‹‚Ìƒ[ƒh
-	stageModel_.Load(L"data/Stage.mv1");
+	stageModel_.Load(L"data/MV1/Stage.mv1");
 
 	MV1SetRotationXYZ(stageModel_.GetHandle(), VGet(0.0f, -DX_PI_F / 2.0f, 0.0f));
 	MV1SetPosition(stageModel_.GetHandle(), VGet(0.0f, -100.0f, 0.0f));

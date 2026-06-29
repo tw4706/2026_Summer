@@ -1,0 +1,78 @@
+#include "EnemyDataLoader.h"
+#include <fstream>
+#include <sstream>
+#include <vector>
+
+bool EnemyDataLoader::Load(const std::string& filePath)
+{
+	std::ifstream ifs(filePath);
+	if (!ifs.is_open())
+	{
+		return false;
+	}
+
+	std::string line;
+	//1行目はヘッダなので飛ばす
+	std::getline(ifs, line);
+
+	while (std::getline(ifs, line))
+	{
+		if (line.empty())continue;
+
+		auto cols = SplitCsvLine(line);
+		//列が足りない行はスキップ
+		if (cols.size() < 19)continue;
+
+		EnemyData data;
+		int i = 0;
+		data.type_ = cols[i++];
+		data.modelPath_ = ToWString(cols[i++]);
+		data.hp_ = std::stoi(cols[i++]);
+		data.pos_.x_ = std::stof(cols[i++]);
+		data.pos_.y_ = std::stof(cols[i++]);
+		data.pos_.z_ = std::stof(cols[i++]);
+		data.rotateY_ = std::stof(cols[i++]);
+		data.scale_.x_ = std::stof(cols[i++]);
+		data.scale_.y_ = std::stof(cols[i++]);
+		data.scale_.z_ = std::stof(cols[i++]);
+		data.searchRadius_ = std::stof(cols[i++]);
+		data.colliderRadius_ = std::stof(cols[i++]);
+		data.colliderHeight_ = std::stof(cols[i++]);
+		data.idleAnim_ = ToWString(cols[i++]);
+		data.runAnim_ = ToWString(cols[i++]);
+		data.attackAnim_ = ToWString(cols[i++]);
+		data.damageAnim_ = ToWString(cols[i++]);
+		data.deathAnim_ = ToWString(cols[i++]);
+
+		enemyDataMap_[data.type_] = data;
+	}
+
+	return true;
+}
+
+const EnemyData* EnemyDataLoader::GetEnemyData(const std::string& type) const
+{
+	auto it = enemyDataMap_.find(type);
+	if (it == enemyDataMap_.end())
+	{
+		return nullptr;
+	}
+	return &it->second;
+}
+
+std::wstring EnemyDataLoader::ToWString(const std::string& str)
+{
+	return std::wstring(str.begin(),str.end());
+}
+
+std::vector<std::string> EnemyDataLoader::SplitCsvLine(const std::string& line)
+{
+	std::vector<std::string> result;
+	std::stringstream ss(line);
+	std::string cell;
+	while (std::getline(ss, cell, ','))
+	{
+		result.push_back(cell);
+	}
+	return result;
+}

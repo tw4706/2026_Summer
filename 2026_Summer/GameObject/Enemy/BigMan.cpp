@@ -34,7 +34,7 @@ void BigMan::Init()
 	hp_ = 50;
 
 	//モデルのロード
-	model_.Load(L"data/BigMan.mv1");
+	model_.Load(L"data/MV1/BigMan.mv1");
 	assert(model_.GetHandle() >= 0);
 
 	//コライダーの登録

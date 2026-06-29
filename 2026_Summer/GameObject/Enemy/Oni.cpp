@@ -39,7 +39,7 @@ void Oni::Init()
 	hp_ = 50;
 
 	//モデルのロード
-	model_.Load(L"data/Oni.mv1");
+	model_.Load(L"data/MV1/Oni.mv1");
 	assert(model_.GetHandle() >= 0);
 
 	//コライダーの登録

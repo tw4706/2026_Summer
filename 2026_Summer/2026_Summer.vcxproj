@@ -140,6 +140,8 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AStarPathFinder.cpp" />
+    <ClCompile Include="EnemyDataLoader.cpp" />
+    <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="GameObject\Enemy\BigMan.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyStateDamage.cpp" />
@@ -182,6 +184,9 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="AStarPathFinder.h" />
+    <ClInclude Include="EnemyData.h" />
+    <ClInclude Include="EnemyDataLoader.h" />
+    <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="GameObject\Enemy\BigMan.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="GameObject\Enemy\EnemyStateDamage.h" />

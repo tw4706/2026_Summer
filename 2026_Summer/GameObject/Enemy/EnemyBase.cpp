@@ -6,12 +6,16 @@
 #include "EnemyStateIdle.h"
 #include"Collider/CapsuleCollider.h"
 #include<cassert>
+#include "EnemyManager.h"
 
 
 EnemyBase::EnemyBase() :
 	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f),
 	moveAngle_(0.0f),
 	scale_({1.0f,1.0f,1.0f}),
+	searchRadius_(500.0f),
+	colliderRadius_(70.0f),
+	colliderHeight_(120.0f),
 	pathFinder_()
 {
 }
@@ -27,6 +31,9 @@ void EnemyBase::Init()
 
 	//アニメーションの初期化
 	animation_.Init(model_.GetHandle());
+
+	//初期アニメーション
+	animation_.ChangeState(AnimationState::Idle, animPaths_.idle_);
 }
 
 void EnemyBase::Update()
@@ -65,9 +72,12 @@ void EnemyBase::Update()
 		CapsuleCollider* pCap = static_cast<CapsuleCollider*>(colliders_[0].get());
 		if (pCap)
 		{
-			Vector3 centerPos = pos_ + Vector3{ 0.0f, 120.0f, 0.0f };
-			Vector3 top = centerPos + Vector3{ 0.0f, 60.0f, 0.0f };
-			Vector3 bottom = centerPos + Vector3{ 0.0f, -60.0f, 0.0f };
+			//高さの半分
+			float halfH = colliderHeight_ * 0.5f;
+
+			Vector3 centerPos = pos_ + Vector3{ 0.0f, colliderHeight_, 0.0f };
+			Vector3 top = centerPos + Vector3{ 0.0f, halfH, 0.0f };
+			Vector3 bottom = centerPos + Vector3{ 0.0f, -halfH, 0.0f };
 			pCap->SetWorldPos(bottom, top);
 		}
 	}
@@ -133,6 +143,37 @@ void EnemyBase::OnDamage(int damage)
 		auto nextState = std::make_shared<EnemyStateDeath>(enemy);
 		ChangeState(nextState);
 	}
+}
+
+void EnemyBase::ApplyData(const EnemyData& data)
+{
+	//ステータス
+	hp_ = data.hp_;
+
+	//トランスフォーム
+	pos_ = data.pos_;
+	moveAngle_ = data.rotateY_;
+	scale_ = data.scale_;
+
+	//索敵範囲
+	searchRadius_ = data.searchRadius_;
+
+	//コライダーの半径と高さ
+	colliderRadius_ = data.colliderRadius_;
+	colliderHeight_ = data.colliderHeight_;
+
+	//モデルの読み込み
+	if (!data.modelPath_.empty())
+	{
+		model_.Load(data.modelPath_.c_str());
+	}
+
+	//アニメーションパスの登録
+	animPaths_.idle_ = data.idleAnim_;
+	animPaths_.run_ = data.runAnim_;
+	animPaths_.attack_ = data.attackAnim_;
+	animPaths_.damage_ = data.damageAnim_;
+	animPaths_.death_ = data.deathAnim_;
 }
 
 Vector3 EnemyBase::GetPlayerPos() const

@@ -3,6 +3,7 @@
 #include "Animation.h"
 #include "AStarPathFinder.h"
 #include "PathFollower.h"
+#include "EnemyData.h"
 
 class Player;
 class EnemyStateBase;
@@ -22,7 +23,17 @@ public:
 	/// <param name="obj">衝突したゲームオブジェクト</param>
 	void OnCollision(Collidable& coll)override;
 
+	/// <summary>
+	/// ダメージ処理
+	/// </summary>
+	/// <param name="damage">ダメージ</param>
 	void OnDamage(int damage);
+
+	/// <summary>
+	/// CSVデータの適用
+	/// </summary>
+	/// <param name="data">CSVファイルのデータ</param>
+	virtual void ApplyData(const EnemyData& data);
 
 	/// <summary>
 	/// プレイヤーの位置の取得
@@ -77,6 +88,17 @@ public:
 	void SetNavigationGrid(const NavigationGrid* pNavGrid);
 
 protected:
+
+	//アニメーションのパス文字列
+	struct AnimPaths
+	{
+		std::wstring idle_;
+		std::wstring run_;
+		std::wstring attack_;
+		std::wstring damage_;
+		std::wstring death_;
+	} animPaths_;
+
 	//移動の際に向いている角度
 	float moveAngle_;
 
@@ -85,6 +107,13 @@ protected:
 
 	//モデルの拡大率
 	Vector3 scale_;
+
+	//索敵範囲
+	float searchRadius_ = 0.0f;
+
+	//コライダーの半径と高さ
+	float colliderRadius_ = 0.0f;
+	float colliderHeight_ = 0.0f;
 
 	//プレイヤーの弱参照
 	std::weak_ptr<Player>pPlayer_;

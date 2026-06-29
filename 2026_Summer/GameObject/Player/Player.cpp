@@ -44,7 +44,7 @@ void Player::Init()
 	isGround_ = true;
 
 	//モデルのロード
-	model_.Load(L"data/Player.mv1");
+	model_.Load(L"data/MV1/Player.mv1");
 	handFrameIndex_ = model_.SearchFrame(L"mixamorig:RightHand");
 
 	//アニメーションの初期化

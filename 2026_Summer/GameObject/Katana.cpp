@@ -32,7 +32,7 @@ Katana::~Katana()
 void Katana::Init()
 {
 	//“ƒ‚ƒfƒ‹‚Ìƒ[ƒh
-	katanaModel_.Load(L"data/Tachi.mv1");
+	katanaModel_.Load(L"data/MV1/Tachi.mv1");
 	
 	auto pCapsule = std::make_unique<CapsuleCollider>(10.0f, 60.0f, Vector3{ 0.0f, 0.0f, 0.0f });
 	pCapsule->SetUseWorldPos(true);
