@@ -6,6 +6,7 @@ class Oni;
 class Player;
 class Input;
 class Stage;
+class BigMan;
 class GameObject;
 class CameraManager;
 class CollisionManager;
@@ -40,6 +41,9 @@ private:
 
 	//鬼
 	std::shared_ptr<Oni> pOni_;
+
+	//大男
+	std::shared_ptr<BigMan> pbigMan_;
 
 	//カメラ(シーンが所有しているためunique_ptrで持つ)
 	std::unique_ptr<CameraManager>pCameraManager_;

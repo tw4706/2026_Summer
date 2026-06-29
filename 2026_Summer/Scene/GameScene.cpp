@@ -3,6 +3,7 @@
 #include"Input.h"
 #include"Katana.h"
 #include"Enemy/Oni.h"
+#include"Enemy/BigMan.h"
 #include "GameObject.h"
 #include "Player/Player.h"
 #include "CollisionManager.h"
@@ -31,6 +32,9 @@ GameScene::GameScene() :
 	//敵の登録
 	pOni_ = std::make_shared<Oni>();
 	RegisterGameObject(pOni_);
+
+	pbigMan_ = std::make_shared<BigMan>();
+	RegisterGameObject(pbigMan_);
 
 	//プレイヤーの登録
 	RegisterGameObject(pPlayer_);
@@ -113,6 +117,21 @@ void GameScene::Init(Input& input)
 
 			//コライダーの登録
 			for (const auto& pCollider : oni->GetColliders())
+			{
+				pCollisionManager_->RegisterCollider(pCollider.get());
+			}
+		}
+		else if (auto bigMan = std::dynamic_pointer_cast<BigMan>(obj))
+		{
+			bigMan->SetPlayer(pPlayer_);
+			bigMan->Init(); //鬼の初期化
+
+			//ナビゲーショングリッドとステージのモデルハンドルをセット
+			bigMan->SetNavigationGrid(pStage_->GetNaviGrid());
+			bigMan->SetStageModelHandle(pStage_->GetHandle());
+
+			//コライダーの登録
+			for (const auto& pCollider : bigMan->GetColliders())
 			{
 				pCollisionManager_->RegisterCollider(pCollider.get());
 			}
