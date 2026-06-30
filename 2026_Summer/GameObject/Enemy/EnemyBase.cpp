@@ -111,7 +111,7 @@ void EnemyBase::Draw()
 	}
 	DrawSphere3D(center, searchRadius_, 8, searchColor, GetColor(0, 0, 0), FALSE);
 
-	//当たり判定(コライダー)のデバッグ表示
+	//当たり判定のデバッグ表示
 	if (!colliders_.empty())
 	{
 		CapsuleCollider* pCap = static_cast<CapsuleCollider*>(colliders_[0].get());
@@ -199,7 +199,7 @@ void EnemyBase::ApplyData(const EnemyData& data)
 	if (!data.modelPath_.empty())
 	{
 		model_.Load(data.modelPath_.c_str());
-		assert(model_.GetHandle() >= 0 && "モデルのロードに失敗しました");
+		assert(model_.GetHandle() >= 0);
 	}
 
 	//アニメーション名をアニメーションクラスに登録

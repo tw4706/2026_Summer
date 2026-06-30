@@ -179,7 +179,10 @@ void GameScene::Update(Input& input)
 	}
 
 	//敵マネージャーの更新
-	pEnemyManager_->Update();
+	for (auto& enemy : pEnemyManager_->GetEnemies())
+	{
+		enemy->Update();
+	}
 
 	//当たり判定の更新
 	if (pCollisionManager_)
@@ -203,6 +206,17 @@ void GameScene::Update(Input& input)
 		}
 	}
 
+	for (auto& enemy : pEnemyManager_->GetEnemies())
+	{
+		if (enemy->IsDead())
+		{
+			for (const auto& pCollider : enemy->GetColliders())
+			{
+				pCollisionManager_->UnRegisterCollider(pCollider.get());
+			}
+		}
+	}
+
 	//死んでいるゲームオブジェクトの削除
 	gameObjects_.erase(
 		std::remove_if(gameObjects_.begin(), gameObjects_.end(), [](const auto& obj) {
@@ -210,6 +224,9 @@ void GameScene::Update(Input& input)
 			}),
 		gameObjects_.end()
 	);
+
+	//死んでいる敵の削除
+	pEnemyManager_->RemoveEnemy();
 }
 
 void GameScene::Draw()

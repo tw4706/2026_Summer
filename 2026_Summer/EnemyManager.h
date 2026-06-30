@@ -43,7 +43,7 @@ public:
 	/// <summary>
 	/// €–SÏ‚İ‚È‚Ç•s—v‚È“G‚ğ”jŠü‚µ‚½‚¢ê‡‚ÉŒÄ‚Ô
 	/// </summary>
-	void RemoveEnemy(const std::shared_ptr<EnemyBase>& enemy);
+	void RemoveEnemy();
 
 	const std::vector<std::shared_ptr<EnemyBase>>& GetEnemies() const { return enemies_; }
 

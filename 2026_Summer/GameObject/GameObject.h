@@ -66,7 +66,7 @@ protected:
 	Vector3 vel_;	//速度
 	float dir_;		//向き
 
-	bool isDead_;	//死亡フラグ
+	bool isDead_ = false;	//死亡フラグ
 	int priority_;	//優先度
 };
 

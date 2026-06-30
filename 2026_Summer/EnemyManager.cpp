@@ -73,11 +73,12 @@ void EnemyManager::SetNavigationGrid(const NavigationGrid* pNavGrid)
 	}
 }
 
-void EnemyManager::RemoveEnemy(const std::shared_ptr<EnemyBase>& enemy)
+void EnemyManager::RemoveEnemy()
 {
-	//íœˆ—
+	//€–S‚µ‚Ä‚¢‚é“G‚ğíœ‚·‚é
 	enemies_.erase(
-		std::remove(enemies_.begin(), enemies_.end(), enemy),
+		std::remove_if(enemies_.begin(), enemies_.end(),
+			[](const std::shared_ptr<EnemyBase>& e) {return e->IsDead(); }),
 		enemies_.end());
 }
 
