@@ -7,8 +7,8 @@ namespace
 	const wchar_t* kEnemyDamage = L"Oni|Damage";
 }
 
-EnemyStateDamage::EnemyStateDamage(std::weak_ptr<EnemyBase> pEnemy):
-	EnemyStateBase(pEnemy)
+EnemyStateDamage::EnemyStateDamage(std::weak_ptr<EnemyBase> pEnemy, float searchRadius):
+	EnemyStateBase(pEnemy,searchRadius)
 {
 }
 
@@ -17,7 +17,7 @@ void EnemyStateDamage::Enter()
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
 
-	enemy->ChangeAnimation(AnimationState::Damage, kEnemyDamage);
+	enemy->ChangeAnimation(AnimationState::Damage);
 }
 
 void EnemyStateDamage::Update()
@@ -29,7 +29,7 @@ void EnemyStateDamage::Update()
 	if (enemy->IsAnimationEnd())
 	{
 		//Idleó‘Ô‚É‘JˆÚ
-		auto nextState = std::make_shared<EnemyStateIdle>(pEnemy_);
+		auto nextState = std::make_shared<EnemyStateIdle>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);
 		return;
 	}

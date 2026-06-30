@@ -232,6 +232,23 @@ void Animation::ChangeState(AnimationState state,const std::wstring&animName)
 	}
 }
 
+void Animation::ChangeState(AnimationState state)
+{
+	auto it = animNames_.find(state);
+	if (it == animNames_.end())
+	{
+		return;
+	}
+
+	//登録したアニメーション名を使用してもともとあるChangeStateを呼ぶ
+	ChangeState(state,it->second);
+}
+
+void Animation::RegisterAnimName(AnimationState state, const std::wstring& animName)
+{
+	animNames_[state] = animName;
+}
+
 void Animation::ResetAnimation()
 {
 	currentTime_ = 0.0f;

@@ -1,5 +1,5 @@
 #pragma once
-#include "EnemyDataLoader.h"
+#include "EnemyStatus.h"
 #include <memory>
 #include <vector>
 #include <string>
@@ -21,7 +21,7 @@ public:
 	/// </summary>
 	/// <param name="path">敵データファイルのパスのワイド文字列の参照</param>
 	/// <returns>データの読み込みに成功した場合はtrue、失敗した場合はfalseを返す。</returns>
-	bool LoadEnemyData(const std::string& path);
+	bool LoadEnemyData(const std::wstring& path);
 
 	/// <summary>
 	/// 指定されたパス種別に応じた敵キャラクターの生成
@@ -62,6 +62,6 @@ private:
 	std::vector<std::shared_ptr<EnemyBase>> enemies_;
 
 	//CSVのデータロード
-	EnemyDataLoader dataLoader_;
+	EnemyStatus dataLoader_;
 };
 

@@ -89,16 +89,6 @@ public:
 
 protected:
 
-	//アニメーションのパス文字列
-	struct AnimPaths
-	{
-		std::wstring idle_;
-		std::wstring run_;
-		std::wstring attack_;
-		std::wstring damage_;
-		std::wstring death_;
-	} animPaths_;
-
 	//移動の際に向いている角度
 	float moveAngle_;
 

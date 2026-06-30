@@ -4,7 +4,7 @@
 class EnemyStateIdle :public EnemyStateBase
 {
 public:
-	EnemyStateIdle(std::weak_ptr<EnemyBase> pEnemy);
+	EnemyStateIdle(std::weak_ptr<EnemyBase> pEnemy, float searchRadius);
 	~EnemyStateIdle() = default;
 
 	virtual void Enter()  override;

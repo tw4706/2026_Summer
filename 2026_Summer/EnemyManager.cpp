@@ -28,7 +28,7 @@ void EnemyManager::Draw()
 	}
 }
 
-bool EnemyManager::LoadEnemyData(const std::string& path)
+bool EnemyManager::LoadEnemyData(const std::wstring& path)
 {
 	return dataLoader_.Load(path);
 }
@@ -47,7 +47,7 @@ std::shared_ptr<EnemyBase> EnemyManager::SpawnEnemy(const std::string& pathType)
 		return nullptr;
 	}
 
-	//CSVデータを適用してから初期化を行う
+	//CSVで入力したパラメータを適用してから初期化を行う
 	enemy->ApplyData(*pData);
 	enemy->Init();
 
@@ -57,6 +57,7 @@ std::shared_ptr<EnemyBase> EnemyManager::SpawnEnemy(const std::string& pathType)
 
 void EnemyManager::SetPlayer(std::weak_ptr<Player> pPlayer)
 {
+	//全敵にプレイヤーのセット
 	for (auto& enemy : enemies_)
 	{
 		enemy->SetPlayer(pPlayer);
@@ -65,6 +66,7 @@ void EnemyManager::SetPlayer(std::weak_ptr<Player> pPlayer)
 
 void EnemyManager::SetNavigationGrid(const NavigationGrid* pNavGrid)
 {
+	//経路探索のグリッドのセット
 	for (auto& enemy : enemies_)
 	{
 		enemy->SetNavigationGrid(pNavGrid);

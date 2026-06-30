@@ -2,14 +2,8 @@
 #include "EnemyStateIdle.h"
 #include "EnemyBase.h"
 
-namespace
-{
-	//敵の攻撃アニメーション
-	const wchar_t* kEnemyAttack = L"Oni|Attack";
-}
-
-EnemyStateAttack::EnemyStateAttack(std::weak_ptr<EnemyBase> pEnemy):
-	EnemyStateBase(pEnemy)
+EnemyStateAttack::EnemyStateAttack(std::weak_ptr<EnemyBase> pEnemy,float searchRadius):
+	EnemyStateBase(pEnemy,searchRadius)
 {
 }
 
@@ -19,7 +13,7 @@ void EnemyStateAttack::Enter()
 	if (!enemy)return;
 
 	//攻撃アニメーションに切り替える
-	enemy->ChangeAnimation(AnimationState::Attack, kEnemyAttack);
+	enemy->ChangeAnimation(AnimationState::Attack);
 
 	//速度をゼロにする
 	enemy->SetVelocity(Vector3{ 0.0f,0.0f,0.0f });
@@ -34,7 +28,7 @@ void EnemyStateAttack::Update()
 	if (enemy->IsAnimationEnd())
 	{
 		//Idle状態に遷移
-		auto nextState = std::make_shared<EnemyStateIdle>(pEnemy_);
+		auto nextState = std::make_shared<EnemyStateIdle>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);
 	}
 }

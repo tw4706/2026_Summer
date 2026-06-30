@@ -27,10 +27,15 @@ void Character::ChangeAnimation(AnimationState state,const std::wstring&animName
 {
 	if (animation_.GetState() != state)
 	{
-		animation_.ChangeState(state,animName.c_str());
+		animation_.ChangeState(state,animName);
 	}
 	else if(state==AnimationState::Attack)
 	{
 		animation_.ResetAnimation();
 	}
+}
+
+void Character::ChangeAnimation(AnimationState state)
+{
+	animation_.ChangeState(state);
 }

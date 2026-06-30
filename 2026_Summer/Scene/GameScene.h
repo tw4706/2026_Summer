@@ -2,14 +2,13 @@
 #include<memory>
 #include <vector>
 
-class Oni;
 class Player;
 class Input;
 class Stage;
-class BigMan;
 class GameObject;
 class CameraManager;
 class CollisionManager;
+class EnemyManager;
 class GameScene
 {
 public:
@@ -39,17 +38,14 @@ private:
 	//プレイヤー
 	std::shared_ptr<Player>pPlayer_;
 
-	//鬼
-	std::shared_ptr<Oni> pOni_;
-
-	//大男
-	std::shared_ptr<BigMan> pbigMan_;
-
 	//カメラ(シーンが所有しているためunique_ptrで持つ)
 	std::unique_ptr<CameraManager>pCameraManager_;
 
 	//コリジョンマネージャー
 	std::unique_ptr<CollisionManager>pCollisionManager_;
+
+	//エネミーマネージャー
+	std::unique_ptr<EnemyManager>pEnemyManager_;
 
 	//ゲームオブジェクトを管理する用のリスト
 	std::vector<std::shared_ptr<GameObject>>gameObjects_;

@@ -33,7 +33,11 @@ void EnemyBase::Init()
 	animation_.Init(model_.GetHandle());
 
 	//初期アニメーション
-	animation_.ChangeState(AnimationState::Idle, animPaths_.idle_);
+	animation_.ChangeState(AnimationState::Idle);
+
+	//コライダー生成
+	Vector3 colOffset = { 0.0f,colliderHeight_,0.0f };
+	this->CreateCollider<CapsuleCollider>(colliderRadius_, colliderHeight_, colOffset);
 }
 
 void EnemyBase::Update()
@@ -46,7 +50,7 @@ void EnemyBase::Update()
 	{
 		//EnemyBaseとして弱参照を作る
 		auto enemy = std::dynamic_pointer_cast<EnemyBase>(shared_from_this());
-		ChangeState(std::make_shared<EnemyStateIdle>(enemy));
+		ChangeState(std::make_shared<EnemyStateIdle>(enemy,searchRadius_));
 	}
 
 	//現在のステートの更新
@@ -88,9 +92,38 @@ void EnemyBase::Draw()
 	//モデルの描画
 	model_.Draw();
 
+
 #ifdef _DEBUG
 	//敵の頭上にHPをデバッグ表示
-	DrawFormatString(static_cast<int>(pos_.x_), static_cast<int>(pos_.y_ + 150.0f), GetColor(255, 255, 255), L"HP: %d", hp_);
+	DrawFormatString(static_cast<int>(pos_.x_), static_cast<int>(pos_.y_ + 150.0f),
+		GetColor(255, 255, 255), L"HP: %d", hp_);
+
+	//索敵範囲のデバッグ表示
+	VECTOR center = VGet(pos_.x_, pos_.y_, pos_.z_);
+	Vector3 playerPos = GetPlayerPos();
+	Vector3 toPlayer = playerPos - pos_;
+	float distSq = (toPlayer.x_ * toPlayer.x_) + (toPlayer.y_ * toPlayer.y_) + (toPlayer.z_ * toPlayer.z_);
+
+	unsigned int searchColor = GetColor(0, 255, 0);
+	if (distSq <= searchRadius_ * searchRadius_)
+	{
+		searchColor = GetColor(255, 0, 0);
+	}
+	DrawSphere3D(center, searchRadius_, 8, searchColor, GetColor(0, 0, 0), FALSE);
+
+	//当たり判定(コライダー)のデバッグ表示
+	if (!colliders_.empty())
+	{
+		CapsuleCollider* pCap = static_cast<CapsuleCollider*>(colliders_[0].get());
+		if (pCap)
+		{
+			VECTOR top = VGet(pCap->GetWorldB().x_, pCap->GetWorldB().y_, pCap->GetWorldB().z_);
+			VECTOR bottom = VGet(pCap->GetWorldA().x_, pCap->GetWorldA().y_, pCap->GetWorldA().z_);
+			//当たっていたら赤、通常は水色
+			unsigned int lineColor = isHit_ ? GetColor(255, 0, 0) : GetColor(0, 255, 255);
+			DrawCapsule3D(top, bottom, pCap->GetRadius(), 8, lineColor, GetColor(0, 0, 0), FALSE);
+		}
+	}
 #endif
 }
 
@@ -120,7 +153,7 @@ void EnemyBase::OnCollision(Collidable& coll)
 		auto enemy = std::dynamic_pointer_cast<EnemyBase>(shared_from_this());
 
 		//ダメージ状態に遷移する
-		auto nextState = std::make_shared<EnemyStateDamage>(enemy);
+		auto nextState = std::make_shared<EnemyStateDamage>(enemy, searchRadius_);
 		ChangeState(nextState);
 	}
 	else
@@ -140,7 +173,7 @@ void EnemyBase::OnDamage(int damage)
 		auto enemy = std::dynamic_pointer_cast<EnemyBase>(shared_from_this());
 
 		//ダメージ状態に遷移する
-		auto nextState = std::make_shared<EnemyStateDeath>(enemy);
+		auto nextState = std::make_shared<EnemyStateDeath>(enemy, searchRadius_);
 		ChangeState(nextState);
 	}
 }
@@ -166,14 +199,15 @@ void EnemyBase::ApplyData(const EnemyData& data)
 	if (!data.modelPath_.empty())
 	{
 		model_.Load(data.modelPath_.c_str());
+		assert(model_.GetHandle() >= 0 && "モデルのロードに失敗しました");
 	}
 
-	//アニメーションパスの登録
-	animPaths_.idle_ = data.idleAnim_;
-	animPaths_.run_ = data.runAnim_;
-	animPaths_.attack_ = data.attackAnim_;
-	animPaths_.damage_ = data.damageAnim_;
-	animPaths_.death_ = data.deathAnim_;
+	//アニメーション名をアニメーションクラスに登録
+	animation_.RegisterAnimName(AnimationState::Idle, data.idleAnim_);
+	animation_.RegisterAnimName(AnimationState::Run, data.runAnim_);
+	animation_.RegisterAnimName(AnimationState::Attack, data.attackAnim_);
+	animation_.RegisterAnimName(AnimationState::Damage, data.damageAnim_);
+	animation_.RegisterAnimName(AnimationState::Death, data.deathAnim_);
 }
 
 Vector3 EnemyBase::GetPlayerPos() const

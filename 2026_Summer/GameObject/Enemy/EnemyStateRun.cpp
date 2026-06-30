@@ -36,8 +36,8 @@ namespace
 	}
 }
 
-EnemyStateRun::EnemyStateRun(std::weak_ptr<EnemyBase> pEnemy) :
-	EnemyStateBase(pEnemy)
+EnemyStateRun::EnemyStateRun(std::weak_ptr<EnemyBase> pEnemy, float searchRadius) :
+	EnemyStateBase(pEnemy,searchRadius)
 {
 }
 
@@ -47,7 +47,7 @@ void EnemyStateRun::Enter()
 	if (!pEnemy) return;
 
 	//Runアニメーションに切り替える
-	pEnemy->ChangeAnimation(AnimationState::Run, kEnemyRun);
+	pEnemy->ChangeAnimation(AnimationState::Run);
 }
 
 void EnemyStateRun::Update()
@@ -61,7 +61,7 @@ void EnemyStateRun::Update()
 		//ヒットフラグをリセット
 		enemy->ResetHitFlag();
 		//攻撃状態に遷移
-		auto nextState = std::make_shared<EnemyStateAttack>(pEnemy_);
+		auto nextState = std::make_shared<EnemyStateAttack>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);
 		
 		return;
@@ -71,7 +71,7 @@ void EnemyStateRun::Update()
 	if (PlayerSearchDistance(kDebugSearchRadius) == false&&!enemy->IsHit())
 	{
 		//検知範囲に入ったらRun状態へ遷移
-		auto nextState = std::make_shared<EnemyStateIdle>(pEnemy_);
+		auto nextState = std::make_shared<EnemyStateIdle>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);
 		return;
 	}
@@ -126,7 +126,7 @@ void EnemyStateRun::Update()
 	//距離が0.1fだった場合は何も行わない
 	if (distance < 0.1f)
 	{
-		auto nextState = std::make_shared<EnemyStateAttack>(pEnemy_);
+		auto nextState = std::make_shared<EnemyStateAttack>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);
 		printfDx(L"攻撃に遷移した！");
 		return;

@@ -3,8 +3,9 @@
 #include "Vector3.h"
 #include "Camera/CameraBase.h"
 
-EnemyStateBase::EnemyStateBase(std::weak_ptr<EnemyBase> pEnemy):
+EnemyStateBase::EnemyStateBase(std::weak_ptr<EnemyBase> pEnemy,float searchRadius) :
 	CharacterStateBase(pEnemy),
+	searchRadius_(searchRadius),
 	pEnemy_(pEnemy)
 {
 }

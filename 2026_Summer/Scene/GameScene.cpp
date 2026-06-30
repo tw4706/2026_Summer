@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "Player/Player.h"
 #include "CollisionManager.h"
+#include "EnemyManager.h"
 #include "Camera/PlayerCamera.h"
 #include "Camera/CameraManager.h"
 #include <DxLib.h>
@@ -19,6 +20,7 @@ GameScene::GameScene() :
 
 	pPlayer_ = std::make_shared<Player>();
 	pCameraManager_ = std::make_unique<CameraManager>();
+	pEnemyManager_ = std::make_unique<EnemyManager>();
 
 	//ゲームオブジェクトの登録
 	//カメラの登録
@@ -29,17 +31,11 @@ GameScene::GameScene() :
 	pStage_ = std::make_shared<Stage>(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f);
 	RegisterGameObject(pStage_);
 
-	//敵の登録
-	pOni_ = std::make_shared<Oni>();
-	RegisterGameObject(pOni_);
-
-	pbigMan_ = std::make_shared<BigMan>();
-	RegisterGameObject(pbigMan_);
+	//CSV読み込み
+	pEnemyManager_->LoadEnemyData(L"data/CSV/EnemyData.csv");
 
 	//プレイヤーの登録
 	RegisterGameObject(pPlayer_);
-
-
 }
 
 GameScene::~GameScene()
@@ -47,7 +43,6 @@ GameScene::~GameScene()
 	gameObjects_.clear();
 	reserveObjList_.clear();
 	pPlayer_ = nullptr;
-	pOni_ = nullptr;
 }
 
 void GameScene::Init(Input& input)
@@ -106,37 +101,33 @@ void GameScene::Init(Input& input)
 				}
 			}
 		}
-		else if (auto oni = std::dynamic_pointer_cast<Oni>(obj))
+	}
+
+	//敵の生成(CSV経由) 
+	auto oni = pEnemyManager_->SpawnEnemy("Oni");
+	if (oni)
+	{
+		oni->SetPlayer(pPlayer_);
+		oni->SetNavigationGrid(pStage_->GetNaviGrid());
+		oni->SetStageModelHandle(pStage_->GetHandle());
+
+		for (const auto& pCollider : oni->GetColliders())
 		{
-			oni->SetPlayer(pPlayer_);
-			oni->Init(); //鬼の初期化
-
-			//ナビゲーショングリッドとステージのモデルハンドルをセット
-			oni->SetNavigationGrid(pStage_->GetNaviGrid());
-			oni->SetStageModelHandle(pStage_->GetHandle());
-
-			//コライダーの登録
-			for (const auto& pCollider : oni->GetColliders())
-			{
-				pCollisionManager_->RegisterCollider(pCollider.get());
-			}
+			pCollisionManager_->RegisterCollider(pCollider.get());
 		}
-		else if (auto bigMan = std::dynamic_pointer_cast<BigMan>(obj))
+	}
+
+	auto bigMan = pEnemyManager_->SpawnEnemy("BigMan");
+	if (bigMan)
+	{
+		bigMan->SetPlayer(pPlayer_);
+		bigMan->SetNavigationGrid(pStage_->GetNaviGrid());
+		bigMan->SetStageModelHandle(pStage_->GetHandle());
+
+		for (const auto& pCollider : bigMan->GetColliders())
 		{
-			bigMan->SetPlayer(pPlayer_);
-			bigMan->Init(); //鬼の初期化
-
-			//ナビゲーショングリッドとステージのモデルハンドルをセット
-			bigMan->SetNavigationGrid(pStage_->GetNaviGrid());
-			bigMan->SetStageModelHandle(pStage_->GetHandle());
-
-			//コライダーの登録
-			for (const auto& pCollider : bigMan->GetColliders())
-			{
-				pCollisionManager_->RegisterCollider(pCollider.get());
-			}
+			pCollisionManager_->RegisterCollider(pCollider.get());
 		}
-
 	}
 
 }
@@ -187,6 +178,9 @@ void GameScene::Update(Input& input)
 		}
 	}
 
+	//敵マネージャーの更新
+	pEnemyManager_->Update();
+
 	//当たり判定の更新
 	if (pCollisionManager_)
 	{
@@ -228,6 +222,9 @@ void GameScene::Draw()
 			obj->Draw();
 		}
 	}
+
+	//敵マネージャーの描画
+	pEnemyManager_->Draw();
 
 	DrawGrid();
 

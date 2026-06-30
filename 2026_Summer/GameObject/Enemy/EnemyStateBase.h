@@ -6,7 +6,7 @@ class EnemyBase;
 class EnemyStateBase :public CharacterStateBase
 {
 public:
-    EnemyStateBase(std::weak_ptr<EnemyBase> pEnemy);
+    EnemyStateBase(std::weak_ptr<EnemyBase> pEnemy,float searchRadius);
     virtual ~EnemyStateBase() = default;
 
     virtual void Enter() = 0;
@@ -21,6 +21,11 @@ public:
     bool PlayerSearchDistance(float radius)const;
 
 protected:
+
+    //õ“G”ÍˆÍ
+    float searchRadius_ = 0.0f;
+
+    //“G‚ÌãQÆ
     std::weak_ptr<EnemyBase> pEnemy_;
 };
 

@@ -3,7 +3,7 @@
 class EnemyStateAttack :public EnemyStateBase
 {
 public:
-	EnemyStateAttack(std::weak_ptr<EnemyBase> pEnemy);
+	EnemyStateAttack(std::weak_ptr<EnemyBase> pEnemy, float searchRadius);
 	~EnemyStateAttack() = default;
 
 	virtual void Enter()  override;

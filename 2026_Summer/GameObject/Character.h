@@ -27,6 +27,12 @@ public:
 	void ChangeAnimation(AnimationState state, const std::wstring& animName);
 
 	/// <summary>
+	/// アニメーションの遷移(オーバーロード)
+	/// </summary>
+	/// <param name="state">アニメーション名</param>
+	void ChangeAnimation(AnimationState state);
+
+	/// <summary>
 	/// アニメーションが終了したかどうかを判定します。
 	/// </summary>
 	/// <returns>アニメーションが終了している場合はtrueを、そうでない場合はfalseを返す。</returns>

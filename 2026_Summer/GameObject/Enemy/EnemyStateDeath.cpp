@@ -1,14 +1,8 @@
 #include "EnemyStateDeath.h"
 #include "EnemyBase.h"
 
-namespace
-{
-	//死亡アニメーション
-	const wchar_t* kEnemyDeath = L"Oni|Death";
-}
-
-EnemyStateDeath::EnemyStateDeath(std::weak_ptr<EnemyBase> pEnemy) :
-	EnemyStateBase(pEnemy)
+EnemyStateDeath::EnemyStateDeath(std::weak_ptr<EnemyBase> pEnemy,float searchRadius) :
+	EnemyStateBase(pEnemy,searchRadius)
 {
 }
 
@@ -17,7 +11,7 @@ void EnemyStateDeath::Enter()
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
 
-	enemy->ChangeAnimation(AnimationState::Death, kEnemyDeath);
+	enemy->ChangeAnimation(AnimationState::Death);
 }
 
 void EnemyStateDeath::Update()
