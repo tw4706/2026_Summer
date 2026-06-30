@@ -1,3 +1,3 @@
 ﻿EnemeyType,ModelPath,HP,PosX,PosY,PosZ,RotX,RotY,RotZ,ScaleX,ScaleY,ScaleZ,SearchRadius,ColliderRadius,ColliderHeight,IdleAnim,RunAnim,AttackAnim,DamageAnim,DeathAnim
 Oni,data/MV1/Oni.mv1,50,200,0,-1500,0,-3.1415927,0,1,1,1,500,70,120,Oni|Idle,Oni|Run,Oni|Attack,Oni|Damage,Oni|Death
-BigMan,data/MV1/BigMan.mv1,80,200,0,-1000,0,-3.1415927,0,1,1,1,500,70,120,BigMan|Idle,BigMan|Run,BigMan|Attack,BigMan|Damage,BigMan|Death
+BigMan,data/MV1/BigMan.mv1,80,200,0,-1000,0,-3.1415927,0,2,2,2,500,70,180,BigMan|Idle,BigMan|Run,BigMan|Attack,BigMan|Damage,BigMan|Death

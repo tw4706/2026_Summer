@@ -180,6 +180,7 @@
     <ClCompile Include="GameObject\Player\Player.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Math\Vector3.cpp" />
+    <ClCompile Include="WayPointLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -226,6 +227,7 @@
     <ClInclude Include="GameObject\Player\Player.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Math\Vector3.h" />
+    <ClInclude Include="WayPointLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="2026_Summer.rc" />
