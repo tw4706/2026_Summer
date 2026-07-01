@@ -22,7 +22,7 @@ void EnemyStateDeath::Update()
 	//Ž€–SƒAƒjƒ[ƒVƒ‡ƒ“‚ªI—¹‚µ‚½‚ç
 	if (enemy->IsAnimationEnd())
 	{
-		//“G‚ðíœ
+		//“G‚ðíœ‚·‚é
 		enemy->Destory();
 	}
 }

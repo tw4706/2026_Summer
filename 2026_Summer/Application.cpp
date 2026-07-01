@@ -4,6 +4,7 @@
 #include "GameScene.h"
 #include<Dxlib.h>
 #include<memory>
+#include "SceneManager.h"
 
 Application::Application()
 {

@@ -25,7 +25,7 @@ void EnemyStateDamage::Update()
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
 
-	//アニメーションが終わったら
+	//アニメーションが終了したら
 	if (enemy->IsAnimationEnd())
 	{
 		//Idle状態に遷移

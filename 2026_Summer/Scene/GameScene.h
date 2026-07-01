@@ -1,4 +1,5 @@
 #pragma once
+#include "Scene.h"
 #include<memory>
 #include <vector>
 
@@ -6,10 +7,10 @@ class Player;
 class Input;
 class Stage;
 class GameObject;
+class EnemyManager;
 class CameraManager;
 class CollisionManager;
-class EnemyManager;
-class GameScene
+class GameScene:public Scene
 {
 public:
 	GameScene();
@@ -22,12 +23,15 @@ public:
 	/// <summary>
 	/// ゲームオブジェクトの登録
 	/// </summary>
-	/// <param name="obj">登録するオブジェクトの名前</param>
+	/// <param name="obj">登録するオブジェクトのスマートポインタ</param>
 	void RegisterGameObject(std::shared_ptr<GameObject>obj);
 
 private:
-	void DrawGrid();
 
+	/// <summary>
+	/// グリッド線の描画
+	/// </summary>
+	void DrawGrid();
 private:
 	//フレームカウンタ
 	int frameCount_;

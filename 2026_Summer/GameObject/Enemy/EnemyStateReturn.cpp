@@ -8,7 +8,7 @@
 namespace
 {
 	//ˆÚ“®‘¬“x
-	const float kMoveSpeed = 0.3f;
+	const float kMoveSpeed = 2.0f;
 
 	//Œo‰ßŠÔ
 	const float kDeltaTime = 1.0f / 60.0f;
@@ -127,6 +127,7 @@ void EnemyStateReturn::Update()
 			enemy->SetNextWayPointId(toWayPointId_);
 		}
 
+		//Idleó‘Ô‚É‘JˆÚ
 		auto nextState = std::make_shared<EnemyStateIdle>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);
 		return;
