@@ -2,9 +2,9 @@
 #include "Input.h"
 #include "Game.h"
 #include "GameScene.h"
+#include "SceneManager.h"
 #include<Dxlib.h>
 #include<memory>
-#include "SceneManager.h"
 
 Application::Application()
 {
@@ -45,9 +45,10 @@ bool Application::Init()
 void  Application::Run()
 {
 	//シーンの作成
-	Input input;
-	std::shared_ptr<GameScene>pScene = std::make_shared<GameScene>();
-	pScene->Init(input);
+	SceneManager sceneManager;
+
+	//シーンの切り替え
+	sceneManager.ChangeScene(std::make_shared<GameScene>(sceneManager));
 
 	while (ProcessMessage() != -1)
 	{
@@ -55,9 +56,9 @@ void  Application::Run()
 
 		//前のフレーム描画を削除
 		ClearDrawScreen();
-		input.Update();
-		pScene->Update(input);
-		pScene->Draw();
+		Input::GetInstance().Update();
+		sceneManager.Update();
+		sceneManager.Draw();
 
 		if (CheckHitKey(KEY_INPUT_ESCAPE))
 		{

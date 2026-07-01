@@ -66,14 +66,14 @@ void Player::Update()
 
 	Collidable::Update();
 
-	if (!pCurrentState_ && pCamera_ && pInput_)
+	if (!pCurrentState_ && pCamera_)
 	{
 		auto sharedSelf = std::dynamic_pointer_cast<Player>(shared_from_this());
 		std::weak_ptr<Player> weakSelf = sharedSelf;
 
 		//今持っているポインタを参照する
 		PlayerCamera& camera = *pCamera_;
-		Input& input = *pInput_;
+		Input& input = Input::GetInstance();
 
 		//ステートパターンの生成
 		pCurrentState_ = std::shared_ptr<PlayerStateIdle>(new PlayerStateIdle(weakSelf, input, camera));

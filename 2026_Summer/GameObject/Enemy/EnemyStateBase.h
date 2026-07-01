@@ -19,7 +19,6 @@ public:
     /// <param name="radius">プレイヤーを検知する半径</param>
     /// <returns></returns>
     bool PlayerSearchDistance(float radius)const;
-
 protected:
 
     //索敵範囲

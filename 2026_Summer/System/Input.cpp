@@ -1,6 +1,12 @@
 #include "Input.h"
 #include<Dxlib.h>
 
+Input& Input::GetInstance()
+{
+	static Input instance;
+	return instance;
+}
+
 Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 {
 	inputTable_["up"] = { {PeripheralType::keyboard,KEY_INPUT_UP},

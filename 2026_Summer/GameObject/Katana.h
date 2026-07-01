@@ -13,7 +13,6 @@ public:
 	virtual~Katana();
 
 	void Init()override;
-	void Update()override {};
 	void Update(const MATRIX&handMat, AnimationState ownerState);
 	void Draw()override;
 

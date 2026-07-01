@@ -2,6 +2,7 @@
 #include<memory>
 #include<list>
 
+class Input;
 class Scene;
 class SceneManager
 {

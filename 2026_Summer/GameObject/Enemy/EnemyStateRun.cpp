@@ -78,7 +78,7 @@ void EnemyStateRun::Update()
 	Vector3 enemyPos = enemy->GetPos();
 	Vector3 playerPos = enemy->GetPlayerPos();
 
-	//---移動先(targetPos)を決定する---
+	//移動先の決定
 	//プレイヤーへの視線が通っているかどうかを判定
 	bool hasLineOfSight = HasLineOfSight(enemy->GetStageModelHandle(), enemyPos, playerPos);
 
@@ -96,7 +96,6 @@ void EnemyStateRun::Update()
 	else
 	{
 		//視線が遮られている場合は経路探索を使う
-
 		//まだ経路を持っていない場合のみ新しく探索する
 		if (!enemy->GetPathFollower().HasPath())
 		{
@@ -119,7 +118,7 @@ void EnemyStateRun::Update()
 	toPlayer.y_ = 0.0f;
 
 	//距離の計算
-	float distance = std::sqrt(toPlayer.x_ * toPlayer.x_ + toPlayer.z_ * toPlayer.z_);
+	float distance = toPlayer.Length();
 
 	//距離が0.1fだった場合は何も行わない
 	if (distance < 0.1f)

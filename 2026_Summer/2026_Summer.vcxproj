@@ -172,6 +172,9 @@
     <ClCompile Include="GameObject\Stage.cpp" />
     <ClCompile Include="GameObject\Collider\PolygonCollider.cpp" />
     <ClCompile Include="PathFollower.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
+    <ClCompile Include="Scene\ResultScene.cpp" />
     <ClCompile Include="System\NavigationGrid.cpp" />
     <ClCompile Include="System\Animation.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
@@ -181,6 +184,7 @@
     <ClCompile Include="GameObject\Player\Player.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Math\Vector3.cpp" />
+    <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="WayPointLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -218,6 +222,9 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="GameObject\Collider\PolygonCollider.h" />
     <ClInclude Include="PathFollower.h" />
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="Scene\ResultScene.h" />
     <ClInclude Include="System\NavigationGrid.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="GameObject\Stage.h" />
@@ -229,6 +236,7 @@
     <ClInclude Include="GameObject\Player\Player.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Math\Vector3.h" />
+    <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="WayPointLoader.h" />
   </ItemGroup>
   <ItemGroup>

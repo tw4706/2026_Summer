@@ -14,7 +14,7 @@ namespace
     const wchar_t* kPlayerRun = L"Player|Run";
 
     //プレイヤーの移動速度
-    constexpr float kSpeed = 10.0f;
+    constexpr float kSpeed = 20.0f;
 
     //停止する際の線形補間
     constexpr float kStopLerp = 0.2f;

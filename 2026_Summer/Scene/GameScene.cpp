@@ -3,17 +3,19 @@
 #include"Input.h"
 #include"Katana.h"
 #include"Enemy/Oni.h"
-#include"Enemy/BigMan.h"
-#include "GameObject.h"
-#include "Player/Player.h"
-#include "CollisionManager.h"
 #include "EnemyManager.h"
+#include "GameObject.h"
+#include"Enemy/BigMan.h"
+#include "Player/Player.h"
+#include"SceneManager.h"
+#include "CollisionManager.h"
 #include "Camera/PlayerCamera.h"
 #include "Camera/CameraManager.h"
 #include <DxLib.h>
 #include <algorithm>
 
-GameScene::GameScene() :
+GameScene::GameScene(SceneManager& sceneManager) :
+	Scene(sceneManager),
 	frameCount_(0)
 {
 	pCollisionManager_ = std::make_unique<CollisionManager>();
@@ -46,7 +48,7 @@ GameScene::~GameScene()
 	pPlayer_ = nullptr;
 }
 
-void GameScene::Init(Input& input)
+void GameScene::Init()
 {
 	//カリングの設定（裏面のポリゴンは見えないようにする）
 	SetUseBackCulling(true);
@@ -83,7 +85,7 @@ void GameScene::Init(Input& input)
 		}
 		else if (auto player = std::dynamic_pointer_cast<Player>(obj)) {
 
-			player->SetInput(&input);
+			//player->SetInput(&input);
 			player->SetCamera(playerCam.get());
 			player->Init();
 
@@ -130,10 +132,9 @@ void GameScene::Init(Input& input)
 			pCollisionManager_->RegisterCollider(pCollider.get());
 		}
 	}
-
 }
 
-void GameScene::Update(Input& input)
+void GameScene::Update()
 {
 	frameCount_++;
 
@@ -162,7 +163,7 @@ void GameScene::Update(Input& input)
 	auto playerCam = std::dynamic_pointer_cast<PlayerCamera>(pCameraManager_->GetActiveCamera());
 	if (playerCam)
 	{
-		Vector3 stickR = input.GetStickRight();
+		Vector3 stickR = Input::GetInstance().GetStickRight();
 		playerCam->AddRotation(-stickR.x_ * 0.03f, -stickR.z_ * 0.03f);
 	}
 
@@ -232,7 +233,7 @@ void GameScene::Update(Input& input)
 
 void GameScene::Draw()
 {
-
+	//すべてのオブジェクトの描画
 	for (auto& obj : gameObjects_)
 	{
 		if (!obj->IsDead())

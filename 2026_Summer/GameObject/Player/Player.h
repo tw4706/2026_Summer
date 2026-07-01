@@ -38,8 +38,6 @@ public:
 	/// <param name="camera">カメラのポインタ</param>
 	void SetCamera(PlayerCamera* camera) { pCamera_ = camera; }
 
-	void SetInput(Input* input) { pInput_ = input; }
-
 	float GetMoveAngle() const { return moveAngle_; }
 	void SetMoveAngle(float angle) { moveAngle_ = angle; }
 
@@ -66,7 +64,6 @@ private:
 	bool isInvincible_ = false;				//無敵中かどうか
 
 	PlayerCamera* pCamera_ = nullptr;		//カメラ
-	Input* pInput_ = nullptr;				//インプット入力
 	std::unique_ptr<Katana> pKatana_;		//刀
 };
 

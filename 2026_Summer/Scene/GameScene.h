@@ -4,7 +4,6 @@
 #include <vector>
 
 class Player;
-class Input;
 class Stage;
 class GameObject;
 class EnemyManager;
@@ -13,12 +12,12 @@ class CollisionManager;
 class GameScene:public Scene
 {
 public:
-	GameScene();
+	GameScene(SceneManager&sceneManager);
 	~GameScene();
 
-	void Init(Input&input);
-	void Update(Input& input);
-	void Draw();
+	void Init()override;
+	void Update()override;
+	void Draw()override;
 
 	/// <summary>
 	/// ゲームオブジェクトの登録

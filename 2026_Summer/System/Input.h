@@ -23,8 +23,20 @@ struct InputState
 class Input
 {
 public:
+
+	/// <summary>
+	/// インスタンスの作成
+	/// </summary>
+	/// <returns>インスタンス</returns>
+	static Input& GetInstance();
+
 	//初期化処理
 	Input();
+
+	//コピー禁止
+	Input(const Input&) = delete;
+	Input& operator=(const Input&) = delete;
+
 	//更新処理
 	void Update();
 	//ボタンが押されたか

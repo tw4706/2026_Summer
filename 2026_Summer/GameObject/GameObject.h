@@ -2,6 +2,7 @@
 #include"Vector3.h"
 
 class Collider;
+class Input;
 class GameObject
 {
 public:

@@ -27,7 +27,7 @@ void SceneManager::ChangeScene(std::shared_ptr<Scene> scene)
 	//ƒV[ƒ“‚ª‹ó‚Ìê‡‚Í
 	if (scenes_.empty())
 	{
-		//­‚È‚­‚Æ‚à1’Ã‚Í“E‚Ü‚ê‚Ä‚¢‚éó‘Ô‚É‚·‚é
+		//­‚È‚­‚Æ‚à1‚Â‚ÍÏ‚Ü‚ê‚Ä‚¢‚éó‘Ô‚É‚·‚é
 		scenes_.push_back(scene);
 	}
 	else
@@ -58,9 +58,5 @@ void SceneManager::Update()
 }
 void SceneManager::Draw()
 {
-	//ƒV[ƒ“‚ð•`‰æ‚³‚¹‚é
-	for (auto& scene : scenes_)
-	{
-		scene->Draw();
-	}
+	scenes_.back()->Draw();
 }

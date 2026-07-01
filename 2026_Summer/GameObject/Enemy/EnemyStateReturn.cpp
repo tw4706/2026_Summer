@@ -17,7 +17,7 @@ namespace
 	const float kRotateLerpRate = 0.1f;
 
 	//復帰目標地点に到達したとみなす距離
-	const float kArriveThreshold = 50.0f;
+	const float kArriveThreshold = 10.0f;
 
 	//線分ab上で、posに最も近い点を求める
 	Vector3 ClosestPointOnSegment(const Vector3& a, const Vector3& b, const Vector3& pos)
@@ -25,7 +25,7 @@ namespace
 		Vector3 ab = b - a;
 		float abLenSq = ab.LengthSq();
 
-		//始点と終点が同じ(長さ0)場合は始点を返す
+		//始点と終点が同じ場合は始点を返す
 		if (abLenSq <= 0.01f)
 		{
 			return a;
@@ -42,14 +42,14 @@ namespace
 	}
 }
 
-EnemyStateReturn::EnemyStateReturn(std::weak_ptr<EnemyBase> pEnemy, float searchRadius):
-	EnemyStateBase(pEnemy,searchRadius)
+EnemyStateReturn::EnemyStateReturn(std::weak_ptr<EnemyBase> pEnemy, float searchRadius) :
+	EnemyStateBase(pEnemy, searchRadius)
 {
 }
 
 void EnemyStateReturn::Enter()
 {
-	auto enemy=pEnemy_.lock();
+	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
 
 	//状態遷移
@@ -70,7 +70,7 @@ void EnemyStateReturn::Enter()
 
 	float nearestDistSq = (std::numeric_limits<float>::max)();
 
-	//巡回ルート(全WayPoint間の接続線分)の中から、現在地に最も近い点を探す
+	//ルートの中から、現在地に最も近い点を探す
 	for (const auto& wp : wayPoints)
 	{
 		for (int connId : wp.connections)

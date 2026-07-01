@@ -4,7 +4,7 @@
 namespace
 {
 	//移動速度(巡回時)
-	const float kPatrolMoveSpeed = 0.15f;
+	const float kPatrolMoveSpeed = 0.3f;
 
 	//経過時間
 	const float kDeltaTime = 1.0f / 60.0f;
@@ -13,7 +13,7 @@ namespace
 	const float kRotateLerpRate = 0.1f;
 
 	//WayPointに到達したとみなす距離
-	const float kArriveThreshold = 10.0f;
+	const float kArriveThreshold = 50.0f;
 
 	//指定エリア内で指定座標に最も近いWayPointのidを返す
 	int FindNearestWayPointId(const std::vector<WayPointLoader::WayPoint>& wayPoints, const Vector3& pos)
@@ -53,28 +53,29 @@ namespace
 	//(直前にいたWayPoint以外の接続先を優先することで、常に一方向へ巡回させる)
 	int GetNextWayPointId(const std::vector<WayPointLoader::WayPoint>& wayPoints, int currentId, int previousId)
 	{
+		//現在のWayPointの情報を取得
 		const WayPointLoader::WayPoint* pCurrent = FindWayPointById(wayPoints, currentId);
 		if (!pCurrent || pCurrent->connections.empty())
 		{
 			return -1;
 		}
 
-		//直前のWayPoint以外に接続先が1つしかない場合は、その接続先を返す
 		if (pCurrent->connections.size() == 1)
 		{
 			return pCurrent->connections.front();
 		}
 
-		for (int connId : pCurrent->connections)
+		for (int connID : pCurrent->connections)
 		{
-			if (connId != previousId)
+			if (connID != previousId)
 			{
-				return connId;
+				//次に進むべきコネクト先のIDを返す
+				return connID;
 			}
 		}
 
-		//直前以外に接続先がない(行き止まり)場合は同じ経路を引き返す
-		return pCurrent->connections.front();
+		//そうでない場合は前のIDを返す
+		return pCurrent->connections.front();;
 	}
 }
 
