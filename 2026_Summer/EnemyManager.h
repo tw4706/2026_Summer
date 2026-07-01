@@ -1,5 +1,6 @@
 #pragma once
 #include "EnemyStatus.h"
+#include "WayPointLoader.h"
 #include <memory>
 #include <vector>
 #include <string>
@@ -17,11 +18,18 @@ public:
 	void Draw();
 
 	/// <summary>
-	/// パスから敵データを読み込む
+	/// 敵データを読み込む
 	/// </summary>
-	/// <param name="path">敵データファイルのパスのワイド文字列の参照</param>
-	/// <returns>データの読み込みに成功した場合はtrue、失敗した場合はfalseを返す。</returns>
+	/// <param name="path">敵データファイルの文字列の参照</param>
+	/// <returns>読み込みに成功した場合はtrue、失敗した場合はfalseを返す</returns>
 	bool LoadEnemyData(const std::wstring& path);
+
+	/// <summary>
+	/// WayPointデータを読み込む
+	/// </summary>
+	/// <param name="path">WayPointデータファイルの文字列の参照</param>
+	/// <returns>読み込みに成功した場合はtrue、失敗した場合はfalseを返す</returns>
+	bool LoadWayPointData(const std::wstring& path);
 
 	/// <summary>
 	/// 指定されたパス種別に応じた敵キャラクターの生成
@@ -61,7 +69,10 @@ private:
 	//生成中の敵一覧
 	std::vector<std::shared_ptr<EnemyBase>> enemies_;
 
-	//CSVのデータロード
+	//敵のパラメータのデータロード
 	EnemyStatus dataLoader_;
+
+	//WayPointのデータロード
+	WayPointLoader wayPointLoader_;
 };
 

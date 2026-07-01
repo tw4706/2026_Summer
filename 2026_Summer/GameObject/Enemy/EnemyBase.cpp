@@ -94,10 +94,6 @@ void EnemyBase::Draw()
 
 
 #ifdef _DEBUG
-	//敵の頭上にHPをデバッグ表示
-	DrawFormatString(static_cast<int>(pos_.x_), static_cast<int>(pos_.y_ + 150.0f),
-		GetColor(255, 255, 255), L"HP: %d", hp_);
-
 	//索敵範囲のデバッグ表示
 	VECTOR center = VGet(pos_.x_, pos_.y_, pos_.z_);
 	Vector3 playerPos = GetPlayerPos();
@@ -122,6 +118,40 @@ void EnemyBase::Draw()
 			//当たっていたら赤、通常は水色
 			unsigned int lineColor = isHit_ ? GetColor(255, 0, 0) : GetColor(0, 255, 255);
 			DrawCapsule3D(top, bottom, pCap->GetRadius(), 8, lineColor, GetColor(0, 0, 0), FALSE);
+		}
+	}
+
+	//経路探索のデバッグ表示
+	if (hasDebugTarget_)
+	{
+		Vector3 enemyPos = GetPos();
+		VECTOR startPos = VGet(enemyPos.x_, enemyPos.y_ + 10.0f, enemyPos.z_);
+		VECTOR endPos = VGet(debugNextPos_.x_, debugNextPos_.y_ + 10.0f, debugNextPos_.z_);
+
+		unsigned int colorLine = GetColor(255, 0, 0);
+		DrawLine3D(startPos, endPos, colorLine);
+	}
+	if (pWayPointLoader_)
+	{
+		//敵と同じエリアIDのWayPointリストを取得
+		const auto& wayPoints = pWayPointLoader_->GetWayPoints(areaId_);
+
+		for (const auto& wp : wayPoints)
+		{
+			//地面に埋まらないように少し浮かせる
+			VECTOR wpPos = VGet(wp.pos.x_, wp.pos.y_ + 10.0f, wp.pos.z_);
+
+			//通常のWayPointは青色にする（現在目指している場所と区別するため）
+			unsigned int wpColor = GetColor(0, 0, 255);
+
+			//もしこのWayPointが、現在敵が目指しているターゲットIDと同じなら黄色にする
+			if (hasDebugTarget_ && wp.id == GetNextWayPointId())
+			{
+				wpColor = GetColor(255, 255, 0);
+			}
+
+			//WayPointの位置に球を描画
+			DrawSphere3D(wpPos, 15.0f, 8, wpColor, wpColor, TRUE);
 		}
 	}
 #endif
@@ -180,6 +210,9 @@ void EnemyBase::OnDamage(int damage)
 
 void EnemyBase::ApplyData(const EnemyData& data)
 {
+	//エリアID
+	areaId_ = data.areId_;
+
 	//ステータス
 	hp_ = data.hp_;
 
@@ -204,6 +237,7 @@ void EnemyBase::ApplyData(const EnemyData& data)
 
 	//アニメーション名をアニメーションクラスに登録
 	animation_.RegisterAnimName(AnimationState::Idle, data.idleAnim_);
+	animation_.RegisterAnimName(AnimationState::Walk, data.walkAnim_);
 	animation_.RegisterAnimName(AnimationState::Run, data.runAnim_);
 	animation_.RegisterAnimName(AnimationState::Attack, data.attackAnim_);
 	animation_.RegisterAnimName(AnimationState::Damage, data.damageAnim_);

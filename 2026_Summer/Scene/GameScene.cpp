@@ -33,6 +33,7 @@ GameScene::GameScene() :
 
 	//CSV“Ç‚İ‚İ
 	pEnemyManager_->LoadEnemyData(L"data/CSV/EnemyData.csv");
+	pEnemyManager_->LoadWayPointData(L"data/CSV/waypoints_stage1.csv");
 
 	//ƒvƒŒƒCƒ„[‚Ì“o˜^
 	RegisterGameObject(pPlayer_);

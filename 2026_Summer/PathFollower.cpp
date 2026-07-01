@@ -57,11 +57,14 @@ Vector3 PathFollower::GetCurrentTarget(const Vector3& currentPos)
 	if (dist < kReachDistance)
 	{
 		currentIndex_++;
-		//次のwaypointがまだあるなら更新する
-		if (currentIndex_ < static_cast<int>(path_.size()))
+
+		//最後まで行ったら現在の位置を返して終了
+		if (currentIndex_ >= static_cast<int>(path_.size()))
 		{
-			targetPos = path_[currentIndex_];
+			return targetPos; // 最後のノード位置を返す
 		}
+		// 次のノードの座標に更新
+		targetPos = path_[currentIndex_];
 	}
 
 	return targetPos;

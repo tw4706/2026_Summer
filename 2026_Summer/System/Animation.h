@@ -7,6 +7,7 @@ enum class AnimationState
 	None,
 	Spawn,
 	Idle,
+	Walk,
 	Run,
 	Damage,
 	Attack,

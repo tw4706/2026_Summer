@@ -1,14 +1,12 @@
 #include "EnemyStateRun.h"
 #include "EnemyStateIdle.h"
 #include "EnemyStateAttack.h"
+#include "EnemyStateReturn.h"
 #include "EnemyBase.h"
 #include<cmath>
 
 namespace
 {
-	//“G‚Ì‘–‚èƒAƒjƒ[ƒVƒ‡ƒ“
-	const wchar_t* kEnemyRun = L"Oni|Run";
-
 	//ˆÚ“®‘¬“x
 	const float kMoveSpeed = 0.3f;
 
@@ -21,6 +19,7 @@ namespace
 	//õ“G”ÍˆÍ‚Ì”¼Œa
 	const float kDebugSearchRadius = 500.0f;
 
+	//‹ü‚Ì‚‚³(Ray‚ÅáŠQ•¨‚Ì”»’è‚ğs‚¤‚Ì‚Ég—p)
 	const float kEyeHeight = 50.0f;
 
 	//2“_ŠÔ‚ÉáŠQ•¨‚ª‚ ‚é‚©‚Ç‚¤‚©‚ğRay‚Å”»’è‚·‚é
@@ -70,8 +69,7 @@ void EnemyStateRun::Update()
 	//õ“G‚Ì”ÍˆÍ‚É“ü‚Á‚Ä‚È‚©‚Á‚½‚ç
 	if (PlayerSearchDistance(kDebugSearchRadius) == false&&!enemy->IsHit())
 	{
-		//ŒŸ’m”ÍˆÍ‚É“ü‚Á‚½‚çRunó‘Ô‚Ö‘JˆÚ
-		auto nextState = std::make_shared<EnemyStateIdle>(pEnemy_, searchRadius_);
+		auto nextState = std::make_shared<EnemyStateReturn>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);
 		return;
 	}
@@ -99,20 +97,20 @@ void EnemyStateRun::Update()
 	{
 		//‹ü‚ªÕ‚ç‚ê‚Ä‚¢‚éê‡‚ÍŒo˜H’Tõ‚ğg‚¤
 
-		//‚Ü‚¾Œo˜H‚ğ‚Á‚Ä‚¢‚È‚¢ê‡‚Ì‚İV‚µ‚­’Tõ‚·‚é(–ˆƒtƒŒ[ƒ€’Tõ‚·‚é‚Æd‚¢‚½‚ß)
+		//‚Ü‚¾Œo˜H‚ğ‚Á‚Ä‚¢‚È‚¢ê‡‚Ì‚İV‚µ‚­’Tõ‚·‚é
 		if (!enemy->GetPathFollower().HasPath())
 		{
 			std::vector<Vector3> path = enemy->GetPathFinder().FindPath(enemyPos, playerPos);
 			enemy->GetPathFollower().SetPath(path);
 		}
 
-		//Œo˜H‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡‚ÍA‚»‚Ìê‚Å‘Ò‹@(ˆÚ“®‚µ‚È‚¢)
+		//Œo˜H‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡‚ÍA‚»‚Ìê‚Å‘Ò‹@
 		if (!enemy->GetPathFollower().HasPath())
 		{
 			return;
 		}
 
-		//Œ»İŒü‚©‚¤‚×‚«Œo˜Hã‚Ì–Ú•W“_‚ğæ“¾
+		//Ÿ‚É‚¢‚­Œo˜Hã‚Ì–Ú•W‚ğæ“¾‚·‚é
 		targetPos = enemy->GetPathFollower().GetCurrentTarget(enemyPos);
 	}
 

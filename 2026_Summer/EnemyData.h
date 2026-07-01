@@ -5,6 +5,9 @@
 //CSVに入っている敵のパラメータ
 struct EnemyData
 {
+	//エリアID
+	int areId_ = 0;
+
 	//敵の種類
 	std::string type_;
 
@@ -36,6 +39,7 @@ struct EnemyData
 
 	//各アニメーションの名前
 	std::wstring idleAnim_;
+	std::wstring walkAnim_;
 	std::wstring runAnim_;
 	std::wstring attackAnim_;
 	std::wstring damageAnim_;

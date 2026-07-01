@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AStarPathFinder.cpp" />
+    <ClCompile Include="GameObject\Enemy\EnemyStateReturn.cpp" />
     <ClCompile Include="EnemyStatus.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="GameObject\Enemy\BigMan.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="AStarPathFinder.h" />
     <ClInclude Include="EnemyData.h" />
+    <ClInclude Include="GameObject\Enemy\EnemyStateReturn.h" />
     <ClInclude Include="EnemyStatus.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="GameObject\Enemy\BigMan.h" />

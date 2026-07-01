@@ -33,6 +33,11 @@ bool EnemyManager::LoadEnemyData(const std::wstring& path)
 	return dataLoader_.Load(path);
 }
 
+bool EnemyManager::LoadWayPointData(const std::wstring& path)
+{
+	return wayPointLoader_.Load(path);
+}
+
 std::shared_ptr<EnemyBase> EnemyManager::SpawnEnemy(const std::string& pathType)
 {
 	const EnemyData* pData = dataLoader_.GetEnemyData(pathType);
@@ -47,8 +52,11 @@ std::shared_ptr<EnemyBase> EnemyManager::SpawnEnemy(const std::string& pathType)
 		return nullptr;
 	}
 
-	//CSVで入力したパラメータを適用してから初期化を行う
+	//CSVで入力したパラメータを適用
 	enemy->ApplyData(*pData);
+	//WayPointのセット
+	enemy->SetWayPointLoader(&wayPointLoader_);
+
 	enemy->Init();
 
 	enemies_.push_back(enemy);
