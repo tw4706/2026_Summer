@@ -102,6 +102,7 @@ void PlayerStateRun::Update()
         return;
     }
 
+    //‹ó’†‚É‚¢‚éê‡‚ÍƒWƒƒƒ“ƒvó‘Ô‚Ö‘JˆÚ
     if (!pPlayer->GetIsGround())
     {
         pPlayer->ChangeState(std::make_shared<PlayerStateJump>(pPlayer_, input_, camera_));

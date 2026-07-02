@@ -141,7 +141,7 @@ void EnemyBase::Draw()
 			//地面に埋まらないように少し浮かせる
 			VECTOR wpPos = VGet(wp.pos.x_, wp.pos.y_ + 10.0f, wp.pos.z_);
 
-			//通常のWayPointは青色にする（現在目指している場所と区別するため）
+			//通常のWayPointは青色にする
 			unsigned int wpColor = GetColor(0, 0, 255);
 
 			//もしこのWayPointが、現在敵が目指しているターゲットIDと同じなら黄色にする

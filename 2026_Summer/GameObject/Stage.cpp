@@ -56,7 +56,8 @@ void Stage::Draw()
 	stageModel_.Draw();
 
 #ifdef _DEBUG
-	DrawNavGridDebug();
+	//ナビゲーショングリッドデバッグの表示
+	//DrawNavGridDebug();
 #endif
 }
 

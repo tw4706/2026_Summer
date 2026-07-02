@@ -172,7 +172,7 @@ void Player::OnCollision(Collidable& coll)
 
 Vector3 Player::GetCameraTarget() const
 {
-	return Vector3{ pos_.x_,pos_.y_ + 150.0f,pos_.z_ - 80.0f };
+	return Vector3{ pos_.x_,pos_.y_ + 150.0f,pos_.z_ };
 }
 
 void Player::SetKatanaColliderEnabled(bool isEnabled)
