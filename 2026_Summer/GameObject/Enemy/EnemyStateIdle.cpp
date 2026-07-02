@@ -3,8 +3,8 @@
 #include "EnemyBase.h"
 namespace
 {
-	//移動速度(巡回時)
-	const float kPatrolMoveSpeed = 0.3f;
+	//移動速度
+	const float kMoveSpeed = 0.2f;
 
 	//経過時間
 	const float kDeltaTime = 1.0f / 60.0f;
@@ -24,7 +24,7 @@ namespace
 		for (const auto& wp : wayPoints)
 		{
 			Vector3 diff = wp.pos - pos;
-			float distSq = diff.x_ * diff.x_ + diff.y_ * diff.y_ + diff.z_ * diff.z_;
+			float distSq = diff.LengthSq();
 
 			if (distSq < nearestDistSq)
 			{
@@ -49,9 +49,8 @@ namespace
 		return nullptr;
 	}
 
-	//現在のWayPointから次に向かうべきWayPointのidを決定する
-	//(直前にいたWayPoint以外の接続先を優先することで、常に一方向へ巡回させる)
-	int GetNextWayPointId(const std::vector<WayPointLoader::WayPoint>& wayPoints, int currentId, int previousId)
+	//現在のWayPointから次のWayPointを決定する
+	int GetNextWayPointId(const std::vector<WayPointLoader::WayPoint>& wayPoints, int currentId, int nextId)
 	{
 		//現在のWayPointの情報を取得
 		const WayPointLoader::WayPoint* pCurrent = FindWayPointById(wayPoints, currentId);
@@ -67,7 +66,7 @@ namespace
 
 		for (int connID : pCurrent->connections)
 		{
-			if (connID != previousId)
+			if (connID != nextId)
 			{
 				//次に進むべきコネクト先のIDを返す
 				return connID;
@@ -98,8 +97,7 @@ void EnemyStateIdle::Enter()
 	const auto& wayPoints = pLoader->GetWayPoints(enemy->GetAreaId());
 	if (wayPoints.empty()) return;
 
-	//すでに有効な巡回情報(current/target)を持っている場合はそのまま引き継ぐ
-	//(EnemyStateAttackやEnemyStateReturnから戻ってきた場合など)
+	//すでに有効な巡回情報を持っている場合はそのまま引き継ぐ
 	bool hasValidCurrent = FindWayPointById(wayPoints, enemy->GetCurrentWayPointId()) != nullptr;
 	bool hasValidTarget = FindWayPointById(wayPoints, enemy->GetNextWayPointId()) != nullptr;
 	if (hasValidCurrent && hasValidTarget)
@@ -107,7 +105,7 @@ void EnemyStateIdle::Enter()
 		return;
 	}
 
-	//初回など、巡回情報が無い場合は最寄りのWayPointから巡回を開始する
+	//巡回情報が無い場合は最寄りのWayPointから巡回を開始する
 	int nearestId = FindNearestWayPointId(wayPoints, enemy->GetPos());
 	enemy->SetCurrentWayPointId(nearestId);
 
@@ -150,7 +148,7 @@ void EnemyStateIdle::Update()
 	toTarget.y_ = 0.0f;
 
 	//距離の計算
-	float distance = std::sqrt(toTarget.x_ * toTarget.x_ + toTarget.z_ * toTarget.z_);
+	float distance = toTarget.Length();
 
 	//目標WayPointに到達したら、次の接続先WayPointへ目標を切り替える
 	if (distance < kArriveThreshold)
@@ -169,7 +167,7 @@ void EnemyStateIdle::Update()
 	toTarget.Normalize();
 
 	//移動速度を設定
-	Vector3 moveVec = { toTarget.x_ * kPatrolMoveSpeed * kDeltaTime, 0.0f, toTarget.z_ * kPatrolMoveSpeed * kDeltaTime };
+	Vector3 moveVec = { toTarget.x_ * kMoveSpeed * kDeltaTime, 0.0f, toTarget.z_ * kMoveSpeed * kDeltaTime };
 	//計算した位置を適用
 	Vector3 nextPos = enemyPos + moveVec;
 	//位置のセット

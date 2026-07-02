@@ -22,7 +22,7 @@ void PlayerStateJump::Enter()
 	auto pPlayer = pPlayer_.lock();
 	if (!pPlayer) return;
 
-	// アニメーションをジャンプに切り替える
+	//アニメーションをジャンプに切り替える
 	pPlayer->ChangeAnimation(AnimationState::Jump, kPlayerJump);
 
 	if (pPlayer->GetIsGround())

@@ -88,7 +88,7 @@ void Input::UpdateAnalogStick()
 	int leftX, leftY;
 	GetJoypadAnalogInput(&leftX, &leftY, DX_INPUT_PAD1);
 
-	//スティックの上限・下限を設定する
+	//左スティックの上限・下限を設定する
 	Vector3 stickLeft(leftX / 1000.0f, 0.0f, -leftY / 1000.0f);
 
 	//デッドゾーン
@@ -111,7 +111,7 @@ void Input::UpdateAnalogStick()
 	int rightX, rightY;
 	GetJoypadAnalogInputRight(&rightX, &rightY, DX_INPUT_PAD1);
 
-	//左の時と同様に上限・下限を設定する
+	//右スティックの上限・下限を設定する
 	Vector3 targetRight(-rightX / 1000.0f, 0.0f, rightY / 1000.0f);
 
 	//線形補間(Lerp)
@@ -127,9 +127,8 @@ bool Input::HasMoveInput() const
 		return true;
 	}
 
-	// 2. 左アナログスティックのチェック
-	// すでに UpdateAnalogStick() でデッドゾーン以下の場合は {0,0,0} になっているため、
-	// 長さが 0 より大きければ入力されていると判定できます。
+	//左アナログスティックのチェック
+	//スティック推している長さが基準以上なら入力があるとしている
 	if (stickLeft_.LengthSq() > 0.09f)
 	{
 		return true;
@@ -140,7 +139,7 @@ bool Input::HasMoveInput() const
 
 Vector3 Input::GetRawMoveInput() const
 {
-	//まず左アナログスティックの入力をベースにする
+	//左アナログスティックの入力
 	Vector3 inputDir = stickLeft_;
 
 	//アナログスティックが入力されていないなら、合成する

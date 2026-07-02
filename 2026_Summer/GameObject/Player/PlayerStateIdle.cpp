@@ -16,9 +16,6 @@ namespace
     //入力のしきい値
     constexpr float kInputEpsilon = 0.01f;
 
-    //アナログスティックのデッドゾーン
-    constexpr float kStickDeadZone = 0.15f;
-
     //移動時の線形補間
     constexpr float kMoveLerp = 0.15f;
 
@@ -47,7 +44,7 @@ void PlayerStateIdle::Update()
     auto pPlayer = pPlayer_.lock();
     if (!pPlayer) return;
 
-	// カメラの回転
+	//カメラの回転
 	Vector3 stickR = input_.GetStickRight();
 	camera_.AddRotation(-stickR.x_ * kCameraSpeed, -stickR.z_ * kCameraSpeed);
 

@@ -5,6 +5,7 @@
 #include"Matrix4x4.h"
 #include "PlayerStateBase.h"
 #include "PlayerStateIdle.h"
+#include "PlayerStateDamage.h"
 #include "Enemy/EnemyBase.h"
 #include "Collider/CapsuleCollider.h"
 #include<Dxlib.h>
@@ -72,11 +73,11 @@ void Player::Update()
 		std::weak_ptr<Player> weakSelf = sharedSelf;
 
 		//今持っているポインタを参照する
-		PlayerCamera& camera = *pCamera_;
+		PlayerCamera& pCamera = *pCamera_;
 		Input& input = Input::GetInstance();
 
 		//ステートパターンの生成
-		pCurrentState_ = std::shared_ptr<PlayerStateIdle>(new PlayerStateIdle(weakSelf, input, camera));
+		pCurrentState_ = std::shared_ptr<PlayerStateIdle>(new PlayerStateIdle(weakSelf, input, *pCamera_));
 
 		pCurrentState_->Enter();
 	}
@@ -149,12 +150,29 @@ void Player::Draw()
 
 void Player::OnCollision(Collidable& coll)
 {
+	//衝突した相手が敵だった場合ダメージ状態に遷移
+	//if (EnemyBase* pEnemy = dynamic_cast<EnemyBase*>(&coll))
+	//{
+	//	auto sharedSelf = std::dynamic_pointer_cast<Player>(shared_from_this());
+	//	std::weak_ptr<Player> weakSelf = sharedSelf;
+
+	//	PlayerCamera& pCamera = *pCamera_;
+
+	//	auto nextState = std::make_shared<PlayerStateDamage>(weakSelf, Input::GetInstance(), pCamera);
+	//	ChangeState(nextState);
+	//}
+	//else
+	//{
+
+	//}
 	isHit_ = true;
+
+
 }
 
 Vector3 Player::GetCameraTarget() const
 {
-	return Vector3{ pos_.x_,pos_.y_ + 200.0f,pos_.z_ };
+	return Vector3{ pos_.x_,pos_.y_ + 150.0f,pos_.z_ - 80.0f };
 }
 
 void Player::SetKatanaColliderEnabled(bool isEnabled)

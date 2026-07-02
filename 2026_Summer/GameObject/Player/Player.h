@@ -60,7 +60,7 @@ public:
 private:
 	float moveAngle_;						//プレイヤーの向く角度
 	int handFrameIndex_;					//右手の刀を持つ手のフレームインデックス
-	float jumpPower_ = 12.0f;				//ジャンプ力
+	float jumpPower_ = 18.0f;				//ジャンプ力
 	bool isInvincible_ = false;				//無敵中かどうか
 
 	PlayerCamera* pCamera_ = nullptr;		//カメラ

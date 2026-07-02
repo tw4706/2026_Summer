@@ -44,9 +44,6 @@ private:
 	//カメラ(シーンが所有しているためunique_ptrで持つ)
 	std::unique_ptr<CameraManager>pCameraManager_;
 
-	//コリジョンマネージャー
-	std::unique_ptr<CollisionManager>pCollisionManager_;
-
 	//エネミーマネージャー
 	std::unique_ptr<EnemyManager>pEnemyManager_;
 

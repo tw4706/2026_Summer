@@ -113,8 +113,10 @@ void EnemyStateRun::Update()
 		targetPos = enemy->GetPathFollower().GetCurrentTarget(enemyPos);
 	}
 
-	//敵からプレイヤーまでのベクトルを計算
+	//敵からプレイヤーまでのベクトル
 	Vector3 toPlayer = playerPos - enemyPos;
+
+	//ゲーム内では高さを行わないのでYを0にする
 	toPlayer.y_ = 0.0f;
 
 	//距離の計算
@@ -137,25 +139,27 @@ void EnemyStateRun::Update()
 	{
 		//移動速度を設定
 		Vector3 moveVec = { toPlayer.x_ * kMoveSpeed * kDeltaTime, 0.0f, toPlayer.z_ * kMoveSpeed * kDeltaTime };
+
 		//計算した位置を適応
 		Vector3 nextPos = enemyPos + moveVec;
+
 		//位置のセット
 		enemy->SetPos(nextPos);
 	}
 
 	//進行方向の角度
 	float targetAngle = std::atan2f(toPlayer.x_, -toPlayer.z_);
+
 	//現在の角度
 	float currentAngle = enemy->GetMoveAngle();
 
 	float angleDiff = targetAngle - currentAngle;
 
-	//差分を-πからπの範囲に正規化（最短経路で回転させたいので）
+	//-πからπの範囲に正規化
 	while (angleDiff > DX_PI_F)  angleDiff -= 2.0f * DX_PI_F;
 	while (angleDiff < -DX_PI_F) angleDiff += 2.0f * DX_PI_F;
 
-	//次の目標の角度を
-	//線形補間を用いて滑らかに回転する
+	//次の目標の角度を線形補間を用いて滑らかに回転する
 	float nextAngle = currentAngle + angleDiff * kRotateLerpRate;
 
 	//計算した角度を適用

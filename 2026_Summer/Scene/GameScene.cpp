@@ -18,8 +18,6 @@ GameScene::GameScene(SceneManager& sceneManager) :
 	Scene(sceneManager),
 	frameCount_(0)
 {
-	pCollisionManager_ = std::make_unique<CollisionManager>();
-
 	pPlayer_ = std::make_shared<Player>();
 	pCameraManager_ = std::make_unique<CameraManager>();
 	pEnemyManager_ = std::make_unique<EnemyManager>();
@@ -35,7 +33,7 @@ GameScene::GameScene(SceneManager& sceneManager) :
 
 	//CSV読み込み
 	pEnemyManager_->LoadEnemyData(L"data/CSV/EnemyData.csv");
-	pEnemyManager_->LoadWayPointData(L"data/CSV/waypoints_stage1.csv");
+	pEnemyManager_->LoadWayPointData(L"data/CSV/wayPointData.csv");
 
 	//プレイヤーの登録
 	RegisterGameObject(pPlayer_);
@@ -70,7 +68,7 @@ void GameScene::Init()
 		reserveObjList_.clear();
 	}
 
-	// 登録されたすべてのオブジェクトを初期化
+	//登録されたすべてのオブジェクトを初期化
 	for (auto& obj : gameObjects_)
 	{
 		if (auto stage = std::dynamic_pointer_cast<Stage>(obj))
@@ -80,19 +78,18 @@ void GameScene::Init()
 			//コライダーの登録
 			for (const auto& pCollider : stage->GetColliders())
 			{
-				pCollisionManager_->RegisterCollider(pCollider.get());
+				CollisionManager::GetInstance().RegisterCollider(pCollider.get());
 			}
 		}
-		else if (auto player = std::dynamic_pointer_cast<Player>(obj)) {
-
-			//player->SetInput(&input);
+		else if (auto player = std::dynamic_pointer_cast<Player>(obj))
+		{
 			player->SetCamera(playerCam.get());
 			player->Init();
 
 			//コライダーの登録
 			for (const auto& pCollider : player->GetColliders())
 			{
-				pCollisionManager_->RegisterCollider(pCollider.get());
+				CollisionManager::GetInstance().RegisterCollider(pCollider.get());
 			}
 
 			//刀の登録
@@ -100,13 +97,13 @@ void GameScene::Init()
 			{
 				for (const auto& pCollider : pKatana->GetColliders())
 				{
-					pCollisionManager_->RegisterCollider(pCollider.get());
+					CollisionManager::GetInstance().RegisterCollider(pCollider.get());
 				}
 			}
 		}
 	}
 
-	//敵の生成(CSV経由) 
+	//敵の生成
 	auto oni = pEnemyManager_->SpawnEnemy("Oni");
 	if (oni)
 	{
@@ -116,7 +113,7 @@ void GameScene::Init()
 
 		for (const auto& pCollider : oni->GetColliders())
 		{
-			pCollisionManager_->RegisterCollider(pCollider.get());
+			CollisionManager::GetInstance().RegisterCollider(pCollider.get());
 		}
 	}
 
@@ -129,7 +126,7 @@ void GameScene::Init()
 
 		for (const auto& pCollider : bigMan->GetColliders())
 		{
-			pCollisionManager_->RegisterCollider(pCollider.get());
+			CollisionManager::GetInstance().RegisterCollider(pCollider.get());
 		}
 	}
 }
@@ -140,14 +137,14 @@ void GameScene::Update()
 
 	if (!reserveObjList_.empty())
 	{
-		// 結合する前に、新しく入ってきたオブジェクトのコライダーをここで確実に登録する！
+		//オブジェクトのコライダーを登録
 		for (auto& obj : reserveObjList_)
 		{
 			if (auto collidableObj = std::dynamic_pointer_cast<Collidable>(obj))
 			{
 				for (const auto& pCollider : collidableObj->GetColliders())
 				{
-					pCollisionManager_->RegisterCollider(pCollider.get());
+					CollisionManager::GetInstance().RegisterCollider(pCollider.get());
 				}
 			}
 		}
@@ -167,9 +164,6 @@ void GameScene::Update()
 		playerCam->AddRotation(-stickR.x_ * 0.03f, -stickR.z_ * 0.03f);
 	}
 
-	//カメラマネージャーの更新
-	pCameraManager_->Update();
-
 	//すべてのゲームオブジェクトの更新
 	for (auto& obj : gameObjects_)
 	{
@@ -186,11 +180,11 @@ void GameScene::Update()
 		enemy->Update();
 	}
 
+	//カメラマネージャーの更新
+	pCameraManager_->Update();
+
 	//当たり判定の更新
-	if (pCollisionManager_)
-	{
-		pCollisionManager_->UpdateCheckCollision();
-	}
+	CollisionManager::GetInstance().UpdateCheckCollision();
 
 	//死んだオブジェクトのコライダーは、配列から消える前にコリジョンマネージャーから外す
 	for (auto& obj : gameObjects_)
@@ -202,7 +196,7 @@ void GameScene::Update()
 			{
 				for (const auto& pCollider : collidableObj->GetColliders())
 				{
-					pCollisionManager_->UnRegisterCollider(pCollider.get());
+					CollisionManager::GetInstance().UnRegisterCollider(pCollider.get());
 				}
 			}
 		}
@@ -214,7 +208,7 @@ void GameScene::Update()
 		{
 			for (const auto& pCollider : enemy->GetColliders())
 			{
-				pCollisionManager_->UnRegisterCollider(pCollider.get());
+				CollisionManager::GetInstance().UnRegisterCollider(pCollider.get());
 			}
 		}
 	}

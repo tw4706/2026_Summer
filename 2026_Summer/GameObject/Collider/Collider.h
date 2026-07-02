@@ -12,7 +12,7 @@ class Collider
 {
 public:
 	Collider(ColliderType type);
-	virtual~Collider() {}
+	virtual~Collider() = default;
 
 	virtual void Update()abstract;
 

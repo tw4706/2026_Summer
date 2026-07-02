@@ -32,9 +32,11 @@ C:\GitHub\2026_Summer\2026_Summer\Model.cpp;C:\GitHub\2026_Summer\2026_Summer\20
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Stage.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Stage.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Collider\PolygonCollider.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PolygonCollider.obj
 C:\GitHub\2026_Summer\2026_Summer\PathFollower.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PathFollower.obj
+C:\GitHub\2026_Summer\2026_Summer\GameObject\Player\PlayerStateDamage.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerStateDamage.obj
 C:\GitHub\2026_Summer\2026_Summer\SceneManager.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\SceneManager.obj
 C:\GitHub\2026_Summer\2026_Summer\Scene\Scene.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Scene.obj
 C:\GitHub\2026_Summer\2026_Summer\Scene\ResultScene.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\ResultScene.obj
+C:\GitHub\2026_Summer\2026_Summer\GameObject\Collider\SphereCollider.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\SphereCollider.obj
 C:\GitHub\2026_Summer\2026_Summer\System\NavigationGrid.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\NavigationGrid.obj
 C:\GitHub\2026_Summer\2026_Summer\System\Animation.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Animation.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\GameObject.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\GameObject.obj

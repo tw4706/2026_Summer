@@ -30,6 +30,7 @@ public:
 	/// <returns>インスタンス</returns>
 	static Input& GetInstance();
 
+private:
 	//初期化処理
 	Input();
 
@@ -37,6 +38,7 @@ public:
 	Input(const Input&) = delete;
 	Input& operator=(const Input&) = delete;
 
+public:
 	//更新処理
 	void Update();
 	//ボタンが押されたか

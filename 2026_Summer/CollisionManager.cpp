@@ -4,11 +4,18 @@
 #include "Collider/PolygonCollider.h"
 #include "Collider/CapsuleCollider.h"
 #include"Player/Player.h"
+#include"Enemy/EnemyBase.h"
 #include"Vector3.h"
 #include "Katana.h"
 #include "Stage.h"
 #include <cmath>
 #include <Dxlib.h>
+
+CollisionManager& CollisionManager::GetInstance()
+{
+	static CollisionManager instance;
+	return instance;
+}
 
 CollisionManager::CollisionManager()
 {
@@ -74,6 +81,9 @@ void CollisionManager::UpdateCheckCollision()
 			{
 				if (pKatanaB->GetOwnerCharacter() == &pObjA) continue;
 			}
+
+			//敵同士の衝突はスキップ
+			if (dynamic_cast<EnemyBase*>(&pObjA) && dynamic_cast<EnemyBase*>(&pObjB))continue;
 
 			ColliderType typeA = pColA->GetType();
 			ColliderType typeB = pColB->GetType();

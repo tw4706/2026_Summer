@@ -9,8 +9,19 @@ class Collidable;
 class CollisionManager
 {
 public:
+
+	/// <summary>
+	/// インスタンスの作成
+	/// </summary>
+	/// <returns></returns>
+	static CollisionManager& GetInstance();
+
 	CollisionManager();
 	virtual~CollisionManager();
+
+	//コピー禁止
+	CollisionManager(const CollisionManager&) = delete;
+	CollisionManager& operator=(const CollisionManager&) = delete;
 
 	/// <summary>
 	/// コライダーの登録

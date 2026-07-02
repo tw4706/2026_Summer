@@ -45,7 +45,7 @@ public:
 	/// <summary>
 	/// ヨー角の取得
 	/// </summary>
-	/// <returns>ヨー角</returns>
+	/// <returns>ヨー角(Z軸(上下)の回転角)</returns>
 	virtual float GetYaw() const { return 0.0f; }
 
 private:
@@ -56,10 +56,9 @@ private:
 	Vector3 UpdateShake();
 
 	/// <summary>
-	/// 最新の計算したカメラの位置と注視点を適用する関数
+	/// 計算したカメラの位置と注視点を適用する関数
 	/// </summary>
 	void UpdateRenderSystem();
-
 protected:
 	Vector3 pos_;          //座標
 	Vector3 cameraTarget_; //注視点

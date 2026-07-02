@@ -73,16 +73,6 @@ bool WayPointLoader::Load(const std::wstring& path)
 
 		wayPointsByArea_[areaId].push_back(wp);
 	}
-
-#ifdef _DEBUG
-	for (const auto& pair : wayPointsByArea_) {
-		int count = pair.second.size();
-		char buf[256];
-		sprintf_s(buf, "--- [Debug] Area %d ‚É %d ŒÂ‚ÌWayPoint‚ğƒ[ƒh‚µ‚Ü‚µ‚½ ---\n", pair.first, count);
-		OutputDebugStringA(buf);
-	}
-#endif
-
 	return true;
 }
 

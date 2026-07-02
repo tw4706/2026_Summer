@@ -14,13 +14,15 @@ namespace
     const wchar_t* kPlayerRun = L"Player|Run";
 
     //プレイヤーの移動速度
-    constexpr float kSpeed = 20.0f;
+    constexpr float kSpeed = 10.0f;
 
     //停止する際の線形補間
     constexpr float kStopLerp = 0.2f;
 
     //カメラの回転速度
     constexpr float kCameraSpeed = 0.03f;
+
+	//カメラのピッチ角
     constexpr float kCameraPitch = 0.3f;
 
     //スティックの回転の線形補間

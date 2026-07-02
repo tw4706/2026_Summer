@@ -198,7 +198,7 @@ void Animation::Play(int animIndex, float speed, bool isLoop)
 	MV1SetAttachAnimTime(modelHandle_, currentAttachAnim_, currentTime_);
 }
 
-void Animation::ChangeState(AnimationState state,const std::wstring&animName)
+void Animation::ChangeState(AnimationState state, const std::wstring& animName)
 {
 	if (state_ == state && currentAttachAnim_ != -1) return;
 
@@ -217,7 +217,7 @@ void Animation::ChangeState(AnimationState state,const std::wstring&animName)
 
 		if (state_ == AnimationState::Attack ||
 			state_ == AnimationState::Damage ||
-			state_ == AnimationState::Death  ||
+			state_ == AnimationState::Death ||
 			state_ == AnimationState::Spawn)
 		{
 			loop = false;
@@ -241,7 +241,7 @@ void Animation::ChangeState(AnimationState state)
 	}
 
 	//登録したアニメーション名を使用してもともとあるChangeStateを呼ぶ
-	ChangeState(state,it->second);
+	ChangeState(state, it->second);
 }
 
 void Animation::RegisterAnimName(AnimationState state, const std::wstring& animName)

@@ -61,6 +61,12 @@ public:
 	void SetMoveAngle(float angle) { moveAngle_ = angle; }
 
 	/// <summary>
+	/// 攻撃の有効・無効の設定
+	/// </summary>
+	/// <param name="isEnable"></param>
+	void SetIsEnableAttack(bool isEnable);
+
+	/// <summary>
 	/// ステージモデルハンドルの取得(視線判定のRayに使う)
 	/// </summary>
 	int GetStageModelHandle() const { return stageModelHandle_; }
@@ -95,12 +101,16 @@ public:
 	/// <returns></returns>
 	int GetAreaId()const { return areaId_; }
 
+	/// <summary>
+	/// エリアIDのセット
+	/// </summary>
+	/// <param name="areaId"></param>
 	void SetAreaId(int areaId) { areaId_ = areaId; }
 
 	/// <summary>
-/// WayPointLoaderの取得
-/// </summary>
-/// <returns>WayPointLoaderのポインタ</returns>
+	/// WayPointLoaderの取得
+	/// </summary>
+	/// <returns>WayPointLoaderのポインタ</returns>
 	const WayPointLoader* GetWayPointLoader() const { return pWayPointLoader_; }
 
 	/// <summary>
@@ -133,6 +143,10 @@ public:
 	/// <param name="id">WayPointID</param>
 	void SetNextWayPointId(int id) { nextWayPointId_ = id; }
 
+	/// <summary>
+	/// デバッグ描画の座標をセット
+	/// </summary>
+	/// <param name="pos"></param>
 	void SetDebugNextPos(const Vector3& pos) { debugNextPos_ = pos; }
 	void SetHasDebugTarget(bool has) { hasDebugTarget_ = has; }
 
@@ -157,28 +171,27 @@ protected:
 	//プレイヤーの弱参照
 	std::weak_ptr<Player>pPlayer_;
 
+	///経路探索のA*アルゴリズムとwaypointの管理
 	//A*
 	AStarPathFinder pathFinder_;
 	//パスフォロワー
 	PathFollower pathFollower_;
-
 	//ナビゲーショングリッド
 	const NavigationGrid* pNaviGrid_ = nullptr;
-
 	//エリアID
 	int areaId_ = 0;
-
 	//WayPointLoaderの参照
 	const WayPointLoader* pWayPointLoader_ = nullptr;
-
 	//現在いるWayPointのID
 	int currentWayPointId_ = -1;
-
 	//目標のWayPointのID
 	int nextWayPointId_ = -1;
 
 	//デバッグ描画用の目標までの座標
 	Vector3 debugNextPos_ = { 0.0f, 0.0f, 0.0f };
 	bool hasDebugTarget_ = false;
+
+	//攻撃コライダー
+	std::shared_ptr<Collider>pAttackCollider_;
 };
 

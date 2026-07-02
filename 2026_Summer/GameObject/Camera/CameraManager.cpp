@@ -16,7 +16,7 @@ void CameraManager::RegisterCamera(const std::string& name, std::shared_ptr<Came
 
 	cameraMap_[name] = camera;
 
-	// 最初に登録されたカメラを自動的にアクティブにする
+	//最初に登録されたカメラを自動的にアクティブにする
 	if (!pActiveCamera_)
 	{
 		pActiveCamera_ = camera;
@@ -30,7 +30,7 @@ void CameraManager::ChangeCamera(const std::string& name)
 	{
 		pActiveCamera_ = it->second;
 
-		// カメラが切り替わった瞬間に初期位置を計算し直す
+		//カメラが切り替わった瞬間に初期位置を計算し直す
 		pActiveCamera_->Init();
 	}
 }
