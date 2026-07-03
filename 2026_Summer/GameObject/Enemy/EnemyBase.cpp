@@ -5,6 +5,7 @@
 #include "EnemyStateDeath.h"
 #include "EnemyStateIdle.h"
 #include"Collider/CapsuleCollider.h"
+#include"Collider/SphereCollider.h"
 #include<cassert>
 #include "EnemyManager.h"
 
@@ -12,7 +13,7 @@
 EnemyBase::EnemyBase() :
 	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f),
 	moveAngle_(0.0f),
-	scale_({1.0f,1.0f,1.0f}),
+	scale_({ 1.0f,1.0f,1.0f }),
 	searchRadius_(500.0f),
 	colliderRadius_(70.0f),
 	colliderHeight_(120.0f),
@@ -36,7 +37,7 @@ void EnemyBase::Init()
 	animation_.ChangeState(AnimationState::Idle);
 
 	//コライダー生成
-	Vector3 colOffset = { 0.0f,colliderHeight_,0.0f };
+	Vector3 colOffset = Vector3{ 0.0f,colliderHeight_,0.0f };
 	this->CreateCollider<CapsuleCollider>(colliderRadius_, colliderHeight_, colOffset);
 }
 
@@ -50,7 +51,7 @@ void EnemyBase::Update()
 	{
 		//EnemyBaseとして弱参照を作る
 		auto enemy = std::dynamic_pointer_cast<EnemyBase>(shared_from_this());
-		ChangeState(std::make_shared<EnemyStateIdle>(enemy,searchRadius_));
+		ChangeState(std::make_shared<EnemyStateIdle>(enemy, searchRadius_));
 	}
 
 	//現在のステートの更新
@@ -95,17 +96,17 @@ void EnemyBase::Draw()
 
 #ifdef _DEBUG
 	//索敵範囲のデバッグ表示
-	VECTOR center = VGet(pos_.x_, pos_.y_, pos_.z_);
+	Vector3 center = pos_;;
 	Vector3 playerPos = GetPlayerPos();
 	Vector3 toPlayer = playerPos - pos_;
-	float distSq = (toPlayer.x_ * toPlayer.x_) + (toPlayer.y_ * toPlayer.y_) + (toPlayer.z_ * toPlayer.z_);
+	float distSq = toPlayer.LengthSq();
 
 	unsigned int searchColor = GetColor(0, 255, 0);
 	if (distSq <= searchRadius_ * searchRadius_)
 	{
 		searchColor = GetColor(255, 0, 0);
 	}
-	DrawSphere3D(center, searchRadius_, 8, searchColor, GetColor(0, 0, 0), FALSE);
+	DrawSphere3D(center.ToDxlibVector(), searchRadius_, 8, searchColor, GetColor(0, 0, 0), FALSE);
 
 	//当たり判定のデバッグ表示
 	if (!colliders_.empty())
@@ -113,23 +114,36 @@ void EnemyBase::Draw()
 		CapsuleCollider* pCap = static_cast<CapsuleCollider*>(colliders_[0].get());
 		if (pCap)
 		{
-			VECTOR top = VGet(pCap->GetWorldB().x_, pCap->GetWorldB().y_, pCap->GetWorldB().z_);
-			VECTOR bottom = VGet(pCap->GetWorldA().x_, pCap->GetWorldA().y_, pCap->GetWorldA().z_);
+			Vector3 top = pCap->GetWorldB();
+			Vector3 bottom = pCap->GetWorldA();
 			//当たっていたら赤、通常は水色
 			unsigned int lineColor = isHit_ ? GetColor(255, 0, 0) : GetColor(0, 255, 255);
-			DrawCapsule3D(top, bottom, pCap->GetRadius(), 8, lineColor, GetColor(0, 0, 0), FALSE);
+			DrawCapsule3D(top.ToDxlibVector(), bottom.ToDxlibVector(), pCap->GetRadius(), 8, lineColor, GetColor(0, 0, 0), FALSE);
 		}
 	}
 
+	//攻撃コライダーのデバッグ表示
+	if (pAttackCollider_)
+	{
+		Vector3 attackPos = pAttackCollider_->GetPos();
+		float attackRadius = pAttackCollider_->GetRadius();
+
+		//オレンジで表示
+		unsigned int attackColor = GetColor(255, 128, 0);
+		DrawSphere3D(attackPos.ToDxlibVector(), attackRadius, 8, attackColor, GetColor(0, 0, 0), FALSE);
+	}
+
 	//経路探索のデバッグ表示
+	DrawFormatString(10, 120, GetColor(255, 255, 255), L"hasDebugTarget: %s", hasDebugTarget_ ? L"TRUE" : L"FALSE");
+
 	if (hasDebugTarget_)
 	{
 		Vector3 enemyPos = GetPos();
-		VECTOR startPos = VGet(enemyPos.x_, enemyPos.y_ + 10.0f, enemyPos.z_);
-		VECTOR endPos = VGet(debugNextPos_.x_, debugNextPos_.y_ + 10.0f, debugNextPos_.z_);
+		Vector3 startPos = { enemyPos.x_, enemyPos.y_ + 10.0f, enemyPos.z_ };
+		Vector3 endPos = { debugNextPos_.x_, debugNextPos_.y_ + 10.0f, debugNextPos_.z_ };
 
 		unsigned int colorLine = GetColor(255, 0, 0);
-		DrawLine3D(startPos, endPos, colorLine);
+		DrawLine3D(startPos.ToDxlibVector(), endPos.ToDxlibVector(), colorLine);
 	}
 	if (pWayPointLoader_)
 	{
@@ -139,7 +153,7 @@ void EnemyBase::Draw()
 		for (const auto& wp : wayPoints)
 		{
 			//地面に埋まらないように少し浮かせる
-			VECTOR wpPos = VGet(wp.pos.x_, wp.pos.y_ + 10.0f, wp.pos.z_);
+			Vector3 wpPos = { wp.pos.x_, wp.pos.y_ + 10.0f, wp.pos.z_ };
 
 			//通常のWayPointは青色にする
 			unsigned int wpColor = GetColor(0, 0, 255);
@@ -151,7 +165,7 @@ void EnemyBase::Draw()
 			}
 
 			//WayPointの位置に球を描画
-			DrawSphere3D(wpPos, 15.0f, 8, wpColor, wpColor, TRUE);
+			DrawSphere3D(wpPos.ToDxlibVector(), 15.0f, 8, wpColor, wpColor, TRUE);
 		}
 	}
 #endif
@@ -206,6 +220,39 @@ void EnemyBase::OnDamage(int damage)
 		auto nextState = std::make_shared<EnemyStateDeath>(enemy, searchRadius_);
 		ChangeState(nextState);
 	}
+}
+
+void EnemyBase::CreateAttackCollider(float radius, float distance)
+{
+	//攻撃コライダーが既に存在する場合は何もしない
+	if (pAttackCollider_)return;
+
+	attackColliderDistance_ = distance;
+
+	pAttackCollider_ = this->CreateCollider<SphereCollider>(radius);
+
+	Vector3 forward = { sinf(moveAngle_),0.0f,cosf(moveAngle_) };
+	Vector3 offset = pos_+forward * attackColliderDistance_ + Vector3{ 0.0f, colliderHeight_ * 0.5f, 0.0f };
+
+	pAttackCollider_->SetPos(offset);
+}
+
+void EnemyBase::RemoveAttackCollider()
+{
+	if (!pAttackCollider_) return;
+
+	auto it = std::find_if(colliders_.begin(), colliders_.end(),
+		[this](const std::unique_ptr<Collider>& pCol)
+		{
+			return pCol.get() == pAttackCollider_;
+		});
+
+	if (it != colliders_.end())
+	{
+		colliders_.erase(it);
+	}
+
+	pAttackCollider_ = nullptr;
 }
 
 void EnemyBase::ApplyData(const EnemyData& data)

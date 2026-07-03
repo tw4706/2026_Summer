@@ -57,7 +57,7 @@ void Stage::Draw()
 
 #ifdef _DEBUG
 	//ナビゲーショングリッドデバッグの表示
-	//DrawNavGridDebug();
+	DrawNavGridDebug();
 #endif
 }
 
@@ -71,12 +71,12 @@ void Stage::DrawNavGridDebug() const
 			if (!node) continue;
 
 			//地面に埋まって見えなくなるのを防ぐため少し浮かせる
-			VECTOR pos = VGet(node->pos.x_, node->pos.y_ + 5.0f, node->pos.z_);
+			Vector3 pos = VGet(node->pos.x_, node->pos.y_ + 5.0f, node->pos.z_);
 
 			//歩行可能なら緑、不可能なら赤
 			unsigned int color = node->iswalked ? GetColor(0, 255, 0) : GetColor(255, 0, 0);
 
-			DrawSphere3D(pos, 5.0f, 6, color, color, TRUE);
+			DrawSphere3D(pos.ToDxlibVector(), 5.0f, 6, color, color, TRUE);
 		}
 	}
 }

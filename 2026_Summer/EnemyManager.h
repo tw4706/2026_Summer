@@ -49,30 +49,27 @@ public:
 	void SetNavigationGrid(const NavigationGrid* pNavGrid);
 
 	/// <summary>
-	/// 死亡済みなど不要な敵を破棄したい場合に呼ぶ
+	/// 死亡済みなど不要な敵を削除する
 	/// </summary>
 	void RemoveEnemy();
 
 	const std::vector<std::shared_ptr<EnemyBase>>& GetEnemies() const { return enemies_; }
 
 private:
-
 	/// <summary>
-	/// 指定された型名に応じたEnemyBaseのインスタンスを生成する
+	/// 型名に応じた敵のインスタンスを生成する
 	/// </summary>
-	/// <param name="type">生成するエネミーの型名を表す文字列</param>
+	/// <param name="type">生成する敵の型を表す文字列</param>
 	/// <returns>生成されたEnemyBaseオブジェクトのスマートポインタ</returns>
 	std::shared_ptr<EnemyBase> CreateInstance(const std::string& type);
-
-
 private:
 	//生成中の敵一覧
 	std::vector<std::shared_ptr<EnemyBase>> enemies_;
 
-	//敵のパラメータのデータロード
+	//敵のパラメータのデータローダー
 	EnemyStatus dataLoader_;
 
-	//WayPointのデータロード
+	//WayPointのデータローダー
 	WayPointLoader wayPointLoader_;
 };
 

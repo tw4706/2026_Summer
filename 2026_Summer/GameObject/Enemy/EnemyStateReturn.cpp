@@ -8,7 +8,7 @@
 namespace
 {
 	//ˆÚ“®‘¬“x
-	const float kMoveSpeed = 2.0f;
+	const float kMoveSpeed = 0.5f;
 
 	//Œo‰ßŽžŠÔ
 	const float kDeltaTime = 1.0f / 60.0f;
@@ -89,7 +89,7 @@ void EnemyStateReturn::Enter()
 
 			Vector3 closest = ClosestPointOnSegment(wp.pos, pTo->pos, enemyPos);
 			Vector3 diff = closest - enemyPos;
-			float distSq = diff.x_ * diff.x_ + diff.y_ * diff.y_ + diff.z_ * diff.z_;
+			float distSq =diff.LengthSq();
 
 			if (distSq < nearestDistSq)
 			{

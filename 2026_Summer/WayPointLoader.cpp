@@ -171,7 +171,7 @@ int WayPointLoader::GetNearestWayPointId(int areaId, const Vector3& pos) const
 	for (const auto& wp : it->second)
 	{
 		Vector3 diff = wp.pos - pos;
-		float distSq = diff.x_ * diff.x_ + diff.y_ * diff.y_ + diff.z_ * diff.z_;
+		float distSq = diff.LengthSq();
 
 		if (distSq < nearestDistSq)
 		{

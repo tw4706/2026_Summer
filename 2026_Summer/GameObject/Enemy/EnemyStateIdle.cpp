@@ -4,13 +4,13 @@
 namespace
 {
 	//移動速度
-	const float kMoveSpeed = 0.2f;
+	const float kMoveSpeed = 0.3f;
 
 	//経過時間
 	const float kDeltaTime = 1.0f / 60.0f;
 
 	//線形補間の割合
-	const float kRotateLerpRate = 0.1f;
+	const float kRotateLerpRate = 0.3f;
 
 	//WayPointに到達したとみなす距離
 	const float kArriveThreshold = 50.0f;
@@ -188,7 +188,7 @@ void EnemyStateIdle::Update()
 	float nextAngle = currentAngle + angleDiff * kRotateLerpRate;
 
 	//計算した角度を適用
-	enemy->SetMoveAngle(nextAngle);
+	enemy->SetMoveAngle(targetAngle);
 }
 
 void EnemyStateIdle::Exit()

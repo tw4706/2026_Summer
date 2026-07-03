@@ -7,6 +7,7 @@
 #include "EnemyData.h"
 
 class Player;
+class SphereCollider;
 class EnemyStateBase;
 class EnemyBase :public Character
 {
@@ -29,6 +30,18 @@ public:
 	/// </summary>
 	/// <param name="damage">ダメージ</param>
 	void OnDamage(int damage);
+
+	/// <summary>
+	/// 攻撃コライダーの生成
+	/// </summary>
+	/// <param name="radius">半径</param>
+	/// <param name="distance">距離</param>
+	void CreateAttackCollider(float radius, float distance);
+
+	/// <summary>
+	/// 攻撃コライダーの削除
+	/// </summary>
+	void RemoveAttackCollider();
 
 	/// <summary>
 	/// CSVデータの適用
@@ -192,6 +205,7 @@ protected:
 	bool hasDebugTarget_ = false;
 
 	//攻撃コライダー
-	std::shared_ptr<Collider>pAttackCollider_;
+	SphereCollider*pAttackCollider_;
+	float attackColliderDistance_ = 0.0f;
 };
 

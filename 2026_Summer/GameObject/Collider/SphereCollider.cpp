@@ -2,7 +2,7 @@
 
 SphereCollider::SphereCollider(float r):
 	Collider(ColliderType::Sphere),
-	radius_(r)
+	r_(r)
 {
 }
 

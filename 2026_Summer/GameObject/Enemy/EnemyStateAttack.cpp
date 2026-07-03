@@ -24,6 +24,8 @@ void EnemyStateAttack::Update()
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
 
+	enemy->CreateAttackCollider(10.0f, 10.0f);
+
 	//攻撃アニメーションが終了したら
 	if (enemy->IsAnimationEnd())
 	{
@@ -35,4 +37,6 @@ void EnemyStateAttack::Update()
 
 void EnemyStateAttack::Exit()
 {
+	auto enemy = pEnemy_.lock();
+	if (!enemy)return;
 }
