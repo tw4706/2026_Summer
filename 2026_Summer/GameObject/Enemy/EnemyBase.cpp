@@ -17,7 +17,10 @@ EnemyBase::EnemyBase() :
 	searchRadius_(500.0f),
 	colliderRadius_(70.0f),
 	colliderHeight_(120.0f),
-	pathFinder_()
+	pathFinder_(),
+	pAttackCollider_(nullptr),
+	attackColliderDistance_(0.0f)
+
 {
 }
 
@@ -86,17 +89,23 @@ void EnemyBase::Update()
 			pCap->SetWorldPos(bottom, top);
 		}
 	}
+
+	//攻撃コライダーの更新
+	if (pAttackCollider_)
+	{
+		Vector3 forward = { sinf(moveAngle_), 0.0f, cosf(moveAngle_) };
+		Vector3 offset = pos_ + forward * attackColliderDistance_ + Vector3{ 0.0f, colliderHeight_ * 0.5f, 0.0f };
+		pAttackCollider_->SetPos(offset);
+	}
 }
 
 void EnemyBase::Draw()
 {
 	//モデルの描画
 	model_.Draw();
-
-
 #ifdef _DEBUG
 	//索敵範囲のデバッグ表示
-	Vector3 center = pos_;;
+	Vector3 center = pos_;
 	Vector3 playerPos = GetPlayerPos();
 	Vector3 toPlayer = playerPos - pos_;
 	float distSq = toPlayer.LengthSq();
@@ -109,33 +118,23 @@ void EnemyBase::Draw()
 	DrawSphere3D(center.ToDxlibVector(), searchRadius_, 8, searchColor, GetColor(0, 0, 0), FALSE);
 
 	//当たり判定のデバッグ表示
-	if (!colliders_.empty())
+	for (const auto& pCol : colliders_)
 	{
-		CapsuleCollider* pCap = static_cast<CapsuleCollider*>(colliders_[0].get());
-		if (pCap)
+		if (CapsuleCollider* pCap = dynamic_cast<CapsuleCollider*>(pCol.get()))
 		{
 			Vector3 top = pCap->GetWorldB();
 			Vector3 bottom = pCap->GetWorldA();
-			//当たっていたら赤、通常は水色
 			unsigned int lineColor = isHit_ ? GetColor(255, 0, 0) : GetColor(0, 255, 255);
 			DrawCapsule3D(top.ToDxlibVector(), bottom.ToDxlibVector(), pCap->GetRadius(), 8, lineColor, GetColor(0, 0, 0), FALSE);
 		}
-	}
-
-	//攻撃コライダーのデバッグ表示
-	if (pAttackCollider_)
-	{
-		Vector3 attackPos = pAttackCollider_->GetPos();
-		float attackRadius = pAttackCollider_->GetRadius();
-
-		//オレンジで表示
-		unsigned int attackColor = GetColor(255, 128, 0);
-		DrawSphere3D(attackPos.ToDxlibVector(), attackRadius, 8, attackColor, GetColor(0, 0, 0), FALSE);
+		else if (SphereCollider* pSphere = dynamic_cast<SphereCollider*>(pCol.get()))
+		{
+			//攻撃コライダーはオレンジ色で表示
+			DrawSphere3D(pSphere->GetPos().ToDxlibVector(), pSphere->GetRadius(), 8, GetColor(255, 128, 0), GetColor(0, 0, 0), FALSE);
+		}
 	}
 
 	//経路探索のデバッグ表示
-	DrawFormatString(10, 120, GetColor(255, 255, 255), L"hasDebugTarget: %s", hasDebugTarget_ ? L"TRUE" : L"FALSE");
-
 	if (hasDebugTarget_)
 	{
 		Vector3 enemyPos = GetPos();

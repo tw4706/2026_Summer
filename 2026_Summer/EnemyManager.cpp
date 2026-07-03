@@ -40,13 +40,19 @@ bool EnemyManager::LoadWayPointData(const std::wstring& path)
 
 std::shared_ptr<EnemyBase> EnemyManager::SpawnEnemy(const std::string& pathType)
 {
+	//CSVのType列に応じたデータの取得
 	const EnemyData* pData = dataLoader_.GetEnemyData(pathType);
+
+	//データが取得できない場合はnullptrを返す
 	if (!pData)
 	{
 		return nullptr;
 	}
 
+	//敵の方に応じるインスタンスの作成
 	auto enemy = CreateInstance(pathType);
+
+	//敵のインスタンスが作成できない場合はnullptrを返す
 	if (!enemy)
 	{
 		return nullptr;
@@ -54,9 +60,11 @@ std::shared_ptr<EnemyBase> EnemyManager::SpawnEnemy(const std::string& pathType)
 
 	//CSVで入力したパラメータを適用
 	enemy->ApplyData(*pData);
+
 	//WayPointのセット
 	enemy->SetWayPointLoader(&wayPointLoader_);
 
+	//敵の初期化
 	enemy->Init();
 
 	enemies_.push_back(enemy);
@@ -84,10 +92,8 @@ void EnemyManager::SetNavigationGrid(const NavigationGrid* pNavGrid)
 void EnemyManager::RemoveEnemy()
 {
 	//死亡している敵を削除する
-	enemies_.erase(
-		std::remove_if(enemies_.begin(), enemies_.end(),
-			[](const std::shared_ptr<EnemyBase>& e) {return e->IsDead(); }),
-		enemies_.end());
+	enemies_.erase(std::remove_if(enemies_.begin(), enemies_.end(),
+			[](const std::shared_ptr<EnemyBase>& e) {return e->IsDead(); }),enemies_.end());
 }
 
 std::shared_ptr<EnemyBase> EnemyManager::CreateInstance(const std::string& type)
