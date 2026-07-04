@@ -140,6 +140,10 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AStarPathFinder.cpp" />
+    <ClCompile Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateAttack.cpp" />
+    <ClCompile Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateChance.cpp" />
+    <ClCompile Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStatePO.cpp" />
+    <ClCompile Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateBase.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyStateReturn.cpp" />
     <ClCompile Include="EnemyStatus.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
@@ -193,6 +197,10 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="AStarPathFinder.h" />
+    <ClInclude Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateAttack.h" />
+    <ClInclude Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateChance.h" />
+    <ClInclude Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStatePO.h" />
+    <ClInclude Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateBase.h" />
     <ClInclude Include="EnemyData.h" />
     <ClInclude Include="GameObject\Enemy\EnemyStateReturn.h" />
     <ClInclude Include="EnemyStatus.h" />

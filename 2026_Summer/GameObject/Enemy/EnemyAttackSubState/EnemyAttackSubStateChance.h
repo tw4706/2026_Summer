@@ -4,10 +4,10 @@ class EnemyAttackSubStateChance :public EnemyAttackSubStateBase
 {
 public:
 	EnemyAttackSubStateChance(EnemyBase* pEnemy, EnemyStateAttack* pEnemyAttack);
-	virtual~EnemyAttackSubStateChance() = default;
+	~EnemyAttackSubStateChance() = default;
 
-	virtual void Enter() = 0;
-	virtual void Update() = 0;
-	virtual void Exit() = 0;
+	virtual void Enter() override;
+	virtual void Update() override;
+	virtual void Exit() override;
 };
 
