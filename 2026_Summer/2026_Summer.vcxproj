@@ -173,6 +173,7 @@
     <ClCompile Include="GameObject\Collider\PolygonCollider.cpp" />
     <ClCompile Include="PathFollower.cpp" />
     <ClCompile Include="GameObject\Player\PlayerStateDamage.cpp" />
+    <ClCompile Include="GameObject\Player\PlayerStateDeath.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\ResultScene.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="GameObject\Collider\PolygonCollider.h" />
     <ClInclude Include="PathFollower.h" />
     <ClInclude Include="GameObject\Player\PlayerStateDamage.h" />
+    <ClInclude Include="GameObject\Player\PlayerStateDeath.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\ResultScene.h" />

@@ -309,11 +309,6 @@ void EnemyBase::SetPlayer(std::weak_ptr<Player> pPlayer)
 	pPlayer_ = pPlayer;
 }
 
-void EnemyBase::SetIsEnableAttack(bool isEnable)
-{
-	isEnabled_ = isEnable;
-}
-
 void EnemyBase::SetNavigationGrid(const NavigationGrid* pNavGrid)
 {
 	pNaviGrid_ = pNavGrid;

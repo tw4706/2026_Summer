@@ -74,10 +74,10 @@ public:
 	void SetMoveAngle(float angle) { moveAngle_ = angle; }
 
 	/// <summary>
-	/// 攻撃の有効・無効の設定
+	/// 攻撃コライダーの取得
 	/// </summary>
-	/// <param name="isEnable"></param>
-	void SetIsEnableAttack(bool isEnable);
+	/// <returns>攻撃コライダーのポインタ</returns>
+	const SphereCollider* GetAttackCollider()const { return pAttackCollider_; }
 
 	/// <summary>
 	/// ステージモデルハンドルの取得(視線判定のRayに使う)

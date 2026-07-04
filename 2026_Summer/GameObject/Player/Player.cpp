@@ -6,6 +6,7 @@
 #include "PlayerStateBase.h"
 #include "PlayerStateIdle.h"
 #include "PlayerStateDamage.h"
+#include "PlayerStateDeath.h"
 #include "Enemy/EnemyBase.h"
 #include "Collider/CapsuleCollider.h"
 #include<Dxlib.h>
@@ -21,6 +22,12 @@ namespace
 
 	//初期回転角度
 	const Vector3 kFirstRotate = { 0.0f, DX_PI_F, 0.0f };
+
+	//プレイヤーの最大体力
+	constexpr int kMaxHP = 100;
+
+	//敵から食らうダメージ
+	constexpr int kEnemyDamage = 10;
 }
 
 Player::Player() :
@@ -43,6 +50,9 @@ void Player::Init()
 	vel_ = { 0.0f,0.0f,0.0f };
 
 	isGround_ = true;
+
+	//HPの初期化
+	hp_ = kMaxHP;
 
 	//モデルのロード
 	model_.Load(L"data/MV1/Player.mv1");
@@ -128,6 +138,7 @@ void Player::Draw()
 	{
 		pKatana_->Draw();
 	}
+
 #ifdef _DEBUG
 	if (!colliders_.empty())
 	{
@@ -145,29 +156,57 @@ void Player::Draw()
 			DrawCapsule3D(top, bottom, pCap->GetRadius(), 8, lineColor, GetColor(0, 0, 0), FALSE);
 		}
 	}
+
+	//HPのデバッグ表示
+	DrawFormatString(100, 100, 0xffffff, L"PlayerHP:%d", hp_);
 #endif
 }
 
 void Player::OnCollision(Collidable& coll)
 {
+	//無敵の場合は何もしない
+	if (isInvincible_)return;
+
 	//衝突した相手が敵だった場合ダメージ状態に遷移
-	//if (EnemyBase* pEnemy = dynamic_cast<EnemyBase*>(&coll))
-	//{
-	//	auto sharedSelf = std::dynamic_pointer_cast<Player>(shared_from_this());
-	//	std::weak_ptr<Player> weakSelf = sharedSelf;
-
-	//	PlayerCamera& pCamera = *pCamera_;
-
-	//	auto nextState = std::make_shared<PlayerStateDamage>(weakSelf, Input::GetInstance(), pCamera);
-	//	ChangeState(nextState);
-	//}
-	//else
-	//{
-
-	//}
+	if (EnemyBase* pEnemy = dynamic_cast<EnemyBase*>(&coll))
+	{
+		if (pEnemy->GetAttackCollider())
+		{
+			OnDamage(kEnemyDamage);
+		}
+	}
 	isHit_ = true;
 
 
+}
+
+void Player::OnDamage(const int damage)
+{
+	//hpを減らす
+	hp_ -= damage;
+
+	//無敵状態をtrueに
+	isInvincible_ = true;
+
+	auto sharedSelf = std::dynamic_pointer_cast<Player>(shared_from_this());
+	std::weak_ptr<Player> weakSelf = sharedSelf;
+
+	PlayerCamera& pCamera = *pCamera_;
+
+	//HPが0以上の場合はダメージ状態に遷移
+	if (hp_ > 0)
+	{
+		auto nextState = std::make_shared<PlayerStateDamage>(weakSelf, Input::GetInstance(), pCamera);
+		ChangeState(nextState);
+	}
+	//HPが0の場合は死亡状態に遷移
+	else
+	{
+		hp_ = 0;
+
+		auto nextState = std::make_shared<PlayerStateDeath>(weakSelf, Input::GetInstance(), pCamera);
+		ChangeState(nextState);
+	}
 }
 
 Vector3 Player::GetCameraTarget() const

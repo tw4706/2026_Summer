@@ -23,6 +23,12 @@ public:
 	/// <param name="obj">衝突したゲームオブジェクト</param>
 	void OnCollision(Collidable& coll)override;
 
+	/// <summary>
+	/// 被ダメージ処理
+	/// </summary>
+	/// <param name="damage"></param>
+	void OnDamage(const int damage);
+
 	/// ==============================
 	/// ゲッター・セッター
 	/// ==============================

@@ -5,7 +5,7 @@
 namespace
 {
 	//Damageアニメーション
-	const wchar_t* kPlayerDamage = L"Player|Damage";
+	const wchar_t* kPlayerDamage = L"Player|Hit";
 }
 PlayerStateDamage::PlayerStateDamage(std::weak_ptr<Player> pPlayer, Input& input, PlayerCamera& camera):
 	PlayerStateBase(pPlayer,input,camera)
@@ -19,8 +19,8 @@ void PlayerStateDamage::Enter()
 
 	//状態遷移
 	player->ChangeAnimation(AnimationState::Damage, kPlayerDamage);
-	//速度を0に
-	player->SetVelocity({0, 0, 0});
+
+	player->SetIsInvincible(true);
 }
 
 void PlayerStateDamage::Update()
@@ -36,4 +36,8 @@ void PlayerStateDamage::Update()
 
 void PlayerStateDamage::Exit()
 {
+	auto player = pPlayer_.lock();
+	if (!player)return;
+
+	player->SetIsInvincible(false);
 }

@@ -17,14 +17,15 @@ void EnemyStateAttack::Enter()
 
 	//速度をゼロにする
 	enemy->SetVelocity(Vector3{ 0.0f,0.0f,0.0f });
+
+	//攻撃のコライダーを生成する
+	enemy->CreateAttackCollider(100.0f, 50.0f);
 }
 
 void EnemyStateAttack::Update()
 {
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
-
-	enemy->CreateAttackCollider(100.0f, 50.0f);
 
 	//攻撃アニメーションが終了したら
 	if (enemy->IsAnimationEnd())
