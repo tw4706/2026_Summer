@@ -74,6 +74,12 @@ public:
 	void SetMoveAngle(float angle) { moveAngle_ = angle; }
 
 	/// <summary>
+	/// 索敵範囲の取得
+	/// </summary>
+	/// <returns>索敵範囲</returns>
+	float GetSearchRadius() const { return searchRadius_; }
+
+	/// <summary>
 	/// 攻撃コライダーの取得
 	/// </summary>
 	/// <returns>攻撃コライダーのポインタ</returns>
@@ -162,6 +168,16 @@ public:
 	/// <param name="pos"></param>
 	void SetDebugNextPos(const Vector3& pos) { debugNextPos_ = pos; }
 	void SetHasDebugTarget(bool has) { hasDebugTarget_ = has; }
+
+	/// <summary>
+	/// スローアニメーション速度の設定
+	/// </summary>
+	void SetSlowAnimationSpeed();
+
+	/// <summary>
+	/// 攻撃アニメーション速度の設定
+	/// </summary>
+	void SetAttackAnimationSpeed();
 
 protected:
 	//移動の際に向いている角度

@@ -285,7 +285,7 @@ void EnemyBase::ApplyData(const EnemyData& data)
 	animation_.RegisterAnimName(AnimationState::Idle, data.idleAnim_);
 	animation_.RegisterAnimName(AnimationState::Walk, data.walkAnim_);
 	animation_.RegisterAnimName(AnimationState::Run, data.runAnim_);
-	animation_.RegisterAnimName(AnimationState::Attack, data.attackAnim_);
+	animation_.RegisterAnimName(AnimationState::EnemyAttack, data.attackAnim_);
 	animation_.RegisterAnimName(AnimationState::Damage, data.damageAnim_);
 	animation_.RegisterAnimName(AnimationState::Death, data.deathAnim_);
 }
@@ -313,4 +313,14 @@ void EnemyBase::SetNavigationGrid(const NavigationGrid* pNavGrid)
 {
 	pNaviGrid_ = pNavGrid;
 	pathFinder_.SetNavigationGrid(pNavGrid);
+}
+
+void EnemyBase::SetSlowAnimationSpeed()
+{
+	animation_.SetSlowAnimationSpeed();
+}
+
+void EnemyBase::SetAttackAnimationSpeed()
+{
+	animation_.SetEnemyAttackAnimationSpeed();
 }

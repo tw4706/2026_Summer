@@ -11,6 +11,7 @@ enum class AnimationState
 	Run,
 	Damage,
 	Attack,
+	EnemyAttack,
 	PrevAttack,
 	Death,
 	Dodge,
@@ -29,6 +30,12 @@ public:
 
 	//モデルのアニメーションの再生
 	void Play(int animIndex, float speed, bool isLoop);
+
+	/// <summary>
+	/// アニメーションの現在の時間を取得する
+	/// </summary>
+	/// <returns>アニメーションの現在時間</returns>
+	float GetCurrentAnimTime()const { return currentTime_; }
 
 	/// <summary>
 	/// アニメーションの状態を変更します。
@@ -67,6 +74,16 @@ public:
 	/// アニメーションのリセット
 	/// </summary>
 	void ResetAnimation();
+
+	/// <summary>
+	/// スローのアニメーション速度を設定
+	/// </summary>
+	void SetSlowAnimationSpeed();
+
+	/// <summary>
+	/// 敵の攻撃アニメーションの速度設定
+	/// </summary>
+	void SetEnemyAttackAnimationSpeed();
 
 private:
 	int modelHandle_;           //モデルハンドル

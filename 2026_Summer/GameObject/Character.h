@@ -33,6 +33,12 @@ public:
 	void ChangeAnimation(AnimationState state);
 
 	/// <summary>
+	/// アニメーションの現在の時間を取得
+	/// </summary>
+	/// <returns>アニメーションの進行度を返す</returns>
+	 float GetCurrentAnimTime() const {return animation_.GetCurrentAnimTime(); }
+
+	/// <summary>
 	/// アニメーションが終了したかどうかを判定します。
 	/// </summary>
 	/// <returns>アニメーションが終了している場合はtrueを、そうでない場合はfalseを返す。</returns>

@@ -15,7 +15,7 @@ void EnemyAttackSubStateAttack::Enter()
 	if (!enemy)return;
 
 	//攻撃アニメーションに切り替える
-	enemy->ChangeAnimation(AnimationState::Attack);
+	enemy->SetAttackAnimationSpeed();
 
 	//攻撃のコライダーを生成する
 	enemy->CreateAttackCollider(100.0f, 50.0f);

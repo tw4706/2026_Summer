@@ -215,9 +215,10 @@ void Animation::ChangeState(AnimationState state, const std::wstring& animName)
 
 		float speed = kAnimationSpeed;
 
-		if (state_ == AnimationState::Attack ||
-			state_ == AnimationState::Damage ||
-			state_ == AnimationState::Death ||
+		if (state_ == AnimationState::Attack		||
+			state_ == AnimationState::EnemyAttack	||
+			state_ == AnimationState::Damage		||
+			state_ == AnimationState::Death			||
 			state_ == AnimationState::Spawn)
 		{
 			loop = false;
@@ -253,4 +254,14 @@ void Animation::ResetAnimation()
 {
 	currentTime_ = 0.0f;
 	isAnimEnd_ = false;
+}
+
+void Animation::SetSlowAnimationSpeed()
+{
+	speed_ = kAnimationSpeed * 0.5f;
+}
+
+void Animation::SetEnemyAttackAnimationSpeed()
+{
+	speed_ = kAnimationSpeed * 2.0f;
 }

@@ -1,5 +1,6 @@
 #include "EnemyStateAttack.h"
 #include "EnemyStateIdle.h"
+#include "EnemyAttackSubState/EnemyAttackSubStatePO.h"
 #include "EnemyBase.h"
 
 EnemyStateAttack::EnemyStateAttack(std::weak_ptr<EnemyBase> pEnemy,float searchRadius):
@@ -14,6 +15,10 @@ void EnemyStateAttack::Enter()
 
 	//‘¬“x‚ğƒ[ƒ‚É‚·‚é
 	enemy->SetVelocity(Vector3{ 0.0f,0.0f,0.0f });
+
+	//Å‰‚ÉUŒ‚‚Ì—\”õ“®ì‚Ìó‘Ô‚É‘JˆÚ‚µ‚Ä‚»‚Á‚©‚ç•ªŠò‚³‚¹‚é
+	auto nextAttackState = std::make_shared<EnemyAttackSubStatePO>(pEnemy_, this);
+	ChangeAttackState(nextAttackState);
 }
 
 void EnemyStateAttack::Update()
