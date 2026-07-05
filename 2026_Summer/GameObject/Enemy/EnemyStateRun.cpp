@@ -19,6 +19,9 @@ namespace
 	//索敵範囲の半径
 	const float kDebugSearchRadius = 500.0f;
 
+	//攻撃開始の範囲
+	const float kAttackRange = 180.0f;
+
 	//視線の高さ(Rayで障害物の判定を行うのに使用)
 	const float kEyeHeight = 50.0f;
 
@@ -36,7 +39,7 @@ namespace
 }
 
 EnemyStateRun::EnemyStateRun(std::weak_ptr<EnemyBase> pEnemy, float searchRadius) :
-	EnemyStateBase(pEnemy,searchRadius)
+	EnemyStateBase(pEnemy, searchRadius)
 {
 }
 
@@ -59,15 +62,10 @@ void EnemyStateRun::Update()
 	{
 		//ヒットフラグをリセット
 		enemy->ResetHitFlag();
-		//攻撃状態に遷移
-		auto nextState = std::make_shared<EnemyStateAttack>(pEnemy_, searchRadius_);
-		enemy->ChangeState(nextState);
-		
-		return;
 	}
 
 	//索敵の範囲に入ってなかったら
-	if (PlayerSearchDistance(kDebugSearchRadius) == false&&!enemy->IsHit())
+	if (PlayerSearchDistance(kDebugSearchRadius) == false && !enemy->IsHit())
 	{
 		auto nextState = std::make_shared<EnemyStateReturn>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);
@@ -123,7 +121,7 @@ void EnemyStateRun::Update()
 	float distance = toPlayer.Length();
 
 	//距離が0.1fだった場合は何も行わない
-	if (distance < 0.1f)
+	if (distance <= kAttackRange)
 	{
 		auto nextState = std::make_shared<EnemyStateAttack>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);

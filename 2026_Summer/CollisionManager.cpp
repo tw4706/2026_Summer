@@ -3,6 +3,7 @@
 #include "Collider/Collidable.h"
 #include "Collider/PolygonCollider.h"
 #include "Collider/CapsuleCollider.h"
+#include "Collider/SphereCollider.h"
 #include"Player/Player.h"
 #include"Enemy/EnemyBase.h"
 #include"Vector3.h"
@@ -130,13 +131,30 @@ bool CollisionManager::CheckSphereVsCapsule(Collidable& pSphereObj, Collidable& 
 {
 	if (!&pSphereObj || !&pCapsuleObj) return false;
 
-	// 各オブジェクトから必要なコライダーデータを取得
-	Vector3 sphereCenter = pSphereObj.GetPos();
-	float sphereRadius = 0.5f;
+	SphereCollider* pSphere = nullptr;
+	for (const auto& col : pSphereObj.GetColliders()) 
+	{
+		if (col->GetType() == ColliderType::Sphere) 
+		{
+			pSphere = static_cast<SphereCollider*>(col.get());
+			break;
+		}
+	}
+	if (!pSphere) return false;
 
-	const auto& colliders = pCapsuleObj.GetColliders();
-	if (colliders.empty()) return false;
-	CapsuleCollider* pCap = static_cast<CapsuleCollider*>(colliders[0].get());
+	CapsuleCollider* pCap = nullptr;
+	for (const auto& col : pCapsuleObj.GetColliders()) 
+	{
+		if (col->GetType() == ColliderType::Capsule) 
+		{
+			pCap = static_cast<CapsuleCollider*>(col.get());
+			break;
+		}
+	}
+	if (!pCap) return false;
+
+	Vector3 sphereCenter = pSphere->GetPos();
+	float sphereRadius = pSphere->GetRadius();
 
 	Vector3 capA = pCap->GetWorldA();
 	Vector3 capB = pCap->GetWorldB();
@@ -175,10 +193,28 @@ bool CollisionManager::CheckSphereVsSphere(Collidable& pSphereObjA, Collidable& 
 {
 	if (!&pSphereObjA || !&pSphereObjB) return false;
 
-	Vector3 posA = pSphereObjA.GetPos();
-	Vector3 posB = pSphereObjB.GetPos();
-	float radA = 0.5f;
-	float radB = 0.5f;
+	SphereCollider* pSphereA = nullptr;
+	for (const auto& col : pSphereObjA.GetColliders()) 
+	{
+		if (col->GetType() == ColliderType::Sphere) 
+		{ 
+			pSphereA = static_cast<SphereCollider*>(col.get()); break;
+		}
+	}
+	SphereCollider* pSphereB = nullptr;
+	for (const auto& col : pSphereObjB.GetColliders()) 
+	{
+		if (col->GetType() == ColliderType::Sphere)
+		{
+			pSphereB = static_cast<SphereCollider*>(col.get()); break; 
+		}
+	}
+	if (!pSphereA || !pSphereB) return false;
+
+	Vector3 posA = pSphereA->GetPos();
+	Vector3 posB = pSphereB->GetPos();
+	float radA = pSphereA->GetRadius();
+	float radB = pSphereB->GetRadius();
 
 	//ABベクトルの距離とその2乗を求める
 	float distSq = (posA - posB).LengthSq();

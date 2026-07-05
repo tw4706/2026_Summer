@@ -52,7 +52,7 @@ bool EnemyStatus::Load(const std::wstring& filePath)
 		data.colliderRadius_ = std::stof(cols[i++]);
 		data.colliderHeight_ = std::stof(cols[i++]);
 		//アニメーション名
-		data.idleAnim_ = ToWString(cols[i++]);
+		data.chanceAnim_ = ToWString(cols[i++]);
 		data.walkAnim_ = ToWString(cols[i++]);
 		data.runAnim_ = ToWString(cols[i++]);
 		data.attackAnim_ = ToWString(cols[i++]);

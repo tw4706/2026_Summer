@@ -51,10 +51,10 @@ Vector3 PathFollower::GetCurrentTarget(const Vector3& currentPos)
 	//現在の目標点との距離を計算
 	Vector3 diff = targetPos - currentPos;
 	diff.y_ = 0.0f;
-	float dist = std::sqrt(diff.x_ * diff.x_ + diff.z_ * diff.z_);
+	float dist = diff.LengthSq();
 
 	//到達していたら次のwaypointへ進める
-	if (dist < kReachDistance)
+	if (dist < kReachDistance * kReachDistance)
 	{
 		currentIndex_++;
 

@@ -6,8 +6,9 @@
 #include "EnemyStateIdle.h"
 #include"Collider/CapsuleCollider.h"
 #include"Collider/SphereCollider.h"
-#include<cassert>
 #include "EnemyManager.h"
+#include "CollisionManager.h"
+#include<cassert>
 
 
 EnemyBase::EnemyBase() :
@@ -230,8 +231,8 @@ void EnemyBase::CreateAttackCollider(float radius, float distance)
 
 	pAttackCollider_ = this->CreateCollider<SphereCollider>(radius);
 
-	Vector3 forward = { sinf(moveAngle_),0.0f,cosf(moveAngle_) };
-	Vector3 offset = pos_+forward * attackColliderDistance_ + Vector3{ 0.0f, colliderHeight_ * 0.5f, 0.0f };
+	Vector3 forward = { -sinf(moveAngle_),0.0f,cosf(moveAngle_) };
+	Vector3 offset = pos_ + forward * attackColliderDistance_ + Vector3{ 0.0f, colliderHeight_ * 0.5f, 0.0f };
 
 	pAttackCollider_->SetPos(offset);
 }
@@ -239,6 +240,8 @@ void EnemyBase::CreateAttackCollider(float radius, float distance)
 void EnemyBase::RemoveAttackCollider()
 {
 	if (!pAttackCollider_) return;
+
+	CollisionManager::GetInstance().UnRegisterCollider(pAttackCollider_);
 
 	auto it = std::find_if(colliders_.begin(), colliders_.end(),
 		[this](const std::unique_ptr<Collider>& pCol)
@@ -282,7 +285,7 @@ void EnemyBase::ApplyData(const EnemyData& data)
 	}
 
 	//アニメーション名をアニメーションクラスに登録
-	animation_.RegisterAnimName(AnimationState::Idle, data.idleAnim_);
+	animation_.RegisterAnimName(AnimationState::Idle, data.chanceAnim_);
 	animation_.RegisterAnimName(AnimationState::Walk, data.walkAnim_);
 	animation_.RegisterAnimName(AnimationState::Run, data.runAnim_);
 	animation_.RegisterAnimName(AnimationState::EnemyAttack, data.attackAnim_);

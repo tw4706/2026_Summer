@@ -74,32 +74,11 @@ void GameScene::Init()
 		if (auto stage = std::dynamic_pointer_cast<Stage>(obj))
 		{
 			stage->Init();
-
-			//ƒRƒ‰ƒCƒ_[‚Ì“o˜^
-			for (const auto& pCollider : stage->GetColliders())
-			{
-				CollisionManager::GetInstance().RegisterCollider(pCollider.get());
-			}
 		}
 		else if (auto player = std::dynamic_pointer_cast<Player>(obj))
 		{
 			player->SetCamera(playerCam.get());
 			player->Init();
-
-			//ƒRƒ‰ƒCƒ_[‚Ì“o˜^
-			for (const auto& pCollider : player->GetColliders())
-			{
-				CollisionManager::GetInstance().RegisterCollider(pCollider.get());
-			}
-
-			//“‚Ì“o˜^
-			if (auto pKatana = player->GetKatana())
-			{
-				for (const auto& pCollider : pKatana->GetColliders())
-				{
-					CollisionManager::GetInstance().RegisterCollider(pCollider.get());
-				}
-			}
 		}
 	}
 
@@ -110,11 +89,6 @@ void GameScene::Init()
 		oni->SetPlayer(pPlayer_);
 		oni->SetNavigationGrid(pStage_->GetNaviGrid());
 		oni->SetStageModelHandle(pStage_->GetHandle());
-
-		for (const auto& pCollider : oni->GetColliders())
-		{
-			CollisionManager::GetInstance().RegisterCollider(pCollider.get());
-		}
 	}
 
 	auto bigMan = pEnemyManager_->SpawnEnemy("BigMan");
@@ -123,11 +97,6 @@ void GameScene::Init()
 		bigMan->SetPlayer(pPlayer_);
 		bigMan->SetNavigationGrid(pStage_->GetNaviGrid());
 		bigMan->SetStageModelHandle(pStage_->GetHandle());
-
-		for (const auto& pCollider : bigMan->GetColliders())
-		{
-			CollisionManager::GetInstance().RegisterCollider(pCollider.get());
-		}
 	}
 }
 
@@ -153,9 +122,9 @@ void GameScene::Update()
 		reserveObjList_.clear();
 
 		std::sort(gameObjects_.begin(), gameObjects_.end(), [](const auto& a, const auto& b)
-			{
+		{
 				return a->GetPriority() < b->GetPriority();
-			});
+		});
 	}
 	auto playerCam = std::dynamic_pointer_cast<PlayerCamera>(pCameraManager_->GetActiveCamera());
 	if (playerCam)

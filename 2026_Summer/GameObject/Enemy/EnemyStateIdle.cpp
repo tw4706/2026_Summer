@@ -188,7 +188,7 @@ void EnemyStateIdle::Update()
 	float nextAngle = currentAngle + angleDiff * kRotateLerpRate;
 
 	//ŒvŽZ‚µ‚½Šp“x‚ð“K—p
-	enemy->SetMoveAngle(targetAngle);
+	enemy->SetMoveAngle(nextAngle);
 }
 
 void EnemyStateIdle::Exit()

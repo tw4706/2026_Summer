@@ -38,7 +38,7 @@ struct EnemyData
 	float colliderHeight_ = 120.0f;
 
 	//各アニメーションの名前
-	std::wstring idleAnim_;
+	std::wstring chanceAnim_;
 	std::wstring walkAnim_;
 	std::wstring runAnim_;
 	std::wstring attackAnim_;

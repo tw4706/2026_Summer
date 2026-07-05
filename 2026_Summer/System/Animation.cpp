@@ -219,7 +219,8 @@ void Animation::ChangeState(AnimationState state, const std::wstring& animName)
 			state_ == AnimationState::EnemyAttack	||
 			state_ == AnimationState::Damage		||
 			state_ == AnimationState::Death			||
-			state_ == AnimationState::Spawn)
+			state_ == AnimationState::Spawn			||
+			state_ == AnimationState::Chance)
 		{
 			loop = false;
 		}

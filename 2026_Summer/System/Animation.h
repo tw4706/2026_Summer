@@ -16,6 +16,7 @@ enum class AnimationState
 	Death,
 	Dodge,
 	Jump,
+	Chance,
 };
 
 class Animation

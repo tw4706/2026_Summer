@@ -12,7 +12,7 @@ void EnemyAttackSubStateChance::Enter()
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
 
-	enemy->ChangeAnimation(AnimationState::Idle);
+	enemy->ChangeAnimation(AnimationState::Chance);
 	enemy->SetVelocity({ 0.0f,0.0f,0.0f });
 }
 
