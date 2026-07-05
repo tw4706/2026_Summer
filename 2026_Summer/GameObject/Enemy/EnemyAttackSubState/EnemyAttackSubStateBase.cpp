@@ -1,10 +1,6 @@
 #include "EnemyAttackSubStateBase.h"
-EnemyAttackSubStateBase::EnemyAttackSubStateBase(EnemyBase* pEnemy, EnemyStateAttack* pEnemyAttack):
+EnemyAttackSubStateBase::EnemyAttackSubStateBase(std::weak_ptr<EnemyBase> pEnemy, EnemyStateAttack* pEnemyAttack):
 	pEnemy_(pEnemy),
 	pEnemyAttack_(pEnemyAttack)
-{
-}
-
-EnemyAttackSubStateBase::~EnemyAttackSubStateBase()
 {
 }

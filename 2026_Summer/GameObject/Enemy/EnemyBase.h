@@ -164,7 +164,6 @@ public:
 	void SetHasDebugTarget(bool has) { hasDebugTarget_ = has; }
 
 protected:
-
 	//ˆÚ“®‚ÌÛ‚ÉŒü‚¢‚Ä‚¢‚éŠp“x
 	float moveAngle_;
 

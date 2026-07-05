@@ -1,11 +1,12 @@
 #pragma once
+#include<memory>
 
 class EnemyBase;
 class EnemyStateAttack;
 class EnemyAttackSubStateBase
 {
 public:
-	EnemyAttackSubStateBase(EnemyBase*pEnemy,EnemyStateAttack*pEnemyAttack);
+	EnemyAttackSubStateBase(std::weak_ptr<EnemyBase>pEnemy,EnemyStateAttack*pEnemyAttack);
 	virtual~EnemyAttackSubStateBase()=default;
 
 	virtual void Enter()=0;
@@ -13,7 +14,7 @@ public:
 	virtual void Exit()=0;
 
 protected:
-	EnemyBase* pEnemy_=nullptr;//敵ベースのポインタ
+	std::weak_ptr<EnemyBase> pEnemy_;		//敵ベースのポインタ
 	EnemyStateAttack* pEnemyAttack_=nullptr;//敵の攻撃ステートのポインタ
 };
 

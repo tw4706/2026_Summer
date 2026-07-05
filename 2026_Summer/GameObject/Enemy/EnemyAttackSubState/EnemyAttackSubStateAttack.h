@@ -3,7 +3,7 @@
 class EnemyAttackSubStateAttack :public EnemyAttackSubStateBase
 {
 public:
-	EnemyAttackSubStateAttack(EnemyBase* pEnemy, EnemyStateAttack* pEnemyAttack);
+	EnemyAttackSubStateAttack(std::weak_ptr<EnemyBase> pEnemy, EnemyStateAttack* pEnemyAttack);
 	~EnemyAttackSubStateAttack() = default;
 
 	virtual void Enter() override;
