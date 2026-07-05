@@ -9,6 +9,10 @@ Collidable::Collidable(Vector3 pos, Vector3 vel, float dir):
 
 Collidable::~Collidable()
 {
+	for (const auto& pCollider : colliders_)
+	{
+		CollisionManager::GetInstance().UnRegisterCollider(pCollider.get());
+	}
 }
 
 void Collidable::Update()

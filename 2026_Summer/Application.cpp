@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "Input.h"
 #include "Game.h"
-#include "GameScene.h"
+#include "TitleScene.h"
 #include "SceneManager.h"
 #include<Dxlib.h>
 #include<memory>
@@ -48,7 +48,7 @@ void  Application::Run()
 	SceneManager sceneManager;
 
 	//ƒV[ƒ“‚ÌØ‚è‘Ö‚¦
-	sceneManager.ChangeScene(std::make_shared<GameScene>(sceneManager));
+	sceneManager.ChangeScene(std::make_shared<TitleScene>(sceneManager));
 
 	while (ProcessMessage() != -1)
 	{

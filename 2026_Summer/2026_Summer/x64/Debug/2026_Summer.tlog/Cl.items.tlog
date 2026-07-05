@@ -38,7 +38,7 @@ C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Collider\PolygonCollider.c
 C:\Users\yongy\git\2026_Summer\2026_Summer\PathFollower.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PathFollower.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Player\PlayerStateDamage.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerStateDamage.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Player\PlayerStateDeath.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerStateDeath.obj
-C:\Users\yongy\git\2026_Summer\2026_Summer\SceneManager.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\SceneManager.obj
+C:\Users\yongy\git\2026_Summer\2026_Summer\Scene\SceneManager.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\SceneManager.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\Scene\Scene.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Scene.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\Scene\ResultScene.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\ResultScene.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Collider\SphereCollider.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\SphereCollider.obj

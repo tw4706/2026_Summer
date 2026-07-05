@@ -3,20 +3,30 @@
 #include"Input.h"
 #include"Katana.h"
 #include"Enemy/Oni.h"
-#include "EnemyManager.h"
-#include "GameObject.h"
-#include"Enemy/BigMan.h"
-#include "Player/Player.h"
+#include"GameObject.h"
+#include"EnemyManager.h"
 #include"SceneManager.h"
-#include "CollisionManager.h"
-#include "Camera/PlayerCamera.h"
-#include "Camera/CameraManager.h"
+#include"ResultScene.h"
+#include"Enemy/BigMan.h"
+#include"Player/Player.h"
+#include"CollisionManager.h"
+#include"Camera/PlayerCamera.h"
+#include"Camera/CameraManager.h"
+#include"Game.h"
 #include <DxLib.h>
 #include <algorithm>
 
+namespace
+{
+	//フェードの間隔
+	constexpr int kFadeInterval = 60;
+}
+
 GameScene::GameScene(SceneManager& sceneManager) :
 	Scene(sceneManager),
-	frameCount_(0)
+	update_(&GameScene::FadeInUpdate),
+	draw_(&GameScene::FadeDraw),
+	frameCount_(kFadeInterval)
 {
 	pPlayer_ = std::make_shared<Player>();
 	pCameraManager_ = std::make_unique<CameraManager>();
@@ -53,14 +63,8 @@ void GameScene::Init()
 
 	//現在のアクティブカメラを取得
 	auto activeCam = pCameraManager_->GetActiveCamera();
-
 	//プレイヤーカメラへのセット
 	auto playerCam = std::dynamic_pointer_cast<PlayerCamera>(activeCam);
-	if (playerCam)
-	{
-		playerCam->SetPlayer(pPlayer_);
-		playerCam->Init();
-	}
 
 	if (!reserveObjList_.empty())
 	{
@@ -80,6 +84,13 @@ void GameScene::Init()
 			player->SetCamera(playerCam.get());
 			player->Init();
 		}
+	}
+
+	//プレイヤーカメラの初期化
+	if (playerCam)
+	{
+		playerCam->SetPlayer(pPlayer_);
+		playerCam->Init();
 	}
 
 	//敵の生成
@@ -102,7 +113,52 @@ void GameScene::Init()
 
 void GameScene::Update()
 {
+	(this->*update_)();
+}
+
+void GameScene::Draw()
+{
+	(this->*draw_)();
+}
+
+void GameScene::FadeInUpdate()
+{
+	pCameraManager_->Update();
+
+	//すべてのゲームオブジェクトの更新
+	for (auto& obj : gameObjects_)
+	{
+		if (!obj->IsDead())
+		{
+			obj->Update();
+		}
+	}
+
+	//敵マネージャーの更新
+	for (auto& enemy : pEnemyManager_->GetEnemies())
+	{
+		enemy->Update();
+	}
+
+	if (frameCount_-- <= 0)
+	{
+		update_ = &GameScene::NormalUpdate;
+		draw_ = &GameScene::NormalDraw;
+	}
+}
+
+void GameScene::NormalUpdate()
+{
 	frameCount_++;
+
+	//プレイヤーが死んだ場合はシーン遷移をする
+	if (pPlayer_->IsDead())
+	{
+		update_ = &GameScene::FadeOutUpdate;
+		draw_ = &GameScene::FadeDraw;
+		frameCount_ = 0;
+		return;
+	}
 
 	if (!reserveObjList_.empty())
 	{
@@ -122,9 +178,9 @@ void GameScene::Update()
 		reserveObjList_.clear();
 
 		std::sort(gameObjects_.begin(), gameObjects_.end(), [](const auto& a, const auto& b)
-		{
+			{
 				return a->GetPriority() < b->GetPriority();
-		});
+			});
 	}
 	auto playerCam = std::dynamic_pointer_cast<PlayerCamera>(pCameraManager_->GetActiveCamera());
 	if (playerCam)
@@ -155,33 +211,6 @@ void GameScene::Update()
 	//当たり判定の更新
 	CollisionManager::GetInstance().UpdateCheckCollision();
 
-	//死んだオブジェクトのコライダーは、配列から消える前にコリジョンマネージャーから外す
-	for (auto& obj : gameObjects_)
-	{
-		if (obj->IsDead())
-		{
-			//Collidable型にキャストできればコライダーを外す
-			if (auto collidableObj = std::dynamic_pointer_cast<Collidable>(obj))
-			{
-				for (const auto& pCollider : collidableObj->GetColliders())
-				{
-					CollisionManager::GetInstance().UnRegisterCollider(pCollider.get());
-				}
-			}
-		}
-	}
-
-	for (auto& enemy : pEnemyManager_->GetEnemies())
-	{
-		if (enemy->IsDead())
-		{
-			for (const auto& pCollider : enemy->GetColliders())
-			{
-				CollisionManager::GetInstance().UnRegisterCollider(pCollider.get());
-			}
-		}
-	}
-
 	//死んでいるゲームオブジェクトの削除
 	gameObjects_.erase(
 		std::remove_if(gameObjects_.begin(), gameObjects_.end(), [](const auto& obj) {
@@ -194,7 +223,38 @@ void GameScene::Update()
 	pEnemyManager_->RemoveEnemy();
 }
 
-void GameScene::Draw()
+void GameScene::FadeOutUpdate()
+{
+	if (frameCount_-- <= 0)
+	{
+		sceneManager_.ChangeScene(std::make_shared<ResultScene>(sceneManager_));
+	}
+}
+
+void GameScene::FadeDraw()
+{
+	NormalDraw();
+
+	float rate;
+
+	if (update_ == &GameScene::FadeInUpdate)
+	{
+		// フェードイン
+		rate = (float)frameCount_ / kFadeInterval;
+	}
+	else
+	{
+		//フェードアウト
+		rate = 1.0f - (float)frameCount_ / kFadeInterval;
+	}
+	rate = std::clamp(rate, 0.0f, 1.0f);
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(255 * rate));
+	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
+
+void GameScene::NormalDraw()
 {
 	//すべてのオブジェクトの描画
 	for (auto& obj : gameObjects_)

@@ -178,7 +178,7 @@
     <ClCompile Include="PathFollower.cpp" />
     <ClCompile Include="GameObject\Player\PlayerStateDamage.cpp" />
     <ClCompile Include="GameObject\Player\PlayerStateDeath.cpp" />
-    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\ResultScene.cpp" />
     <ClCompile Include="GameObject\Collider\SphereCollider.cpp" />
@@ -235,7 +235,7 @@
     <ClInclude Include="PathFollower.h" />
     <ClInclude Include="GameObject\Player\PlayerStateDamage.h" />
     <ClInclude Include="GameObject\Player\PlayerStateDeath.h" />
-    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\ResultScene.h" />
     <ClInclude Include="GameObject\Collider\SphereCollider.h" />

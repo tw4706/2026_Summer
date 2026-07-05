@@ -27,6 +27,12 @@ void PlayerStateDeath::Update()
 {
 	auto player = pPlayer_.lock();
 	if (!player)return;
+
+	//アニメーションが終了したら死ぬ
+	if (player->IsAnimationEnd())
+	{
+		player->Death();
+	}
 }
 
 void PlayerStateDeath::Exit()

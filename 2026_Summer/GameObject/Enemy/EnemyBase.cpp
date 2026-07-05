@@ -94,7 +94,7 @@ void EnemyBase::Update()
 	//攻撃コライダーの更新
 	if (pAttackCollider_)
 	{
-		Vector3 forward = { sinf(moveAngle_), 0.0f, cosf(moveAngle_) };
+		Vector3 forward = { sinf(moveAngle_), 0.0f, -cosf(moveAngle_) };
 		Vector3 offset = pos_ + forward * attackColliderDistance_ + Vector3{ 0.0f, colliderHeight_ * 0.5f, 0.0f };
 		pAttackCollider_->SetPos(offset);
 	}
@@ -231,7 +231,7 @@ void EnemyBase::CreateAttackCollider(float radius, float distance)
 
 	pAttackCollider_ = this->CreateCollider<SphereCollider>(radius);
 
-	Vector3 forward = { -sinf(moveAngle_),0.0f,cosf(moveAngle_) };
+	Vector3 forward = { sinf(moveAngle_),0.0f,cosf(moveAngle_) };
 	Vector3 offset = pos_ + forward * attackColliderDistance_ + Vector3{ 0.0f, colliderHeight_ * 0.5f, 0.0f };
 
 	pAttackCollider_->SetPos(offset);

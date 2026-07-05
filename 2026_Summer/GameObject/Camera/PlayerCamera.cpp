@@ -38,6 +38,8 @@ void PlayerCamera::Init()
 	Matrix4x4 rot = Matrix4x4::RotateY(yaw_) * Matrix4x4::RotateX(pitch_);
 	Vector3 offset = rot.TransformForVector(kTargetToCamera);
 	pos_ = cameraTarget_ + offset;
+
+	CameraBase::Update();
 }
 
 void PlayerCamera::Update()
