@@ -23,7 +23,7 @@ public:
 	/// <summary>
 	/// 現在アクティブなカメラの更新
 	/// </summary>
-	void Update();
+	void Update(int stageModelHandle);
 
 	/// <summary>
 	/// 現在アクティブなカメラを取得

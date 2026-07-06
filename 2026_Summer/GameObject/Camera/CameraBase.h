@@ -9,7 +9,7 @@ public:
 	virtual~CameraBase();
 
 	virtual void Init()abstract;
-	virtual void Update();
+	virtual void Update(int stageModelHandle);
 
 	/// <summary>
 	/// カメラの回転
@@ -48,6 +48,15 @@ public:
 	/// </summary>
 	/// <returns>ヨー角(Z軸(上下)の回転角)</returns>
 	virtual float GetYaw() const { return 0.0f; }
+
+	/// <summary>
+	/// カメラとステージの当たり判定
+	/// </summary>
+	/// <param name="stageModelHandle">ステージのモデルハンドル</param>
+	/// <param name="startPos">始点</param>
+	/// <param name="endPos">終点</param>
+	/// <returns>すてーじとあたっているかどうかを返す</returns>
+	Vector3 CheckCollCameraToStage(int stageModelHandle, const Vector3& startPos, const Vector3& endPos);
 
 private:
 	/// <summary>

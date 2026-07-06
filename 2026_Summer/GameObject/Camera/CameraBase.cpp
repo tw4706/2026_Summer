@@ -27,7 +27,7 @@ CameraBase::~CameraBase()
 {
 }
 
-void CameraBase::Update()
+void CameraBase::Update(int stageModelHandle)
 {
     //カメラの位置・注視点の計算
     UpdateRenderSystem();
@@ -42,7 +42,34 @@ void CameraBase::StartZoom(float fov) {
     fovTarget_ = fov;
 }
 
-Vector3 CameraBase::UpdateShake() 
+Vector3 CameraBase::CheckCollCameraToStage(int stageModelHandle,const Vector3&startPos, const Vector3& endPos)
+{
+    //線分の始点と終点をDxLibのVECTORに変換
+    VECTOR start = startPos.ToDxlibVector();
+    VECTOR end = endPos.ToDxlibVector();
+
+    //線分とポリゴンの当たり判定
+    MV1_COLL_RESULT_POLY result = MV1CollCheck_Line(stageModelHandle, -1, start, end);
+
+    if (result.HitFlag == 1)
+    {
+        //当たった座標
+        Vector3 hitPos = result.HitPosition;
+
+        //ポリゴンの法線
+        Vector3 normal = result.Normal;
+
+        //押し出し処理
+        hitPos += normal * 10.0f;
+
+        //押し出した座標を返す
+        return hitPos;
+    }
+
+    return end;
+}
+
+Vector3 CameraBase::UpdateShake()
 {
     if (shakeTime_ <= 0.0f) return Vector3(0, 0, 0);
     shakeTime_ -= kDeltaTime;

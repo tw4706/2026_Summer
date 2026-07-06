@@ -111,7 +111,7 @@ void GameScene::Init()
 	}
 
 	//カメラマネージャーの更新
-	pCameraManager_->Update();
+	pCameraManager_->Update(pStage_->GetHandle());
 
 }
 
@@ -144,7 +144,7 @@ void GameScene::FadeInUpdate()
 	}
 
 	//カメラマネージャーの更新
-	pCameraManager_->Update();
+	pCameraManager_->Update(pStage_->GetHandle());
 
 	if (frameCount_-- <= 0)
 	{
@@ -212,7 +212,7 @@ void GameScene::NormalUpdate()
 	}
 
 	//カメラマネージャーの更新
-	pCameraManager_->Update();
+	pCameraManager_->Update(pStage_->GetHandle());
 
 	//当たり判定の更新
 	CollisionManager::GetInstance().UpdateCheckCollision();

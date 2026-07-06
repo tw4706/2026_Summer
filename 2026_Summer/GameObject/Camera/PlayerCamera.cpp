@@ -38,11 +38,9 @@ void PlayerCamera::Init()
 	Matrix4x4 rot = Matrix4x4::RotateY(yaw_) * Matrix4x4::RotateX(pitch_);
 	Vector3 offset = rot.TransformForVector(kTargetToCamera);
 	pos_ = cameraTarget_ + offset;
-
-	CameraBase::Update();
 }
 
-void PlayerCamera::Update()
+void PlayerCamera::Update(int stageModelHandle)
 {
 	if (!pPlayer_) return;
 
@@ -57,11 +55,15 @@ void PlayerCamera::Update()
 	Matrix4x4 rot = Matrix4x4::RotateY(currentYaw_) * Matrix4x4::RotateX(currentPitch_);
 	Vector3 offset = rot.TransformForVector(kTargetToCamera);
 	Vector3 targetCamPos = cameraTarget_ + offset;
-
 	pos_ = targetCamPos;
 
+	////注視点から次のカメラの座標に線分判定を行う
+	Vector3 finalCameraPos = CheckCollCameraToStage(stageModelHandle, cameraTarget_, targetCamPos);
+
+	pos_ = finalCameraPos;
+
 	//親クラスの更新処理
-	CameraBase::Update();
+	CameraBase::Update(stageModelHandle);
 }
 
 void PlayerCamera::AddRotation(float yaw, float pitch)

@@ -10,7 +10,7 @@ public:
     virtual ~PlayerCamera();
 
     virtual void Init() override;
-    virtual void Update() override;
+    virtual void Update(int stageModelHandle)override;
 
     /// <summary>
     /// ƒJƒƒ‰‚Ì‰ñ“]

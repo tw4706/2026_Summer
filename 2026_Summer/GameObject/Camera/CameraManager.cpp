@@ -35,10 +35,10 @@ void CameraManager::ChangeCamera(const std::string& name)
 	}
 }
 
-void CameraManager::Update()
+void CameraManager::Update(int stageModelHandle)
 {
 	if (pActiveCamera_)
 	{
-		pActiveCamera_->Update();
+		pActiveCamera_->Update(stageModelHandle);
 	}
 }
