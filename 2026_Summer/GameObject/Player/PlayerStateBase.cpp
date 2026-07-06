@@ -1,9 +1,9 @@
 #include "PlayerStateBase.h"
 #include "Player.h"
-#include "Vector3.h"
+#include "Math/Vector3.h"
 #include "Input.h"
 #include "Camera/PlayerCamera.h"
-#include "Matrix4x4.h"
+#include "Math/Matrix4x4.h"
 #include<Dxlib.h>
 
 PlayerStateBase::PlayerStateBase(std::weak_ptr<Player> pPlayer, PlayerCamera& camera):

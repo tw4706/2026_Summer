@@ -6,7 +6,7 @@
 #include "Collider/SphereCollider.h"
 #include"Player/Player.h"
 #include"Enemy/EnemyBase.h"
-#include"Vector3.h"
+#include"Math/Vector3.h"
 #include "Katana.h"
 #include "Stage.h"
 #include <cmath>

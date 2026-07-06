@@ -30,15 +30,15 @@ void EnemyStateIdle::Enter()
 
 	enemy->ChangeAnimation(AnimationState::Walk);
 
-	const WayPointLoader* pLoader = enemy->GetWayPointLoader();
+	const WayPointLoader* pLoader = enemy->pWayPointLoader_;
 	if (!pLoader) return;
 
-	const auto& wayPoints = pLoader->GetWayPoints(enemy->GetAreaId());
+	const auto& wayPoints = pLoader->GetWayPoints(enemy->areaId_);
 	if (wayPoints.empty()) return;
 
 	//すでに有効な巡回情報を持っている場合はそのまま引き継ぐ
-	bool hasValidCurrent = pLoader_->FindWayPointById(wayPoints, enemy->GetCurrentWayPointId()) != nullptr;
-	bool hasValidTarget = pLoader_->FindWayPointById(wayPoints, enemy->GetNextWayPointId()) != nullptr;
+	bool hasValidCurrent = pLoader_->FindWayPointById(wayPoints, enemy->currentWayPointId_) != nullptr;
+	bool hasValidTarget = pLoader_->FindWayPointById(wayPoints, enemy->nextWayPointId_) != nullptr;
 	if (hasValidCurrent && hasValidTarget)
 	{
 		return;
@@ -46,10 +46,10 @@ void EnemyStateIdle::Enter()
 
 	//巡回情報が無い場合は最寄りのWayPointから巡回を開始する
 	int nearestId = pLoader_->FindNearestWayPointId(wayPoints, enemy->GetPos());
-	enemy->SetCurrentWayPointId(nearestId);
+	enemy->currentWayPointId_ = nearestId;
 
 	int nextId = pLoader_->GetNextWayPointId(wayPoints, nearestId, -1);
-	enemy->SetNextWayPointId(nextId);
+	enemy->nextWayPointId_ = nextId;
 }
 
 void EnemyStateIdle::Update()
@@ -66,21 +66,21 @@ void EnemyStateIdle::Update()
 		return;
 	}
 
-	const WayPointLoader* pLoader = enemy->GetWayPointLoader();
+	const WayPointLoader* pLoader = enemy->pWayPointLoader_;
 	if (!pLoader) return;
 
-	const auto& wayPoints = pLoader->GetWayPoints(enemy->GetAreaId());
+	const auto& wayPoints = pLoader->GetWayPoints(enemy->areaId_);
 	if (wayPoints.empty()) return;
 
-	int targetId = enemy->GetNextWayPointId();
+	int targetId = enemy->nextWayPointId_;
 	const WayPointLoader::WayPoint* pTargetWp = pLoader_->FindWayPointById(wayPoints, targetId);
 	if (!pTargetWp) return;
 
 	Vector3 enemyPos = enemy->GetPos();
 
 	//デバッグ用に目標座標のセット
-	enemy->SetDebugNextPos(pTargetWp->pos);
-	enemy->SetHasDebugTarget(true);
+	enemy->debugNextPos_ = pTargetWp->pos;
+	enemy->hasDebugTarget_ = true;
 
 	//敵から目標WayPointまでのベクトルを計算
 	Vector3 toTarget = pTargetWp->pos - enemyPos;
@@ -93,12 +93,12 @@ void EnemyStateIdle::Update()
 	if (distance < kArriveThreshold)
 	{
 		int arrivedId = targetId;
-		int oldCurrentId = enemy->GetCurrentWayPointId();
+		int oldCurrentId = enemy->currentWayPointId_;
 
-		enemy->SetCurrentWayPointId(arrivedId);
+		enemy->currentWayPointId_ = arrivedId;
 
 		int nextId = pLoader_->GetNextWayPointId(wayPoints, arrivedId, oldCurrentId);
-		enemy->SetNextWayPointId(nextId);
+		enemy->nextWayPointId_ = nextId;
 		return;
 	}
 
@@ -115,7 +115,7 @@ void EnemyStateIdle::Update()
 	//進行方向の角度
 	float targetAngle = std::atan2f(toTarget.x_, -toTarget.z_);
 	//現在の角度
-	float currentAngle = enemy->GetMoveAngle();
+	float currentAngle = enemy->moveAngle_;
 
 	float angleDiff = targetAngle - currentAngle;
 
@@ -127,7 +127,7 @@ void EnemyStateIdle::Update()
 	float nextAngle = currentAngle + angleDiff * kRotateLerpRate;
 
 	//計算した角度を適用
-	enemy->SetMoveAngle(nextAngle);
+	enemy->moveAngle_ = nextAngle;
 }
 
 void EnemyStateIdle::Exit()

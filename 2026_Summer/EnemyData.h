@@ -1,5 +1,5 @@
 #pragma once
-#include "Vector3.h"
+#include "Math/Vector3.h"
 #include <string>
 
 //CSV‚É“ü‚Á‚Ä‚¢‚é“G‚Ìƒpƒ‰ƒ[ƒ^

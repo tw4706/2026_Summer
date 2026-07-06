@@ -59,10 +59,7 @@ std::shared_ptr<EnemyBase> EnemyManager::SpawnEnemy(const std::string& pathType)
 	}
 
 	//CSVで入力したパラメータを適用
-	enemy->ApplyData(*pData);
-
-	//WayPointのセット
-	enemy->SetWayPointLoader(&wayPointLoader_);
+	enemy->ApplyData(*pData, &wayPointLoader_);
 
 	//敵の初期化
 	enemy->Init();

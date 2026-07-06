@@ -20,7 +20,7 @@ void PlayerStateDamage::Enter()
 	//ó‘Ô‘JˆÚ
 	player->ChangeAnimation(AnimationState::Damage, kPlayerDamage);
 
-	player->SetIsInvincible(true);
+	player->isInvincible_ = true;
 }
 
 void PlayerStateDamage::Update()
@@ -39,5 +39,5 @@ void PlayerStateDamage::Exit()
 	auto player = pPlayer_.lock();
 	if (!player)return;
 
-	player->SetIsInvincible(false);
+	player->isInvincible_=false;
 }

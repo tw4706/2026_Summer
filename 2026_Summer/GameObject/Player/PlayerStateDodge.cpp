@@ -31,7 +31,7 @@ void PlayerStateDodge::Enter()
 	if (!player)return;
 
 	//無敵時間のセット
-	player->SetIsInvincible(true);
+	player->isInvincible_ = true;
 
 	//現在カメラ基準の入力方向を直接取得する
 	Vector3 moveDir = GetCameraLookMoveDirection();
@@ -39,7 +39,7 @@ void PlayerStateDodge::Enter()
 	//入力がない、または直立状態ならプレイヤーの向いている正面方向にする
 	if (moveDir.LengthSq() < 0.001f)
 	{
-		float angle = player->GetMoveAngle();
+		float angle = player->moveAngle_;
 		moveDir = Vector3(sinf(angle), 0.0f, -cosf(angle));
 	}
 
@@ -51,7 +51,7 @@ void PlayerStateDodge::Enter()
 
 	//回避をするときにモデルも回避方向に向くように調整する
 	float targetAngle = atan2f(moveDir.x_, -moveDir.z_);
-	player->SetMoveAngle(targetAngle);
+	player->moveAngle_ = targetAngle;
 
 	//タイマーをリセット
 	invincibleTimer_ = 0.0f;
@@ -74,7 +74,7 @@ void PlayerStateDodge::Update()
 	else
 	{
 		//無敵フラグを解除
-		player->SetIsInvincible(false);
+		player->isInvincible_ = false;
 
 		//入力の有無に応じて状態遷移を行う
 		if (Input::GetInstance().HasMoveInput())
@@ -104,5 +104,5 @@ void PlayerStateDodge::Exit()
 	if (!player) return;
 
 	//ここでも一応のために無敵を解除しておく
-	player->SetIsInvincible(false);
+	player->isInvincible_ = false;
 }

@@ -159,7 +159,7 @@ void EnemyBase::Draw()
 			unsigned int wpColor = GetColor(0, 0, 255);
 
 			//もしこのWayPointが、現在敵が目指しているターゲットIDと同じなら黄色にする
-			if (hasDebugTarget_ && wp.id == GetNextWayPointId())
+			if (hasDebugTarget_ && wp.id == nextWayPointId_)
 			{
 				wpColor = GetColor(255, 255, 0);
 			}
@@ -257,8 +257,11 @@ void EnemyBase::RemoveAttackCollider()
 	pAttackCollider_ = nullptr;
 }
 
-void EnemyBase::ApplyData(const EnemyData& data)
+void EnemyBase::ApplyData(const EnemyData& data, const WayPointLoader* pWayPointLoader)
 {
+	//WayPointのローダー
+	pWayPointLoader_ = pWayPointLoader;
+
 	//エリアID
 	areaId_ = data.areId_;
 

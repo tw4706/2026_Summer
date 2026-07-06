@@ -11,6 +11,10 @@ class SphereCollider;
 class EnemyStateBase;
 class EnemyBase :public Character
 {
+	friend class EnemyStateBase;
+	friend class EnemyStateIdle;
+	friend class EnemyStateRun;
+	friend class EnemyStateReturn;
 public:
 	EnemyBase();
 	virtual~EnemyBase();
@@ -47,7 +51,7 @@ public:
 	/// CSVデータの適用
 	/// </summary>
 	/// <param name="data">CSVファイルのデータ</param>
-	virtual void ApplyData(const EnemyData& data);
+	virtual void ApplyData(const EnemyData& data, const WayPointLoader* pWayPointLoader);
 
 	/// <summary>
 	/// プレイヤーの位置の取得
@@ -60,18 +64,6 @@ public:
 	/// </summary>
 	/// <param name="pPlayer">プレイヤーのポインタ</param>
 	void SetPlayer(std::weak_ptr<Player>pPlayer);
-
-	/// <summary>
-	/// 移動時の角度の取得
-	/// </summary>
-	/// <returns>角度を返す</returns>
-	float GetMoveAngle() const { return moveAngle_; }
-
-	/// <summary>
-	/// 移動時の角度の設定
-	/// </summary>
-	/// <param name="angle">角度</param>
-	void SetMoveAngle(float angle) { moveAngle_ = angle; }
 
 	/// <summary>
 	/// 索敵範囲の取得
@@ -96,78 +88,10 @@ public:
 	void SetStageModelHandle(int handle) { stageModelHandle_ = handle; }
 
 	/// <summary>
-	/// A*の取得
-	/// </summary>
-	/// <returns>A*の参照を返す</returns>
-	AStarPathFinder& GetPathFinder() { return pathFinder_; }
-
-	/// <summary>
-	/// パスフォロワーオブジェクトへの参照を取得
-	/// </summary>
-	/// <returns>pathFollower_の参照を返す</returns>
-	PathFollower& GetPathFollower() { return pathFollower_; }
-
-	/// <summary>
 	/// ナビゲーショングリッドの設定
 	/// </summary>
 	/// <param name="pNavGrid">設定するナビゲーショングリッドのポインタ</param>
 	void SetNavigationGrid(const NavigationGrid* pNavGrid);
-
-
-	/// <summary>
-	/// エリアIDの取得
-	/// </summary>
-	/// <returns></returns>
-	int GetAreaId()const { return areaId_; }
-
-	/// <summary>
-	/// エリアIDのセット
-	/// </summary>
-	/// <param name="areaId"></param>
-	void SetAreaId(int areaId) { areaId_ = areaId; }
-
-	/// <summary>
-	/// WayPointLoaderの取得
-	/// </summary>
-	/// <returns>WayPointLoaderのポインタ</returns>
-	const WayPointLoader* GetWayPointLoader() const { return pWayPointLoader_; }
-
-	/// <summary>
-	/// WayPointLoaderの設定
-	/// </summary>
-	/// <param name="pWayPointLoader">設定するWayPointLoaderのポインタ</param>
-	void SetWayPointLoader(const WayPointLoader* pWayPointLoader) { pWayPointLoader_ = pWayPointLoader; }
-
-	/// <summary>
-	/// 現在いるWayPointのIDを取得
-	/// </summary>
-	/// <returns>現在のWayPointID</returns>
-	int GetCurrentWayPointId() const { return currentWayPointId_; }
-
-	/// <summary>
-	/// 現在いるWayPointのIDを設定
-	/// </summary>
-	/// <param name="id">WayPointID</param>
-	void SetCurrentWayPointId(int id) { currentWayPointId_ = id; }
-
-	/// <summary>
-	/// 目標のWayPointのIDを取得
-	/// </summary>
-	/// <returns>目標のWayPointID</returns>
-	int GetNextWayPointId() const { return nextWayPointId_; }
-
-	/// <summary>
-	/// 目標のWayPointのIDを設定
-	/// </summary>
-	/// <param name="id">WayPointID</param>
-	void SetNextWayPointId(int id) { nextWayPointId_ = id; }
-
-	/// <summary>
-	/// デバッグ描画の座標をセット
-	/// </summary>
-	/// <param name="pos"></param>
-	void SetDebugNextPos(const Vector3& pos) { debugNextPos_ = pos; }
-	void SetHasDebugTarget(bool has) { hasDebugTarget_ = has; }
 
 	/// <summary>
 	/// スローアニメーション速度の設定
@@ -184,7 +108,7 @@ protected:
 	float moveAngle_;
 
 	//ステージのモデルハンドル(視線判定用)
-	int stageModelHandle_ = -1; 
+	int stageModelHandle_ = -1;
 
 	//モデルの拡大率
 	Vector3 scale_;
@@ -220,7 +144,7 @@ protected:
 	bool hasDebugTarget_ = false;
 
 	//攻撃コライダー
-	SphereCollider*pAttackCollider_;
+	SphereCollider* pAttackCollider_;
 	float attackColliderDistance_ = 0.0f;
 };
 

@@ -1,8 +1,8 @@
 #include "Player.h"
 #include "Katana.h"
-#include"Input.h"
-#include"Camera/PlayerCamera.h"
-#include"Matrix4x4.h"
+#include "Input.h"
+#include "Camera/PlayerCamera.h"
+#include "Math/Matrix4x4.h"
 #include "PlayerStateBase.h"
 #include "PlayerStateIdle.h"
 #include "PlayerStateDamage.h"
@@ -181,7 +181,7 @@ void Player::OnCollision(Collidable& coll)
 void Player::OnDamage(const int damage)
 {
 	//ガード中はダメージを通さない
-	if (IsGuarding())
+	if (isGuarding_)
 	{
 		return;
 	}

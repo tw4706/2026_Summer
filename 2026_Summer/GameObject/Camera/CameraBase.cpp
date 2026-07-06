@@ -1,4 +1,5 @@
 #include "CameraBase.h"
+#include<Dxlib.h>
 
 namespace 
 {
@@ -14,7 +15,7 @@ namespace
 }
 
 CameraBase::CameraBase():
-    pos_(0.0f, 0.0f, 0.0f),
+    pos_({ 0.0f, 0.0f, 0.0f }),
     cameraTarget_(0.0f, 0.0f, 0.0f),
     fov_(DX_PI_F / 3.0f),
     fovTarget_(DX_PI_F / 3.0f),

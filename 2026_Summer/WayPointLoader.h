@@ -57,7 +57,7 @@ private:
 	//指定エリア内で指定座標に最も近いWayPointのidを返す
 	int GetNearestWayPointId(int areaId, const Vector3& pos) const;
 
-	//カンマ区切りの文字列をトークンに分割する
+	//コンマ区切りの文字列をトークンに分割する
 	std::vector<std::string> Split(const std::string& str, char delimiter) const;
 
 	std::unordered_map<int, std::vector<WayPoint>> wayPointsByArea_;

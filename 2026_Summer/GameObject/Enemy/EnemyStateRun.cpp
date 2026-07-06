@@ -85,9 +85,9 @@ void EnemyStateRun::Update()
 	if (hasLineOfSight)
 	{
 		//Ž‹ü‚ª’Ê‚Á‚Ä‚¢‚éê‡‚ÍŒo˜H’Ç]‚ð‚â‚ß‚Ä’¼i‚·‚é
-		if (enemy->GetPathFollower().HasPath())
+		if (enemy->pathFollower_.HasPath())
 		{
-			enemy->GetPathFollower().ClearPath();
+			enemy->pathFollower_.ClearPath();
 		}
 		targetPos = playerPos;
 	}
@@ -95,20 +95,20 @@ void EnemyStateRun::Update()
 	{
 		//Ž‹ü‚ªŽÕ‚ç‚ê‚Ä‚¢‚éê‡‚ÍŒo˜H’Tõ‚ðŽg‚¤
 		//‚Ü‚¾Œo˜H‚ðŽ‚Á‚Ä‚¢‚È‚¢ê‡‚Ì‚ÝV‚µ‚­’Tõ‚·‚é
-		if (!enemy->GetPathFollower().HasPath())
+		if (!enemy->pathFollower_.HasPath())
 		{
-			std::vector<Vector3> path = enemy->GetPathFinder().FindPath(enemyPos, playerPos);
-			enemy->GetPathFollower().SetPath(path);
+			std::vector<Vector3> path = enemy->pathFinder_.FindPath(enemyPos, playerPos);
+			enemy->pathFollower_.SetPath(path);
 		}
 
 		//Œo˜H‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡‚ÍA‚»‚Ìê‚Å‘Ò‹@
-		if (!enemy->GetPathFollower().HasPath())
+		if (!enemy->pathFollower_.HasPath())
 		{
 			return;
 		}
 
 		//ŽŸ‚É‚¢‚­Œo˜Hã‚Ì–Ú•W‚ðŽæ“¾‚·‚é
-		targetPos = enemy->GetPathFollower().GetCurrentTarget(enemyPos);
+		targetPos = enemy->pathFollower_.GetCurrentTarget(enemyPos);
 	}
 
 	//“G‚©‚çƒvƒŒƒCƒ„[‚Ü‚Å‚ÌƒxƒNƒgƒ‹
@@ -148,7 +148,7 @@ void EnemyStateRun::Update()
 	float targetAngle = std::atan2f(toPlayer.x_, -toPlayer.z_);
 
 	//Œ»Ý‚ÌŠp“x
-	float currentAngle = enemy->GetMoveAngle();
+	float currentAngle = enemy->moveAngle_;
 
 	float angleDiff = targetAngle - currentAngle;
 
@@ -160,7 +160,7 @@ void EnemyStateRun::Update()
 	float nextAngle = currentAngle + angleDiff * kRotateLerpRate;
 
 	//ŒvŽZ‚µ‚½Šp“x‚ð“K—p
-	enemy->SetMoveAngle(nextAngle);
+	enemy->moveAngle_=nextAngle;
 }
 
 void EnemyStateRun::Exit()

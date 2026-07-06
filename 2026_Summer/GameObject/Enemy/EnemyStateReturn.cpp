@@ -62,10 +62,10 @@ void EnemyStateReturn::Enter()
 	fromWayPointId_ = -1;
 	toWayPointId_ = -1;
 
-	const WayPointLoader* pLoader = enemy->GetWayPointLoader();
+	const WayPointLoader* pLoader = enemy->pWayPointLoader_;
 	if (!pLoader) return;
 
-	const auto& wayPoints = pLoader->GetWayPoints(enemy->GetAreaId());
+	const auto& wayPoints = pLoader->GetWayPoints(enemy->areaId_);
 	if (wayPoints.empty()) return;
 
 	float nearestDistSq = (std::numeric_limits<float>::max)();
@@ -89,7 +89,7 @@ void EnemyStateReturn::Enter()
 
 			Vector3 closest = ClosestPointOnSegment(wp.pos, pTo->pos, enemyPos);
 			Vector3 diff = closest - enemyPos;
-			float distSq =diff.LengthSq();
+			float distSq = diff.LengthSq();
 
 			if (distSq < nearestDistSq)
 			{
@@ -122,8 +122,8 @@ void EnemyStateReturn::Update()
 		//–ß‚Á‚½‹æŠÔ‚Ìî•ñ‚ð“G‚ÉƒZƒbƒg‚µ‚Ä‚©‚ç‘JˆÚ‚·‚é
 		if (fromWayPointId_ != -1 && toWayPointId_ != -1)
 		{
-			enemy->SetCurrentWayPointId(fromWayPointId_);
-			enemy->SetNextWayPointId(toWayPointId_);
+			enemy->currentWayPointId_ = fromWayPointId_;
+			enemy->nextWayPointId_ = toWayPointId_;
 		}
 
 		//Idleó‘Ô‚É‘JˆÚ
@@ -145,7 +145,7 @@ void EnemyStateReturn::Update()
 	//is•ûŒü‚ÌŠp“x
 	float targetAngle = std::atan2f(toTarget.x_, -toTarget.z_);
 	//Œ»Ý‚ÌŠp“x
-	float currentAngle = enemy->GetMoveAngle();
+	float currentAngle = enemy->moveAngle_;
 
 	float angleDiff = targetAngle - currentAngle;
 
@@ -157,7 +157,7 @@ void EnemyStateReturn::Update()
 	float nextAngle = currentAngle + angleDiff * kRotateLerpRate;
 
 	//ŒvŽZ‚µ‚½Šp“x‚ð“K—p
-	enemy->SetMoveAngle(nextAngle);
+	enemy->moveAngle_ = nextAngle;
 }
 
 void EnemyStateReturn::Exit()

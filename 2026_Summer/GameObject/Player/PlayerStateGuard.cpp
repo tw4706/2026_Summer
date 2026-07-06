@@ -8,8 +8,8 @@ namespace
 	const wchar_t* kPlayerGuard = L"Player|Guard";
 }
 
-PlayerStateGuard::PlayerStateGuard(std::weak_ptr<Player> pPlayer, PlayerCamera& camera):
-	PlayerStateBase(pPlayer,camera)
+PlayerStateGuard::PlayerStateGuard(std::weak_ptr<Player> pPlayer, PlayerCamera& camera) :
+	PlayerStateBase(pPlayer, camera)
 {
 }
 
@@ -19,7 +19,7 @@ void PlayerStateGuard::Enter()
 	if (!player) return;
 
 	player->ChangeAnimation(AnimationState::Guard, kPlayerGuard);
-	player->SetIsGuarding(true);
+	player->isGuarding_ = true;
 }
 
 void PlayerStateGuard::Update()
@@ -30,7 +30,7 @@ void PlayerStateGuard::Update()
 	//ガードのアニメーションが終了したらIdle状態に戻る
 	if (player->IsAnimationEnd())
 	{
-		auto nextState = std::make_shared<PlayerStateIdle>(pPlayer_,camera_);
+		auto nextState = std::make_shared<PlayerStateIdle>(pPlayer_, camera_);
 		player->ChangeState(nextState);
 	}
 
@@ -41,5 +41,5 @@ void PlayerStateGuard::Exit()
 	auto player = pPlayer_.lock();
 	if (!player) return;
 
-	player->SetIsGuarding(false);
+	player->isGuarding_ = false;
 }

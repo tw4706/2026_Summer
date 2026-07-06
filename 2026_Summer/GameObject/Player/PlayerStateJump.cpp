@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "Input.h"
 #include "Camera/PlayerCamera.h"
-#include "Matrix4x4.h"
+#include "Math/Matrix4x4.h"
 
 namespace
 {
@@ -29,7 +29,7 @@ void PlayerStateJump::Enter()
 	if (pPlayer->GetIsGround())
 	{
 		Vector3 vel = pPlayer->GetVelocity();
-		vel.y_ = pPlayer->GetJumpPower();   //初速をセット
+		vel.y_ = pPlayer->jumpPower_;   //初速をセット
 		pPlayer->SetVelocity(vel);
 
 		//接地フラグを返す
@@ -51,7 +51,7 @@ void PlayerStateJump::Update()
 
 	bool isKeyboardMoving = (fabs(inputDir.x_) > 0.01f || fabs(inputDir.z_) > 0.01f);
 	Vector3 currentVel = pPlayer->GetVelocity();
-	float currentAngle = pPlayer->GetMoveAngle();
+	float currentAngle = pPlayer->moveAngle_;
 
 	if (isKeyboardMoving)
 	{
@@ -81,7 +81,7 @@ void PlayerStateJump::Update()
 
 	//計算結果を反映
 	pPlayer->SetVelocity(currentVel);
-	pPlayer->SetMoveAngle(currentAngle); //変更した向きを適用
+	pPlayer->moveAngle_ = currentAngle; //変更した向きを適用
 	pPlayer->AddPosition();
 
 	//カメラ回転

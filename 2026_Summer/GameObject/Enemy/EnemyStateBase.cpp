@@ -1,6 +1,6 @@
 #include "EnemyStateBase.h"
 #include "Enemy/EnemyBase.h"
-#include "Vector3.h"
+#include "Math/Vector3.h"
 #include "Camera/CameraBase.h"
 
 EnemyStateBase::EnemyStateBase(std::weak_ptr<EnemyBase> pEnemy,float searchRadius) :
