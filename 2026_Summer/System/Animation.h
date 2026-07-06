@@ -9,6 +9,7 @@ enum class AnimationState
 	Idle,
 	Walk,
 	Run,
+	Guard,
 	Damage,
 	Attack,
 	EnemyAttack,

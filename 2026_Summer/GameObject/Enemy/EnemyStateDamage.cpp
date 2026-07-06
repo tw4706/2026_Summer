@@ -18,6 +18,7 @@ void EnemyStateDamage::Enter()
 	if (!enemy)return;
 
 	enemy->ChangeAnimation(AnimationState::Damage);
+
 }
 
 void EnemyStateDamage::Update()

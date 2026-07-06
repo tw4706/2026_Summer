@@ -196,3 +196,65 @@ std::vector<std::string> WayPointLoader::Split(const std::string& str, char deli
 
 	return result;
 }
+
+//現在のWayPointから次のWayPointを決定する
+int WayPointLoader::GetNextWayPointId(const std::vector<WayPointLoader::WayPoint>& wayPoints, int currentId, int nextId)
+{
+	//現在のWayPointの情報を取得
+	const WayPointLoader::WayPoint* pCurrent = FindWayPointById(wayPoints, currentId);
+	if (!pCurrent || pCurrent->connections.empty())
+	{
+		return -1;
+	}
+
+	if (pCurrent->connections.size() == 1)
+	{
+		return pCurrent->connections.front();
+	}
+
+	for (int connID : pCurrent->connections)
+	{
+		if (connID != nextId)
+		{
+			//次に進むべきコネクト先のIDを返す
+			return connID;
+		}
+	}
+
+	//そうでない場合は前のIDを返す
+	return pCurrent->connections.front();;
+}
+
+//指定エリア内で指定座標に最も近いWayPointのidを返す
+int WayPointLoader::FindNearestWayPointId(const std::vector<WayPointLoader::WayPoint>& wayPoints, const Vector3& pos)
+{
+	int nearestId = -1;
+	float nearestDistSq = (std::numeric_limits<float>::max)();
+
+	for (const auto& wp : wayPoints)
+	{
+		Vector3 diff = wp.pos - pos;
+		float distSq = diff.LengthSq();
+
+		if (distSq < nearestDistSq)
+		{
+			nearestDistSq = distSq;
+			nearestId = wp.id;
+		}
+	}
+	return nearestId;
+}
+
+//idからWayPointを検索する
+const WayPointLoader::WayPoint* WayPointLoader::FindWayPointById(const std::vector<WayPoint>& wayPoints, int id)
+{
+	for (const auto& wp : wayPoints)
+	{
+		if (wp.id == id)
+		{
+			return &wp;
+		}
+	}
+
+	return nullptr;
+}

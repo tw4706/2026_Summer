@@ -3,6 +3,7 @@
 #include "PlayerStateAttack.h"
 #include "PlayerStateIdle.h"
 #include "PlayerStateDodge.h"
+#include "PlayerStateGuard.h"
 #include "Player.h"
 #include "Input.h"
 #include "Camera/PlayerCamera.h"
@@ -113,6 +114,12 @@ void PlayerStateRun::Update()
     if (Input::GetInstance().IsTriggered("attack"))
     {
         pPlayer->ChangeState(std::make_shared<PlayerStateAttack>(pPlayer_, camera_));
+        return;
+    }
+
+    if (Input::GetInstance().IsTriggered("guard"))
+    {
+        pPlayer->ChangeState(std::make_shared<PlayerStateGuard>(pPlayer_, camera_));
         return;
     }
 

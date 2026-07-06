@@ -176,12 +176,16 @@ void Player::OnCollision(Collidable& coll)
 		}
 	}
 	isHit_ = true;
-
-
 }
 
 void Player::OnDamage(const int damage)
 {
+	//ガード中はダメージを通さない
+	if (IsGuarding())
+	{
+		return;
+	}
+
 	//hpを減らす
 	hp_ -= damage;
 

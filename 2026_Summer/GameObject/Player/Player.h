@@ -47,9 +47,34 @@ public:
 	float GetMoveAngle() const { return moveAngle_; }
 	void SetMoveAngle(float angle) { moveAngle_ = angle; }
 
-	bool GetIsInvincible() const { return isInvincible_; }
+	/// <summary>
+	/// 無敵かどうかの取得
+	/// </summary>
+	/// <returns>無敵かどうかを返す</returns>
+	bool IsInvincible() const { return isInvincible_; }
+
+	/// <summary>
+	/// 無敵かどうかの設定
+	/// </summary>
+	/// <param name="isInvincible">無敵かどうかのフラグ</param>
 	void SetIsInvincible(bool isInvincible) { isInvincible_ = isInvincible; }
 
+	/// <summary>
+	/// ガード中かどうかの取得
+	/// </summary>
+	/// <returns>ガード中かどうかを返す</returns>
+	bool IsGuarding() const { return isGuarding_; }
+
+	/// <summary>
+	/// ガード中かどうかの設定
+	/// </summary>
+	/// <param name="isInvincible">ガード中かどうかのフラグ</param>
+	void SetIsGuarding(bool isGuarding) { isGuarding_ = isGuarding; }
+
+	/// <summary>
+	/// ジャンプ力の取得
+	/// </summary>
+	/// <returns>ジャンプ力を返す</returns>
 	float GetJumpPower() const { return jumpPower_; }
 
 	/// <summary>
@@ -73,6 +98,7 @@ private:
 	int handFrameIndex_;					//右手の刀を持つ手のフレームインデックス
 	float jumpPower_ = 18.0f;				//ジャンプ力
 	bool isInvincible_ = false;				//無敵中かどうか
+	bool isGuarding_ = false;				//ガード中かどうか
 
 	PlayerCamera* pCamera_ = nullptr;		//カメラ
 	std::unique_ptr<Katana> pKatana_;		//刀

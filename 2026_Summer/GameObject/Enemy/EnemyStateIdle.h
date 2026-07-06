@@ -1,6 +1,7 @@
 #pragma once
 #include "EnemyStateBase.h"
 
+class WayPointLoader;
 class EnemyStateIdle :public EnemyStateBase
 {
 public:
@@ -10,5 +11,8 @@ public:
 	virtual void Enter()  override;
 	virtual void Update() override;
 	virtual void Exit()   override;
+private:
+	//WayPointLoader‚Ìƒ|ƒCƒ“ƒ^
+	std::shared_ptr<WayPointLoader>pLoader_;
 };
 

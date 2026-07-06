@@ -14,74 +14,13 @@ namespace
 
 	//WayPointに到達したとみなす距離
 	const float kArriveThreshold = 50.0f;
-
-	//指定エリア内で指定座標に最も近いWayPointのidを返す
-	int FindNearestWayPointId(const std::vector<WayPointLoader::WayPoint>& wayPoints, const Vector3& pos)
-	{
-		int nearestId = -1;
-		float nearestDistSq = (std::numeric_limits<float>::max)();
-
-		for (const auto& wp : wayPoints)
-		{
-			Vector3 diff = wp.pos - pos;
-			float distSq = diff.LengthSq();
-
-			if (distSq < nearestDistSq)
-			{
-				nearestDistSq = distSq;
-				nearestId = wp.id;
-			}
-		}
-
-		return nearestId;
-	}
-
-	//idからWayPointを検索する
-	const WayPointLoader::WayPoint* FindWayPointById(const std::vector<WayPointLoader::WayPoint>& wayPoints, int id)
-	{
-		for (const auto& wp : wayPoints)
-		{
-			if (wp.id == id)
-			{
-				return &wp;
-			}
-		}
-		return nullptr;
-	}
-
-	//現在のWayPointから次のWayPointを決定する
-	int GetNextWayPointId(const std::vector<WayPointLoader::WayPoint>& wayPoints, int currentId, int nextId)
-	{
-		//現在のWayPointの情報を取得
-		const WayPointLoader::WayPoint* pCurrent = FindWayPointById(wayPoints, currentId);
-		if (!pCurrent || pCurrent->connections.empty())
-		{
-			return -1;
-		}
-
-		if (pCurrent->connections.size() == 1)
-		{
-			return pCurrent->connections.front();
-		}
-
-		for (int connID : pCurrent->connections)
-		{
-			if (connID != nextId)
-			{
-				//次に進むべきコネクト先のIDを返す
-				return connID;
-			}
-		}
-
-		//そうでない場合は前のIDを返す
-		return pCurrent->connections.front();;
-	}
 }
 
 
 EnemyStateIdle::EnemyStateIdle(std::weak_ptr<EnemyBase> pEnemy, float searchRadius) :
 	EnemyStateBase(pEnemy, searchRadius)
 {
+	pLoader_ = std::make_shared<WayPointLoader>();
 }
 
 void EnemyStateIdle::Enter()
@@ -98,18 +37,18 @@ void EnemyStateIdle::Enter()
 	if (wayPoints.empty()) return;
 
 	//すでに有効な巡回情報を持っている場合はそのまま引き継ぐ
-	bool hasValidCurrent = FindWayPointById(wayPoints, enemy->GetCurrentWayPointId()) != nullptr;
-	bool hasValidTarget = FindWayPointById(wayPoints, enemy->GetNextWayPointId()) != nullptr;
+	bool hasValidCurrent = pLoader_->FindWayPointById(wayPoints, enemy->GetCurrentWayPointId()) != nullptr;
+	bool hasValidTarget = pLoader_->FindWayPointById(wayPoints, enemy->GetNextWayPointId()) != nullptr;
 	if (hasValidCurrent && hasValidTarget)
 	{
 		return;
 	}
 
 	//巡回情報が無い場合は最寄りのWayPointから巡回を開始する
-	int nearestId = FindNearestWayPointId(wayPoints, enemy->GetPos());
+	int nearestId = pLoader_->FindNearestWayPointId(wayPoints, enemy->GetPos());
 	enemy->SetCurrentWayPointId(nearestId);
 
-	int nextId = GetNextWayPointId(wayPoints, nearestId, -1);
+	int nextId = pLoader_->GetNextWayPointId(wayPoints, nearestId, -1);
 	enemy->SetNextWayPointId(nextId);
 }
 
@@ -134,7 +73,7 @@ void EnemyStateIdle::Update()
 	if (wayPoints.empty()) return;
 
 	int targetId = enemy->GetNextWayPointId();
-	const WayPointLoader::WayPoint* pTargetWp = FindWayPointById(wayPoints, targetId);
+	const WayPointLoader::WayPoint* pTargetWp = pLoader_->FindWayPointById(wayPoints, targetId);
 	if (!pTargetWp) return;
 
 	Vector3 enemyPos = enemy->GetPos();
@@ -158,7 +97,7 @@ void EnemyStateIdle::Update()
 
 		enemy->SetCurrentWayPointId(arrivedId);
 
-		int nextId = GetNextWayPointId(wayPoints, arrivedId, oldCurrentId);
+		int nextId = pLoader_->GetNextWayPointId(wayPoints, arrivedId, oldCurrentId);
 		enemy->SetNextWayPointId(nextId);
 		return;
 	}

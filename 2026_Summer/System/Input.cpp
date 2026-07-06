@@ -17,13 +17,11 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 						{PeripheralType::pad1,PAD_INPUT_LEFT} };
 	inputTable_["right"] = { {PeripheralType::keyboard,KEY_INPUT_RIGHT},
 						{PeripheralType::pad1,PAD_INPUT_RIGHT} };
-	inputTable_["cameraLeft"] = { {PeripheralType::keyboard,KEY_INPUT_X},
-						{PeripheralType::pad1,PAD_INPUT_5} };
-	inputTable_["cameraRight"] = { {PeripheralType::keyboard,KEY_INPUT_C},
-						{PeripheralType::pad1,PAD_INPUT_6} };
 
 	inputTable_["attack"] = { {PeripheralType::keyboard,KEY_INPUT_Z},
 						{PeripheralType::pad1,PAD_INPUT_6} };
+	inputTable_["guard"] = { {PeripheralType::keyboard,KEY_INPUT_G},
+						{PeripheralType::pad1,PAD_INPUT_B} };
 	inputTable_["dodge"] = { {PeripheralType::keyboard,KEY_INPUT_D},
 						{PeripheralType::pad1,PAD_INPUT_C} };
 	inputTable_["jump"] = { {PeripheralType::keyboard,KEY_INPUT_SPACE},

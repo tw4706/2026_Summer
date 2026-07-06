@@ -1,6 +1,7 @@
 #include "PlayerStateJump.h"
 #include "PlayerStateIdle.h"
 #include "PlayerStateRun.h"
+#include "PlayerStateAttack.h"
 #include "Player.h"
 #include "Input.h"
 #include "Camera/PlayerCamera.h"
@@ -41,7 +42,7 @@ void PlayerStateJump::Update()
 	auto pPlayer = pPlayer_.lock();
 	if (!pPlayer) return;
 
-	//‹ó’†‚Å‚Ìù‰ñEˆÚ“®§Œä
+	//‹ó’†‚Å‚ÌˆÚ“®§Œä
 	Vector3 inputDir = { 0.0f, 0.0f, 0.0f };
 	if (Input::GetInstance().IsPressed("up"))    inputDir.z_ += 1.0f;
 	if (Input::GetInstance().IsPressed("down"))  inputDir.z_ -= 1.0f;
@@ -114,6 +115,13 @@ void PlayerStateJump::Update()
 	else
 	{
 		landingFrameCount_ = 0;  //Ú’n‚ª“rØ‚ê‚½Û‚ÉƒŠƒZƒbƒg
+	}
+
+	//UŒ‚ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚çUŒ‚‚Ö‘JˆÚ
+	if (Input::GetInstance().IsTriggered("attack"))
+	{
+		pPlayer->ChangeState(std::make_shared<PlayerStateAttack>(pPlayer_, camera_));
+		return;
 	}
 }
 
