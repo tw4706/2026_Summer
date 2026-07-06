@@ -120,12 +120,11 @@ void EnemyStateRun::Update()
 	//‹——£‚ÌŒvZ
 	float distance = toPlayer.Length();
 
-	//‹——£‚ª0.1f‚¾‚Á‚½ê‡‚Í‰½‚às‚í‚È‚¢
+	//ˆê’è‹——£‚Ü‚Å—ˆ‚½‚çUŒ‚‚É‘JˆÚ
 	if (distance <= kAttackRange)
 	{
 		auto nextState = std::make_shared<EnemyStateAttack>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);
-		printfDx(L"UŒ‚‚É‘JˆÚ‚µ‚½I");
 		return;
 	}
 

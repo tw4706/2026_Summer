@@ -19,8 +19,8 @@ namespace
 	constexpr float kFrameTime = 1.0f / 60.0f;
 }
 
-PlayerStateDodge::PlayerStateDodge(std::weak_ptr<Player> pPlayer, Input& input, PlayerCamera& camera) :
-	PlayerStateBase(pPlayer, input, camera),
+PlayerStateDodge::PlayerStateDodge(std::weak_ptr<Player> pPlayer, PlayerCamera& camera) :
+	PlayerStateBase(pPlayer, camera),
 	invincibleTimer_(0.0f)
 {
 }
@@ -77,9 +77,9 @@ void PlayerStateDodge::Update()
 		player->SetIsInvincible(false);
 
 		//“ü—Í‚Ì—L–³‚É‰‚¶‚Äó‘Ô‘JˆÚ‚ğs‚¤
-		if (input_.HasMoveInput())
+		if (Input::GetInstance().HasMoveInput())
 		{
-			auto nextState = std::make_shared<PlayerStateRun>(pPlayer_, input_, camera_);
+			auto nextState = std::make_shared<PlayerStateRun>(pPlayer_, camera_);
 			player->ChangeState(nextState);
 			nextState->Update();
 		}
@@ -87,7 +87,7 @@ void PlayerStateDodge::Update()
 		{
 			//~‚Ü‚Á‚Ä‚¢‚éê‡‚Ì‚İ‘¬“x‚ğ0‚É‚·‚é
 			player->SetVelocity(Vector3(0.0f, 0.0f, 0.0f));
-			auto nextState = std::make_shared<PlayerStateIdle>(pPlayer_, input_, camera_);
+			auto nextState = std::make_shared<PlayerStateIdle>(pPlayer_, camera_);
 			player->ChangeState(nextState);
 			nextState->Update();
 		}

@@ -89,6 +89,6 @@ void ResultScene::FadeDraw()
 
 void ResultScene::NormalDraw()
 {
-	DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 0xffffff, L"リザルトシーン");
-	DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2 + 30, 0xffffff, L"ボタンを押してタイトルに戻る");
+	DrawFormatString(0, 0, 0xffffff, L"リザルトシーン");
+	DrawFormatString(0, 30, 0xffffff, L"ボタンを押してタイトルに戻る");
 }

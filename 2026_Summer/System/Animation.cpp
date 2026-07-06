@@ -205,7 +205,7 @@ void Animation::ChangeState(AnimationState state, const std::wstring& animName)
 	prevState_ = state_;
 	state_ = state;
 
-	//animNameで受け取ったアニメーション名で直接探す
+	//animNameで受け取ったアニメーション名を使用する
 	int animIndex = MV1GetAnimIndex(modelHandle_, animName.c_str());
 
 	//アニメーションの再生
@@ -215,11 +215,11 @@ void Animation::ChangeState(AnimationState state, const std::wstring& animName)
 
 		float speed = kAnimationSpeed;
 
-		if (state_ == AnimationState::Attack		||
-			state_ == AnimationState::EnemyAttack	||
-			state_ == AnimationState::Damage		||
-			state_ == AnimationState::Death			||
-			state_ == AnimationState::Spawn			||
+		if (state_ == AnimationState::Attack ||
+			state_ == AnimationState::EnemyAttack ||
+			state_ == AnimationState::Damage ||
+			state_ == AnimationState::Death ||
+			state_ == AnimationState::Spawn ||
 			state_ == AnimationState::Chance)
 		{
 			loop = false;
@@ -259,7 +259,7 @@ void Animation::ResetAnimation()
 
 void Animation::SetSlowAnimationSpeed()
 {
-	speed_ = kAnimationSpeed * 0.5f;
+	speed_ = kAnimationSpeed * 0.8f;
 }
 
 void Animation::SetEnemyAttackAnimationSpeed()

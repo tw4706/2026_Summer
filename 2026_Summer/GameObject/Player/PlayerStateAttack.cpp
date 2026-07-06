@@ -8,8 +8,8 @@ namespace
     const wchar_t* kPlayerAttack = L"Player|Attack";
 }
 
-PlayerStateAttack::PlayerStateAttack(std::weak_ptr<Player> pPlayer, Input& input, PlayerCamera& camera) :
-	PlayerStateBase(pPlayer,input,camera)
+PlayerStateAttack::PlayerStateAttack(std::weak_ptr<Player> pPlayer, PlayerCamera& camera) :
+	PlayerStateBase(pPlayer,camera)
 {
 }
 
@@ -41,7 +41,7 @@ void PlayerStateAttack::Update()
     {
         //“‚Ì“–‚½‚è”»’è‚ð–³Œø‰»
         pPlayer->SetKatanaColliderEnabled(false);
-        pPlayer->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, input_, camera_));
+        pPlayer->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, camera_));
         return;
     }
 }

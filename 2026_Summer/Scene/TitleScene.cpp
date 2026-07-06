@@ -12,7 +12,7 @@ namespace
 	constexpr int kFadeInterval = 60;
 }
 
-TitleScene::TitleScene(SceneManager& sceneManager):
+TitleScene::TitleScene(SceneManager& sceneManager) :
 	Scene(sceneManager),
 	update_(&TitleScene::FadeInUpdate),
 	draw_(&TitleScene::FadeDraw),
@@ -89,6 +89,6 @@ void TitleScene::FadeDraw()
 
 void TitleScene::NormalDraw()
 {
-	DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 0xffffff, L"タイトルシーン");
-	DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2+30, 0xffffff, L"ボタンを押してスタート");
+	DrawFormatString(0, 0, 0xffffff, L"タイトルシーン");
+	DrawFormatString(0,30, 0xffffff, L"ボタンを押してスタート");
 }

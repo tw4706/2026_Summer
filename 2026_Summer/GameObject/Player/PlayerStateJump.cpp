@@ -12,8 +12,8 @@ namespace
 	const wchar_t* kPlayerJump = L"Player|Jump";
 }
 
-PlayerStateJump::PlayerStateJump(std::weak_ptr<Player> pPlayer, Input& input, PlayerCamera& camera) :
-	PlayerStateBase(pPlayer, input, camera)
+PlayerStateJump::PlayerStateJump(std::weak_ptr<Player> pPlayer, PlayerCamera& camera) :
+	PlayerStateBase(pPlayer, camera)
 {
 }
 
@@ -43,10 +43,10 @@ void PlayerStateJump::Update()
 
 	//空中での旋回・移動制御
 	Vector3 inputDir = { 0.0f, 0.0f, 0.0f };
-	if (input_.IsPressed("up"))    inputDir.z_ += 1.0f;
-	if (input_.IsPressed("down"))  inputDir.z_ -= 1.0f;
-	if (input_.IsPressed("left"))  inputDir.x_ -= 1.0f;
-	if (input_.IsPressed("right")) inputDir.x_ += 1.0f;
+	if (Input::GetInstance().IsPressed("up"))    inputDir.z_ += 1.0f;
+	if (Input::GetInstance().IsPressed("down"))  inputDir.z_ -= 1.0f;
+	if (Input::GetInstance().IsPressed("left"))  inputDir.x_ -= 1.0f;
+	if (Input::GetInstance().IsPressed("right")) inputDir.x_ += 1.0f;
 
 	bool isKeyboardMoving = (fabs(inputDir.x_) > 0.01f || fabs(inputDir.z_) > 0.01f);
 	Vector3 currentVel = pPlayer->GetVelocity();
@@ -75,14 +75,6 @@ void PlayerStateJump::Update()
 	Vector3 pos = pPlayer->GetPos();
 	currentVel.y_ -= pPlayer->GetGravity(); //重力をY軸に適用
 
-	//地面との接地判定
-	//if (pos.y_ + currentVel.y_ <= 0.0f)
-	//{
-	//	pos.y_ = 0.0f;
-	//	currentVel.y_ = 0.0f;
-	//	pPlayer->SetIsGround(true);
-	//}
-
 	//現在のプレイヤーの速度を更新
 	pPlayer->GetVelocity() = currentVel;
 
@@ -92,7 +84,7 @@ void PlayerStateJump::Update()
 	pPlayer->AddPosition();
 
 	//カメラ回転
-	Vector3 stickR = input_.GetStickRight();
+	Vector3 stickR = Input::GetInstance().GetStickRight();
 	camera_.AddRotation(-stickR.x_ * 0.03f, -stickR.z_ * 0.03f);
 
 	//状態遷移判定
@@ -110,11 +102,11 @@ void PlayerStateJump::Update()
 			float speedXZ = sqrtf(currentVel.x_ * currentVel.x_ + currentVel.z_ * currentVel.z_);
 			if (speedXZ > 1.5f)
 			{
-				pPlayer->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_, input_, camera_));
+				pPlayer->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_, camera_));
 			}
 			else
 			{
-				pPlayer->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, input_, camera_));
+				pPlayer->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, camera_));
 			}
 			return;
 		}

@@ -3,7 +3,7 @@
 class PlayerStateDeath :public PlayerStateBase
 {
 public:
-	PlayerStateDeath(std::weak_ptr<Player> pPlayer, Input& input, PlayerCamera& camera);
+	PlayerStateDeath(std::weak_ptr<Player> pPlayer, PlayerCamera& camera);
 	~PlayerStateDeath() = default;
 
 	void Enter()  override;

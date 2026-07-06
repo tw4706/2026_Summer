@@ -15,7 +15,7 @@
 namespace
 {
 	//初期位置
-	const Vector3 kFirstPos = { 0.0f, -60.0f, 0.0f };
+	const Vector3 kFirstPos = { 0.0f, 0.0f, 0.0f };
 
 	//初期スケール
 	const Vector3 kFirstScale = { 1.0f, 1.0f, 1.0f };
@@ -24,7 +24,7 @@ namespace
 	const Vector3 kFirstRotate = { 0.0f, DX_PI_F, 0.0f };
 
 	//プレイヤーの最大体力
-	constexpr int kMaxHP = 100;
+	constexpr int kMaxHP = 50;
 
 	//敵から食らうダメージ
 	constexpr int kEnemyDamage = 10;
@@ -60,6 +60,7 @@ void Player::Init()
 
 	//アニメーションの初期化
 	animation_.Init(model_.GetHandle());
+	animation_.ChangeState(AnimationState::Idle);
 
 	//コライダーの登録
 	Vector3 colOffset = { 0.0f, 120.0f, 0.0f };
@@ -84,10 +85,9 @@ void Player::Update()
 
 		//今持っているポインタを参照する
 		PlayerCamera& pCamera = *pCamera_;
-		Input& input = Input::GetInstance();
 
 		//ステートパターンの生成
-		pCurrentState_ = std::shared_ptr<PlayerStateIdle>(new PlayerStateIdle(weakSelf, input, *pCamera_));
+		pCurrentState_ = std::make_shared<PlayerStateIdle>(weakSelf, *pCamera_);
 
 		pCurrentState_->Enter();
 	}
@@ -196,7 +196,7 @@ void Player::OnDamage(const int damage)
 	//HPが0以上の場合はダメージ状態に遷移
 	if (hp_ > 0)
 	{
-		auto nextState = std::make_shared<PlayerStateDamage>(weakSelf, Input::GetInstance(), pCamera);
+		auto nextState = std::make_shared<PlayerStateDamage>(weakSelf, pCamera);
 		ChangeState(nextState);
 	}
 	//HPが0の場合は死亡状態に遷移
@@ -204,7 +204,7 @@ void Player::OnDamage(const int damage)
 	{
 		hp_ = 0;
 
-		auto nextState = std::make_shared<PlayerStateDeath>(weakSelf, Input::GetInstance(), pCamera);
+		auto nextState = std::make_shared<PlayerStateDeath>(weakSelf, pCamera);
 		ChangeState(nextState);
 	}
 }

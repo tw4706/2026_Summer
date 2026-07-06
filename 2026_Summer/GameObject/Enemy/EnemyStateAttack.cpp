@@ -3,8 +3,8 @@
 #include "EnemyAttackSubState/EnemyAttackSubStatePO.h"
 #include "EnemyBase.h"
 
-EnemyStateAttack::EnemyStateAttack(std::weak_ptr<EnemyBase> pEnemy,float searchRadius):
-	EnemyStateBase(pEnemy,searchRadius)
+EnemyStateAttack::EnemyStateAttack(std::weak_ptr<EnemyBase> pEnemy, float searchRadius) :
+	EnemyStateBase(pEnemy, searchRadius)
 {
 }
 
@@ -34,7 +34,7 @@ void EnemyStateAttack::Update()
 	}
 
 	//攻撃アニメーションが終了したら
-	if (enemy->IsAnimationEnd()&&!pCurrentAttackState_)
+	if (enemy->IsAnimationEnd() && !pCurrentAttackState_)
 	{
 		//Idle状態に遷移
 		auto nextState = std::make_shared<EnemyStateIdle>(pEnemy_, searchRadius_);
@@ -44,6 +44,7 @@ void EnemyStateAttack::Update()
 
 void EnemyStateAttack::Exit()
 {
+	//サブステートがここまで存在するなら終了処理を呼び出す	
 	if (pCurrentAttackState_)
 	{
 		pCurrentAttackState_->Exit();

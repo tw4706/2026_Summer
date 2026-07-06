@@ -18,7 +18,7 @@ void EnemyAttackSubStateAttack::Enter()
 	enemy->SetAttackAnimationSpeed();
 
 	//攻撃のコライダーを生成する
-	enemy->CreateAttackCollider(100.0f, 100.0f);
+	enemy->CreateAttackCollider(100.0f, 50.0f);
 }
 
 void EnemyAttackSubStateAttack::Update()

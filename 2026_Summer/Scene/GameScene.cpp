@@ -109,6 +109,10 @@ void GameScene::Init()
 		bigMan->SetNavigationGrid(pStage_->GetNaviGrid());
 		bigMan->SetStageModelHandle(pStage_->GetHandle());
 	}
+
+	//カメラマネージャーの更新
+	pCameraManager_->Update();
+
 }
 
 void GameScene::Update()
@@ -123,11 +127,10 @@ void GameScene::Draw()
 
 void GameScene::FadeInUpdate()
 {
-	pCameraManager_->Update();
-
 	//すべてのゲームオブジェクトの更新
 	for (auto& obj : gameObjects_)
 	{
+
 		if (!obj->IsDead())
 		{
 			obj->Update();
@@ -139,6 +142,9 @@ void GameScene::FadeInUpdate()
 	{
 		enemy->Update();
 	}
+
+	//カメラマネージャーの更新
+	pCameraManager_->Update();
 
 	if (frameCount_-- <= 0)
 	{
@@ -271,8 +277,8 @@ void GameScene::NormalDraw()
 	DrawGrid();
 
 #ifdef _DEBUG
-	DrawString(0, 0, L"SceneMain", GetColor(255, 255, 255));
-	DrawFormatString(0, 16, GetColor(255, 255, 255), L"FRAME:%d", frameCount_);
+	DrawString(0, 0, L"GameScene", GetColor(255, 255, 255));
+	DrawFormatString(0, 30, GetColor(255, 255, 255), L"FRAME:%d", frameCount_);
 #endif
 }
 

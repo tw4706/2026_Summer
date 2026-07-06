@@ -6,17 +6,16 @@
 #include "Matrix4x4.h"
 #include<Dxlib.h>
 
-PlayerStateBase::PlayerStateBase(std::weak_ptr<Player> pPlayer, Input& input, PlayerCamera& camera):
+PlayerStateBase::PlayerStateBase(std::weak_ptr<Player> pPlayer, PlayerCamera& camera):
 	CharacterStateBase(pPlayer),
     pPlayer_(pPlayer),
-    input_(input),
     camera_(camera)
 {
 }
 
 Vector3 PlayerStateBase::GetCameraLookMoveDirection() const
 {
-	Vector3 rawInput = input_.GetRawMoveInput();
+	Vector3 rawInput = Input::GetInstance().GetRawMoveInput();
 	if (rawInput.LengthSq() < 0.001f) return { 0.0f, 0.0f, 0.0f };
 
 	auto pPlayer = pPlayer_.lock();

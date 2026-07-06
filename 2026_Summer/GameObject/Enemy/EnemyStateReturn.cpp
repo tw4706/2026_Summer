@@ -100,7 +100,6 @@ void EnemyStateReturn::Enter()
 			}
 		}
 	}
-
 }
 
 void EnemyStateReturn::Update()

@@ -2,13 +2,12 @@
 #include "CharacterStateBase.h"
 
 class Player;
-class Input;
 class PlayerCamera;
 class Vector3;
 class PlayerStateBase :public CharacterStateBase
 {
 public:
-    PlayerStateBase(std::weak_ptr<Player> pPlayer, Input& input, PlayerCamera& camera);
+    PlayerStateBase(std::weak_ptr<Player> pPlayer, PlayerCamera& camera);
     virtual ~PlayerStateBase() = default;
 
     virtual void Enter() = 0;
@@ -20,7 +19,6 @@ protected:
 
 protected:
     std::weak_ptr<Player> pPlayer_;
-    Input& input_;
     PlayerCamera& camera_;
 };
 
