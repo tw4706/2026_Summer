@@ -12,6 +12,7 @@ enum class AnimationState
 	Guard,
 	Damage,
 	Attack,
+	JumpAttack,
 	EnemyAttack,
 	PrevAttack,
 	Death,

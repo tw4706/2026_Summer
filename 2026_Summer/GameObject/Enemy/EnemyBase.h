@@ -124,7 +124,6 @@ protected:
 	std::weak_ptr<Player>pPlayer_;
 
 	///経路探索のA*アルゴリズムとwaypointの管理
-	//A*
 	AStarPathFinder pathFinder_;
 	//パスフォロワー
 	PathFollower pathFollower_;

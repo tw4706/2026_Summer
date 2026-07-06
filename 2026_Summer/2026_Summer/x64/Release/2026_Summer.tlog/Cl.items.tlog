@@ -39,6 +39,7 @@ C:\GitHub\2026_Summer\2026_Summer\PathFollower.cpp;C:\GitHub\2026_Summer\2026_Su
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Player\PlayerStateDamage.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\PlayerStateDamage.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Player\PlayerStateDeath.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\PlayerStateDeath.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Player\PlayerStateGuard.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\PlayerStateGuard.obj
+C:\GitHub\2026_Summer\2026_Summer\GameObject\Player\PlayerStateJumpAttack.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\PlayerStateJumpAttack.obj
 C:\GitHub\2026_Summer\2026_Summer\Scene\SceneManager.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\SceneManager.obj
 C:\GitHub\2026_Summer\2026_Summer\Scene\Scene.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\Scene.obj
 C:\GitHub\2026_Summer\2026_Summer\Scene\ResultScene.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\ResultScene.obj

@@ -179,6 +179,7 @@
     <ClCompile Include="GameObject\Player\PlayerStateDamage.cpp" />
     <ClCompile Include="GameObject\Player\PlayerStateDeath.cpp" />
     <ClCompile Include="GameObject\Player\PlayerStateGuard.cpp" />
+    <ClCompile Include="GameObject\Player\PlayerStateJumpAttack.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\ResultScene.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="GameObject\Player\PlayerStateDamage.h" />
     <ClInclude Include="GameObject\Player\PlayerStateDeath.h" />
     <ClInclude Include="GameObject\Player\PlayerStateGuard.h" />
+    <ClInclude Include="GameObject\Player\PlayerStateJumpAttack.h" />
     <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\ResultScene.h" />

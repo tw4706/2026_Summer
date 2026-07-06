@@ -110,14 +110,15 @@ void EnemyStateRun::Update()
 		//次にいく経路上の目標を取得する
 		targetPos = enemy->pathFollower_.GetCurrentTarget(enemyPos);
 	}
+	//ターゲットへのベクトル
+	Vector3 toTarget = targetPos - enemyPos;
+
+	//高さを使わないのでYを0にする
+	toTarget.y_ = 0.0f;
 
 	//敵からプレイヤーまでのベクトル
 	Vector3 toPlayer = playerPos - enemyPos;
-
-	//ゲーム内では高さを行わないのでYを0にする
 	toPlayer.y_ = 0.0f;
-
-	//距離の計算
 	float distance = toPlayer.Length();
 
 	//一定距離まで来たら攻撃に遷移
@@ -129,13 +130,13 @@ void EnemyStateRun::Update()
 	}
 
 	//正規化
-	toPlayer.Normalize();
+	toTarget.Normalize();
 
 	//もしプレイヤーとぶつかっていない場合
 	if (!enemy->IsHit())
 	{
 		//移動速度を設定
-		Vector3 moveVec = { toPlayer.x_ * kMoveSpeed * kDeltaTime, 0.0f, toPlayer.z_ * kMoveSpeed * kDeltaTime };
+		Vector3 moveVec = { toTarget.x_ * kMoveSpeed * kDeltaTime, 0.0f, toTarget.z_ * kMoveSpeed * kDeltaTime };
 
 		//計算した位置を適応
 		Vector3 nextPos = enemyPos + moveVec;
@@ -145,7 +146,7 @@ void EnemyStateRun::Update()
 	}
 
 	//進行方向の角度
-	float targetAngle = std::atan2f(toPlayer.x_, -toPlayer.z_);
+	float targetAngle = std::atan2f(toTarget.x_, -toTarget.z_);
 
 	//現在の角度
 	float currentAngle = enemy->moveAngle_;

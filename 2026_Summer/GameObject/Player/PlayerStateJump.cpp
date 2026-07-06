@@ -2,6 +2,7 @@
 #include "PlayerStateIdle.h"
 #include "PlayerStateRun.h"
 #include "PlayerStateAttack.h"
+#include "PlayerStateJumpAttack.h"
 #include "Player.h"
 #include "Input.h"
 #include "Camera/PlayerCamera.h"
@@ -120,7 +121,7 @@ void PlayerStateJump::Update()
 	//UŒ‚ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚çUŒ‚‚Ö‘JˆÚ
 	if (Input::GetInstance().IsTriggered("attack"))
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateAttack>(pPlayer_, camera_));
+		pPlayer->ChangeState(std::make_shared<PlayerStateJumpAttack>(pPlayer_, camera_));
 		return;
 	}
 }

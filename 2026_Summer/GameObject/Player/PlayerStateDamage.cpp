@@ -7,6 +7,7 @@ namespace
 	//Damageアニメーション
 	const wchar_t* kPlayerDamage = L"Player|Hit";
 }
+
 PlayerStateDamage::PlayerStateDamage(std::weak_ptr<Player> pPlayer, PlayerCamera& camera):
 	PlayerStateBase(pPlayer,camera)
 {
