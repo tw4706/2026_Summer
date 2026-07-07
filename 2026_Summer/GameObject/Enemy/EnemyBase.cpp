@@ -257,21 +257,21 @@ void EnemyBase::RemoveAttackCollider()
 	pAttackCollider_ = nullptr;
 }
 
-void EnemyBase::ApplyData(const EnemyData& data, const WayPointLoader* pWayPointLoader)
+void EnemyBase::ApplyData(const EnemyData& data, const EnemySpawnData& spawnData, const WayPointLoader* pWayPointLoader)
 {
 	//WayPointのローダー
 	pWayPointLoader_ = pWayPointLoader;
 
 	//エリアID
-	areaId_ = data.areId_;
+	areaId_ = spawnData.areaId_;
 
 	//ステータス
-	hp_ = data.hp_;
+	hp_ = spawnData.hp_;
 
 	//トランスフォーム
-	pos_ = data.pos_;
-	moveAngle_ = data.rotateY_;
-	scale_ = data.scale_;
+	pos_ = spawnData.spawnPos_;
+	moveAngle_ = spawnData.rotateY;
+	scale_ = spawnData.scale_;
 
 	//索敵範囲
 	searchRadius_ = data.searchRadius_;

@@ -43,6 +43,7 @@ GameScene::GameScene(SceneManager& sceneManager) :
 
 	//CSV読み込み
 	pEnemyManager_->LoadEnemyData(L"data/CSV/EnemyData.csv");
+	pEnemyManager_->LoadEnemySpawnData(L"data/CSV/EnemySpawnData.csv");
 	pEnemyManager_->LoadWayPointData(L"data/CSV/WayPointData.csv");
 
 	//プレイヤーの登録
@@ -94,20 +95,18 @@ void GameScene::Init()
 	}
 
 	//敵の生成
-	auto oni = pEnemyManager_->SpawnEnemy("Oni");
-	if (oni)
+	for (int areaId = 0; areaId < 3; ++areaId)
 	{
-		oni->SetPlayer(pPlayer_);
-		oni->SetNavigationGrid(pStage_->GetNaviGrid());
-		oni->SetStageModelHandle(pStage_->GetHandle());
-	}
+		auto enemies = pEnemyManager_->SpawnEnemyArea(areaId);
 
-	auto bigMan = pEnemyManager_->SpawnEnemy("BigMan");
-	if (bigMan)
-	{
-		bigMan->SetPlayer(pPlayer_);
-		bigMan->SetNavigationGrid(pStage_->GetNaviGrid());
-		bigMan->SetStageModelHandle(pStage_->GetHandle());
+		OutputDebugStringA(("area:" + std::to_string(areaId) + " spawned:" + std::to_string(enemies.size()) + "\n").c_str());
+
+		for (auto& enemy : enemies)
+		{
+			enemy->SetPlayer(pPlayer_);
+			enemy->SetNavigationGrid(pStage_->GetNaviGrid());
+			enemy->SetStageModelHandle(pStage_->GetHandle());
+		}
 	}
 
 	//カメラマネージャーの更新

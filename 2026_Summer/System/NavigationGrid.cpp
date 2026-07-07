@@ -9,6 +9,12 @@ namespace
 
 	//レイを飛ばす終点の高さ
 	const float kRayEndHeight = -1000.0f;
+
+	//地面とみなす法線yの値(障害物の側面・斜面を区別するのに使う)
+	constexpr float kGroundNormalThreshold = 0.7f;
+
+	//地面の高さの許容誤差(これを超えて高い/低い位置にヒットしたら障害物とみなす)
+	constexpr float kGroundYTolerance = 50.0f;
 }
 
 void NavigationGrid::CreateGrid(int stageModelHandle, float minX, float maxX, float minZ, float maxZ, float cellSize)
@@ -16,7 +22,7 @@ void NavigationGrid::CreateGrid(int stageModelHandle, float minX, float maxX, fl
 	cellSize_ = cellSize;
 
 	//グリッドの原点を記録する(座標を返還する際の基準点にするため)
-	origin_ = Vector3{ minX, 0.0f, minZ };
+	gridPos_ = Vector3{ minX, 0.0f, minZ };
 
 	//マスの個数を求める
 	width_ = static_cast<int>((maxX - minX) / cellSize_) + 1;
@@ -35,15 +41,15 @@ void NavigationGrid::CreateGrid(int stageModelHandle, float minX, float maxX, fl
 			VECTOR start = VGet(worldPos.x_, kRayStartHeight, worldPos.z_);
 			VECTOR end = VGet(worldPos.x_, kRayEndHeight, worldPos.z_);
 
-			//ここで線分(Ray)とポリゴンの当たり判定を行うことで地面の高さがわかる
+			//ここで線分とポリゴンの当たり判定を行うことで地面の高さがわかる
 			MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(stageModelHandle, -1, start, end);
 
 			NodeData& node = nodes_[z * width_ + x];
 
-			//地面がない場合(ヒットしてないとき)
+			//地面とヒットしてないとき
 			if (hit.HitFlag == FALSE)
 			{
-				//歩行不可とする
+				//歩行できないようにする
 				node.pos = Vector3{ worldPos.x_, 0.0f, worldPos.z_ };
 				node.iswalked = false;
 				continue;
@@ -75,12 +81,12 @@ const NavigationGrid::NodeData* NavigationGrid::GetNode(int x, int z) const
 
 Vector3 NavigationGrid::GridToWorldPos(int x, int z) const
 {
-	return Vector3{ origin_.x_ + x * cellSize_, 0.0f, origin_.z_ + z * cellSize_ };
+	return Vector3{ gridPos_.x_ + x * cellSize_, 0.0f, gridPos_.z_ + z * cellSize_ };
 }
 
 void NavigationGrid::WorldPosToGrid(const Vector3& worldPos, int& outX, int& outZ) const
 {
 	//今一番近いノードに変換する
-	outX = static_cast<int>((worldPos.x_ - origin_.x_) / cellSize_ + 0.5f);
-	outZ = static_cast<int>((worldPos.z_ - origin_.z_) / cellSize_ + 0.5f);
+	outX = static_cast<int>((worldPos.x_ - gridPos_.x_) / cellSize_ + 0.5f);
+	outZ = static_cast<int>((worldPos.z_ - gridPos_.z_) / cellSize_ + 0.5f);
 }

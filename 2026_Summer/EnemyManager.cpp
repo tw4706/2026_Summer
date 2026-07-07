@@ -33,39 +33,53 @@ bool EnemyManager::LoadEnemyData(const std::wstring& path)
 	return dataLoader_.Load(path);
 }
 
+bool EnemyManager::LoadEnemySpawnData(const std::wstring& path)
+{
+	return spawnDataLoader_.Load(path);
+}
+
 bool EnemyManager::LoadWayPointData(const std::wstring& path)
 {
 	return wayPointLoader_.Load(path);
 }
 
-std::shared_ptr<EnemyBase> EnemyManager::SpawnEnemy(const std::string& pathType)
+std::vector<std::shared_ptr<EnemyBase>> EnemyManager::SpawnEnemyArea(int areaId)
 {
-	//CSVのType列に応じたデータの取得
-	const EnemyData* pData = dataLoader_.GetEnemyData(pathType);
+	std::vector<std::shared_ptr<EnemyBase>> spawned;
 
-	//データが取得できない場合はnullptrを返す
-	if (!pData)
+	//指定エリアの配置データを全て取得(複数体分)
+	auto spawnList = spawnDataLoader_.GetSpawnDataByArea(areaId);
+
+	for (const auto* pSpawn : spawnList)
 	{
-		return nullptr;
+		//配置データのType名からデータを取得
+		const EnemyData* pData = dataLoader_.GetEnemyData(pSpawn->type_);
+
+		//データが取得できない場合はスキップ
+		if (!pData)
+		{
+			continue;
+		}
+
+		//敵の種類に応じたインスタンスの作成
+		auto enemy = CreateInstance(pSpawn->type_);
+
+		//敵のインスタンスが作成できない場合はスキップ
+		if (!enemy)
+		{
+			continue;
+		}
+
+		//パラメータ + 配置データの両方を適用
+		enemy->ApplyData(*pData, *pSpawn, &wayPointLoader_);
+		//敵の初期化
+		enemy->Init();
+
+		enemies_.push_back(enemy);
+		spawned.push_back(enemy);
 	}
 
-	//敵の方に応じるインスタンスの作成
-	auto enemy = CreateInstance(pathType);
-
-	//敵のインスタンスが作成できない場合はnullptrを返す
-	if (!enemy)
-	{
-		return nullptr;
-	}
-
-	//CSVで入力したパラメータを適用
-	enemy->ApplyData(*pData, &wayPointLoader_);
-
-	//敵の初期化
-	enemy->Init();
-
-	enemies_.push_back(enemy);
-	return enemy;
+	return spawned;
 }
 
 void EnemyManager::SetPlayer(std::weak_ptr<Player> pPlayer)

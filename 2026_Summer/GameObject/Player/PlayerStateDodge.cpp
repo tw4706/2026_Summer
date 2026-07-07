@@ -7,7 +7,7 @@
 namespace
 {
 	//回避アニメーション
-	const wchar_t* kPlayeDodge = L"Player|Dodge";
+	const std::wstring_view kPlayeDodge = L"Player|Dodge";
 
 	//回避速度
 	constexpr float kDodgeSpeed = 15.0f;
@@ -33,7 +33,7 @@ void PlayerStateDodge::Enter()
 	auto player = pPlayer_.lock();
 	if (!player)return;
 
-	player->ChangeAnimation(AnimationState::Dodge, kPlayeDodge);
+	player->ChangeAnimation(AnimationState::Dodge, kPlayeDodge.data());
 
 	//無敵時間のセット
 	player->isInvincible_ = true;

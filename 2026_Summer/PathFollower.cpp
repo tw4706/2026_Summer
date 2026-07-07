@@ -40,7 +40,7 @@ bool PathFollower::IsPathFinished() const
 
 Vector3 PathFollower::GetCurrentTarget(const Vector3& currentPos)
 {
-	//経路がない、または進み切っている場合は現在地をそのまま返す(呼び出し側で要IsFinishedチェック)
+	//経路がない、または進み切っている場合は現在地をそのまま返す
 	if (path_.empty() || currentIndex_ >= static_cast<int>(path_.size()))
 	{
 		return currentPos;

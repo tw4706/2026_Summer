@@ -158,7 +158,9 @@ void Player::Draw()
 	}
 
 	//HPのデバッグ表示
-	DrawFormatString(100, 100, 0xffffff, L"PlayerHP:%d", hp_);
+	DrawFormatString(100, 150, 0xffffff, L"PlayerHP:%d", hp_);
+
+	DrawFormatString(100, 100, 0x00ffff, L"PlayerPosX : %.2f,PlayerPosY : %.2f,PlauerPosZ : %.2f", pos_.x_, pos_.y_, pos_.z_);
 #endif
 }
 

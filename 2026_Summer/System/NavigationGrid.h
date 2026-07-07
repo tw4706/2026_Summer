@@ -62,13 +62,9 @@ private:
 	int width_ = 0;
 	int height_ = 0;
 	float cellSize_ = 50.0f;
-	Vector3 origin_; //グリッドの原点(ワールド座標でのminX, 0, minZ)
+	Vector3 gridPos_; //グリッドの原点
 
-	//地面とみなす法線yの閾値(将来障害物の側面・斜面を区別するために使う)
-	static constexpr float kGroundNormalThreshold = 0.7f;
 	//想定する地面の高さ
 	float expectedGroundY_ = 0.0f;
-	//地面の高さの許容誤差(これを超えて高い/低い位置にヒットしたら障害物とみなす)
-	static constexpr float kGroundYTolerance = 50.0f;
 };
 

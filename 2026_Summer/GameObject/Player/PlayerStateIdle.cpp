@@ -12,7 +12,7 @@ namespace
 {
 	//プレイヤーアニメーション
 	//Idle
-	const wchar_t* kPlayerIdle = L"Player|Idle";
+	const std::wstring_view kPlayerIdle = L"Player|Idle";
 
     //入力のしきい値
     constexpr float kInputEpsilon = 0.01f;
@@ -34,7 +34,7 @@ void PlayerStateIdle::Enter()
     auto pPlayer = pPlayer_.lock();
     if (!pPlayer) return;
 
-    pPlayer->ChangeAnimation(AnimationState::Idle, kPlayerIdle);
+    pPlayer->ChangeAnimation(AnimationState::Idle, kPlayerIdle.data());
 
     //速度を0にする
     pPlayer->SetVelocity({ 0.0f, 0.0f, 0.0f });

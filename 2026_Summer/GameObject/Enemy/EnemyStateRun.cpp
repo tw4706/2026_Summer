@@ -94,7 +94,7 @@ void EnemyStateRun::Update()
 	else
 	{
 		//Ž‹ü‚ªŽÕ‚ç‚ê‚Ä‚¢‚éê‡‚ÍŒo˜H’Tõ‚ðŽg‚¤
-		//‚Ü‚¾Œo˜H‚ðŽ‚Á‚Ä‚¢‚È‚¢ê‡‚Ì‚ÝV‚µ‚­’Tõ‚·‚é
+		//‚Ü‚¾Œo˜H‚ðŽ‚Á‚Ä‚¢‚È‚¢ê‡‚ÍV‚µ‚­’Tõ‚ð‚·‚é
 		if (!enemy->pathFollower_.HasPath())
 		{
 			std::vector<Vector3> path = enemy->pathFinder_.FindPath(enemyPos, playerPos);

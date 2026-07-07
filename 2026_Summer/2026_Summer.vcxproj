@@ -76,14 +76,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>c:\Dxlib_h</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>c:\Dxlib_h;$(ProjectDir)CSV</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>c:\Dxlib_h</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>Dxlib_h</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -94,13 +94,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>c:\DxLib_VC\プロジェクトに追加すべきファイル_VC用</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>c:\DxLib_VC\プロジェクトに追加すべきファイル_VC用;$(ProjectDir)CSV</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>c:\DxLib_VC\プロジェクトに追加すべきファイル_VC用</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>Dxlib_h</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -109,7 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Dxlib_h;$(ProjectDir)Math;$(ProjectDir)GameObject;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)Player;$(ProjectDir)Enemy;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Dxlib_h;$(ProjectDir)Math;$(ProjectDir)GameObject;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)Player;$(ProjectDir)Enemy;$(ProjectDir);$(ProjectDir)CSV</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -127,7 +127,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Dxlib_h;$(ProjectDir)Common;$(ProjectDir)GameObject;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)Player;$(ProjectDir)Enemy;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Dxlib_h;$(ProjectDir)Common;$(ProjectDir)GameObject;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)Player;$(ProjectDir)Enemy;$(ProjectDir);$(ProjectDir)CSV</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -140,12 +140,13 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AStarPathFinder.cpp" />
+    <ClCompile Include="CSV\EnemySpawnDataLoader.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateAttack.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateChance.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStatePO.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateBase.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyStateReturn.cpp" />
-    <ClCompile Include="EnemyStatus.cpp" />
+    <ClCompile Include="CSV\EnemyStatus.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="GameObject\Enemy\BigMan.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
@@ -194,18 +195,20 @@
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Math\Vector3.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
-    <ClCompile Include="WayPointLoader.cpp" />
+    <ClCompile Include="CSV\WayPointLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="AStarPathFinder.h" />
+    <ClInclude Include="CSV\EnemySpawnData.h" />
+    <ClInclude Include="CSV\EnemySpawnDataLoader.h" />
     <ClInclude Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateAttack.h" />
     <ClInclude Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateChance.h" />
     <ClInclude Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStatePO.h" />
     <ClInclude Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateBase.h" />
-    <ClInclude Include="EnemyData.h" />
+    <ClInclude Include="CSV\EnemyData.h" />
     <ClInclude Include="GameObject\Enemy\EnemyStateReturn.h" />
-    <ClInclude Include="EnemyStatus.h" />
+    <ClInclude Include="CSV\EnemyStatus.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="GameObject\Enemy\BigMan.h" />
     <ClInclude Include="CollisionManager.h" />
@@ -255,7 +258,7 @@
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Scene\TitleScene.h" />
-    <ClInclude Include="WayPointLoader.h" />
+    <ClInclude Include="CSV\WayPointLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="2026_Summer.rc" />

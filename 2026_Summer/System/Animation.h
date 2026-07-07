@@ -10,6 +10,8 @@ enum class AnimationState
 	Walk,
 	Run,
 	Guard,
+	LeftGuard,
+	RightGuard,
 	Damage,
 	Attack,
 	JumpAttack,

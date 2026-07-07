@@ -11,7 +11,7 @@
 namespace
 {
 	//Jump
-	const wchar_t* kPlayerJump = L"Player|Jump";
+	const std::wstring_view kPlayerJump = L"Player|Jump";
 }
 
 PlayerStateJump::PlayerStateJump(std::weak_ptr<Player> pPlayer, PlayerCamera& camera) :
@@ -25,7 +25,7 @@ void PlayerStateJump::Enter()
 	if (!pPlayer) return;
 
 	//アニメーションをジャンプに切り替える
-	pPlayer->ChangeAnimation(AnimationState::Jump, kPlayerJump);
+	pPlayer->ChangeAnimation(AnimationState::Jump, kPlayerJump.data());
 
 	if (pPlayer->GetIsGround())
 	{

@@ -53,9 +53,9 @@ bool WayPointLoader::Load(const std::wstring& path)
 		WayPoint wp;
 		int areaId = std::stoi(tokens[0]);
 		wp.id = std::stoi(tokens[1]);
-		wp.pos.x_ = std::stof(tokens[2]) * 100.0f;
-		wp.pos.y_ = std::stof(tokens[3]) * 100.0f;
-		wp.pos.z_ = std::stof(tokens[4]) * -100.0f;
+		wp.pos.x_ = std::stof(tokens[2]);
+		wp.pos.y_ = std::stof(tokens[3]);
+		wp.pos.z_ = std::stof(tokens[4]);
 
 		//connectionsÇÉpÅ[ÉX
 		std::string connStr = tokens[5];

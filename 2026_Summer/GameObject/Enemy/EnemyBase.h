@@ -5,6 +5,7 @@
 #include "PathFollower.h"
 #include "WayPointLoader.h"
 #include "EnemyData.h"
+#include "EnemySpawnData.h"
 
 class Player;
 class SphereCollider;
@@ -51,7 +52,7 @@ public:
 	/// CSVデータの適用
 	/// </summary>
 	/// <param name="data">CSVファイルのデータ</param>
-	virtual void ApplyData(const EnemyData& data, const WayPointLoader* pWayPointLoader);
+	virtual void ApplyData(const EnemyData& data,const EnemySpawnData&spawnData, const WayPointLoader* pWayPointLoader);
 
 	/// <summary>
 	/// プレイヤーの位置の取得

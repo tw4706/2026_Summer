@@ -5,7 +5,7 @@
 namespace
 {
 	//JumpAttackアニメーション
-	const wchar_t* kPlayerJumpAttack = L"Player|JumpAttack";
+	const std::wstring_view kPlayerJumpAttack = L"Player|JumpAttack";
 }
 
 PlayerStateJumpAttack::PlayerStateJumpAttack(std::weak_ptr<Player> pPlayer, PlayerCamera& camera):
@@ -18,7 +18,7 @@ void PlayerStateJumpAttack::Enter()
 	auto player = pPlayer_.lock();
 	if (!player) return;
 
-	player->ChangeAnimation(AnimationState::JumpAttack, kPlayerJumpAttack);
+	player->ChangeAnimation(AnimationState::JumpAttack, kPlayerJumpAttack.data());
 
 	//攻撃開始と同時に刀の当たり判定を有効化
 	player->SetKatanaColliderEnabled(true);

@@ -4,7 +4,7 @@
 namespace
 {
 	//死亡アニメーション
-	const wchar_t* kPlayerDeath = L"Player|Death";
+	const std::wstring_view kPlayerDeath = L"Player|Death";
 
 }
 
@@ -20,7 +20,7 @@ void PlayerStateDeath::Enter()
 
 	//速度をゼロに
 	player->SetVelocity({ 0.0f,0.0f,0.0f });
-	player->ChangeAnimation(AnimationState::Death, kPlayerDeath);
+	player->ChangeAnimation(AnimationState::Death, kPlayerDeath.data());
 }
 
 void PlayerStateDeath::Update()

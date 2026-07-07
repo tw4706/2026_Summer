@@ -1,11 +1,12 @@
 C:\GitHub\2026_Summer\2026_Summer\Application.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\Application.obj
 C:\GitHub\2026_Summer\2026_Summer\AStarPathFinder.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\AStarPathFinder.obj
+C:\GitHub\2026_Summer\2026_Summer\CSV\EnemySpawnDataLoader.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemySpawnDataLoader.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateAttack.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyAttackSubStateAttack.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateChance.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyAttackSubStateChance.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStatePO.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyAttackSubStatePO.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateBase.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyAttackSubStateBase.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\EnemyStateReturn.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyStateReturn.obj
-C:\GitHub\2026_Summer\2026_Summer\EnemyStatus.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyStatus.obj
+C:\GitHub\2026_Summer\2026_Summer\CSV\EnemyStatus.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyStatus.obj
 C:\GitHub\2026_Summer\2026_Summer\EnemyManager.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyManager.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\BigMan.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\BigMan.obj
 C:\GitHub\2026_Summer\2026_Summer\CollisionManager.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\CollisionManager.obj
@@ -54,4 +55,4 @@ C:\GitHub\2026_Summer\2026_Summer\GameObject\Player\Player.cpp;C:\GitHub\2026_Su
 C:\GitHub\2026_Summer\2026_Summer\Scene\GameScene.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\GameScene.obj
 C:\GitHub\2026_Summer\2026_Summer\Math\Vector3.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\Vector3.obj
 C:\GitHub\2026_Summer\2026_Summer\Scene\TitleScene.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\TitleScene.obj
-C:\GitHub\2026_Summer\2026_Summer\WayPointLoader.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\WayPointLoader.obj
+C:\GitHub\2026_Summer\2026_Summer\CSV\WayPointLoader.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\WayPointLoader.obj

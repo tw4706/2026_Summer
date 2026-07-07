@@ -12,7 +12,7 @@
 namespace
 {
 	//Run
-	const wchar_t* kPlayerRun = L"Player|Run";
+	const std::wstring_view kPlayerRun = L"Player|Run";
 
 	//プレイヤーの移動速度
 	constexpr float kSpeed = 10.0f;
@@ -53,7 +53,7 @@ void PlayerStateRun::Enter()
 	if (!pPlayer) return;
 
 	//Runアニメーションに遷移
-	pPlayer->ChangeAnimation(AnimationState::Run, kPlayerRun);
+	pPlayer->ChangeAnimation(AnimationState::Run, kPlayerRun.data());
 }
 
 void PlayerStateRun::Update()

@@ -1,5 +1,6 @@
 #pragma once
 #include "EnemyStatus.h"
+#include "EnemySpawnDataLoader.h"
 #include "WayPointLoader.h"
 #include <memory>
 #include <vector>
@@ -25,6 +26,13 @@ public:
 	bool LoadEnemyData(const std::wstring& path);
 
 	/// <summary>
+	/// 敵データを読み込む
+	/// </summary>
+	/// <param name="path">敵データファイルの文字列の参照</param>
+	/// <returns>読み込みに成功した場合はtrue、失敗した場合はfalseを返す</returns>
+	bool LoadEnemySpawnData(const std::wstring& path);
+
+	/// <summary>
 	/// WayPointデータを読み込む
 	/// </summary>
 	/// <param name="path">WayPointデータファイルの文字列の参照</param>
@@ -36,7 +44,7 @@ public:
 	/// </summary>
 	/// <param name="pathtype">CSVのType列に対応する文字列</param>
 	/// <returns>生成された敵キャラクター,失敗したらnullptr</returns>
-	std::shared_ptr<EnemyBase>SpawnEnemy(const std::string& pathType);
+	std::vector<std::shared_ptr<EnemyBase>>SpawnEnemyArea(int areaId);
 
 	/// <summary>
 	/// プレイヤーへの参照を全敵にセット
@@ -68,6 +76,9 @@ private:
 
 	//敵のパラメータのデータローダー
 	EnemyStatus dataLoader_;
+
+	//敵の生成データのローダー
+	EnemySpawnDataLoader spawnDataLoader_;
 
 	//WayPointのデータローダー
 	WayPointLoader wayPointLoader_;
