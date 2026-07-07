@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "Katana.h"
 #include "Input.h"
-#include "Camera/PlayerCamera.h"
+#include "Camera/CameraBase.h"
 #include "Math/Matrix4x4.h"
 #include "PlayerStateBase.h"
 #include "PlayerStateIdle.h"
@@ -84,7 +84,7 @@ void Player::Update()
 		std::weak_ptr<Player> weakSelf = sharedSelf;
 
 		//今持っているポインタを参照する
-		PlayerCamera& pCamera = *pCamera_;
+		CameraBase& pCamera = *pCamera_;
 
 		//ステートパターンの生成
 		pCurrentState_ = std::make_shared<PlayerStateIdle>(weakSelf, *pCamera_);
@@ -197,7 +197,7 @@ void Player::OnDamage(const int damage)
 	auto sharedSelf = std::dynamic_pointer_cast<Player>(shared_from_this());
 	std::weak_ptr<Player> weakSelf = sharedSelf;
 
-	PlayerCamera& pCamera = *pCamera_;
+	CameraBase& pCamera = *pCamera_;
 
 	//HPが0以上の場合はダメージ状態に遷移
 	if (hp_ > 0)

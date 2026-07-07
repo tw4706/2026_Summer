@@ -14,7 +14,7 @@ namespace
 	const std::wstring_view kPlayerJump = L"Player|Jump";
 }
 
-PlayerStateJump::PlayerStateJump(std::weak_ptr<Player> pPlayer, PlayerCamera& camera) :
+PlayerStateJump::PlayerStateJump(std::weak_ptr<Player> pPlayer, CameraBase& camera) :
 	PlayerStateBase(pPlayer, camera)
 {
 }
@@ -56,7 +56,7 @@ void PlayerStateJump::Update()
 
 	if (isKeyboardMoving)
 	{
-		float cameraYaw = camera_.GetYaw();
+		float cameraYaw = pCamera_.GetYaw();
 		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraYaw);
 		Vector3 playerDir = rotMat.TransformForVector(-inputDir).Normalize();
 
@@ -87,7 +87,7 @@ void PlayerStateJump::Update()
 
 	//ƒJƒƒ‰‰ñ“]
 	Vector3 stickR = Input::GetInstance().GetStickRight();
-	camera_.AddRotation(-stickR.x_ * 0.03f, -stickR.z_ * 0.03f);
+	pCamera_.AddRotation(-stickR.x_ * 0.03f, -stickR.z_ * 0.03f);
 
 	//ó‘Ô‘JˆÚ”»’è
 	if (pPlayer->GetIsGround())
@@ -104,11 +104,11 @@ void PlayerStateJump::Update()
 			float speedXZ = sqrtf(currentVel.x_ * currentVel.x_ + currentVel.z_ * currentVel.z_);
 			if (speedXZ > 1.5f)
 			{
-				pPlayer->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_, camera_));
+				pPlayer->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_, pCamera_));
 			}
 			else
 			{
-				pPlayer->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, camera_));
+				pPlayer->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, pCamera_));
 			}
 			return;
 		}
@@ -121,7 +121,7 @@ void PlayerStateJump::Update()
 	//UŒ‚ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚çUŒ‚‚Ö‘JˆÚ
 	if (Input::GetInstance().IsTriggered("attack"))
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateJumpAttack>(pPlayer_, camera_));
+		pPlayer->ChangeState(std::make_shared<PlayerStateJumpAttack>(pPlayer_, pCamera_));
 		return;
 	}
 }

@@ -10,7 +10,7 @@ CameraManager::~CameraManager()
 {
 }
 
-void CameraManager::RegisterCamera(const std::string& name, std::shared_ptr<CameraBase> camera)
+void CameraManager::RegisterCamera(const std::wstring& name, std::shared_ptr<CameraBase> camera)
 {
 	if (!camera) return;
 
@@ -23,16 +23,33 @@ void CameraManager::RegisterCamera(const std::string& name, std::shared_ptr<Came
 	}
 }
 
-void CameraManager::ChangeCamera(const std::string& name)
+void CameraManager::ChangeCamera(const std::wstring& name)
 {
+	//チェンジするカメラをマップから探す
 	auto it = cameraMap_.find(name);
-	if (it != cameraMap_.end())
-	{
-		pActiveCamera_ = it->second;
+	if (it == cameraMap_.end())return;
 
-		//カメラが切り替わった瞬間に初期位置を計算し直す
-		pActiveCamera_->Init();
+	auto nextCamera = it->second;
+
+	//アクティブなカメラが存在するなら
+	if (pActiveCamera_)
+	{
+		//現在のカメラの座標とターゲット取得する
+		Vector3 prevPos = pActiveCamera_->GetPos();
+		Vector3 prevTarget = pActiveCamera_->GetCameraTarget();
+
+		//今のカメラの座標とターゲットをそのまま次のカメラに適用する
+		//これを行うことによって切り替わりの際にカメラがぶおんってならないようにする
+		nextCamera->SetCompulsoryPosAndTarget(prevPos, prevTarget);
 	}
+	//アクティなカメラを切り替える
+	pActiveCamera_ = nextCamera;
+
+	//現在のカメラの名前を引数で来たカメラの名前に上書き
+	currentCameraName_ = name;
+
+	pActiveCamera_->Init();
+
 }
 
 void CameraManager::Update(int stageModelHandle)
@@ -41,4 +58,16 @@ void CameraManager::Update(int stageModelHandle)
 	{
 		pActiveCamera_->Update(stageModelHandle);
 	}
+}
+
+std::shared_ptr<CameraBase> CameraManager::GetCamera(const std::wstring& name)
+{
+	//引数で渡されたnameをfindで探す
+	auto it = cameraMap_.find(name);
+
+	//見つからない場合はnullptr
+	if (it == cameraMap_.end())return nullptr;
+
+	//要素の実体を返す
+	return it->second;
 }

@@ -5,7 +5,7 @@
 
 class Input;
 class Katana;
-class PlayerCamera;
+class CameraBase;
 class CharacterStateBase;
 class Player :public Character
 {
@@ -50,7 +50,7 @@ public:
 	/// カメラのセット
 	/// </summary>
 	/// <param name="camera">カメラのポインタ</param>
-	void SetCamera(PlayerCamera* camera) { pCamera_ = camera; }
+	void SetCamera(CameraBase* camera) { pCamera_ = camera; }
 
 	/// <summary>
 	/// 刀の当たり判定の有効/無効を設定する
@@ -75,7 +75,7 @@ private:
 	bool isInvincible_ = false;				//無敵中かどうか
 	bool isGuarding_ = false;				//ガード中かどうか
 
-	PlayerCamera* pCamera_ = nullptr;		//カメラ
+	CameraBase* pCamera_ = nullptr;		//カメラ
 	std::unique_ptr<Katana> pKatana_;		//刀
 };
 

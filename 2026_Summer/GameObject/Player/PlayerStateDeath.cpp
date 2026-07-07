@@ -8,7 +8,7 @@ namespace
 
 }
 
-PlayerStateDeath::PlayerStateDeath(std::weak_ptr<Player> pPlayer, PlayerCamera& camera):
+PlayerStateDeath::PlayerStateDeath(std::weak_ptr<Player> pPlayer, CameraBase& camera):
 	PlayerStateBase(pPlayer,camera)
 {
 }

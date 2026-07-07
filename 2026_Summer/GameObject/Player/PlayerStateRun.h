@@ -5,7 +5,7 @@ class Player;
 class PlayerStateRun :public PlayerStateBase
 {
 public:
-    PlayerStateRun(std::weak_ptr<Player> pPlayer, PlayerCamera& camera);
+    PlayerStateRun(std::weak_ptr<Player> pPlayer, CameraBase& camera);
     ~PlayerStateRun() = default;
 
     void Enter()  override;

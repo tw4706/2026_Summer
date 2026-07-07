@@ -11,6 +11,7 @@
 #include"Player/Player.h"
 #include"CollisionManager.h"
 #include"Camera/PlayerCamera.h"
+#include"Camera/LockOnCamera.h"
 #include"Camera/CameraManager.h"
 #include"Game.h"
 #include <DxLib.h>
@@ -35,7 +36,9 @@ GameScene::GameScene(SceneManager& sceneManager) :
 	//ゲームオブジェクトの登録
 	//カメラの登録
 	auto playerCamera = std::make_shared<PlayerCamera>();
-	pCameraManager_->RegisterCamera("PlayerCamera", playerCamera);
+	pCameraManager_->RegisterCamera(L"PlayerCamera", playerCamera);
+	auto lockOnCamera = std::make_shared<LockOnCamera>();
+	pCameraManager_->RegisterCamera(L"LockOnCamera", lockOnCamera);
 
 	//ステージの登録
 	pStage_ = std::make_shared<Stage>(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f);
@@ -187,6 +190,64 @@ void GameScene::NormalUpdate()
 				return a->GetPriority() < b->GetPriority();
 			});
 	}
+
+	//ロックオンカメラ
+	if(Input::GetInstance().IsTriggered("lockOn"))
+	{
+		//現在アクティブなカメラがロックオンカメラの場合
+		if (pCameraManager_->GetActiveCameraName() == L"LockOnCamera")
+		{
+			//通常のプレイヤーカメラに戻す
+			//(ロックオンはすでに行っている状態なので)
+			pCameraManager_->ChangeCamera(L"PlayerCamera");
+		}
+		else
+		{
+			//最短距離を保存する変数
+			float closestDistanceSq = 999999999.0f;
+
+			//一番近い敵のポインタを保存するポインタ
+			std::shared_ptr<EnemyBase>closestEnemy;
+
+			for (auto& enemy : pEnemyManager_->GetEnemies())
+			{
+				if (enemy->IsDead())continue;
+
+				//プレイヤーと敵の差分のベクトルを計算
+				Vector3 diff = enemy->GetPos() - pPlayer_->GetPos();
+
+				//距離の2情を計算
+				float distSq = diff.LengthSq();
+
+				//今見つけている敵より距離が短い場合
+				if (distSq < closestDistanceSq)
+				{
+					closestDistanceSq = distSq;//最短距離を更新
+					closestEnemy = enemy;//一番近い敵を更新
+				}
+			}
+
+			//ロックオンできる敵がいるなら
+			if (closestEnemy != nullptr)
+			{
+				//マネージャーからカメラを取り出す
+				auto camera=pCameraManager_->GetCamera(L"LockOnCamera");
+
+				//ロックオンカメラの型にキャスト
+				auto lockOnCamera = std::dynamic_pointer_cast<LockOnCamera>(camera);
+
+				//キャストに成功したら
+				if (lockOnCamera)
+				{
+					lockOnCamera->SetTargetEnemy(closestEnemy);
+					lockOnCamera->SetPlayer(pPlayer_);
+
+					pCameraManager_->ChangeCamera(L"LockOnCamera");
+				}
+			}
+		}
+	}
+
 	auto playerCam = std::dynamic_pointer_cast<PlayerCamera>(pCameraManager_->GetActiveCamera());
 	if (playerCam)
 	{

@@ -70,6 +70,12 @@ Vector3 CameraBase::CheckCollCameraToStage(int stageModelHandle,const Vector3&st
     return end;
 }
 
+void CameraBase::SetCompulsoryPosAndTarget(Vector3& prevCameraPos, Vector3& prevCameraTarget)
+{
+    pos_ = prevCameraPos;
+    cameraTarget_ = prevCameraTarget;
+}
+
 Vector3 CameraBase::UpdateShake()
 {
     if (shakeTime_ <= 0.0f) return Vector3(0, 0, 0);

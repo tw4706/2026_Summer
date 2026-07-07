@@ -12,6 +12,9 @@ public:
 	virtual void Init()override;
 	virtual void Update(int stageModelHandle)override;
 
+	void SetPlayer(std::weak_ptr<Player>pPlayer) { pPlayer_ = pPlayer; }
+	void SetTargetEnemy(std::weak_ptr<EnemyBase>pEnemy) { pEnemy_ = pEnemy; }
+
 private:
 	std::weak_ptr<Player>pPlayer_;//プレイヤーのポインタ
 	std::weak_ptr<EnemyBase>pEnemy_;//敵のポインタ

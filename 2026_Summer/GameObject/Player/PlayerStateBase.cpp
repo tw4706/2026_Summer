@@ -2,14 +2,14 @@
 #include "Player.h"
 #include "Math/Vector3.h"
 #include "Input.h"
-#include "Camera/PlayerCamera.h"
+#include "Camera/CameraBase.h"
 #include "Math/Matrix4x4.h"
 #include<Dxlib.h>
 
-PlayerStateBase::PlayerStateBase(std::weak_ptr<Player> pPlayer, PlayerCamera& camera):
+PlayerStateBase::PlayerStateBase(std::weak_ptr<Player> pPlayer, CameraBase& camera):
 	CharacterStateBase(pPlayer),
     pPlayer_(pPlayer),
-    camera_(camera)
+	pCamera_(camera)
 {
 }
 
@@ -22,7 +22,7 @@ Vector3 PlayerStateBase::GetCameraLookMoveDirection() const
 	if (!pPlayer) return { 0.0f, 0.0f, 0.0f };
 
 	//カメラのYaw角を使った行列回転を行う
-	float cameraYaw = camera_.GetYaw();					//カメラのヨー角を取得
+	float cameraYaw = pCamera_.GetYaw();					//カメラのヨー角を取得
 	Matrix4x4 rotMat = Matrix4x4::RotateY(cameraYaw);	//Y軸回転行列を作成
 
 	Vector3 moveDir = rotMat.TransformForVector(-rawInput).Normalize();

@@ -33,6 +33,7 @@ C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Player\PlayerStateDodge.cp
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Camera\PlayerCamera.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerCamera.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Enemy\Oni.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Oni.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Katana.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Katana.obj
+C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Camera\LockOnCamera.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\LockOnCamera.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\Model.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Model.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Stage.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Stage.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Collider\PolygonCollider.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PolygonCollider.obj

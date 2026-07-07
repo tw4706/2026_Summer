@@ -3,7 +3,7 @@
 class PlayerStateDamage :public PlayerStateBase
 {
 public:
-	PlayerStateDamage(std::weak_ptr<Player> pPlayer, PlayerCamera& camera);
+	PlayerStateDamage(std::weak_ptr<Player> pPlayer, CameraBase& camera);
 	~PlayerStateDamage() = default;
 
 	void Enter()  override;

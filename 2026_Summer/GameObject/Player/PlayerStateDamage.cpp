@@ -8,7 +8,7 @@ namespace
 	const std::wstring_view kPlayerDamage = L"Player|Hit";
 }
 
-PlayerStateDamage::PlayerStateDamage(std::weak_ptr<Player> pPlayer, PlayerCamera& camera):
+PlayerStateDamage::PlayerStateDamage(std::weak_ptr<Player> pPlayer, CameraBase& camera):
 	PlayerStateBase(pPlayer,camera)
 {
 }
@@ -31,7 +31,7 @@ void PlayerStateDamage::Update()
 
 	if (player->IsAnimationEnd())
 	{
-		player->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, camera_));
+		player->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, pCamera_));
 	}
 }
 

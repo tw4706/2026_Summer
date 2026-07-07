@@ -5,7 +5,7 @@ class Player;
 class PlayerStateJumpAttack :public PlayerStateBase
 {
 public:
-    PlayerStateJumpAttack(std::weak_ptr<Player> pPlayer, PlayerCamera& camera);
+    PlayerStateJumpAttack(std::weak_ptr<Player> pPlayer, CameraBase& camera);
     ~PlayerStateJumpAttack() = default;
 
     void Enter()  override;

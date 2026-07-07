@@ -58,6 +58,13 @@ public:
 	/// <returns>すてーじとあたっているかどうかを返す</returns>
 	Vector3 CheckCollCameraToStage(int stageModelHandle, const Vector3& startPos, const Vector3& endPos);
 
+	/// <summary>
+	/// 強制的にカメラの座標とターゲットを設定する関数
+	/// </summary>
+	/// <param name="prevCameraPos">前のカメラ座標</param>
+	/// <param name="prevCameraTarget">前のカメラターゲット</param>
+	void SetCompulsoryPosAndTarget(Vector3& prevCameraPos, Vector3& prevCameraTarget);
+
 private:
 	/// <summary>
 	/// カメラシェイクの更新

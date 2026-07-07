@@ -18,12 +18,14 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 	inputTable_["right"] = { {PeripheralType::keyboard,KEY_INPUT_RIGHT},
 						{PeripheralType::pad1,PAD_INPUT_RIGHT} };
 
+	inputTable_["lockOn"] = { {PeripheralType::keyboard,KEY_INPUT_L},
+						{PeripheralType::pad1,PAD_INPUT_C} };
 	inputTable_["attack"] = { {PeripheralType::keyboard,KEY_INPUT_Z},
 						{PeripheralType::pad1,PAD_INPUT_6} };
 	inputTable_["guard"] = { {PeripheralType::keyboard,KEY_INPUT_G},
 						{PeripheralType::pad1,PAD_INPUT_B} };
 	inputTable_["dodge"] = { {PeripheralType::keyboard,KEY_INPUT_D},
-						{PeripheralType::pad1,PAD_INPUT_C} };
+						{PeripheralType::pad1,PAD_INPUT_B} };
 	inputTable_["jump"] = { {PeripheralType::keyboard,KEY_INPUT_SPACE},
 						{PeripheralType::pad1,PAD_INPUT_A} };
 	inputTable_["next"] = { {PeripheralType::keyboard,KEY_INPUT_SPACE},

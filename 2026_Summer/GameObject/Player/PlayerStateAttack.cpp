@@ -8,7 +8,7 @@ namespace
 	const std::wstring_view kPlayerAttack = L"Player|Attack";
 }
 
-PlayerStateAttack::PlayerStateAttack(std::weak_ptr<Player> pPlayer, PlayerCamera& camera) :
+PlayerStateAttack::PlayerStateAttack(std::weak_ptr<Player> pPlayer, CameraBase& camera) :
 	PlayerStateBase(pPlayer, camera)
 {
 }
@@ -43,7 +43,7 @@ void PlayerStateAttack::Update()
 	{
 		//“‚Ì“–‚½‚è”»’è‚ð–³Œø‰»
 		player->SetKatanaColliderEnabled(false);
-		player->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, camera_));
+		player->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, pCamera_));
 		return;
 	}
 	if (player->GetIsGround())
