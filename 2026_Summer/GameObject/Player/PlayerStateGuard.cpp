@@ -1,6 +1,8 @@
 #include "PlayerStateGuard.h"
 #include "PlayerStateIdle.h"
 #include "Player.h"
+#include "Camera/PlayerCamera.h"
+#include "System/Input.h"
 #include<string_view>
 
 namespace
@@ -40,13 +42,35 @@ void PlayerStateGuard::Update()
 	//正面ベクトルを今向いている向きで定義
 	Vector3 forwardVec = { std::sinf(player->moveAngle_),0.0f,-std::cosf(player->moveAngle_) };
 
-	//移動の入力がない場合はIdleに遷移
-	if (playerDir.LengthSq() <= 0.0001f)
+	//ガードのボタンを離したときにidle状態に遷移する
+	if (Input::GetInstance().IsReleased("guard"))
 	{
 		auto nextState = std::make_shared<PlayerStateIdle>(pPlayer_, camera_);
 		player->ChangeState(nextState);
 		return;
 	}
+
+	//移動の入力がない場合は普通のGuard状態に遷移
+	if (playerDir.LengthSq() <= 0.00001f)
+	{
+		player->ChangeAnimation(AnimationState::Guard,kPlayerGuard.data());
+		return;
+	}
+
+	//カメラのターゲットとカメラの現在位置を取得
+	Vector3 cameraTarget = player->GetCameraTarget();
+	Vector3 currentCameraPos = camera_.GetPos();
+
+	//カメラのとの距離を計算
+	Vector3 cameraVec = cameraTarget - currentCameraPos;
+	cameraVec.y_ = 0.0f;//Yは0にしておく
+	cameraVec.Normalize();
+
+	//カメラの正面の角度を計算
+	float playerAngle = atan2f(cameraVec.x_, -cameraVec.z_);
+
+	//カメラの正面の角度をプレイヤーの向きに適用
+	player->moveAngle_ = playerAngle;
 
 	playerDir.Normalize();
 
@@ -68,14 +92,6 @@ void PlayerStateGuard::Update()
 	else
 	{
 		player->ChangeAnimation(AnimationState::LeftGuard, kPlayerLeftGuard.data());
-	}
-
-	// アニメーションが終了したら
-	if (player->IsAnimationEnd())
-	{
-		//Idleに遷移させる
-		auto nextState = std::make_shared<PlayerStateIdle>(pPlayer_, camera_);
-		player->ChangeState(nextState);
 	}
 }
 

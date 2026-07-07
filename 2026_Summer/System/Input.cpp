@@ -82,6 +82,11 @@ bool Input::IsTriggered(const char* name) const
 	return inputData_.at(name) && !lastInputData_.at(name);
 }
 
+bool Input::IsReleased(const char* name) const
+{
+	return !inputData_.at(name) && lastInputData_.at(name);
+}
+
 void Input::UpdateAnalogStick()
 {
 	//左アナログスティック情報の取得

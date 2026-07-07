@@ -43,8 +43,12 @@ public:
 	void Update();
 	//ボタンが押されたか
 	bool IsPressed(const char* name)const;
+
 	//ボタンが今押されたかどうか
 	bool IsTriggered(const char* name)const;
+
+	//ボタンが離されたかどうか
+	bool IsReleased(const char* name)const;
 
 	//アナログスティックの更新
 	void UpdateAnalogStick();
