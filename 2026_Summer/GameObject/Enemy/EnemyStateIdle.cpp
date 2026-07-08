@@ -84,10 +84,7 @@ void EnemyStateIdle::Update()
 		return;
 	}
 
-	const WayPointLoader* pLoader = enemy->pWayPointLoader_;
-	if (!pLoader) return;
-
-	const auto& wayPoints = pLoader->GetWayPoints(enemy->areaId_);
+	const auto& wayPoints = enemy->pWayPointLoader_->GetWayPoints(enemy->areaId_);
 	if (wayPoints.empty()) return;
 
 	int targetId = enemy->nextWayPointId_;
@@ -123,6 +120,10 @@ void EnemyStateIdle::Update()
 
 	//移動速度を設定
 	Vector3 moveVec = { toTarget.x_ * kMoveSpeed * kDeltaTime, 0.0f, toTarget.z_ * kMoveSpeed * kDeltaTime };
+	
+	//速度の適用
+	enemy->SetVelocity(moveVec);
+
 	//計算した位置を適用
 	Vector3 nextPos = enemyPos + moveVec;
 	//位置のセット

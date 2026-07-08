@@ -147,25 +147,24 @@ void EnemyBase::Draw()
 	}
 	if (pWayPointLoader_)
 	{
-		//敵と同じエリアIDのWayPointリストを取得
+		//敵と同じエリアIDのWayPointを取得
 		const auto& wayPoints = pWayPointLoader_->GetWayPoints(areaId_);
 
 		for (const auto& wp : wayPoints)
 		{
-			//地面に埋まらないように少し浮かせる
-			Vector3 wpPos = { wp.pos.x_, wp.pos.y_ + 10.0f, wp.pos.z_ };
+			Vector3 wayPointPos = { wp.pos.x_, wp.pos.y_ + 10.0f, wp.pos.z_ };
 
 			//通常のWayPointは青色にする
-			unsigned int wpColor = GetColor(0, 0, 255);
+			unsigned int wayPointColor = GetColor(0, 0, 255);
 
 			//もしこのWayPointが、現在敵が目指しているターゲットIDと同じなら黄色にする
 			if (hasDebugTarget_ && wp.id == nextWayPointId_)
 			{
-				wpColor = GetColor(255, 255, 0);
+				wayPointColor = GetColor(255, 255, 0);
 			}
 
 			//WayPointの位置に球を描画
-			DrawSphere3D(wpPos.ToDxlibVector(), 15.0f, 8, wpColor, wpColor, TRUE);
+			DrawSphere3D(wayPointPos.ToDxlibVector(), 15.0f, 8, wayPointColor, wayPointColor, TRUE);
 		}
 	}
 #endif
