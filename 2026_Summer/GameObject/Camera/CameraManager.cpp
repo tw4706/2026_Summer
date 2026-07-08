@@ -49,7 +49,6 @@ void CameraManager::ChangeCamera(const std::wstring& name)
 	currentCameraName_ = name;
 
 	pActiveCamera_->Init();
-
 }
 
 void CameraManager::Update(int stageModelHandle)

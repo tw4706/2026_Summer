@@ -53,6 +53,12 @@ public:
 	void SetCamera(CameraBase* camera) { pCamera_ = camera; }
 
 	/// <summary>
+	/// ˆÚ“®Šp“x‚Ìİ’è
+	/// </summary>
+	/// <param name="angle">Šp“x</param>
+	void SetMoveAngle(float angle) { moveAngle_ = angle; }
+
+	/// <summary>
 	/// “‚Ì“–‚½‚è”»’è‚Ì—LŒø/–³Œø‚ğİ’è‚·‚é
 	/// </summary>
 	void SetKatanaColliderEnabled(bool isEnabled);

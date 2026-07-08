@@ -14,6 +14,21 @@ namespace
 
 	//WayPointに到達したとみなす距離
 	const float kArriveThreshold = 50.0f;
+
+	//視線の高さ(Rayで障害物の判定を行うのに使用)
+	const float kEyeHeight = 50.0f;
+
+	//敵の視線の先に障害物があるかどうかをレイを飛ばして判定する
+	//hitしていなければ視線が通っている(=true)
+	bool HasLineOfSight(int stageModelHandle, const Vector3& from, const Vector3& to)
+	{
+		VECTOR start = VGet(from.x_, from.y_ + kEyeHeight, from.z_);
+		VECTOR end = VGet(to.x_, to.y_ + kEyeHeight, to.z_);
+
+		MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(stageModelHandle, -1, start, end);
+
+		return hit.HitFlag == false;
+	}
 }
 
 
@@ -57,8 +72,11 @@ void EnemyStateIdle::Update()
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
 
-	//索敵範囲かつまだ当たっていなかったら
-	if (PlayerSearchDistance(searchRadius_))
+	Vector3 enemyPos = enemy->GetPos();
+	Vector3 playerPos = enemy->GetPlayerPos();
+	bool hasLineOfSight = HasLineOfSight(enemy->GetStageModelHandle(), enemyPos, playerPos);
+
+	if (PlayerSearchDistance(searchRadius_) && hasLineOfSight)
 	{
 		//Run状態へ遷移
 		auto nextState = std::make_shared<EnemyStateRun>(pEnemy_, searchRadius_);
@@ -75,8 +93,6 @@ void EnemyStateIdle::Update()
 	int targetId = enemy->nextWayPointId_;
 	const WayPointLoader::WayPoint* pTargetWp = pLoader_->FindWayPointById(wayPoints, targetId);
 	if (!pTargetWp) return;
-
-	Vector3 enemyPos = enemy->GetPos();
 
 	//デバッグ用に目標座標のセット
 	enemy->debugNextPos_ = pTargetWp->pos;

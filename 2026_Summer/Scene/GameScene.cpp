@@ -102,8 +102,6 @@ void GameScene::Init()
 	{
 		auto enemies = pEnemyManager_->SpawnEnemyArea(areaId);
 
-		OutputDebugStringA(("area:" + std::to_string(areaId) + " spawned:" + std::to_string(enemies.size()) + "\n").c_str());
-
 		for (auto& enemy : enemies)
 		{
 			enemy->SetPlayer(pPlayer_);
@@ -114,7 +112,6 @@ void GameScene::Init()
 
 	//カメラマネージャーの更新
 	pCameraManager_->Update(pStage_->GetHandle());
-
 }
 
 void GameScene::Update()

@@ -25,7 +25,7 @@ namespace
 	//視線の高さ(Rayで障害物の判定を行うのに使用)
 	const float kEyeHeight = 50.0f;
 
-	//2点間に障害物があるかどうかをRayで判定する
+	//敵の視線の先に障害物があるかどうかをレイを飛ばして判定する
 	//hitしていなければ視線が通っている(=true)
 	bool HasLineOfSight(int stageModelHandle, const Vector3& from, const Vector3& to)
 	{
@@ -34,7 +34,7 @@ namespace
 
 		MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(stageModelHandle, -1, start, end);
 
-		return hit.HitFlag == FALSE;
+		return hit.HitFlag == false;
 	}
 }
 
@@ -64,22 +64,20 @@ void EnemyStateRun::Update()
 		enemy->ResetHitFlag();
 	}
 
+	Vector3 enemyPos = enemy->GetPos();
+	Vector3 playerPos = enemy->GetPlayerPos();
+
+	//プレイヤーへ視線が通っているかどうかを判定
+	bool hasLineOfSight = HasLineOfSight(enemy->GetStageModelHandle(), enemyPos, playerPos);
+
 	//索敵の範囲に入ってなかったら
-	if (PlayerSearchDistance(kDebugSearchRadius) == false && !enemy->IsHit())
+	if ((PlayerSearchDistance(searchRadius_) == false || !hasLineOfSight) && !enemy->IsHit())
 	{
 		auto nextState = std::make_shared<EnemyStateReturn>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);
 		return;
 	}
-
-	//敵とプレイヤーの位置を取得
-	Vector3 enemyPos = enemy->GetPos();
-	Vector3 playerPos = enemy->GetPlayerPos();
-
-	//移動先の決定
-	//プレイヤーへの視線が通っているかどうかを判定
-	bool hasLineOfSight = HasLineOfSight(enemy->GetStageModelHandle(), enemyPos, playerPos);
-
+	//ターゲット座標
 	Vector3 targetPos;
 
 	if (hasLineOfSight)
@@ -91,25 +89,25 @@ void EnemyStateRun::Update()
 		}
 		targetPos = playerPos;
 	}
-	else
-	{
-		//視線が遮られている場合は経路探索を使う
-		//まだ経路を持っていない場合は新しく探索をする
-		if (!enemy->pathFollower_.HasPath())
-		{
-			std::vector<Vector3> path = enemy->pathFinder_.FindPath(enemyPos, playerPos);
-			enemy->pathFollower_.SetPath(path);
-		}
+	//else
+	//{
+	//	//視線が遮られている場合は経路探索を使う
+	//	//まだ経路を持っていない場合は新しく探索をする
+	//	if (!enemy->pathFollower_.HasPath())
+	//	{
+	//		std::vector<Vector3> path = enemy->pathFinder_.FindPath(enemyPos, playerPos);
+	//		enemy->pathFollower_.SetPath(path);
+	//	}
 
-		//経路が見つからなかった場合は、その場で待機
-		if (!enemy->pathFollower_.HasPath())
-		{
-			return;
-		}
+	//	//経路が見つからなかった場合は、その場で待機
+	//	if (!enemy->pathFollower_.HasPath())
+	//	{
+	//		return;
+	//	}
 
-		//次にいく経路上の目標を取得する
-		targetPos = enemy->pathFollower_.GetCurrentTarget(enemyPos);
-	}
+	//	//次にいく経路上の目標を取得する
+	//	targetPos = enemy->pathFollower_.GetCurrentTarget(enemyPos);
+	//}
 	//ターゲットへのベクトル
 	Vector3 toTarget = targetPos - enemyPos;
 
