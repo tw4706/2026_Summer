@@ -39,7 +39,7 @@ void LockOnCamera::Update(int stageModelHandle)
 	directionVec = directionVec.Normalize();
 
 	//ロックオン時のカメラのターゲット座標の計算
-	Vector3 targetPos = playerCameraPos + (directionVec * 300.0f) + Vector3{ 0.0f,50.0f,0.0f };
+	Vector3 targetPos = playerCameraPos + (directionVec * 300.0f) + Vector3{ 0.0f,100.0f,50.0f };
 
 	//線形補間を行い、滑らかな追従を行う
 	pos_ = Vector3::Lerp(pos_, targetPos, 0.3f);

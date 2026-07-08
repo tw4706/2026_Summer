@@ -76,6 +76,10 @@ void PlayerStateGuard::Update()
 
 	//移動速度を計算
 	Vector3 moveVec = playerDir * kMoveSpeed;
+
+	//速度を適用
+	player->SetVelocity(moveVec);
+
 	//移動後の位置を計算
 	Vector3 nextPos = player->GetPos() + moveVec;
 	//位置の適用

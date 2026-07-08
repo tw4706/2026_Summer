@@ -89,25 +89,6 @@ void EnemyStateRun::Update()
 		}
 		targetPos = playerPos;
 	}
-	//else
-	//{
-	//	//視線が遮られている場合は経路探索を使う
-	//	//まだ経路を持っていない場合は新しく探索をする
-	//	if (!enemy->pathFollower_.HasPath())
-	//	{
-	//		std::vector<Vector3> path = enemy->pathFinder_.FindPath(enemyPos, playerPos);
-	//		enemy->pathFollower_.SetPath(path);
-	//	}
-
-	//	//経路が見つからなかった場合は、その場で待機
-	//	if (!enemy->pathFollower_.HasPath())
-	//	{
-	//		return;
-	//	}
-
-	//	//次にいく経路上の目標を取得する
-	//	targetPos = enemy->pathFollower_.GetCurrentTarget(enemyPos);
-	//}
 	//ターゲットへのベクトル
 	Vector3 toTarget = targetPos - enemyPos;
 
