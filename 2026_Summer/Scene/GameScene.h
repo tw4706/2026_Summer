@@ -9,10 +9,10 @@ class GameObject;
 class EnemyManager;
 class CameraManager;
 class CollisionManager;
-class GameScene:public Scene
+class GameScene :public Scene
 {
 public:
-	GameScene(SceneManager&sceneManager);
+	GameScene(SceneManager& sceneManager);
 	~GameScene();
 
 	void Init()override;

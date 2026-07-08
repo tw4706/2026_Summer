@@ -11,13 +11,13 @@ namespace
 	const float kMoveSpeed = 0.5f;
 
 	//経過時間
-	const float kDeltaTime = 1.0f / 60.0f;
+	//const float kDeltaTime = 1.0f / 60.0f;
 
 	//線形補間の割合
 	const float kRotateLerpRate = 0.1f;
 
 	//復帰目標地点に到達したとみなす距離
-	const float kArriveThreshold = 10.0f;
+	const float kArriveThreshold = 30.0f;
 
 	//線分ab上で、posに最も近い点を求める
 	Vector3 ClosestPointOnSegment(const Vector3& a, const Vector3& b, const Vector3& pos)
@@ -53,7 +53,7 @@ void EnemyStateReturn::Enter()
 	if (!enemy)return;
 
 	//状態遷移
-	enemy->ChangeAnimation(AnimationState::Run);
+	enemy->ChangeAnimation(AnimationState::Walk);
 
 	Vector3 enemyPos = enemy->GetPos();
 
@@ -133,7 +133,7 @@ void EnemyStateReturn::Update()
 	toTarget.Normalize();
 
 	//移動速度を設定
-	Vector3 moveVec = { toTarget.x_ * kMoveSpeed * kDeltaTime, 0.0f, toTarget.z_ * kMoveSpeed * kDeltaTime };
+	Vector3 moveVec = { toTarget.x_ * kMoveSpeed, 0.0f, toTarget.z_ * kMoveSpeed };
 	//速度の適用
 	enemy->SetVelocity(moveVec);
 	//計算した位置を適用

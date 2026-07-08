@@ -17,7 +17,7 @@ void Character::ChangeState(std::shared_ptr<CharacterStateBase> pNextState)
 {
 	if (!pNextState) return;
 
-	//ステートが残っている際はそのステートのExitを読んで終了する
+	//ステートが残っている際はそのステートのExitを呼ぶ
 	if (pCurrentState_)
 	{
 		pCurrentState_->Exit();

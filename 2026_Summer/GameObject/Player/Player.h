@@ -69,11 +69,6 @@ public:
 	/// <returns>刀のポインタ</returns>
 	Katana* GetKatana() const { return pKatana_.get(); }
 
-	/// <summary>
-	/// 死んだときに呼ばれる処理
-	/// </summary>
-	void Death() { isDead_ = true; }
-
 private:
 	float moveAngle_;						//プレイヤーの向く角度
 	int handFrameIndex_;					//右手の刀を持つ手のフレームインデックス

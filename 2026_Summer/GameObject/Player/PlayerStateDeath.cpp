@@ -28,11 +28,13 @@ void PlayerStateDeath::Update()
 	auto player = pPlayer_.lock();
 	if (!player)return;
 
-	//アニメーションが終了したら死ぬ
+	//アニメーションが終了したら
 	if (player->IsAnimationEnd())
 	{
-		player->Death();
+		//プレイヤーを消す
+		player->Destory();
 	}
+
 }
 
 void PlayerStateDeath::Exit()

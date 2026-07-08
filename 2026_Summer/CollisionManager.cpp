@@ -132,9 +132,9 @@ bool CollisionManager::CheckSphereVsCapsule(Collidable& pSphereObj, Collidable& 
 	if (!&pSphereObj || !&pCapsuleObj) return false;
 
 	SphereCollider* pSphere = nullptr;
-	for (const auto& col : pSphereObj.GetColliders()) 
+	for (const auto& col : pSphereObj.GetColliders())
 	{
-		if (col->GetType() == ColliderType::Sphere) 
+		if (col->GetType() == ColliderType::Sphere)
 		{
 			pSphere = static_cast<SphereCollider*>(col.get());
 			break;
@@ -143,9 +143,9 @@ bool CollisionManager::CheckSphereVsCapsule(Collidable& pSphereObj, Collidable& 
 	if (!pSphere) return false;
 
 	CapsuleCollider* pCap = nullptr;
-	for (const auto& col : pCapsuleObj.GetColliders()) 
+	for (const auto& col : pCapsuleObj.GetColliders())
 	{
-		if (col->GetType() == ColliderType::Capsule) 
+		if (col->GetType() == ColliderType::Capsule)
 		{
 			pCap = static_cast<CapsuleCollider*>(col.get());
 			break;
@@ -194,19 +194,19 @@ bool CollisionManager::CheckSphereVsSphere(Collidable& pSphereObjA, Collidable& 
 	if (!&pSphereObjA || !&pSphereObjB) return false;
 
 	SphereCollider* pSphereA = nullptr;
-	for (const auto& col : pSphereObjA.GetColliders()) 
+	for (const auto& col : pSphereObjA.GetColliders())
 	{
-		if (col->GetType() == ColliderType::Sphere) 
-		{ 
+		if (col->GetType() == ColliderType::Sphere)
+		{
 			pSphereA = static_cast<SphereCollider*>(col.get()); break;
 		}
 	}
 	SphereCollider* pSphereB = nullptr;
-	for (const auto& col : pSphereObjB.GetColliders()) 
+	for (const auto& col : pSphereObjB.GetColliders())
 	{
 		if (col->GetType() == ColliderType::Sphere)
 		{
-			pSphereB = static_cast<SphereCollider*>(col.get()); break; 
+			pSphereB = static_cast<SphereCollider*>(col.get()); break;
 		}
 	}
 	if (!pSphereA || !pSphereB) return false;
@@ -365,18 +365,14 @@ bool CollisionManager::CheckCapsuleVsPolygon(Collidable& pCapsuleObj, Collidable
 	MV1_COLL_RESULT_POLY_DIM result = MV1CollCheck_Capsule(
 		modelHandle, -1,
 		capA.ToDxlibVector(),
-		capB.ToDxlibVector(),
-		capRadius);
+		capB.ToDxlibVector(),capRadius);
 
+	//当たっているポリゴンが一つ以上あるならtrue,そうでないならfalse
 	bool isHit = (result.HitNum > 0);
 
 	//もし当たっているポリゴンが1つでもあるなら
 	if (isHit)
 	{
-		//衝突処理
-		//pCapsuleObj.OnCollision(pPolygonObj);
-		//pPolygonObj.OnCollision(pCapsuleObj);
-
 		//押し戻し処理
 		//各ヒットポリゴンの法線方向に押し戻しを行う
 		Vector3 pos = pCapsuleObj.GetPos();
@@ -388,31 +384,37 @@ bool CollisionManager::CheckCapsuleVsPolygon(Collidable& pCapsuleObj, Collidable
 
 			//法線のY咆哮の傾きで床か壁かを判定する
 			//床の場合
-			if (normal.y_ > 0.1f)
+			if (normal.y_ > 0.5f)
 			{
 				float targetCapAY = poly.HitPosition.y + capRadius;
 				float diffY = targetCapAY - capA.y_;
-				pos.y_ += diffY;
-				capA.y_ += diffY;
-				capB.y_ += diffY;
+				if (diffY > 0.0f)
+				{
+					pos.y_ += diffY;
+					capA.y_ += diffY;
+					capB.y_ += diffY;
+				}
+
 				pCapsuleObj.SetIsGround(true);
 			}
 			//壁の場合
 			else
 			{
 				//壁の押し戻し
-				Vector3 norm(normal.x_, 0.0f, normal.z_);
+				Vector3 norm = { normal.x_, 0.0f, normal.z_ };
 				float normLen = norm.Length();
 				if (normLen < 0.0001f) continue;
 				norm = norm / normLen;
 
 				// 法線方向への移動量がめり込み量
 				Vector3 vel = pCapsuleObj.GetVelocity();
-				float moveAlongNormal = -(vel.Dot(norm));
-
-				if (moveAlongNormal > 0.0f)
+				float moveNormal = -(vel.Dot(norm));
+				
+				//法線があるなら
+				if (moveNormal > 0.0f)
 				{
-					Vector3 pushVec = norm * moveAlongNormal;
+					//法線方向に移動の速度を足す
+					Vector3 pushVec = norm * moveNormal;
 					pos += pushVec;
 					capA += pushVec;
 					capB += pushVec;
