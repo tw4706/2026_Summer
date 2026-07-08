@@ -74,3 +74,33 @@ void PlayerCamera::AddRotation(float yaw, float pitch)
 	pitch_ += pitch;
 	pitch_ = std::clamp(pitch_, -kLimitPitch, kLimitPitch);
 }
+
+void PlayerCamera::SetRotation(float yaw, float pitch)
+{
+	yaw_ = yaw;
+	pitch_ = pitch;
+
+	pitch_ = std::clamp(pitch_, -kLimitPitch, kLimitPitch);
+
+	currentYaw_ = yaw_;
+	currentPitch_ = pitch_;
+}
+
+void PlayerCamera::SetRotationToLockOn(const Vector3&lockOnPos, const Vector3& lockOnTarget)
+{
+	Vector3 cameraTarget = lockOnPos - lockOnTarget;
+
+	//XZ‚Ì‹——£‚ÌŒvŽZ
+	float length = sqrtf(cameraTarget.x_ * cameraTarget.x_ + cameraTarget.z_ * cameraTarget.z_);
+
+	float currentYaw = 0.0f;
+	float currentPitch = 0.0f;
+
+	if (length > 0.0001f)
+	{
+		currentYaw = atan2f(cameraTarget.x_, cameraTarget.z_);
+		currentPitch = atan2f(-cameraTarget.y_, length);
+	}
+
+	SetRotation(currentYaw, currentPitch);
+}

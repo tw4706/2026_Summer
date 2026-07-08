@@ -19,6 +19,15 @@ public:
     /// <param name="pitch">ピッチ角</param>
     void AddRotation(float yaw, float pitch)override;
 
+    void SetRotation(float yaw, float pitch);
+
+    /// <summary>
+    /// 回転角度の設定
+    /// </summary>
+    /// <param name="yaw">ヨー角</param>
+    /// <param name="pitch">ピッチ角</param>
+    void SetRotationToLockOn(const Vector3& lockOnPos, const Vector3& lockOnTarget);
+
     /// <summary>
     /// プレイヤーの設定
     /// </summary>

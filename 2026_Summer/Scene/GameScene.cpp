@@ -194,18 +194,31 @@ void GameScene::NormalUpdate()
 		//現在アクティブなカメラがロックオンカメラの場合
 		if (pCameraManager_->GetActiveCameraName() == L"LockOnCamera")
 		{
+			auto activeCam = pCameraManager_->GetActiveCamera();
+			auto playerCam = pCameraManager_->GetCamera(L"PlayerCamera");
+
+			auto lockOnCamera = std::dynamic_pointer_cast<LockOnCamera>(activeCam);
+			auto playerCamera = std::dynamic_pointer_cast<PlayerCamera>(playerCam);
+
+			// 両方のキャストに成功したら、角度の同期関数を呼び出す
+			if (lockOnCamera && playerCamera)
+			{
+				playerCamera->SetRotationToLockOn(lockOnCamera->GetPos(), lockOnCamera->GetCameraTarget());
+			}
+
 			//通常のプレイヤーカメラに戻す
 			//(ロックオンはすでに行っている状態なので)
 			pCameraManager_->ChangeCamera(L"PlayerCamera");
 		}
 		else
 		{
-			//最短距離を保存する変数
-			float closestDistanceSq = 999999999.0f;
+			//floatの最大値を取ってロックオンの範囲を決める
+			float closestDistanceSq = FLT_MAX;
 
 			//一番近い敵のポインタを保存するポインタ
 			std::shared_ptr<EnemyBase>closestEnemy;
 
+			//敵分ループを回す
 			for (auto& enemy : pEnemyManager_->GetEnemies())
 			{
 				if (enemy->IsDead())continue;
@@ -219,15 +232,16 @@ void GameScene::NormalUpdate()
 				//今見つけている敵より距離が短い場合
 				if (distSq < closestDistanceSq)
 				{
-					closestDistanceSq = distSq;//最短距離を更新
-					closestEnemy = enemy;//一番近い敵を更新
+					closestDistanceSq = distSq;	//一番近い距離を更新
+					closestEnemy = enemy;		//一番近い敵を更新
 				}
 			}
 
 			//ロックオンできる敵がいるなら
 			if (closestEnemy != nullptr)
 			{
-				//マネージャーからカメラを取り出す
+				//カメラ
+				// マネージャーからカメラを取り出す
 				auto camera=pCameraManager_->GetCamera(L"LockOnCamera");
 
 				//ロックオンカメラの型にキャスト
@@ -239,6 +253,7 @@ void GameScene::NormalUpdate()
 					lockOnCamera->SetTargetEnemy(closestEnemy);
 					lockOnCamera->SetPlayer(pPlayer_);
 
+					//カメラをロックオンカメラに切り替える
 					pCameraManager_->ChangeCamera(L"LockOnCamera");
 				}
 			}

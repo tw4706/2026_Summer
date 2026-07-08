@@ -44,27 +44,6 @@ void LockOnCamera::Update(int stageModelHandle)
 	//線形補間を行い、滑らかな追従を行う
 	pos_ = Vector3::Lerp(pos_, targetPos, 0.3f);
 
-	//プレイヤーの座標を取得
-	Vector3 playerPos = player->GetPos();
-
-	//プレイヤーから敵までのベクトルを計算
-	Vector3 toEnemyVec = enemyTargetPos - playerPos;
-	//Yをoにする
-	toEnemyVec.y_ = 0.0f;
-
-	//移動入力があった場合
-	if (toEnemyVec.LengthSq() > 0.0001f)
-	{
-		//正規化
-		toEnemyVec.Normalize();
-
-		float targetAngle = atan2f(toEnemyVec.x_, -toEnemyVec.z_);
-
-		//向きの適用
-		player->SetMoveAngle(targetAngle);
-
-	}
-
 	//カメラとステージの消灯判定を行う
 	pos_ = CheckCollCameraToStage(stageModelHandle, playerCameraPos, pos_);
 
