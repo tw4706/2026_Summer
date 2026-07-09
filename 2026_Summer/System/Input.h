@@ -12,6 +12,7 @@ enum class PeripheralType
 {
 	keyboard,
 	pad1,
+	padXInput,
 };
 
 struct InputState

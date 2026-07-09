@@ -37,10 +37,10 @@ void LockOnCamera::Update(int stageModelHandle)
 	directionVec.y_ = 0.0f;
 
 	//正規化して視線方向のベクトルを作成
-	const float kMinDirLengthSq = 1.0f; //必要に応じて調整
+	const float kMinDirLengthSq = 1.0f;
 	if (directionVec.LengthSq() < kMinDirLengthSq)
 	{
-		//前回の有効な向きを保存
+		//前回の向きを保存
 		directionVec = lastDirectionVec_;
 	}
 	else

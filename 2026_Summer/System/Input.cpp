@@ -10,26 +10,36 @@ Input& Input::GetInstance()
 Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 {
 	inputTable_["up"] = { {PeripheralType::keyboard,KEY_INPUT_UP},
-						{PeripheralType::pad1,XINPUT_BUTTON_DPAD_DOWN} };
+						{PeripheralType::pad1,PAD_INPUT_UP},
+						{PeripheralType::padXInput,XINPUT_BUTTON_DPAD_DOWN} };
 	inputTable_["down"] = { {PeripheralType::keyboard,KEY_INPUT_DOWN},
-						{PeripheralType::pad1,XINPUT_BUTTON_DPAD_UP} };
+						{PeripheralType::pad1,PAD_INPUT_DOWN},
+						{PeripheralType::padXInput,XINPUT_BUTTON_DPAD_UP} };
 	inputTable_["left"] = { {PeripheralType::keyboard,KEY_INPUT_LEFT},
-						{PeripheralType::pad1,XINPUT_BUTTON_DPAD_LEFT} };
+						{PeripheralType::pad1,PAD_INPUT_LEFT},
+						{PeripheralType::padXInput,XINPUT_BUTTON_DPAD_LEFT} };
 	inputTable_["right"] = { {PeripheralType::keyboard,KEY_INPUT_RIGHT},
-						{PeripheralType::pad1,XINPUT_BUTTON_DPAD_RIGHT} };
+						{PeripheralType::pad1,PAD_INPUT_RIGHT},
+						{PeripheralType::padXInput,XINPUT_BUTTON_DPAD_RIGHT} };
 
 	inputTable_["lockOn"] = { {PeripheralType::keyboard,KEY_INPUT_L},
-						{PeripheralType::pad1,XINPUT_BUTTON_RIGHT_THUMB} };
+						{PeripheralType::pad1,PAD_INPUT_8},
+						{PeripheralType::padXInput,XINPUT_BUTTON_RIGHT_THUMB} };
 	inputTable_["attack"] = { {PeripheralType::keyboard,KEY_INPUT_Z},
-						{PeripheralType::pad1,XINPUT_BUTTON_RIGHT_SHOULDER} };
+						{PeripheralType::pad1,PAD_INPUT_5},
+						{PeripheralType::padXInput,XINPUT_BUTTON_RIGHT_SHOULDER} };
 	inputTable_["guard"] = { {PeripheralType::keyboard,KEY_INPUT_G},
-						{PeripheralType::pad1,XINPUT_BUTTON_LEFT_SHOULDER} };
+						{PeripheralType::pad1,PAD_INPUT_4},
+						{PeripheralType::padXInput,XINPUT_BUTTON_LEFT_SHOULDER} };
 	inputTable_["dodge"] = { {PeripheralType::keyboard,KEY_INPUT_D},
-						{PeripheralType::pad1,XINPUT_BUTTON_X} };
+						{PeripheralType::pad1,PAD_INPUT_C},
+						{PeripheralType::padXInput,XINPUT_BUTTON_X} };
 	inputTable_["jump"] = { {PeripheralType::keyboard,KEY_INPUT_SPACE},
-						{PeripheralType::pad1,XINPUT_BUTTON_A} };
+						{PeripheralType::pad1,PAD_INPUT_A},
+						{PeripheralType::padXInput,XINPUT_BUTTON_A} };
 	inputTable_["next"] = { {PeripheralType::keyboard,KEY_INPUT_SPACE},
-						{PeripheralType::pad1,XINPUT_BUTTON_A} };
+						{PeripheralType::pad1,PAD_INPUT_A},
+						{PeripheralType::padXInput,XINPUT_BUTTON_A} };
 
 	//ïœÇ»ílÇ™ì¸ÇÁÇ»Ç¢ÇÊÇ§Ç…ògÇäJÇØÇƒÇ®Ç≠
 	for (const auto& input : inputTable_)
@@ -43,6 +53,7 @@ void Input::Update()
 {
 	//ì¸óÕèÓïÒÇÃéÊìæ
 	char keyState[256];
+	int padState = GetJoypadInputState(DX_INPUT_PAD1);
 	GetHitKeyStateAll(keyState);
 	lastInputData_ = inputData_;
 
@@ -64,6 +75,9 @@ void Input::Update()
 				input = keyState[state.id];
 				break;
 			case PeripheralType::pad1:
+				input = (padState & state.id);
+				break;
+			case PeripheralType::padXInput:
 				if (isXInputConnected_)
 				{
 					input = (xInputState_.Buttons[state.id] != 0);
