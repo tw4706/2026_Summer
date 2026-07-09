@@ -44,13 +44,10 @@ void PlayerStateJump::Update()
 	if (!pPlayer) return;
 
 	//空中での移動制御
-	Vector3 inputDir = { 0.0f, 0.0f, 0.0f };
-	if (Input::GetInstance().IsPressed("up"))    inputDir.z_ += 1.0f;
-	if (Input::GetInstance().IsPressed("down"))  inputDir.z_ -= 1.0f;
-	if (Input::GetInstance().IsPressed("left"))  inputDir.x_ -= 1.0f;
-	if (Input::GetInstance().IsPressed("right")) inputDir.x_ += 1.0f;
+	//スティック入力とキーボード入力を統合して取得
+	Vector3 inputDir = Input::GetInstance().GetRawMoveInput();
+	bool isKeyboardMoving = Input::GetInstance().HasMoveInput();
 
-	bool isKeyboardMoving = (fabs(inputDir.x_) > 0.01f || fabs(inputDir.z_) > 0.01f);
 	Vector3 currentVel = pPlayer->GetVelocity();
 	float currentAngle = pPlayer->moveAngle_;
 

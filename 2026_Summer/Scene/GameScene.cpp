@@ -209,6 +209,9 @@ void GameScene::NormalUpdate()
 			//通常のプレイヤーカメラに戻す
 			//(ロックオンはすでに行っている状態なので)
 			pCameraManager_->ChangeCamera(L"PlayerCamera");
+
+			//ロックオンを解除
+			pPlayer_->SetLockOn(false);
 		}
 		else
 		{
@@ -255,6 +258,10 @@ void GameScene::NormalUpdate()
 
 					//カメラをロックオンカメラに切り替える
 					pCameraManager_->ChangeCamera(L"LockOnCamera");
+
+					//ロックオン開始
+					pPlayer_->SetLockOn(true);
+					pPlayer_->SetLockOnEnemy(closestEnemy);
 				}
 			}
 		}

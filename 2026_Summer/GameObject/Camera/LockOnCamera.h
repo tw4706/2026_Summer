@@ -16,6 +16,8 @@ public:
 	void SetTargetEnemy(std::weak_ptr<EnemyBase>pEnemy) { pEnemy_ = pEnemy; }
 
 private:
+	Vector3 lastDirectionVec_;
+
 	std::weak_ptr<Player>pPlayer_;//プレイヤーのポインタ
 	std::weak_ptr<EnemyBase>pEnemy_;//敵のポインタ
 };

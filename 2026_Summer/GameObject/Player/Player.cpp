@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Katana.h"
 #include "Input.h"
+#include "Game.h"
 #include "Camera/CameraBase.h"
 #include "Math/Matrix4x4.h"
 #include "PlayerStateBase.h"
@@ -53,6 +54,11 @@ void Player::Init()
 
 	//HPの初期化
 	hp_ = kMaxHP;
+
+	//画像のロード
+	reticleUIHandle_ = LoadGraph(L"data/UI/reticle.png");
+	int reticleX, reticleY;
+	GetGraphSize(reticleUIHandle_, &reticleX, &reticleY);
 
 	//モデルのロード
 	model_.Load(L"data/MV1/Player.mv1");
@@ -139,6 +145,38 @@ void Player::Draw()
 		pKatana_->Draw();
 	}
 
+	//ロックオンのレティクルUI
+	if (IsLockOn())
+	{
+		//ターゲットのロックができているなら
+		if (auto target = pLockOnEnemy_.lock())
+		{
+			//始点(始点はプレイヤーの位置から高さをプラスしている)
+			Vector3 startPos = pos_;
+			startPos.y_ += 80.0f;
+
+			//終点(終点は敵の位置から高さをプラスしている)
+			Vector3 endPos = target->GetPos();
+			endPos.y_ += 80.0f;
+
+			//DxLibのVECTOR型に変換
+			VECTOR start = startPos.ToDxlibVector();
+			VECTOR end = endPos.ToDxlibVector();
+
+			// ロックオン中は「黄色」の太い線でレイを描画
+			unsigned int rayColor = GetColor(255, 255, 0);
+			DrawLine3D(start, end, rayColor);
+
+			VECTOR reticleScreenPos = ConvWorldPosToScreenPos(end);
+
+			//レティクルUIの描画
+			DrawRotaGraph3(reticleScreenPos.x - 100.0f, reticleScreenPos.y - 80.0f,
+				0, 0,
+				0.2f, 0.2f,
+				0.0f, reticleUIHandle_, true);
+		}
+	}
+
 #ifdef _DEBUG
 	if (!colliders_.empty())
 	{
@@ -153,14 +191,14 @@ void Player::Draw()
 			unsigned int lineColor = isHit_ ? GetColor(255, 0, 0) : GetColor(0, 255, 255);
 
 			//描画
-			DrawCapsule3D(top, bottom, pCap->GetRadius(), 8, lineColor, GetColor(0, 0, 0), FALSE);
+			DrawCapsule3D(top, bottom, pCap->GetRadius(), 8, lineColor, GetColor(0, 0, 0), false);
 		}
 	}
 
 	//HPのデバッグ表示
 	DrawFormatString(100, 150, 0xffffff, L"PlayerHP:%d", hp_);
 
-	DrawFormatString(100, 100, 0x00ffff, L"PlayerPosX : %.2f,PlayerPosY : %.2f,PlauerPosZ : %.2f", pos_.x_, pos_.y_, pos_.z_);
+	DrawFormatString(100, 100, 0x00ffff, L"PlayerPosX : %.2f,PlayerPosY : %.2f,PlayerPosZ : %.2f", pos_.x_, pos_.y_, pos_.z_);
 #endif
 }
 

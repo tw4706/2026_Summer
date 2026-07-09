@@ -14,11 +14,7 @@ namespace
 }
 
 PlayerCamera::PlayerCamera() :
-	CameraBase(),
-	yaw_(0.0f),
-	pitch_(0.0f),
-	currentYaw_(0.0f),
-	currentPitch_(0.0f)
+	CameraBase()
 {
 }
 

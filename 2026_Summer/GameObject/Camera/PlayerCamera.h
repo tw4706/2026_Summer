@@ -19,6 +19,11 @@ public:
     /// <param name="pitch">ピッチ角</param>
     void AddRotation(float yaw, float pitch)override;
 
+    /// <summary>
+    /// 回転のセット
+    /// </summary>
+    /// <param name="yaw">ヨー角</param>
+    /// <param name="pitch"ピッチ角></param>
     void SetRotation(float yaw, float pitch);
 
     /// <summary>
@@ -33,18 +38,7 @@ public:
     /// </summary>
     /// <param name="player">プレイヤーのポインタ</param>
     void SetPlayer(std::shared_ptr<Player> player) { pPlayer_ = player; }
-
-    /// <summary>
-    /// ヨー角の取得
-    /// </summary>
-    /// <returns>ヨー角</returns>
-    virtual float GetYaw() const override { return yaw_; }
-
 private:
     std::shared_ptr<Player> pPlayer_;
-    float yaw_;             //ヨー角
-    float pitch_;           //ピッチ角
-    float currentYaw_;      //現在のヨー角
-    float currentPitch_;    //現在のピッチ角
 };
 

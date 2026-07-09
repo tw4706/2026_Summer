@@ -15,8 +15,11 @@ public:
     virtual void Exit() = 0;
 
 protected:
+    /// <summary>
+    /// ƒJƒƒ‰‚ÌŒ©‚Ä‚¢‚éˆÊ’u‚ÆŒü‚«‚ğæ“¾‚·‚éŠÖ”
+    /// </summary>
+    /// <returns>ƒJƒƒ‰‚ÌŒü‚«‚ğ•Ô‚·</returns>
     Vector3 GetCameraLookMoveDirection()const;
-
 protected:
     std::weak_ptr<Player> pPlayer_;
     CameraBase& pCamera_;

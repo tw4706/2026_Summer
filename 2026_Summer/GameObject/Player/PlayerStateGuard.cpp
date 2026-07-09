@@ -7,9 +7,6 @@
 
 namespace
 {
-	//ガードのアニメーション
-	const std::wstring_view kPlayerGuard = L"Player|Guard";
-
 	//左右のガードアニメーション
 	const std::wstring_view kPlayerLeftGuard = L"Player|LeftGuard";
 	const std::wstring_view kPlayerRightGuard = L"Player|RightGuard";
@@ -28,7 +25,7 @@ void PlayerStateGuard::Enter()
 	auto player = pPlayer_.lock();
 	if (!player) return;
 
-	player->ChangeAnimation(AnimationState::Guard, kPlayerGuard.data());
+	player->ChangeAnimation(AnimationState::LeftGuard, kPlayerLeftGuard.data());
 	player->isGuarding_ = true;
 }
 
@@ -47,13 +44,6 @@ void PlayerStateGuard::Update()
 	{
 		auto nextState = std::make_shared<PlayerStateIdle>(pPlayer_, pCamera_);
 		player->ChangeState(nextState);
-		return;
-	}
-
-	//移動の入力がない場合は普通のGuard状態に遷移
-	if (playerDir.LengthSq() <= 0.00001f)
-	{
-		player->ChangeAnimation(AnimationState::Guard,kPlayerGuard.data());
 		return;
 	}
 

@@ -47,7 +47,7 @@ public:
 	/// ヨー角の取得
 	/// </summary>
 	/// <returns>ヨー角(Z軸(上下)の回転角)</returns>
-	virtual float GetYaw() const { return 0.0f; }
+	virtual float GetYaw() const { return yaw_; }
 
 	/// <summary>
 	/// カメラとステージの当たり判定
@@ -81,6 +81,10 @@ protected:
 	Vector3 cameraTarget_; //注視点
 	float fov_;            //視野角
 	float fovTarget_;      //ターゲットの視野角
+	float yaw_;             //ヨー角
+	float pitch_;           //ピッチ角
+	float currentYaw_;      //現在のヨー角
+	float currentPitch_;    //現在のピッチ角
 
 	float shakeTime_;      //シェイク時間
 	float shakePower_;     //シェイクの強さ

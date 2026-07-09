@@ -63,9 +63,7 @@ void PlayerStateRun::Update()
 
 	//プレイヤーの方向ベクトルを取得
 	Vector3 playerDir = GetCameraLookMoveDirection();
-#ifdef _DEBUG
-	DrawFormatString(0, 200, GetColor(255, 255, 255), L"playerDir: %.2f, %.2f, %.2f", playerDir.x_, playerDir.y_, playerDir.z_);
-#endif
+
 	//現在の速度・向きの取得
 	Vector3 currentVel = pPlayer->GetVelocity();
 	float currentAngle = pPlayer->moveAngle_;
@@ -93,8 +91,11 @@ void PlayerStateRun::Update()
 	pPlayer->AddPosition();
 
 	//カメラの回転処理
-	Vector3 stickR = Input::GetInstance().GetStickRight();
-	pCamera_.AddRotation(-stickR.x_ * kCameraSpeed, -stickR.z_ * kCameraSpeed);
+	if (!pPlayer->IsLockOn())
+	{
+		Vector3 stickR = Input::GetInstance().GetStickRight();
+		pCamera_.AddRotation(-stickR.x_ * kCameraSpeed, -stickR.z_ * kCameraSpeed);
+	}
 
 	//ジャンプボタンが押されたらジャンプへ
 	if (Input::GetInstance().IsTriggered("jump"))

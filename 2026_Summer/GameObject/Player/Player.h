@@ -5,6 +5,7 @@
 
 class Input;
 class Katana;
+class EnemyBase;
 class CameraBase;
 class CharacterStateBase;
 class Player :public Character
@@ -69,14 +70,37 @@ public:
 	/// <returns>刀のポインタ</returns>
 	Katana* GetKatana() const { return pKatana_.get(); }
 
+	/// <summary>
+	/// ロックオン中かどうかの取得
+	/// </summary>
+	bool IsLockOn() const { return isLockOn_; }
+
+	/// <summary>
+	/// ロックオン状態の設定
+	/// </summary>
+	void SetLockOn(bool isLockOn) { isLockOn_ = isLockOn; }
+
+	/// <summary>
+	/// ロックオン対象の敵の取得
+	/// </summary>
+	std::weak_ptr<EnemyBase> GetLockOnEnemy() const { return pLockOnEnemy_; }
+
+	/// <summary>
+	/// ロックオン対象の敵の設定
+	/// </summary>
+	void SetLockOnEnemy(std::weak_ptr<EnemyBase> enemy) { pLockOnEnemy_ = enemy; }
+
 private:
 	float moveAngle_;						//プレイヤーの向く角度
 	int handFrameIndex_;					//右手の刀を持つ手のフレームインデックス
 	float jumpPower_ = 18.0f;				//ジャンプ力
 	bool isInvincible_ = false;				//無敵中かどうか
 	bool isGuarding_ = false;				//ガード中かどうか
+	bool isLockOn_ = false;					//ロックオンしているかどうか
+	int reticleUIHandle_;						//レティクルUIハンドル
 
-	CameraBase* pCamera_ = nullptr;		//カメラ
+	CameraBase* pCamera_ = nullptr;			//カメラ
+	std::weak_ptr<EnemyBase>pLockOnEnemy_;	//敵のポインタ
 	std::unique_ptr<Katana> pKatana_;		//刀
 };
 

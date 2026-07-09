@@ -19,6 +19,10 @@ CameraBase::CameraBase():
     cameraTarget_(0.0f, 0.0f, 0.0f),
     fov_(DX_PI_F / 3.0f),
     fovTarget_(DX_PI_F / 3.0f),
+    yaw_(0.0f),
+    pitch_(0.0f),
+    currentYaw_(0.0f),
+    currentPitch_(0.0f),
     shakeTime_(0.0f),
     shakePower_(0.0f)
 {

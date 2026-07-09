@@ -12,6 +12,7 @@ LockOnCamera::~LockOnCamera()
 
 void LockOnCamera::Init()
 {
+	lastDirectionVec_ = { 0.0f,0.0f,0.0f };
 }
 
 void LockOnCamera::Update(int stageModelHandle)
@@ -36,7 +37,17 @@ void LockOnCamera::Update(int stageModelHandle)
 	directionVec.y_ = 0.0f;
 
 	//正規化して視線方向のベクトルを作成
-	directionVec = directionVec.Normalize();
+	const float kMinDirLengthSq = 1.0f; //必要に応じて調整
+	if (directionVec.LengthSq() < kMinDirLengthSq)
+	{
+		//前回の有効な向きを保存
+		directionVec = lastDirectionVec_;
+	}
+	else
+	{
+		directionVec = directionVec.Normalize();
+		lastDirectionVec_ = directionVec; //保存
+	}
 
 	//ロックオン時のカメラのターゲット座標の計算
 	Vector3 targetPos = playerCameraPos + (directionVec * 300.0f) + Vector3{ 0.0f,100.0f,50.0f };

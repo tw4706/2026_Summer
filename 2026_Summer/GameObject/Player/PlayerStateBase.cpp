@@ -22,36 +22,28 @@ Vector3 PlayerStateBase::GetCameraLookMoveDirection() const
 	if (!pPlayer) return { 0.0f, 0.0f, 0.0f };
 
 	//今ロックオンしているかどうかのフラグ
-	bool isLockOn = false;
-
-	Vector3 playerTarget = pPlayer->GetCameraTarget();
-	Vector3 cameraTarget = pCamera_.GetCameraTarget();
-	//プレイヤーから敵の正面のベクトルを計算
-	Vector3 toEnemy = cameraTarget - pPlayer->GetPos();
-	toEnemy.y_ = 0.0f;
-
-	//プレイヤーの注視点とカメラの注視点が一定距離離れていたらロックオンされているとする
-	if (toEnemy.LengthSq() > 30.0f)
-	{
-		isLockOn = true;
-	}
+	bool isLockOn = pPlayer->IsLockOn();
 
 	if (isLockOn)
 	{
-		Vector3 cameraForward = cameraTarget - pCamera_.GetPos();
-		cameraForward.y_ = 0.0f; // 平面で移動させるためYは0にする
-		cameraForward = cameraForward.Normalize();
+		//カメラのターゲット座標を取得
+		Vector3 cameraTarget = pCamera_.GetCameraTarget();
+
+		Vector3 toEnemy = cameraTarget - pPlayer->GetPos();
+		toEnemy.y_ = 0.0f;		//平面で移動させるためYは0
+		toEnemy = toEnemy.Normalize();
 
 		//敵の正面ベクトルから右のベクトルを計算
-		Vector3 rightVec = Vector3{ 0.0f, 1.0f, 0.0f }.Cross(cameraForward).Normalize();
+		Vector3 rightVec = Vector3{ 0.0f, 1.0f, 0.0f }.Cross(toEnemy).Normalize();
 
-		Vector3 moveDir = (cameraForward * rawInput.z_) + (rightVec * rawInput.x_);
+		//入力方向に応じて移動のベクトルを合成
+		Vector3 moveDir = (toEnemy * rawInput.x_) + (rightVec * rawInput.z_);
 		return moveDir.Normalize();
 	}
 	else
 	{
 		//カメラのYaw角を使った行列回転を行う
-		float cameraYaw = pCamera_.GetYaw();					//カメラのヨー角を取得
+		float cameraYaw = pCamera_.GetYaw();				//カメラのヨー角を取得
 		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraYaw);	//Y軸回転行列を作成
 
 		Vector3 moveDir = rotMat.TransformForVector(-rawInput).Normalize();

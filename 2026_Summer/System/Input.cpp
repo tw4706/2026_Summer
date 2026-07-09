@@ -10,26 +10,26 @@ Input& Input::GetInstance()
 Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 {
 	inputTable_["up"] = { {PeripheralType::keyboard,KEY_INPUT_UP},
-						{PeripheralType::pad1,PAD_INPUT_UP} };
+						{PeripheralType::pad1,XINPUT_BUTTON_DPAD_DOWN} };
 	inputTable_["down"] = { {PeripheralType::keyboard,KEY_INPUT_DOWN},
-						{PeripheralType::pad1,PAD_INPUT_DOWN} };
+						{PeripheralType::pad1,XINPUT_BUTTON_DPAD_UP} };
 	inputTable_["left"] = { {PeripheralType::keyboard,KEY_INPUT_LEFT},
-						{PeripheralType::pad1,PAD_INPUT_LEFT} };
+						{PeripheralType::pad1,XINPUT_BUTTON_DPAD_LEFT} };
 	inputTable_["right"] = { {PeripheralType::keyboard,KEY_INPUT_RIGHT},
-						{PeripheralType::pad1,PAD_INPUT_RIGHT} };
+						{PeripheralType::pad1,XINPUT_BUTTON_DPAD_RIGHT} };
 
 	inputTable_["lockOn"] = { {PeripheralType::keyboard,KEY_INPUT_L},
-						{PeripheralType::pad1,PAD_INPUT_C} };
+						{PeripheralType::pad1,XINPUT_BUTTON_RIGHT_THUMB} };
 	inputTable_["attack"] = { {PeripheralType::keyboard,KEY_INPUT_Z},
-						{PeripheralType::pad1,PAD_INPUT_6} };
+						{PeripheralType::pad1,XINPUT_BUTTON_RIGHT_SHOULDER} };
 	inputTable_["guard"] = { {PeripheralType::keyboard,KEY_INPUT_G},
-						{PeripheralType::pad1,PAD_INPUT_B} };
+						{PeripheralType::pad1,XINPUT_BUTTON_LEFT_SHOULDER} };
 	inputTable_["dodge"] = { {PeripheralType::keyboard,KEY_INPUT_D},
-						{PeripheralType::pad1,PAD_INPUT_B} };
+						{PeripheralType::pad1,XINPUT_BUTTON_X} };
 	inputTable_["jump"] = { {PeripheralType::keyboard,KEY_INPUT_SPACE},
-						{PeripheralType::pad1,PAD_INPUT_A} };
+						{PeripheralType::pad1,XINPUT_BUTTON_A} };
 	inputTable_["next"] = { {PeripheralType::keyboard,KEY_INPUT_SPACE},
-						{PeripheralType::pad1,PAD_INPUT_A} };
+						{PeripheralType::pad1,XINPUT_BUTTON_A} };
 
 	//変な値が入らないように枠を開けておく
 	for (const auto& input : inputTable_)
@@ -44,8 +44,10 @@ void Input::Update()
 	//入力情報の取得
 	char keyState[256];
 	GetHitKeyStateAll(keyState);
-	int padState = GetJoypadInputState(DX_INPUT_PAD1);
 	lastInputData_ = inputData_;
+
+	//パッドが接続できているかどうか
+	isXInputConnected_ = (GetJoypadXInputState(DX_INPUT_PAD1, &xInputState_) == 0);
 
 	//アナログスティックの更新
 	UpdateAnalogStick();
@@ -62,7 +64,10 @@ void Input::Update()
 				input = keyState[state.id];
 				break;
 			case PeripheralType::pad1:
-				input = (padState & state.id);
+				if (isXInputConnected_)
+				{
+					input = (xInputState_.Buttons[state.id] != 0);
+				}
 				break;
 			}
 			if (input)
@@ -91,17 +96,25 @@ bool Input::IsReleased(const char* name) const
 
 void Input::UpdateAnalogStick()
 {
-	//左アナログスティック情報の取得
-	int leftX, leftY;
-	GetJoypadAnalogInput(&leftX, &leftY, DX_INPUT_PAD1);
+	Vector3 stickLeft;
+	Vector3 targetRight;
 
-	//左スティックの上限・下限を設定する
-	Vector3 stickLeft(leftX / 1000.0f, 0.0f, -leftY / 1000.0f);
+	if (isXInputConnected_)
+	{
+		//XInputの生値(-32768～32767)を正規化して使う
+		stickLeft = Vector3(xInputState_.ThumbLX / 32768.0f, 0.0f, xInputState_.ThumbLY / 32768.0f);
+		targetRight = Vector3(-xInputState_.ThumbRX / 32768.0f, 0.0f, xInputState_.ThumbRY / 32768.0f);
+	}
 
-	//デッドゾーン
+	//左スティックのデッドゾーン
 	if (stickLeft.LengthSq() < 0.04f)
 	{
 		stickLeft = { 0,0,0 };
+	}
+	//右スティックのデッドゾーン
+	if (targetRight.LengthSq() < 0.04f)
+	{
+		targetRight = { 0,0,0 };
 	}
 
 	//正規化
@@ -113,13 +126,6 @@ void Input::UpdateAnalogStick()
 	//線形補間(Lerp)
 	stickLeft_.x_ = Vector3::Lerp(stickLeft_.x_, stickLeft.x_, 0.2f);
 	stickLeft_.z_ = Vector3::Lerp(stickLeft_.z_, stickLeft.z_, 0.2f);
-
-	//右アナログスティック情報の取得
-	int rightX, rightY;
-	GetJoypadAnalogInputRight(&rightX, &rightY, DX_INPUT_PAD1);
-
-	//右スティックの上限・下限を設定する
-	Vector3 targetRight(-rightX / 1000.0f, 0.0f, rightY / 1000.0f);
 
 	//線形補間(Lerp)
 	stickRight_.x_ = Vector3::Lerp(stickRight_.x_, targetRight.x_, 0.15f);
@@ -149,9 +155,10 @@ Vector3 Input::GetRawMoveInput() const
 	//左アナログスティックの入力
 	Vector3 inputDir = stickLeft_;
 
-	//アナログスティックが入力されていないなら、合成する
+	//アナログスティックが入力されていないなら
 	if (inputDir.LengthSq() <= 0.0f)
 	{
+		//速度を適用する
 		if (IsPressed("up"))    inputDir.z_ += 1.0f;
 		if (IsPressed("down"))  inputDir.z_ -= 1.0f;
 		if (IsPressed("left"))  inputDir.x_ -= 1.0f;

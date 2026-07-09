@@ -11,7 +11,7 @@
 enum class PeripheralType
 {
 	keyboard,
-	pad1
+	pad1,
 };
 
 struct InputState
@@ -69,5 +69,10 @@ private:
 
 	Vector3 stickLeft_ = { 0.0f,0.0f,0.0f };
 	Vector3 stickRight_ = { 0.0f,0.0f,0.0f };
+
+	//XInput‚Ìæ“¾
+	XINPUT_STATE xInputState_={};
+	//ƒpƒbƒh‚ªÚ‘±‚Å‚«‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	bool isXInputConnected_ =false;
 };
 
