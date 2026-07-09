@@ -4,7 +4,7 @@
 namespace 
 {
     //カメラのNear・Far
-    constexpr float kCameraNear = 100.0f;
+    constexpr float kCameraNear = 10.0f;
     constexpr float kCameraFar = 5000.0f;
 
     //経過時間
@@ -61,7 +61,7 @@ Vector3 CameraBase::CheckCollCameraToStage(int stageModelHandle,const Vector3&st
         Vector3 normal = result.Normal;
 
         //押し出し処理
-        hitPos += normal * 10.0f;
+        hitPos += normal * 20.0f;
 
         //押し出した座標を返す
         return hitPos;
