@@ -10,7 +10,7 @@
 namespace
 {
 	//ロックオンで探す最大距離
-	constexpr float kMaxLockOnDistanceSq = 100.0f * 100.0f;
+	constexpr float kMaxLockOnDistanceSq = 70.0f * 70.0f;
 
 	//ロックオンを行う索敵の視野角
 	constexpr float kLockOnAngle = 0.707f;
@@ -38,15 +38,16 @@ void LockOnManager::Update(std::shared_ptr<Player> pPlayer, const std::vector<st
 		float closestDistanceSq = FLT_MAX;
 		std::shared_ptr<EnemyBase> nextEnemy = nullptr;
 
-		Vector3 playerForward = pPlayer->GetCameraTarget()-pPlayer->GetPos();
+		Vector3 playerPos = pPlayer->GetPos();
+		Vector3 playerForward = pPlayer->GetCameraTarget();
 		playerForward.y_ = 0.0f;
-		playerForward.Normalize();
+		playerForward = playerForward.Normalize();
 
 		for (const auto& enemy : pEnemies)
 		{
 			if (!enemy || enemy->IsDead() || enemy == pCurrentTarget_) continue;
 
-			Vector3 diff = enemy->GetPos() - playerForward;
+			Vector3 diff = enemy->GetPos() - playerPos;
 			float distSq = diff.LengthSq();
 
 			if (distSq > kMaxLockOnDistanceSq) continue;
@@ -171,6 +172,8 @@ void LockOnManager::StartLockOn(std::shared_ptr<Player> pPlayer, const std::vect
 
 	Vector3 playerPos = pPlayer->GetPos();
 	Vector3 playerForward = pPlayer->GetCameraTarget();
+	playerForward.y_ = 0.0f;
+	playerForward = playerForward.Normalize();
 
 	for (const auto& enemy : pEnemies)
 	{
@@ -201,14 +204,19 @@ void LockOnManager::StartLockOn(std::shared_ptr<Player> pPlayer, const std::vect
 	// ターゲットが見つかったらロックオン開始
 	if (closestEnemy)
 	{
+		//各カメラの取得
 		auto camera = pCameraManager->GetCamera(L"LockOnCamera");
 		auto lockOnCamera = std::dynamic_pointer_cast<LockOnCamera>(camera);
 
+		//ロックオンカメラが存在する場合
 		if (lockOnCamera)
 		{
+			//ターゲットのセット(敵)
 			lockOnCamera->SetTargetEnemy(closestEnemy);
+			//プレイヤーのセット
 			lockOnCamera->SetPlayer(pPlayer);
 
+			//カメラの切り替え
 			pCameraManager->ChangeCamera(L"LockOnCamera");
 			pPlayer->SetLockOn(true);
 			pPlayer->SetLockOnEnemy(closestEnemy);
