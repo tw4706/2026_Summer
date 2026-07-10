@@ -1,6 +1,12 @@
 #include "Input.h"
 #include<Dxlib.h>
 
+namespace
+{
+	//はじきの閾値
+	constexpr float kFlickThreshold = 0.6f;
+}
+
 Input& Input::GetInstance()
 {
 	static Input instance;
@@ -144,6 +150,20 @@ void Input::UpdateAnalogStick()
 	//線形補間(Lerp)
 	stickRight_.x_ = Vector3::Lerp(stickRight_.x_, targetRight.x_, 0.15f);
 	stickRight_.z_ = Vector3::Lerp(stickRight_.z_, targetRight.z_, 0.15f);
+
+	float currentX = stickRight_.x_;
+
+	//左方向へのフリック
+	//閾値より小さいときは左
+	bool currentLeft = (currentX < -kFlickThreshold);
+	isRightStickFlickL_ = (currentLeft && !lastRightStickFlickL_);
+	lastRightStickFlickL_ = currentLeft;
+
+	//右方向へのフリック
+	//閾値より大きいときは右
+	bool currentRight = (currentX > kFlickThreshold);
+	isRightStickFlickR_ = (currentRight && !lastRightStickFlickR_);
+	lastRightStickFlickR_ = currentRight;
 }
 
 bool Input::HasMoveInput() const

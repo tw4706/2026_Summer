@@ -63,6 +63,10 @@ public:
 	//スティック情報の取得
 	Vector3 GetStickLeft()const { return stickLeft_; }
 	Vector3 GetStickRight()const { return stickRight_; }
+
+	//スティックがはじかれているかの取得
+	bool IsRightStickFlickLeft() const { return isRightStickFlickL_; }
+	bool IsRightStickFlickRight() const { return isRightStickFlickR_; }
 private:
 	std::map<std::string, std::vector<InputState>>inputTable_;	//イベント名と実際の入力の対応表
 	std::map<std::string, bool>inputData_;						//実際に入力されたかどうかのデータ
@@ -75,5 +79,13 @@ private:
 	XINPUT_STATE xInputState_={};
 	//パッドが接続できているかどうか
 	bool isXInputConnected_ =false;
+
+	//前フレームの右スティックの記憶用変数
+	bool lastRightStickFlickL_ = false;
+	bool lastRightStickFlickR_ = false;
+
+	//今のフレームでスティックが弾かれたかどうかのフラグ
+	bool isRightStickFlickL_ = false;
+	bool isRightStickFlickR_ = false;
 };
 

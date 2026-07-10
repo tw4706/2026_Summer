@@ -25,5 +25,8 @@ public:
 
 private:
 	int frameCount_ = 0;
+
+	//タイトルロゴハンドル
+	int titleLogoHandle_ = -1;
 };
 

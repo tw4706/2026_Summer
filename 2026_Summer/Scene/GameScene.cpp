@@ -367,6 +367,69 @@ void GameScene::NormalUpdate()
 		}
 	}
 
+	// ロックオン中かつ、右スティックのフリック入力を検知した場合
+	if (pPlayer_->IsLockOn() && (Input::GetInstance().IsRightStickFlickLeft() || Input::GetInstance().IsRightStickFlickRight()))
+	{
+		std::shared_ptr<EnemyBase> currentTarget = pPlayer_->GetLockOnEnemy().lock();
+
+		if (currentTarget)
+		{
+			//プレイヤーから現在のターゲットへの水平方向ベクトル A
+			Vector3 vecA = currentTarget->GetPos() - pPlayer_->GetPos();
+			vecA.y_ = 0.0f;
+			vecA = vecA.Normalize();
+
+			std::shared_ptr<EnemyBase> nextTarget = nullptr;
+			float maxDot = -2.0f; //内積の最大値
+
+			//フリックされた方向の判定
+			bool isFlickRight = Input::GetInstance().IsRightStickFlickRight();
+
+			// 生存している敵全員をチェック
+			for (auto& enemy : pEnemyManager_->GetEnemies())
+			{
+				if (enemy->IsDead() || enemy == currentTarget) continue;
+
+				// プレイヤーから候補の敵への水平方向ベクトル B
+				Vector3 vecB = enemy->GetPos() - pPlayer_->GetPos();
+				vecB.y_ = 0.0f;
+				vecB = vecB.Normalize();
+
+				// 外積（Cross）を使って左右の判定を行う
+				Vector3 crossResult = vecA.Cross(vecB);
+
+				// スティックが右フリックされた場合は右側の敵、左フリックされた場合は左側の敵を対象にする
+				// ※DxLibの左手座標系では、Y成分がプラスなら右側、マイナスなら左側になります
+				bool isEnemyOnRight = (crossResult.y_ < 0.0f);
+
+				if ((isFlickRight && isEnemyOnRight) || (!isFlickRight && !isEnemyOnRight))
+				{
+					// 条件に合う敵の中で、現在のターゲットと最も「角度が近い（内積が大きい）」ものを探す
+					float dotResult = vecA.Dot(vecB);
+
+					if (dotResult > maxDot)
+					{
+						maxDot = dotResult;
+						nextTarget = enemy;
+					}
+				}
+			}
+
+			// 新しいターゲットが見つかったらカメラとプレイヤーのロックオン先を更新
+			if (nextTarget != nullptr)
+			{
+				auto camera = pCameraManager_->GetCamera(L"LockOnCamera");
+				auto lockOnCamera = std::dynamic_pointer_cast<LockOnCamera>(camera);
+
+				if (lockOnCamera)
+				{
+					lockOnCamera->SetTargetEnemy(nextTarget);
+					pPlayer_->SetLockOnEnemy(nextTarget);
+				}
+			}
+		}
+	}
+
 	//死んでいるゲームオブジェクトの削除
 	gameObjects_.erase(std::remove_if(gameObjects_.begin(), gameObjects_.end(), 
 		[](const auto& obj) {return obj->IsDead();}),gameObjects_.end());

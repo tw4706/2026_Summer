@@ -26,6 +26,7 @@ TitleScene::~TitleScene()
 
 void TitleScene::Init()
 {
+	titleLogoHandle_ = LoadGraph(L"data/UI/titleLogo.png");
 }
 
 void TitleScene::Update()
@@ -51,6 +52,8 @@ void TitleScene::NormalUpdate()
 {
 	if (Input::GetInstance().IsTriggered("next"))
 	{
+		frameCount_ = kFadeInterval;
+
 		update_ = &TitleScene::FadeOutUpdate;
 		draw_ = &TitleScene::FadeDraw;
 	}
@@ -91,4 +94,8 @@ void TitleScene::NormalDraw()
 {
 	DrawFormatString(0, 0, 0xffffff, L"タイトルシーン");
 	DrawFormatString(0,30, 0xffffff, L"ボタンを押してスタート");
+
+	//タイトルロゴの描画
+	DrawRotaGraph3(Game::kScreenWidth / 2-500, Game::kScreenHeight / 2-400,0, 0,
+		0.5f, 0.5f, 0.0f, titleLogoHandle_, true);
 }

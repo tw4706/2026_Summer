@@ -5,7 +5,7 @@ namespace
 {
     //ƒJƒƒ‰‚ÌNearEFar
     constexpr float kCameraNear = 10.0f;
-    constexpr float kCameraFar = 5000.0f;
+    constexpr float kCameraFar = 8000.0f;
 
     //Œo‰ßŠÔ
     constexpr float kDeltaTime = 1.0f / 60.0f;

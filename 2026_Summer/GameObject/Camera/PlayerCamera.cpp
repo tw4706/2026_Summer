@@ -44,8 +44,6 @@ void PlayerCamera::Update(int stageModelHandle)
 	cameraTarget_ = pPlayer_->GetCameraTarget();
 
 	//ƒJƒƒ‰‚Ì‰ñ“]‚ğüŒ`•âŠÔ‚Ås‚¤
-	//currentYaw_ = currentYaw_ + (yaw_ - currentYaw_) * 0.5f;
-	//currentPitch_ = currentPitch_ + (pitch_ - currentPitch_) * 0.5f;
 	currentYaw_ = Vector3::Lerp(currentYaw_, yaw_, 0.5f);
 	currentPitch_ = Vector3::Lerp(currentPitch_, pitch_, 0.5f);
 
