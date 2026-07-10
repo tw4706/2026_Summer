@@ -368,12 +368,8 @@ void GameScene::NormalUpdate()
 	}
 
 	//死んでいるゲームオブジェクトの削除
-	gameObjects_.erase(
-		std::remove_if(gameObjects_.begin(), gameObjects_.end(), [](const auto& obj) {
-			return obj->IsDead();
-			}),
-		gameObjects_.end()
-	);
+	gameObjects_.erase(std::remove_if(gameObjects_.begin(), gameObjects_.end(), 
+		[](const auto& obj) {return obj->IsDead();}),gameObjects_.end());
 
 	//死んでいる敵の削除
 	pEnemyManager_->RemoveEnemy();
@@ -387,7 +383,6 @@ void GameScene::NormalUpdate()
 		frameCount_ = 0;
 		return;
 	}
-
 }
 
 void GameScene::FadeOutUpdate()
