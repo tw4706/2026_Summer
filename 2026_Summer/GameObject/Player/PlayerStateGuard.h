@@ -4,7 +4,7 @@
 class PlayerStateGuard :public PlayerStateBase
 {
 public:
-	PlayerStateGuard(std::weak_ptr<Player> pPlayer, CameraBase& camera);
+	PlayerStateGuard(std::weak_ptr<Player> pPlayer);
 	~PlayerStateGuard() = default;
 
 	void Enter()  override;

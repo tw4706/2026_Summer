@@ -15,8 +15,8 @@ namespace
 	constexpr float kMoveSpeed = 5.0f;
 }
 
-PlayerStateGuard::PlayerStateGuard(std::weak_ptr<Player> pPlayer, CameraBase& camera) :
-	PlayerStateBase(pPlayer, camera)
+PlayerStateGuard::PlayerStateGuard(std::weak_ptr<Player> pPlayer) :
+	PlayerStateBase(pPlayer)
 {
 }
 
@@ -34,6 +34,10 @@ void PlayerStateGuard::Update()
 	auto player = pPlayer_.lock();
 	if (!player) return;
 
+	//アクティブなカメラを取得
+	CameraBase* pCamera = GetActiveCamera();
+	if (!pCamera) return;
+
 	Vector3 playerDir = GetCameraLookMoveDirection();
 
 	//正面ベクトルを今向いている向きで定義
@@ -42,14 +46,14 @@ void PlayerStateGuard::Update()
 	//ガードのボタンを離したときにidle状態に遷移する
 	if (Input::GetInstance().IsReleased("guard"))
 	{
-		auto nextState = std::make_shared<PlayerStateIdle>(pPlayer_, pCamera_);
+		auto nextState = std::make_shared<PlayerStateIdle>(pPlayer_);
 		player->ChangeState(nextState);
 		return;
 	}
 
 	//カメラのターゲットとカメラの現在位置を取得
 	Vector3 cameraTarget = player->GetCameraTarget();
-	Vector3 currentCameraPos = pCamera_.GetPos();
+	Vector3 currentCameraPos = pCamera->GetPos();
 
 	//カメラのとの距離を計算
 	Vector3 cameraVec = cameraTarget - currentCameraPos;

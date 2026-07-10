@@ -42,8 +42,8 @@ namespace
 	constexpr float kStickDeadZone = 0.15f;
 }
 
-PlayerStateRun::PlayerStateRun(std::weak_ptr<Player> pPlayer, CameraBase& camera) :
-	PlayerStateBase(pPlayer, camera)
+PlayerStateRun::PlayerStateRun(std::weak_ptr<Player> pPlayer) :
+	PlayerStateBase(pPlayer)
 {
 }
 
@@ -60,6 +60,10 @@ void PlayerStateRun::Update()
 {
 	auto pPlayer = pPlayer_.lock();
 	if (!pPlayer) return;
+
+	//アクティブなカメラを取得
+	CameraBase* pCamera = GetActiveCamera();
+	if (!pCamera) return;
 
 	//プレイヤーの方向ベクトルを取得
 	Vector3 playerDir = GetCameraLookMoveDirection();
@@ -94,47 +98,47 @@ void PlayerStateRun::Update()
 	if (!pPlayer->IsLockOn())
 	{
 		Vector3 stickR = Input::GetInstance().GetStickRight();
-		pCamera_.AddRotation(-stickR.x_ * kCameraSpeed, -stickR.z_ * kCameraSpeed);
+		pCamera->AddRotation(-stickR.x_ * kCameraSpeed, -stickR.z_ * kCameraSpeed);
 	}
 
 	//ジャンプボタンが押されたらジャンプへ
 	if (Input::GetInstance().IsTriggered("jump"))
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateJump>(pPlayer_, pCamera_));
+		pPlayer->ChangeState(std::make_shared<PlayerStateJump>(pPlayer_));
 		return;
 	}
 
 	//空中にいる場合はジャンプ状態へ遷移
 	if (!pPlayer->GetIsGround())
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateJump>(pPlayer_, pCamera_));
+		pPlayer->ChangeState(std::make_shared<PlayerStateJump>(pPlayer_));
 		return;
 	}
 
 	//攻撃ボタンが押されたら攻撃へ遷移
 	if (Input::GetInstance().IsTriggered("attack"))
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateAttack>(pPlayer_, pCamera_));
+		pPlayer->ChangeState(std::make_shared<PlayerStateAttack>(pPlayer_));
 		return;
 	}
 
 	if (Input::GetInstance().IsTriggered("guard"))
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateGuard>(pPlayer_, pCamera_));
+		pPlayer->ChangeState(std::make_shared<PlayerStateGuard>(pPlayer_));
 		return;
 	}
 
 	//回避ボタンが押されたら回避へ遷移
 	if (Input::GetInstance().IsTriggered("dodge"))
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateDodge>(pPlayer_, pCamera_));
+		pPlayer->ChangeState(std::make_shared<PlayerStateDodge>(pPlayer_));
 		return;
 	}
 
 	//移動入力が完全に無くなったらIdleへ遷移
 	if (!Input::GetInstance().HasMoveInput())
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, pCamera_));
+		pPlayer->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_));
 		return;
 	}
 }

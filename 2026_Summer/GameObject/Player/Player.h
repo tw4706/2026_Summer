@@ -2,6 +2,7 @@
 #include "Character.h"
 #include "Model.h"
 #include "Animation.h"
+#include "Camera/CameraManager.h"
 
 class Input;
 class Katana;
@@ -48,10 +49,16 @@ public:
 	Vector3 GetCameraTarget()const;
 
 	/// <summary>
+	/// カメラマネージャーからアクティなカメラを取得する
+	/// </summary>
+	/// <returns>アクティブなカメラを返す</returns>
+	CameraBase* GetActiveCamera() const { return pCameraManager_ ? pCameraManager_->GetActiveCamera().get() : nullptr; }
+
+	/// <summary>
 	/// カメラのセット
 	/// </summary>
 	/// <param name="camera">カメラのポインタ</param>
-	void SetCamera(CameraBase* camera) { pCamera_ = camera; }
+	void SetCameraManager(CameraManager* manager) { pCameraManager_ = manager; }
 
 	/// <summary>
 	/// 移動角度の設定
@@ -99,7 +106,8 @@ private:
 	bool isLockOn_ = false;					//ロックオンしているかどうか
 	int reticleUIHandle_;						//レティクルUIハンドル
 
-	CameraBase* pCamera_ = nullptr;			//カメラ
+	CameraManager* pCameraManager_=nullptr;			//カメラマネージャー
+	CameraBase* activeCamera_ = nullptr;	//アクティブなカメラ
 	std::weak_ptr<EnemyBase>pLockOnEnemy_;	//敵のポインタ
 	std::unique_ptr<Katana> pKatana_;		//刀
 };

@@ -85,7 +85,7 @@ void GameScene::Init()
 		}
 		else if (auto player = std::dynamic_pointer_cast<Player>(obj))
 		{
-			player->SetCamera(playerCam.get());
+			player->SetCameraManager(pCameraManager_.get());
 			player->Init();
 		}
 	}

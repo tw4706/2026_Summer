@@ -7,7 +7,7 @@ class Vector3;
 class PlayerStateBase :public CharacterStateBase
 {
 public:
-    PlayerStateBase(std::weak_ptr<Player> pPlayer, CameraBase& camera);
+    PlayerStateBase(std::weak_ptr<Player> pPlayer);
     virtual ~PlayerStateBase() = default;
 
     virtual void Enter() = 0;
@@ -20,8 +20,14 @@ protected:
     /// </summary>
     /// <returns>カメラの向きを返す</returns>
     Vector3 GetCameraLookMoveDirection()const;
+
+    /// <summary>
+    /// アクティブなカメラの取得
+    /// </summary>
+    /// <returns></returns>
+    CameraBase* GetActiveCamera() const;
 protected:
-    std::weak_ptr<Player> pPlayer_;
-    CameraBase& pCamera_;
+
+    std::weak_ptr<Player> pPlayer_; //プレイヤーの弱参照
 };
 

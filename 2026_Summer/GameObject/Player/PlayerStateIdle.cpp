@@ -24,8 +24,8 @@ namespace
     constexpr float kCameraSpeed = 0.03f;
 }
 
-PlayerStateIdle::PlayerStateIdle(std::weak_ptr<Player> pPlayer, CameraBase& camera) :
-	PlayerStateBase(pPlayer,camera)
+PlayerStateIdle::PlayerStateIdle(std::weak_ptr<Player> pPlayer) :
+	PlayerStateBase(pPlayer)
 {
 }
 
@@ -45,40 +45,48 @@ void PlayerStateIdle::Update()
     auto pPlayer = pPlayer_.lock();
     if (!pPlayer) return;
 
-	//ƒJƒƒ‰‚Ì‰ñ“]
-	Vector3 stickR = Input::GetInstance().GetStickRight();
-	pCamera_.AddRotation(-stickR.x_ * kCameraSpeed, -stickR.z_ * kCameraSpeed);
+	//ƒAƒNƒeƒBƒu‚ÈƒJƒƒ‰‚ðŽæ“¾
+	CameraBase* pCamera = GetActiveCamera();
+	if (!pCamera) return;
+
+	//ƒƒbƒNƒIƒ“‚ð‚µ‚Ä‚¢‚È‚¢ê‡‚Í’Êí‚ÌƒJƒƒ‰‚Ì‰ñ“]‚É‚·‚é
+	if (!pPlayer->IsLockOn())
+	{
+		//ƒJƒƒ‰‚Ì‰ñ“]
+		Vector3 stickR = Input::GetInstance().GetStickRight();
+		pCamera->AddRotation(-stickR.x_ * kCameraSpeed, -stickR.z_ * kCameraSpeed);
+	}
 
 	// ‹ó’†‚É‚¢‚é‚Æ‚«‚©ƒWƒƒƒ“ƒv‚ª‰Ÿ‚³‚ê‚½‚çJumpó‘Ô‚Ö‘JˆÚ
 	if (!pPlayer->GetIsGround() || Input::GetInstance().IsTriggered("jump"))
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateJump>(pPlayer_, pCamera_));
+		pPlayer->ChangeState(std::make_shared<PlayerStateJump>(pPlayer_));
 		return;
 	}
 
 	// UŒ‚‚ª‰Ÿ‚³‚ê‚½‚çAttackó‘Ô‚Ö‘JˆÚ
 	if (Input::GetInstance().IsTriggered("attack"))
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateAttack>(pPlayer_, pCamera_));
+		pPlayer->ChangeState(std::make_shared<PlayerStateAttack>(pPlayer_));
 		return;
 	}
 	if (Input::GetInstance().IsTriggered("guard"))
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateGuard>(pPlayer_, pCamera_));
+		pPlayer->ChangeState(std::make_shared<PlayerStateGuard>(pPlayer_));
 		return;
 	}
 
 	// ‰ñ”ð‚ª‰Ÿ‚³‚ê‚½‚çDodgeó‘Ô‚Ö‘JˆÚ
 	if (Input::GetInstance().IsTriggered("dodge"))
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateDodge>(pPlayer_, pCamera_));
+		pPlayer->ChangeState(std::make_shared<PlayerStateDodge>(pPlayer_));
 		return;
 	}
 
 	// ˆÚ“®“ü—Í‚ª‚ ‚Á‚½‚çRunó‘Ô‚Ö‘JˆÚ
 	if (Input::GetInstance().HasMoveInput())
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_, pCamera_));
+		pPlayer->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_));
 		return;
 	}
 }

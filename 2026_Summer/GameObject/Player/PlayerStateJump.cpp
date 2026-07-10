@@ -14,8 +14,8 @@ namespace
 	const std::wstring_view kPlayerJump = L"Player|Jump";
 }
 
-PlayerStateJump::PlayerStateJump(std::weak_ptr<Player> pPlayer, CameraBase& camera) :
-	PlayerStateBase(pPlayer, camera)
+PlayerStateJump::PlayerStateJump(std::weak_ptr<Player> pPlayer) :
+	PlayerStateBase(pPlayer)
 {
 }
 
@@ -43,6 +43,10 @@ void PlayerStateJump::Update()
 	auto pPlayer = pPlayer_.lock();
 	if (!pPlayer) return;
 
+	//アクティブなカメラを取得
+	CameraBase* pCamera = GetActiveCamera();
+	if (!pCamera) return;
+
 	//空中での移動制御
 	//スティック入力とキーボード入力を統合して取得
 	Vector3 inputDir = Input::GetInstance().GetRawMoveInput();
@@ -53,7 +57,7 @@ void PlayerStateJump::Update()
 
 	if (isKeyboardMoving)
 	{
-		float cameraYaw = pCamera_.GetYaw();
+		float cameraYaw = pCamera->GetYaw();
 		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraYaw);
 		Vector3 playerDir = rotMat.TransformForVector(-inputDir).Normalize();
 
@@ -82,9 +86,12 @@ void PlayerStateJump::Update()
 	pPlayer->moveAngle_ = currentAngle; //変更した向きを適用
 	pPlayer->AddPosition();
 
-	//カメラ回転
-	Vector3 stickR = Input::GetInstance().GetStickRight();
-	pCamera_.AddRotation(-stickR.x_ * 0.03f, -stickR.z_ * 0.03f);
+	if (!pPlayer->IsLockOn())
+	{
+		//カメラ回転
+		Vector3 stickR = Input::GetInstance().GetStickRight();
+		pCamera->AddRotation(-stickR.x_ * 0.03f, -stickR.z_ * 0.03f);
+	}
 
 	//状態遷移判定
 	if (pPlayer->GetIsGround())
@@ -101,11 +108,11 @@ void PlayerStateJump::Update()
 			float speedXZ = sqrtf(currentVel.x_ * currentVel.x_ + currentVel.z_ * currentVel.z_);
 			if (speedXZ > 1.5f)
 			{
-				pPlayer->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_, pCamera_));
+				pPlayer->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_));
 			}
 			else
 			{
-				pPlayer->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_, pCamera_));
+				pPlayer->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_));
 			}
 			return;
 		}
@@ -118,7 +125,7 @@ void PlayerStateJump::Update()
 	//攻撃ボタンが押されたら攻撃へ遷移
 	if (Input::GetInstance().IsTriggered("attack"))
 	{
-		pPlayer->ChangeState(std::make_shared<PlayerStateJumpAttack>(pPlayer_, pCamera_));
+		pPlayer->ChangeState(std::make_shared<PlayerStateJumpAttack>(pPlayer_));
 		return;
 	}
 }

@@ -64,7 +64,6 @@ public:
 	/// <param name="prevCameraPos">前のカメラ座標</param>
 	/// <param name="prevCameraTarget">前のカメラターゲット</param>
 	void SetCompulsoryPosAndTarget(Vector3& prevCameraPos, Vector3& prevCameraTarget);
-
 private:
 	/// <summary>
 	/// カメラシェイクの更新

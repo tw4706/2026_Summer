@@ -35,6 +35,7 @@ Player::Player() :
 	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f),
 	moveAngle_(0.0f),
 	handFrameIndex_(-1),
+	reticleUIHandle_(-1),
 	pKatana_(nullptr)
 {
 }
@@ -84,16 +85,16 @@ void Player::Update()
 
 	Collidable::Update();
 
-	if (!pCurrentState_ && pCamera_)
+	activeCamera_ = GetActiveCamera();
+	if (!activeCamera_)return;
+
+	if (!pCurrentState_)
 	{
 		auto sharedSelf = std::dynamic_pointer_cast<Player>(shared_from_this());
 		std::weak_ptr<Player> weakSelf = sharedSelf;
 
-		//今持っているポインタを参照する
-		CameraBase& pCamera = *pCamera_;
-
 		//ステートパターンの生成
-		pCurrentState_ = std::make_shared<PlayerStateIdle>(weakSelf, *pCamera_);
+		pCurrentState_ = std::make_shared<PlayerStateIdle>(weakSelf);
 
 		pCurrentState_->Enter();
 	}
@@ -235,12 +236,10 @@ void Player::OnDamage(const int damage)
 	auto sharedSelf = std::dynamic_pointer_cast<Player>(shared_from_this());
 	std::weak_ptr<Player> weakSelf = sharedSelf;
 
-	CameraBase& pCamera = *pCamera_;
-
 	//HPが0以上の場合はダメージ状態に遷移
 	if (hp_ > 0)
 	{
-		auto nextState = std::make_shared<PlayerStateDamage>(weakSelf, pCamera);
+		auto nextState = std::make_shared<PlayerStateDamage>(weakSelf);
 		ChangeState(nextState);
 	}
 	//HPが0の場合は死亡状態に遷移
@@ -248,7 +247,7 @@ void Player::OnDamage(const int damage)
 	{
 		hp_ = 0;
 
-		auto nextState = std::make_shared<PlayerStateDeath>(weakSelf, pCamera);
+		auto nextState = std::make_shared<PlayerStateDeath>(weakSelf);
 		ChangeState(nextState);
 	}
 }
