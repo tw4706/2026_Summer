@@ -61,6 +61,12 @@ public:
 	Vector3 GetPlayerPos()const;
 
 	/// <summary>
+	/// カメラから見た時のターゲット座標の取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetCameraTarget()const;
+
+	/// <summary>
 	/// プレイヤーのセット
 	/// </summary>
 	/// <param name="pPlayer">プレイヤーのポインタ</param>

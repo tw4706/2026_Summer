@@ -309,6 +309,11 @@ Vector3 EnemyBase::GetPlayerPos() const
 	return pPlayer->GetPos();
 }
 
+Vector3 EnemyBase::GetCameraTarget() const
+{
+	return pos_ + Vector3{ 0.0f,colliderHeight_,0.0f };
+}
+
 void EnemyBase::SetPlayer(std::weak_ptr<Player> pPlayer)
 {
 	pPlayer_ = pPlayer;

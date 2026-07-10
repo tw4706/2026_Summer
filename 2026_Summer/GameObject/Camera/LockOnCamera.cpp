@@ -24,10 +24,10 @@ void LockOnCamera::Update(int stageModelHandle)
 	if (!player || !enemy)return;
 
 	//敵の座標を取得
-	Vector3 enemyTargetPos = enemy->GetPos();
+	Vector3 enemyTargetPos = enemy->GetCameraTarget();
 
 	//カメラのターゲット座標に代入
-	cameraTarget_ = enemyTargetPos;
+	cameraTarget_ = Vector3::Lerp(cameraTarget_,enemyTargetPos,0.1f);
 
 	Vector3 playerCameraPos = player->GetCameraTarget();
 

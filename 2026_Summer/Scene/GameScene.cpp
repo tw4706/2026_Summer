@@ -189,7 +189,7 @@ void GameScene::NormalUpdate()
 	}
 
 	//ロックオンカメラ
-	if(Input::GetInstance().IsTriggered("lockOn"))
+	if (Input::GetInstance().IsTriggered("lockOn"))
 	{
 		//現在アクティブなカメラがロックオンカメラの場合
 		if (pCameraManager_->GetActiveCameraName() == L"LockOnCamera")
@@ -245,7 +245,7 @@ void GameScene::NormalUpdate()
 			{
 				//カメラ
 				// マネージャーからカメラを取り出す
-				auto camera=pCameraManager_->GetCamera(L"LockOnCamera");
+				auto camera = pCameraManager_->GetCamera(L"LockOnCamera");
 
 				//ロックオンカメラの型にキャスト
 				auto lockOnCamera = std::dynamic_pointer_cast<LockOnCamera>(camera);
@@ -296,6 +296,77 @@ void GameScene::NormalUpdate()
 	//当たり判定の更新
 	CollisionManager::GetInstance().UpdateCheckCollision();
 
+	//ロックオンカメラの敵の切り替え処理
+	if (pPlayer_->IsLockOn())
+	{
+		std::shared_ptr<EnemyBase> target = pPlayer_->GetLockOnEnemy().lock();
+
+		//次の敵を探す
+		if (target && target->IsDead())
+		{
+			//floatの最大値を取ってロックオンの範囲を決める
+			float closestDistanceSq = FLT_MAX;
+
+			//一番近い敵のポインタを保存するポインタ
+			std::shared_ptr<EnemyBase>closestEnemy;
+
+			//敵分ループを回す
+			for (auto& enemy : pEnemyManager_->GetEnemies())
+			{
+				if (enemy->IsDead())continue;
+
+				//プレイヤーと敵の差分のベクトルを計算
+				Vector3 diff = enemy->GetPos() - pPlayer_->GetPos();
+
+				//距離の2情を計算
+				float distSq = diff.LengthSq();
+
+				//今見つけている敵より距離が短い場合
+				if (distSq < closestDistanceSq)
+				{
+					closestDistanceSq = distSq;	//一番近い距離を更新
+					closestEnemy = enemy;		//一番近い敵を更新
+				}
+			}
+
+			if (closestEnemy != nullptr)
+			{
+				//カメラ
+				// マネージャーからカメラを取り出す
+				auto camera = pCameraManager_->GetCamera(L"LockOnCamera");
+
+				//ロックオンカメラの型にキャスト
+				auto lockOnCamera = std::dynamic_pointer_cast<LockOnCamera>(camera);
+
+				//キャストに成功したら
+				if (lockOnCamera)
+				{
+					lockOnCamera->SetTargetEnemy(closestEnemy);
+					lockOnCamera->SetPlayer(pPlayer_);
+
+					//カメラをロックオンカメラに切り替える
+					pCameraManager_->ChangeCamera(L"LockOnCamera");
+
+					//ロックオン開始
+					pPlayer_->SetLockOn(true);
+					pPlayer_->SetLockOnEnemy(closestEnemy);
+				}
+			}
+			else
+			{
+				//プレイヤーカメラに戻す
+				pCameraManager_->ChangeCamera(L"PlayerCamera");
+				pPlayer_->SetLockOn(false);
+			}
+		}
+		else if (!target)//そうでない場合は
+		{
+			//プレイヤーカメラに戻す
+			pCameraManager_->ChangeCamera(L"PlayerCamera");
+			pPlayer_->SetLockOn(false);
+		}
+	}
+
 	//死んでいるゲームオブジェクトの削除
 	gameObjects_.erase(
 		std::remove_if(gameObjects_.begin(), gameObjects_.end(), [](const auto& obj) {
@@ -306,6 +377,17 @@ void GameScene::NormalUpdate()
 
 	//死んでいる敵の削除
 	pEnemyManager_->RemoveEnemy();
+
+	//敵がいなくなったらリザルトに遷移
+	//今がこうなだけでボスを倒したら何かしらシーン遷移を行う
+	if (pEnemyManager_->GetEnemies().empty())
+	{
+		update_ = &GameScene::FadeOutUpdate;
+		draw_ = &GameScene::FadeDraw;
+		frameCount_ = 0;
+		return;
+	}
+
 }
 
 void GameScene::FadeOutUpdate()

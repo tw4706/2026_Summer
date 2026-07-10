@@ -59,19 +59,22 @@ void PlayerStateJump::Update()
 	{
 		float cameraYaw = pCamera->GetYaw();
 		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraYaw);
-		Vector3 playerDir = rotMat.TransformForVector(-inputDir).Normalize();
+		Vector3 playerDir = GetCameraLookMoveDirection();
 
-		Vector3 targetVel = playerDir * 8.0f;
-		currentVel.x_ = Vector3::Lerp(currentVel.x_, targetVel.x_, 0.25f);
-		currentVel.z_ = Vector3::Lerp(currentVel.z_, targetVel.z_, 0.25f);
+		if (playerDir.LengthSq() > 0.001f)
+		{
+			Vector3 targetVel = playerDir * 8.0f;
+			currentVel.x_ = Vector3::Lerp(currentVel.x_, targetVel.x_, 0.25f);
+			currentVel.z_ = Vector3::Lerp(currentVel.z_, targetVel.z_, 0.25f);
 
-		//向きの変更
-		float playerAngle = atan2f(playerDir.x_, -playerDir.z_);
-		float diff = playerAngle - currentAngle;
-		while (diff > DX_PI_F) diff -= DX_PI_F * 2;
-		while (diff < -DX_PI_F) diff += DX_PI_F * 2;
+			//向きの変更
+			float playerAngle = atan2f(playerDir.x_, -playerDir.z_);
+			float diff = playerAngle - currentAngle;
+			while (diff > DX_PI_F) diff -= DX_PI_F * 2;
+			while (diff < -DX_PI_F) diff += DX_PI_F * 2;
 
-		currentAngle += diff * 0.15f;
+			currentAngle += diff * 0.15f;
+		}
 	}
 
 	//重力・位置更新処理

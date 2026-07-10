@@ -156,25 +156,28 @@ void Player::Draw()
 			Vector3 startPos = pos_;
 			startPos.y_ += 80.0f;
 
-			//終点(終点は敵の位置から高さをプラスしている)
-			Vector3 endPos = target->GetPos();
-			endPos.y_ += 80.0f;
+			//終点(敵の半分くらいの位置)
+			Vector3 endPos = target->GetCameraTarget();
 
 			//DxLibのVECTOR型に変換
 			VECTOR start = startPos.ToDxlibVector();
 			VECTOR end = endPos.ToDxlibVector();
 
-			// ロックオン中は「黄色」の太い線でレイを描画
+			//ロックオン中は「黄色」の太い線でレイを描画
 			unsigned int rayColor = GetColor(255, 255, 0);
 			DrawLine3D(start, end, rayColor);
 
 			VECTOR reticleScreenPos = ConvWorldPosToScreenPos(end);
+
+			SetUseZBuffer3D(false);
 
 			//レティクルUIの描画
 			DrawRotaGraph3(reticleScreenPos.x - 100.0f, reticleScreenPos.y - 80.0f,
 				0, 0,
 				0.2f, 0.2f,
 				0.0f, reticleUIHandle_, true);
+
+			SetUseZBuffer3D(true);
 		}
 	}
 
