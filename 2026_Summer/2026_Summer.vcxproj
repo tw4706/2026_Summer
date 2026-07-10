@@ -176,6 +176,7 @@
     <ClCompile Include="GameObject\Enemy\Oni.cpp" />
     <ClCompile Include="GameObject\Katana.cpp" />
     <ClCompile Include="GameObject\Camera\LockOnCamera.cpp" />
+    <ClCompile Include="LockOnManager.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="GameObject\Stage.cpp" />
     <ClCompile Include="GameObject\Collider\PolygonCollider.cpp" />
@@ -239,6 +240,7 @@
     <ClInclude Include="GameObject\Enemy\Oni.h" />
     <ClInclude Include="GameObject\Katana.h" />
     <ClInclude Include="GameObject\Camera\LockOnCamera.h" />
+    <ClInclude Include="LockOnManager.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="GameObject\Collider\PolygonCollider.h" />
     <ClInclude Include="PathFollower.h" />

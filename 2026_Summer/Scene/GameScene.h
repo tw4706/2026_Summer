@@ -9,6 +9,7 @@ class GameObject;
 class EnemyManager;
 class CameraManager;
 class CollisionManager;
+class LockOnManager;
 class GameScene :public Scene
 {
 public:
@@ -57,6 +58,9 @@ private:
 
 	//エネミーマネージャー
 	std::unique_ptr<EnemyManager>pEnemyManager_;
+
+	//ロックオンマネージャー
+	std::unique_ptr<LockOnManager>pLockOnManager_;
 
 	//ゲームオブジェクトを管理する用のリスト
 	std::vector<std::shared_ptr<GameObject>>gameObjects_;

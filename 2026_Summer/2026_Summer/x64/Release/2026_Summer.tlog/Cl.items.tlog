@@ -34,6 +34,7 @@ C:\GitHub\2026_Summer\2026_Summer\GameObject\Camera\PlayerCamera.cpp;C:\GitHub\2
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\Oni.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\Oni.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Katana.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\Katana.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Camera\LockOnCamera.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\LockOnCamera.obj
+C:\GitHub\2026_Summer\2026_Summer\LockOnManager.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\LockOnManager.obj
 C:\GitHub\2026_Summer\2026_Summer\Model.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\Model.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Stage.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\Stage.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Collider\PolygonCollider.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\PolygonCollider.obj
