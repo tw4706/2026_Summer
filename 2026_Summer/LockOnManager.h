@@ -15,6 +15,8 @@ public:
 	void Update(std::shared_ptr<Player>pPlayer,const std::vector<std::shared_ptr<EnemyBase>>&pEnemies,
 		CameraManager*pCameraManager);
 
+	void Draw(std::shared_ptr<Player> pPlayer, CameraManager* pCameraManager);
+
 	void StartLockOn(std::shared_ptr<Player>pPlayer, const std::vector<std::shared_ptr<EnemyBase>>& pEnemies,
 		CameraManager* pCameraManager);
 

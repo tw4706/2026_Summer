@@ -29,16 +29,16 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 						{PeripheralType::padXInput,XINPUT_BUTTON_DPAD_RIGHT} };
 
 	inputTable_["lockOn"] = { {PeripheralType::keyboard,KEY_INPUT_L},
-						{PeripheralType::pad1,PAD_INPUT_8},
+						{PeripheralType::pad1,PAD_INPUT_C},
 						{PeripheralType::padXInput,XINPUT_BUTTON_RIGHT_THUMB} };
 	inputTable_["attack"] = { {PeripheralType::keyboard,KEY_INPUT_Z},
-						{PeripheralType::pad1,PAD_INPUT_5},
+						{PeripheralType::pad1,PAD_INPUT_6},
 						{PeripheralType::padXInput,XINPUT_BUTTON_RIGHT_SHOULDER} };
 	inputTable_["guard"] = { {PeripheralType::keyboard,KEY_INPUT_G},
 						{PeripheralType::pad1,PAD_INPUT_4},
 						{PeripheralType::padXInput,XINPUT_BUTTON_LEFT_SHOULDER} };
 	inputTable_["dodge"] = { {PeripheralType::keyboard,KEY_INPUT_D},
-						{PeripheralType::pad1,PAD_INPUT_C},
+						{PeripheralType::pad1,PAD_INPUT_7},
 						{PeripheralType::padXInput,XINPUT_BUTTON_X} };
 	inputTable_["jump"] = { {PeripheralType::keyboard,KEY_INPUT_SPACE},
 						{PeripheralType::pad1,PAD_INPUT_A},
@@ -119,11 +119,24 @@ void Input::UpdateAnalogStick()
 	Vector3 stickLeft;
 	Vector3 targetRight;
 
+	//XInput対応コントローラが接続されているとき
 	if (isXInputConnected_)
 	{
 		//XInputの生値(-32768～32767)を正規化して使う
 		stickLeft = Vector3(xInputState_.ThumbLX / 32768.0f, 0.0f, xInputState_.ThumbLY / 32768.0f);
 		targetRight = Vector3(-xInputState_.ThumbRX / 32768.0f, 0.0f, xInputState_.ThumbRY / 32768.0f);
+	}
+	else//XInput対応コントローラ以外の場合
+	{
+		//左スティックの取得
+		int leftX, leftY;
+		GetJoypadAnalogInput(&leftX, &leftY, DX_INPUT_PAD1);
+		stickLeft= Vector3(leftX / 1000.0f, 0.0f, -leftY / 1000.0f);
+
+		//右スティックの取得
+		int rightX, rightY;
+		GetJoypadAnalogInputRight(&rightX, &rightY, DX_INPUT_PAD1);
+		targetRight=Vector3(-rightX / 1000.0f, 0.0f, rightY / 1000.0f);
 	}
 
 	//左スティックのデッドゾーン

@@ -167,6 +167,12 @@ void GameScene::NormalUpdate()
 		return;
 	}
 
+	//ロックオンボタンを押したらロックオンを開始する
+	if (Input::GetInstance().IsTriggered("lockOn"))
+	{
+		pLockOnManager_->StartLockOn(pPlayer_, pEnemyManager_->GetEnemies(), pCameraManager_.get());
+	}
+
 	if (!reserveObjList_.empty())
 	{
 		//オブジェクトのコライダーを登録
@@ -219,20 +225,15 @@ void GameScene::NormalUpdate()
 	//当たり判定の更新
 	CollisionManager::GetInstance().UpdateCheckCollision();
 
+	//ロックオンマネージャーの更新
+	pLockOnManager_->Update(pPlayer_, pEnemyManager_->GetEnemies(), pCameraManager_.get());
+
 	//死んでいるゲームオブジェクトの削除
 	gameObjects_.erase(std::remove_if(gameObjects_.begin(), gameObjects_.end(), 
 		[](const auto& obj) {return obj->IsDead();}),gameObjects_.end());
 
 	//死んでいる敵の削除
 	pEnemyManager_->RemoveEnemy();
-
-	if (Input::GetInstance().IsTriggered("lockOn"))
-	{
-		pLockOnManager_->StartLockOn(pPlayer_, pEnemyManager_->GetEnemies(), pCameraManager_.get());
-	}
-
-	// 毎フレームの監視・フリック切り替えの更新
-	pLockOnManager_->Update(pPlayer_, pEnemyManager_->GetEnemies(), pCameraManager_.get());
 
 	//敵がいなくなったらリザルトに遷移
 	//今がこうなだけでボスを倒したら何かしらシーン遷移を行う
@@ -289,6 +290,9 @@ void GameScene::NormalDraw()
 
 	//敵マネージャーの描画
 	pEnemyManager_->Draw();
+
+	//ロックオンマネージャーの描画(デバッグ)
+	pLockOnManager_->Draw(pPlayer_,pCameraManager_.get());
 
 	DrawGrid();
 

@@ -42,6 +42,13 @@ public:
 	/// ==============================
 	/// ゲッター・セッター
 	/// ==============================
+	
+	/// <summary>
+	/// 正面ベクトルの取得
+	/// </summary>
+	/// <returns>正面ベクトルを返す</returns>
+	Vector3 GetForWardVec()const { return Vector3{ std::sinf(moveAngle_), 0.0f, -std::cosf(moveAngle_) }; }
+
 	/// <summary>
 	/// カメラの注視点の取得
 	/// </summary>
