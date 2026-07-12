@@ -25,6 +25,7 @@ struct EnemyData
 	std::wstring walkAnim_;
 	std::wstring runAnim_;
 	std::wstring attackAnim_;
+	std::wstring jumpAttackAnim_;
 	std::wstring damageAnim_;
 	std::wstring deathAnim_;
 };

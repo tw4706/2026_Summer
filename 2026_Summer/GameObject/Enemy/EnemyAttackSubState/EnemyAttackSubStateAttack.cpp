@@ -4,8 +4,8 @@
 #include "../EnemyStateAttack.h"
 #include "../EnemyBase.h"
 
-EnemyAttackSubStateAttack::EnemyAttackSubStateAttack(std::weak_ptr<EnemyBase> pEnemy, EnemyStateAttack* pEnemyAttack):
-	EnemyAttackSubStateBase(pEnemy, pEnemyAttack)
+EnemyAttackSubStateAttack::EnemyAttackSubStateAttack(std::weak_ptr<EnemyBase> pEnemy, EnemyStateAttack* pEnemyAttack, const AttackData& attackData):
+	EnemyAttackSubStateBase(pEnemy, pEnemyAttack,attackData)
 {
 }
 
@@ -18,7 +18,7 @@ void EnemyAttackSubStateAttack::Enter()
 	enemy->SetAttackAnimationSpeed();
 
 	//攻撃のコライダーを生成する
-	enemy->CreateAttackCollider(100.0f, 50.0f);
+	enemy->CreateAttackCollider(attackData_.colliderRadius_, attackData_.colliderHeight_);
 }
 
 void EnemyAttackSubStateAttack::Update()

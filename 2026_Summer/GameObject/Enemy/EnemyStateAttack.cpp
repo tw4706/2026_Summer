@@ -2,6 +2,7 @@
 #include "EnemyStateIdle.h"
 #include "EnemyAttackSubState/EnemyAttackSubStatePO.h"
 #include "EnemyBase.h"
+#include "AttackSelect.h"
 
 EnemyStateAttack::EnemyStateAttack(std::weak_ptr<EnemyBase> pEnemy, float searchRadius) :
 	EnemyStateBase(pEnemy, searchRadius)
@@ -16,8 +17,21 @@ void EnemyStateAttack::Enter()
 	//速度をゼロにする
 	enemy->SetVelocity(Vector3{ 0.0f,0.0f,0.0f });
 
+	//攻撃データを取得
+	const auto* pLoader = enemy->GetAttackDataLoader();
+
+	//攻撃データローダーが無ければ何もしない
+	if (!pLoader)return;
+
+	//全攻撃候補を取得
+	auto attackCandidates = pLoader->GetAllAttackData();
+
+	//重みを持たせた抽選でどの攻撃を出すか決める
+	const AttackData* pSelected = AttackSelect::ChooseWeighted(attackCandidates);
+	if (!pSelected)return;
+
 	//最初に攻撃の予備動作の状態に遷移してそっから分岐させる
-	auto nextAttackState = std::make_shared<EnemyAttackSubStatePO>(pEnemy_, this);
+	auto nextAttackState = std::make_shared<EnemyAttackSubStatePO>(pEnemy_, this,*pSelected);
 	ChangeAttackState(nextAttackState);
 }
 

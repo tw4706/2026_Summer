@@ -291,6 +291,7 @@ void EnemyBase::ApplyData(const EnemyData& data, const EnemySpawnData& spawnData
 	animation_.RegisterAnimName(AnimationState::Walk, data.walkAnim_);
 	animation_.RegisterAnimName(AnimationState::Run, data.runAnim_);
 	animation_.RegisterAnimName(AnimationState::EnemyAttack, data.attackAnim_);
+	animation_.RegisterAnimName(AnimationState::EnemyJumpAttack, data.jumpAttackAnim_);
 	animation_.RegisterAnimName(AnimationState::Damage, data.damageAnim_);
 	animation_.RegisterAnimName(AnimationState::Death, data.deathAnim_);
 }

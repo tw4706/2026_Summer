@@ -85,7 +85,7 @@ private:
 	//敵のパラメータのデータローダー
 	EnemyStatus dataLoader_;
 
-	//敵の生成データのローダー
+	//敵の生成データローダー
 	EnemySpawnDataLoader spawnDataLoader_;
 
 	//WayPointのデータローダー

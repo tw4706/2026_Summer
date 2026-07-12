@@ -135,7 +135,7 @@ void EnemyStateRun::Update()
 
 	float angleDiff = targetAngle - currentAngle;
 
-	//-ƒÎ‚©‚çƒÎ‚Ì”ÍˆÍ‚É³‹K‰»
+	//-180“x‚©‚ç180“x‚Ì”ÍˆÍ‚É³‹K‰»
 	while (angleDiff > DX_PI_F)  angleDiff -= 2.0f * DX_PI_F;
 	while (angleDiff < -DX_PI_F) angleDiff += 2.0f * DX_PI_F;
 

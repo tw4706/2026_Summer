@@ -219,6 +219,7 @@ void Animation::ChangeState(AnimationState state, const std::wstring& animName)
 			state_ == AnimationState::JumpAttack ||
 			state_ == AnimationState::Guard ||
 			state_ == AnimationState::EnemyAttack ||
+			state_ == AnimationState::EnemyJumpAttack ||
 			state_ == AnimationState::Damage ||
 			state_ == AnimationState::Death ||
 			state_ == AnimationState::Spawn ||
