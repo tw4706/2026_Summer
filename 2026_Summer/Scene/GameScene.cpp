@@ -50,6 +50,7 @@ GameScene::GameScene(SceneManager& sceneManager) :
 	pEnemyManager_->LoadEnemyData(L"data/CSV/EnemyData.csv");
 	pEnemyManager_->LoadEnemySpawnData(L"data/CSV/EnemySpawnData.csv");
 	pEnemyManager_->LoadWayPointData(L"data/CSV/WayPointData.csv");
+	pEnemyManager_->LoadEnemyAttackData(L"data/CSV/EnemyAttackData.csv");
 
 	//ƒvƒŒƒCƒ„[‚Ì“o˜^
 	RegisterGameObject(pPlayer_);

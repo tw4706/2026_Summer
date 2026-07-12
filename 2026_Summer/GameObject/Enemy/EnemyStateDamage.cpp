@@ -2,11 +2,6 @@
 #include "EnemyStateIdle.h"
 #include "EnemyBase.h"
 
-namespace
-{
-	const wchar_t* kEnemyDamage = L"Oni|Damage";
-}
-
 EnemyStateDamage::EnemyStateDamage(std::weak_ptr<EnemyBase> pEnemy, float searchRadius):
 	EnemyStateBase(pEnemy,searchRadius)
 {
@@ -34,7 +29,6 @@ void EnemyStateDamage::Update()
 		enemy->ChangeState(nextState);
 		return;
 	}
-
 }
 
 void EnemyStateDamage::Exit()

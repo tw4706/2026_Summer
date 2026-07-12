@@ -4,6 +4,7 @@
 #include "AStarPathFinder.h"
 #include "PathFollower.h"
 #include "WayPointLoader.h"
+#include "EnemyAttackDataLoader.h"
 #include "EnemyData.h"
 #include "EnemySpawnData.h"
 
@@ -53,6 +54,18 @@ public:
 	/// </summary>
 	/// <param name="data">CSVファイルのデータ</param>
 	virtual void ApplyData(const EnemyData& data,const EnemySpawnData&spawnData, const WayPointLoader* pWayPointLoader);
+
+	/// <summary>
+	/// 攻撃データローダーのセット
+	/// </summary>
+	/// <param name="pLoader">攻撃データローダーのポインタ</param>
+	void SetAttackDataLoader(const EnemyAttackDataLoader* pLoader) { pAttackDataLoader_ = pLoader; }
+
+	/// <summary>
+	/// 攻撃データローダーの取得
+	/// </summary>
+	const EnemyAttackDataLoader* GetAttackDataLoader() const { return pAttackDataLoader_; }
+
 
 	/// <summary>
 	/// プレイヤーの位置の取得
@@ -138,8 +151,6 @@ protected:
 	const NavigationGrid* pNaviGrid_ = nullptr;
 	//エリアID
 	int areaId_ = 0;
-	//WayPointLoaderの参照
-	const WayPointLoader* pWayPointLoader_ = nullptr;
 	//現在いるWayPointのID
 	int currentWayPointId_ = -1;
 	//目標のWayPointのID
@@ -152,5 +163,11 @@ protected:
 	//攻撃コライダー
 	SphereCollider* pAttackCollider_;
 	float attackColliderDistance_ = 0.0f;
+
+	//WayPointLoaderの参照
+	const WayPointLoader* pWayPointLoader_ = nullptr;
+
+	//攻撃データローダーの参照
+	const EnemyAttackDataLoader* pAttackDataLoader_ = nullptr;
 };
 

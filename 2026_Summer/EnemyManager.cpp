@@ -43,6 +43,11 @@ bool EnemyManager::LoadWayPointData(const std::wstring& path)
 	return wayPointLoader_.Load(path);
 }
 
+bool EnemyManager::LoadEnemyAttackData(const std::wstring& path)
+{
+	return attackDataLoader_.Load(path);
+}
+
 std::vector<std::shared_ptr<EnemyBase>> EnemyManager::SpawnEnemyArea(int areaId)
 {
 	std::vector<std::shared_ptr<EnemyBase>> spawned;
@@ -72,6 +77,8 @@ std::vector<std::shared_ptr<EnemyBase>> EnemyManager::SpawnEnemyArea(int areaId)
 
 		//パラメータ + 配置データの両方を適用
 		enemy->ApplyData(*pData, *pSpawn, &wayPointLoader_);
+		//攻撃データの適用
+		enemy->SetAttackDataLoader(&attackDataLoader_);
 		//敵の初期化
 		enemy->Init();
 

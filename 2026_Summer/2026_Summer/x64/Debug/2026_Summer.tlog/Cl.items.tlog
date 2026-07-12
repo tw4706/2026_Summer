@@ -1,6 +1,8 @@
 C:\Users\yongy\git\2026_Summer\2026_Summer\Application.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Application.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\AStarPathFinder.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\AStarPathFinder.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\CSV\EnemySpawnDataLoader.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\EnemySpawnDataLoader.obj
+C:\Users\yongy\git\2026_Summer\2026_Summer\CSV\EnemyAttackDataLoader.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\EnemyAttackDataLoader.obj
+C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Enemy\EnemyStateGuard.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\EnemyStateGuard.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateAttack.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\EnemyAttackSubStateAttack.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateChance.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\EnemyAttackSubStateChance.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStatePO.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\EnemyAttackSubStatePO.obj
