@@ -23,6 +23,9 @@ void PlayerStateAttack::Enter()
 
 	//UŒ‚ŠJŽn‚Æ“¯Žž‚É“‚Ì“–‚½‚è”»’è‚ð—LŒø‰»
 	player->SetKatanaColliderEnabled(true);
+
+	//UŒ‚s“®‚ð‹L˜^
+	player->actionCounter_.RecordAttack();
 }
 
 void PlayerStateAttack::Update()

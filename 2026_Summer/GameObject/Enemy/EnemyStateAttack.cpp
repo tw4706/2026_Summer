@@ -26,8 +26,11 @@ void EnemyStateAttack::Enter()
 	//全攻撃候補を取得
 	auto attackCandidates = pLoader->GetAllAttackData();
 
+	//プレイヤーの行動カウンタを取得
+	const PlayerActionCounter* pCounter = enemy->GetPlayerActionCounter();
+
 	//重みを持たせた抽選でどの攻撃を出すか決める
-	const AttackData* pSelected = AttackSelect::ChooseWeighted(attackCandidates);
+	const AttackData* pSelected = AttackSelect::ChooseWeighted(attackCandidates,*pCounter);
 	if (!pSelected)return;
 
 	//最初に攻撃の予備動作の状態に遷移してそっから分岐させる

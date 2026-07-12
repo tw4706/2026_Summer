@@ -320,6 +320,17 @@ void EnemyBase::SetPlayer(std::weak_ptr<Player> pPlayer)
 	pPlayer_ = pPlayer;
 }
 
+const PlayerActionCounter* EnemyBase::GetPlayerActionCounter() const
+{
+	auto pPlayer = pPlayer_.lock();
+	if (!pPlayer)
+	{
+		return nullptr;
+	}
+	//プレイヤーのカウンタを返す
+	return &pPlayer->GetActionCounter();
+}
+
 void EnemyBase::SetNavigationGrid(const NavigationGrid* pNavGrid)
 {
 	pNaviGrid_ = pNavGrid;

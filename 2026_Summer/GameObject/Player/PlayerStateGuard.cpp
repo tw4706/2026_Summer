@@ -27,6 +27,9 @@ void PlayerStateGuard::Enter()
 
 	player->ChangeAnimation(AnimationState::LeftGuard, kPlayerLeftGuard.data());
 	player->isGuarding_ = true;
+
+	//ƒK[ƒhs“®‚ð‹L˜^
+	player->actionCounter_.RecordGuard();
 }
 
 void PlayerStateGuard::Update()

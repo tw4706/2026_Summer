@@ -10,11 +10,11 @@
 namespace
 {
 	//ロックオンで探す最大距離
-	constexpr float kMaxLockOnDistance = 1500.0f;
+	constexpr float kMaxLockOnDistance = 2000.0f;
 	constexpr float kMaxLockOnDistanceSq = kMaxLockOnDistance * kMaxLockOnDistance;
 
 	//ターゲット切り替え時に敵を切り替えれる距離
-	constexpr float kTargetChangeDistance = 3000.0f;
+	constexpr float kTargetChangeDistance = 4000.0f;
 	constexpr float kTargetChangeDistanceSq = kTargetChangeDistance * kTargetChangeDistance;
 
 	//ロックオンを行う索敵の視野角
@@ -221,14 +221,10 @@ void LockOnManager::StartLockOn(std::shared_ptr<Player> pPlayer, const std::vect
 		float distSq = diff.LengthSq();
 		float dist = std::sqrtf(distSq);
 
-#ifdef _DEBUG
-		OutputDebugStringA(("dist: " + std::to_string(dist) + "\n").c_str());
-#endif
-
 		//距離制限
 		if (distSq > kMaxLockOnDistanceSq) continue;
 
-		//角度制限（内積）
+		//角度制限
 		Vector3 toEnemyDir = diff;
 		toEnemyDir.y_ = 0.0f;
 		toEnemyDir = toEnemyDir.Normalize();

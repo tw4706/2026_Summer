@@ -38,6 +38,9 @@ void PlayerStateDodge::Enter()
 	//無敵時間のセット
 	player->isInvincible_ = true;
 
+	//回避行動を記録
+	player->actionCounter_.RecordDodge();
+
 	//現在カメラ基準の入力方向を直接取得する
 	Vector3 moveDir = GetCameraLookMoveDirection();
 

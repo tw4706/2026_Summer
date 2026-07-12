@@ -46,6 +46,7 @@ C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Player\PlayerStateDamage.c
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Player\PlayerStateDeath.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerStateDeath.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Player\PlayerStateGuard.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerStateGuard.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Player\PlayerStateJumpAttack.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerStateJumpAttack.obj
+C:\Users\yongy\git\2026_Summer\2026_Summer\PlayerActionCounter.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerActionCounter.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\Scene\SceneManager.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\SceneManager.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\Scene\Scene.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Scene.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\Scene\ResultScene.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\ResultScene.obj

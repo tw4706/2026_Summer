@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "Animation.h"
 #include "Camera/CameraManager.h"
+#include "../../PlayerActionCounter.h"
 
 class Input;
 class Katana;
@@ -104,6 +105,11 @@ public:
 	/// </summary>
 	void SetLockOnEnemy(std::weak_ptr<EnemyBase> enemy) { pLockOnEnemy_ = enemy; }
 
+	/// <summary>
+	/// プレイヤーの行動カウンタの取得
+	/// </summary>
+	const PlayerActionCounter& GetActionCounter() const { return actionCounter_; }
+
 private:
 	float moveAngle_;						//プレイヤーの向く角度
 	int handFrameIndex_;					//右手の刀を持つ手のフレームインデックス
@@ -117,5 +123,6 @@ private:
 	CameraBase* activeCamera_ = nullptr;	//アクティブなカメラ
 	std::weak_ptr<EnemyBase>pLockOnEnemy_;	//敵のポインタ
 	std::unique_ptr<Katana> pKatana_;		//刀
+	PlayerActionCounter actionCounter_; //プレイヤーの行動傾向カウンタ
 };
 

@@ -7,6 +7,7 @@
 #include "EnemyAttackDataLoader.h"
 #include "EnemyData.h"
 #include "EnemySpawnData.h"
+#include "PlayerActionCounter.h"
 
 class Player;
 class SphereCollider;
@@ -84,6 +85,12 @@ public:
 	/// </summary>
 	/// <param name="pPlayer">プレイヤーのポインタ</param>
 	void SetPlayer(std::weak_ptr<Player>pPlayer);
+
+	/// <summary>
+	/// プレイヤーの行動カウンタの取得	
+	/// </summary>
+	/// <returns>プレイヤーが存在しない場合はnullptr</returns>
+	const PlayerActionCounter* GetPlayerActionCounter() const;
 
 	/// <summary>
 	/// 索敵範囲の取得
