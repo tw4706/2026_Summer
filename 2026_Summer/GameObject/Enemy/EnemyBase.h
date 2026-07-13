@@ -150,6 +150,14 @@ protected:
 	//Å‘å‘Ì—Í
 	int maxHP_;
 
+	//•`‰æ—p‘Ì—Í
+	float drawHP_;
+
+	//HP‚ğ•`‰æ‚µ‚Ä‚¢‚¢‚©‚Ç‚¤‚©
+	bool isDrawHPVisible_;
+
+	int drawHPVisibleTimer_;
+
 	//ƒ‚ƒfƒ‹‚ÌŠg‘å—¦
 	Vector3 scale_;
 

@@ -15,6 +15,8 @@
 EnemyBase::EnemyBase() :
 	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f),
 	moveAngle_(0.0f),
+	isDrawHPVisible_(false),
+	drawHPVisibleTimer_(0.0f),
 	scale_({ 1.0f,1.0f,1.0f }),
 	searchRadius_(500.0f),
 	colliderRadius_(70.0f),
@@ -59,6 +61,9 @@ void EnemyBase::Update()
 {
 	// Collidableクラスの更新
 	Collidable::Update();
+
+	//描画用HPの更新(lerpで減らす)
+	drawHP_ = Vector3::Lerp(drawHP_, static_cast<float>(hp_), 0.1f);
 
 	//ステートが入ってない場合
 	if (!pCurrentState_)
@@ -178,43 +183,44 @@ void EnemyBase::Draw()
 		}
 	}
 #endif
+	if (isDrawHPVisible_)
+	{//敵の頭上の3D座標を計算
+		Vector3 headWorldPos = GetCameraTarget() + Vector3{ 0.0f, 70.0f, 0.0f };
 
-	//敵の頭上の3D座標を計算
-	Vector3 headWorldPos = GetCameraTarget() + Vector3{ 0.0f, 70.0f, 0.0f };
+		//D座標を画面の2D座標に変換
+		VECTOR screenPos = ConvWorldPosToScreenPos(headWorldPos.ToDxlibVector());
 
-	//D座標を画面の2D座標に変換
-	VECTOR screenPos = ConvWorldPosToScreenPos(headWorldPos.ToDxlibVector());
+		//画面外にいる場合は描画しない判定
+		//変換結果の Z 値が 0.0f ～ 1.0f の間にあれば画面内に映っています
+		if (screenPos.z >= 0.0f && screenPos.z <= 1.0f)
+		{
+			//拡大率
+			float scale = 0.2f;
 
-	//画面外にいる場合は描画しない判定
-	//変換結果の Z 値が 0.0f ～ 1.0f の間にあれば画面内に映っています
-	if (screenPos.z >= 0.0f && screenPos.z <= 1.0f)
-	{
-		//拡大率
-		float scale = 0.2f;
+			//HPの割合
+			float hpRate = drawHP_ / maxHP_;
+			int drawHPWidth = static_cast<int>(hpUIX_ * hpRate);
 
-		//HPの割合
-		float hpRate = static_cast<float>(hp_) / maxHP_;
-		int drawHPWidth = static_cast<int>(hpUIX_ * hpRate);
+			int scaledBarW = static_cast<int>(hpBarUIX_ * scale); //フレームの幅
+			int scaledBarH = static_cast<int>(hpBarUIY_ * scale); //フレームの高さ
+			int scaledHPW = static_cast<int>(drawHPWidth * scale); //バーの幅
 
-		int scaledBarW = static_cast<int>(hpBarUIX_ * scale); //フレームの幅
-		int scaledBarH = static_cast<int>(hpBarUIY_ * scale); //フレームの高さ
-		int scaledHPW = static_cast<int>(drawHPWidth * scale); //バーの幅
+			//HPバーの基準点を計算
+			int drawX = static_cast<int>(screenPos.x) - (scaledBarW / 2);
+			int drawY = static_cast<int>(screenPos.y) - (scaledBarH / 2);
 
-		//HPバーの基準点を計算
-		int drawX = static_cast<int>(screenPos.x) - (scaledBarW / 2);
-		int drawY = static_cast<int>(screenPos.y) - (scaledBarH / 2);
+			//HPバーフレームの描画
+			DrawRectExtendGraph(drawX, drawY,
+				drawX + scaledBarW, drawY + scaledBarH, 0, 0,
+				hpBarUIX_, hpBarUIY_,
+				hpFrameHandle_, true);
 
-		//HPバーフレームの描画
-		DrawRectExtendGraph(drawX, drawY,
-			drawX+ scaledBarW, drawY+ scaledBarH, 0, 0,
-			hpBarUIX_, hpBarUIY_,
-			hpFrameHandle_, true);
-
-		//HPバーの描画
-		DrawRectExtendGraph(drawX, drawY,
-			drawX + scaledHPW, drawY + scaledBarH, 0, 0,
-			drawHPWidth, hpUIY_,
-			hpHandle_, true);
+			//HPバーの描画
+			DrawRectExtendGraph(drawX, drawY,
+				drawX + scaledHPW, drawY + scaledBarH, 0, 0,
+				drawHPWidth, hpUIY_,
+				hpHandle_, true);
+		}
 	}
 }
 
@@ -256,6 +262,21 @@ void EnemyBase::OnCollision(Collidable& coll)
 void EnemyBase::OnDamage(int damage)
 {
 	hp_ -= damage;
+
+	isDrawHPVisible_ = true;
+
+	drawHPVisibleTimer_ = 3.0f;
+
+	if (isDrawHPVisible_)
+	{
+		drawHPVisibleTimer_ --;
+
+		//描画をひょうじするたいまーが0以下かつHPが0の場合
+		if (drawHPVisibleTimer_ <= 0.0f && drawHP_ - static_cast<float>(hp_) < 0.1f)
+		{
+			isDrawHPVisible_ = false;
+		}
+	}
 
 	if (hp_ <= 0)
 	{
@@ -316,7 +337,10 @@ void EnemyBase::ApplyData(const EnemyData& data, const EnemySpawnData& spawnData
 	hp_ = spawnData.hp_;
 
 	//最大体力
-	maxHP_= spawnData.hp_;
+	maxHP_ = spawnData.hp_;
+
+	//描画用体力
+	drawHP_ = static_cast<float>(hp_);
 
 	//トランスフォーム
 	pos_ = spawnData.spawnPos_;
