@@ -38,6 +38,10 @@ Player::Player() :
 	handFrameIndex_(-1),
 	hpUIHandle_(-1),
 	hpBarUIHandle_(-1),
+	hpUIX_(0.0f),
+	hpUIY_(0.0f),
+	hpBarUIX_(0.0f),
+	hpBarUIY_(0.0f),
 	reticleUIHandle_(-1),
 	pKatana_(nullptr)
 {

@@ -20,7 +20,7 @@ const AttackData* AttackSelect::ChooseWeighted(const std::vector<const AttackDat
 		//プレイヤーがガードをするほどダメージの高いジャンプ攻撃を選ばれやすくする
 		if (data->type_ == AttackType::JumpAttack)
 		{
-			w *= 1.0f + guardRatio * 2.0f; //ずっとガードしているなら確率が3倍
+			w *= 1.0f + guardRatio * 2.0f;//ずっとガードしているなら確率が2倍
 		}
 
 		//配列に入れて合計の重みを代入

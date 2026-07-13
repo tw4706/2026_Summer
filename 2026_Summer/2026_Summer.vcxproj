@@ -113,6 +113,7 @@
       <AdditionalIncludeDirectories>Dxlib_h;$(ProjectDir)Math;$(ProjectDir)GameObject;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)Player;$(ProjectDir)Enemy;$(ProjectDir);$(ProjectDir)CSV</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -129,7 +130,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>Dxlib_h;$(ProjectDir)Common;$(ProjectDir)GameObject;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)Player;$(ProjectDir)Enemy;$(ProjectDir);$(ProjectDir)CSV</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>

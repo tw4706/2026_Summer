@@ -39,7 +39,7 @@ void EnemyBase::Init()
 
 	//‰æ‘œ‚Ìƒ[ƒh
 	hpHandle_ = LoadGraph(L"data/UI/EnemyHP.png");
-	assert(pHandle_ >= 0);
+	assert(hpHandle_ >= 0);
 	GetGraphSize(hpHandle_, &hpUIX_, &hpUIY_);
 
 	hpFrameHandle_ = LoadGraph(L"data/UI/HPBar.png");
