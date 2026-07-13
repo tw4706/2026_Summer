@@ -278,6 +278,7 @@ void EnemyBase::OnDamage(int damage)
 		}
 	}
 
+	//HP‚ª0‚Ìê‡
 	if (hp_ <= 0)
 	{
 		hp_ = 0;

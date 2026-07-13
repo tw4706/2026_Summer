@@ -148,15 +148,18 @@ void EnemyStateIdle::Update()
 	enemy->debugNextPos_ = pTargetWp->pos;
 	enemy->hasDebugTarget_ = true;
 
-	//Œo˜H‚ª–³‚¢Žž‚¾‚¯’¼i‰Â”Û‚ð”»’è‚·‚é
-	bool canWalkDirect = IsPathWalkable(enemy->pNaviGrid_, enemyPos, pTargetWp->pos);
-
-	if (!canWalkDirect)
+	//Œo˜H‚ª–³‚¢Žž‚¾‚¯’¼i”»’è‚ð‚·‚é
+	if (!enemy->pathFollower_.HasPath())
 	{
-		std::vector<Vector3> path = enemy->pathFinder_.FindPath(enemyPos, pTargetWp->pos);
-		if (!path.empty())
+		bool canWalkDirect = IsPathWalkable(enemy->pNaviGrid_, enemyPos, pTargetWp->pos);
+
+		if (!canWalkDirect)
 		{
-			enemy->pathFollower_.SetPath(path);
+			std::vector<Vector3> path = enemy->pathFinder_.FindPath(enemyPos, pTargetWp->pos);
+			if (!path.empty())
+			{
+				enemy->pathFollower_.SetPath(path);
+			}
 		}
 	}
 
