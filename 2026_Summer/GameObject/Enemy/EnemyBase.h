@@ -137,6 +137,19 @@ protected:
 	//ステージのモデルハンドル(視線判定用)
 	int stageModelHandle_ = -1;
 
+	//HPバーのハンドル
+	int hpHandle_;
+
+	//HPバーフレームハンドル
+	int hpFrameHandle_;
+
+	//グラフィックハンドルのサイズ取得用
+	int hpUIX_, hpUIY_;
+	int hpBarUIX_, hpBarUIY_;
+
+	//最大体力
+	int maxHP_;
+
 	//モデルの拡大率
 	Vector3 scale_;
 

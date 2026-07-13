@@ -117,7 +117,11 @@ private:
 	bool isInvincible_ = false;				//無敵中かどうか
 	bool isGuarding_ = false;				//ガード中かどうか
 	bool isLockOn_ = false;					//ロックオンしているかどうか
-	int reticleUIHandle_;						//レティクルUIハンドル
+	int hpUIHandle_;						//HPUIハンドル
+	int hpBarUIHandle_;						//HPバーUIハンドル
+	int hpUIX_, hpUIY_;						//グラフィックハンドルのサイズ取得用
+	int hpBarUIX_, hpBarUIY_;				//グラフィックハンドルのサイズ取得用
+	int reticleUIHandle_;					//レティクルUIハンドル
 
 	CameraManager* pCameraManager_=nullptr;			//カメラマネージャー
 	CameraBase* activeCamera_ = nullptr;	//アクティブなカメラ

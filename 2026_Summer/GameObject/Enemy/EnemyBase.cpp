@@ -1,13 +1,14 @@
 #include "EnemyBase.h"
 #include "Player/Player.h"
 #include "Katana.h"
+#include "Game.h"
+#include "EnemyManager.h"
+#include "EnemyStateIdle.h"
 #include "EnemyStateDamage.h"
 #include "EnemyStateDeath.h"
-#include "EnemyStateIdle.h"
+#include "CollisionManager.h"
 #include"Collider/CapsuleCollider.h"
 #include"Collider/SphereCollider.h"
-#include "EnemyManager.h"
-#include "CollisionManager.h"
 #include<cassert>
 
 
@@ -33,6 +34,15 @@ void EnemyBase::Init()
 {
 	vel_ = { 0.0f, 0.0f, 0.0f };
 	isHit_ = false;
+
+	//画像のロード
+	hpHandle_ = LoadGraph(L"data/UI/EnemyHP.png");
+	assert(pHandle_ >= 0);
+	GetGraphSize(hpHandle_, &hpUIX_, &hpUIY_);
+
+	hpFrameHandle_ = LoadGraph(L"data/UI/HPBar.png");
+	assert(hpFrameHandle_ >= 0);
+	GetGraphSize(hpFrameHandle_, &hpBarUIX_, &hpBarUIY_);
 
 	//アニメーションの初期化
 	animation_.Init(model_.GetHandle());
@@ -168,6 +178,44 @@ void EnemyBase::Draw()
 		}
 	}
 #endif
+
+	//敵の頭上の3D座標を計算
+	Vector3 headWorldPos = GetCameraTarget() + Vector3{ 0.0f, 70.0f, 0.0f };
+
+	//D座標を画面の2D座標に変換
+	VECTOR screenPos = ConvWorldPosToScreenPos(headWorldPos.ToDxlibVector());
+
+	//画面外にいる場合は描画しない判定
+	//変換結果の Z 値が 0.0f ～ 1.0f の間にあれば画面内に映っています
+	if (screenPos.z >= 0.0f && screenPos.z <= 1.0f)
+	{
+		//拡大率
+		float scale = 0.2f;
+
+		//HPの割合
+		float hpRate = static_cast<float>(hp_) / maxHP_;
+		int drawHPWidth = static_cast<int>(hpUIX_ * hpRate);
+
+		int scaledBarW = static_cast<int>(hpBarUIX_ * scale); //フレームの幅
+		int scaledBarH = static_cast<int>(hpBarUIY_ * scale); //フレームの高さ
+		int scaledHPW = static_cast<int>(drawHPWidth * scale); //バーの幅
+
+		//HPバーの基準点を計算
+		int drawX = static_cast<int>(screenPos.x) - (scaledBarW / 2);
+		int drawY = static_cast<int>(screenPos.y) - (scaledBarH / 2);
+
+		//HPバーフレームの描画
+		DrawRectExtendGraph(drawX, drawY,
+			drawX+ scaledBarW, drawY+ scaledBarH, 0, 0,
+			hpBarUIX_, hpBarUIY_,
+			hpFrameHandle_, true);
+
+		//HPバーの描画
+		DrawRectExtendGraph(drawX, drawY,
+			drawX + scaledHPW, drawY + scaledBarH, 0, 0,
+			drawHPWidth, hpUIY_,
+			hpHandle_, true);
+	}
 }
 
 void EnemyBase::OnCollision(Collidable& coll)
@@ -266,6 +314,9 @@ void EnemyBase::ApplyData(const EnemyData& data, const EnemySpawnData& spawnData
 
 	//ステータス
 	hp_ = spawnData.hp_;
+
+	//最大体力
+	maxHP_= spawnData.hp_;
 
 	//トランスフォーム
 	pos_ = spawnData.spawnPos_;

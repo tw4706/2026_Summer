@@ -3,7 +3,6 @@
 #include "EnemyBase.h"
 #include "System/NavigationGrid.h"
 
-
 namespace
 {
 	//ˆÚ“®‘¬“x
@@ -73,7 +72,6 @@ namespace
 		return true;
 	}
 }
-
 
 EnemyStateIdle::EnemyStateIdle(std::weak_ptr<EnemyBase> pEnemy, float searchRadius) :
 	EnemyStateBase(pEnemy, searchRadius)

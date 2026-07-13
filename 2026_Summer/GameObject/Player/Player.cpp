@@ -12,6 +12,7 @@
 #include "Collider/CapsuleCollider.h"
 #include<Dxlib.h>
 #include<memory>
+#include<cassert>
 
 namespace
 {
@@ -35,6 +36,8 @@ Player::Player() :
 	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f),
 	moveAngle_(0.0f),
 	handFrameIndex_(-1),
+	hpUIHandle_(-1),
+	hpBarUIHandle_(-1),
 	reticleUIHandle_(-1),
 	pKatana_(nullptr)
 {
@@ -57,6 +60,14 @@ void Player::Init()
 	hp_ = kMaxHP;
 
 	//画像のロード
+	hpUIHandle_ = LoadGraph(L"data/UI/PlayerHP.png");
+	assert(hpUIHandle_ >= 0);
+	GetGraphSize(hpUIHandle_, &hpUIX_, &hpUIY_);
+
+	hpBarUIHandle_ = LoadGraph(L"data/UI/HPBar.png");
+	assert(hpBarUIHandle_ >= 0);
+	GetGraphSize(hpBarUIHandle_, &hpBarUIX_, &hpBarUIY_);
+
 	reticleUIHandle_ = LoadGraph(L"data/UI/reticle.png");
 	int reticleX, reticleY;
 	GetGraphSize(reticleUIHandle_, &reticleX, &reticleY);
@@ -204,6 +215,31 @@ void Player::Draw()
 
 	DrawFormatString(100, 100, 0x00ffff, L"PlayerPosX : %.2f,PlayerPosY : %.2f,PlayerPosZ : %.2f", pos_.x_, pos_.y_, pos_.z_);
 #endif
+
+	//HPの割合
+	float hpRate = static_cast<float>(hp_) / kMaxHP;
+	int drawHPWidth = static_cast<int>(hpUIX_ * hpRate);
+
+	//拡大率
+	float scale = 1.0f;
+
+	int distX = static_cast<int>(hpBarUIX_ * scale);
+	int distY = static_cast<int>(hpBarUIY_ * scale);
+
+	int distX2 = static_cast<int>(drawHPWidth * scale);
+	int distY2 = static_cast<int>(hpUIY_ * scale);
+
+	//HPバーフレームの描画
+	DrawRectGraph(Game::kScreenWidth / 2 - 250, Game::kScreenHeight - 150,
+		0, 0,
+		hpBarUIX_, hpBarUIY_,
+		hpBarUIHandle_, true);
+
+	//HPバーの描画
+	DrawRectGraph(Game::kScreenWidth / 2 - 250, Game::kScreenHeight - 150,
+		0, 0,
+		drawHPWidth, hpUIY_,
+		hpUIHandle_, true);
 }
 
 void Player::OnCollision(Collidable& coll)
