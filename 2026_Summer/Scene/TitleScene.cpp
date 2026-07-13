@@ -96,6 +96,6 @@ void TitleScene::NormalDraw()
 	DrawFormatString(0,30, 0xffffff, L"ボタンを押してスタート");
 
 	//タイトルロゴの描画
-	DrawRotaGraph3(Game::kScreenWidth / 2-500, Game::kScreenHeight / 2-400,0, 0,
-		0.5f, 0.5f, 0.0f, titleLogoHandle_, true);
+	DrawRotaGraph3(Game::kScreenWidth / 2-600, Game::kScreenHeight / 2-500,0, 0,
+		0.6f, 0.6f, 0.0f, titleLogoHandle_, true);
 }

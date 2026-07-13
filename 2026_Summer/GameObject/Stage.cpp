@@ -4,12 +4,12 @@
 namespace
 {
 	//ナビゲーショングリッドを生成する範囲
-	const float kGridMinX = -500.0f;
-	const float kGridMaxX = 500.0f;
-	const float kGridMinZ = -500.0f;
-	const float kGridMaxZ = 500.0f;
+	const float kGridMinX = -5000.0f;
+	const float kGridMaxX = 1000.0f;
+	const float kGridMinZ = -8500.0f;
+	const float kGridMaxZ = 0.0f;
 	//グリッド1マスのサイズ
-	const float kGridCellSize = 50.0f;
+	const float kGridCellSize = 100.0f;
 
 	//バウンディングボックスを作成する際の余白
 	const float kBoundsMargin = 50.0f;
@@ -41,7 +41,7 @@ void Stage::Init()
 
 	//ナビゲーショングリッドの生成
 	navGrid_.SetExpectedGroundY(-100.0f);
-	navGrid_.CreateGrid(stageModel_.GetHandle(), kGridMinX, kGridMaxX, kGridMinZ, kGridMaxZ, kGridCellSize);
+	navGrid_.CreateGrid(stageModel_.GetHandle(), kGridMinX, kGridMaxX, kGridMinZ, kGridMaxZ, kGridCellSize, 120.0f);
 
 }
 
@@ -57,7 +57,7 @@ void Stage::Draw()
 
 #ifdef _DEBUG
 	//ナビゲーショングリッドデバッグの表示
-	//DrawNavGridDebug();
+	DrawNavGridDebug();
 #endif
 }
 
@@ -74,7 +74,7 @@ void Stage::DrawNavGridDebug() const
 			Vector3 pos = VGet(node->pos.x_, node->pos.y_ + 5.0f, node->pos.z_);
 
 			//歩行可能なら緑、不可能なら赤
-			unsigned int color = node->iswalked ? GetColor(0, 255, 0) : GetColor(255, 0, 0);
+			unsigned int color = node->iswalked ? GetColor(0, 255, 0) : GetColor(0, 255, 255);
 
 			DrawSphere3D(pos.ToDxlibVector(), 5.0f, 6, color, color, TRUE);
 		}

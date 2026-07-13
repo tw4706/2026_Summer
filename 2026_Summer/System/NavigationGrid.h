@@ -20,7 +20,7 @@ public:
 	/// <param name="minZ">グリッドのZ軸方向の最小座標</param>
 	/// <param name="maxZ">グリッドのZ軸方向の最大座標</param>
 	/// <param name="cellSize">各グリッドの1マスのサイズ</param>
-	void CreateGrid(int stageModelHandle, float minX, float maxX, float minZ, float maxZ, float cellSize);
+	void CreateGrid(int stageModelHandle, float minX, float maxX, float minZ, float maxZ, float cellSize, int margin);
 
 	/// <summary>
 	/// x,z座標に対応するノードデータの座標を取得

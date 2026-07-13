@@ -65,7 +65,7 @@ Vector3 CameraBase::CheckCollCameraToStage(int stageModelHandle,const Vector3&st
         Vector3 normal = result.Normal;
 
         //‰Ÿ‚µo‚µˆ—
-        hitPos += normal * 20.0f;
+        hitPos += normal * 15.0f;
 
         //‰Ÿ‚µo‚µ‚½À•W‚ğ•Ô‚·
         return hitPos;

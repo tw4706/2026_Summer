@@ -10,18 +10,18 @@ namespace
 	//レイを飛ばす終点の高さ
 	const float kRayEndHeight = -1000.0f;
 
-	//地面とみなす法線yの値(障害物の側面・斜面を区別するのに使う)
+	//地面とみなす法線yの値
 	constexpr float kGroundNormalThreshold = 0.7f;
 
 	//地面の高さの許容誤差(これを超えて高い/低い位置にヒットしたら障害物とみなす)
-	constexpr float kGroundYTolerance = 50.0f;
+	constexpr float kGroundYTolerance = 100.0f;
 }
 
-void NavigationGrid::CreateGrid(int stageModelHandle, float minX, float maxX, float minZ, float maxZ, float cellSize)
+void NavigationGrid::CreateGrid(int stageModelHandle, float minX, float maxX, float minZ, float maxZ, float cellSize, int margin)
 {
 	cellSize_ = cellSize;
 
-	//グリッドの原点を記録する(座標を返還する際の基準点にするため)
+	//グリッドの原点を記録
 	gridPos_ = Vector3{ minX, 0.0f, minZ };
 
 	//マスの個数を求める
@@ -65,6 +65,38 @@ void NavigationGrid::CreateGrid(int stageModelHandle, float minX, float maxX, fl
 			bool isExpectedHeight = std::abs(groundY - expectedGroundY_) <= kGroundYTolerance;
 
 			node.iswalked = isFlatEnough && isExpectedHeight;
+		}
+	}
+
+	int marginCells = static_cast<int>(std::ceil(margin / cellSize_));
+
+	if (marginCells > 0)
+	{
+		std::vector<NodeData> original = nodes_; //前の状態をコピーしておく
+
+		for (int z = 0; z < height_; ++z)
+		{
+			for (int x = 0; x < width_; ++x)
+			{
+				//すでに壁ならそのまま
+				if (!original[z * width_ + x].iswalked) continue;
+
+				//周囲marginCellsマスの中に壁があればこのマスも歩行不可にする
+				for (int dz = -marginCells; dz <= marginCells; ++dz)
+				{
+					for (int dx = -marginCells; dx <= marginCells; ++dx)
+					{
+						int nx = x + dx;
+						int nz = z + dz;
+						if (nx < 0 || nx >= width_ || nz < 0 || nz >= height_) continue;
+
+						if (!original[nz * width_ + nx].iswalked)
+						{
+							nodes_[z * width_ + x].iswalked = false;
+						}
+					}
+				}
+			}
 		}
 	}
 }

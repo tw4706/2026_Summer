@@ -29,7 +29,7 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 						{PeripheralType::padXInput,XINPUT_BUTTON_DPAD_RIGHT} };
 
 	inputTable_["lockOn"] = { {PeripheralType::keyboard,KEY_INPUT_L},
-						{PeripheralType::pad1,PAD_INPUT_C},
+						{PeripheralType::pad1,PAD_INPUT_10},
 						{PeripheralType::padXInput,XINPUT_BUTTON_RIGHT_THUMB} };
 	inputTable_["attack"] = { {PeripheralType::keyboard,KEY_INPUT_Z},
 						{PeripheralType::pad1,PAD_INPUT_6},

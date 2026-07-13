@@ -10,8 +10,10 @@ namespace
 	//右,左,上,下.右上,右下,左上,左下の移動を再現
 	const int kDirectionX[8] = { 1, -1, 0, 0, 1, 1, -1, -1 };
 	const int kDirectionZ[8] = { 0, 0, 1, -1, 1, -1, 1, -1 };
-	//斜め移動のコスト
+
+	//斜め移動のコスト(√2)
 	const float kDiagonalCost = 1.41421356f;
+
 	//直進移動のコスト
 	const float kStraightCost = 1.0f;
 }
@@ -50,7 +52,7 @@ std::vector<Vector3> AStarPathFinder::FindPath(const Vector3& startPos, const Ve
 	const auto* startNode = pNaviGrid_->GetNode(startX, startZ);
 	const auto* goalNode = pNaviGrid_->GetNode(goalX, goalZ);
 
-	//範囲外か歩行できないなら探索しない
+	//範囲外か歩行できない場所なら探索をおこなわない
 	if (!startNode || !goalNode || !startNode->iswalked || !goalNode->iswalked)
 	{
 		return resultPath;

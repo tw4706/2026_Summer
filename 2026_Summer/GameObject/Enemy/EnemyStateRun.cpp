@@ -3,6 +3,7 @@
 #include "EnemyStateAttack.h"
 #include "EnemyStateReturn.h"
 #include "EnemyBase.h"
+#include "System/NavigationGrid.h"
 #include<cmath>
 
 namespace
@@ -35,6 +36,46 @@ namespace
 		MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(stageModelHandle, -1, start, end);
 
 		return hit.HitFlag == false;
+	}
+
+	//直線上に歩行不可のマスが無いかを一定間隔でチェック
+	bool IsPathWalkable(const NavigationGrid* pNaviGrid, const Vector3& from, const Vector3& to)
+	{
+		if (!pNaviGrid) return true; //グリッドが無ければチェックしようがないので許可する
+
+		float cellSize = pNaviGrid->GetCellSize();
+		if (cellSize <= 0.0f) return true;
+
+		Vector3 diff = to - from;
+		diff.y_ = 0.0f;
+		float distance = diff.Length();
+
+		//距離が短ければチェック不要
+		if (distance < cellSize)
+		{
+			return true;
+		}
+
+		int sampleCount = static_cast<int>(distance / cellSize) + 1;
+
+		for (int i = 0; i <= sampleCount; ++i)
+		{
+			float t = static_cast<float>(i) / static_cast<float>(sampleCount);
+			Vector3 samplePos = from + diff * t;
+
+			int gx, gz;
+			pNaviGrid->WorldPosToGrid(samplePos, gx, gz);
+
+			const NavigationGrid::NodeData* node = pNaviGrid->GetNode(gx, gz);
+
+			//グリッド範囲外または歩行不可なら直進不可と判定
+			if (!node || !node->iswalked)
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
 
@@ -77,6 +118,10 @@ void EnemyStateRun::Update()
 		enemy->ChangeState(nextState);
 		return;
 	}
+
+	//直線上のグリッドが歩行可能かどうかをチェック
+	bool canWalk = hasLineOfSight && IsPathWalkable(enemy->pNaviGrid_, enemyPos, playerPos);
+
 	//ターゲット座標
 	Vector3 targetPos;
 
@@ -89,6 +134,31 @@ void EnemyStateRun::Update()
 		}
 		targetPos = playerPos;
 	}
+	else//視線が通らない(障害物などで遮られている場合)
+	{
+		//経路がない場合は再度探索して経路をセットする
+		//A*探索で障害物を回避した経路を作り、その経路に沿って移動する
+		if (!enemy->pathFollower_.HasPath())
+		{
+			std::vector<Vector3> path = enemy->pathFinder_.FindPath(enemyPos, playerPos);
+
+			if (!path.empty())
+			{
+				enemy->pathFollower_.SetPath(path);
+			}
+		}
+
+		if (enemy->pathFollower_.HasPath())
+		{
+			targetPos = enemy->pathFollower_.GetCurrentTarget(enemyPos);
+		}
+		else
+		{
+			//経路が見つからなかった場合はそのままプレイヤーに追従
+			targetPos = playerPos;
+		}
+	}
+
 	//ターゲットへのベクトル
 	Vector3 toTarget = targetPos - enemyPos;
 

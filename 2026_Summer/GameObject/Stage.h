@@ -32,12 +32,6 @@ public:
 	const NavigationGrid* GetNaviGrid() const { return &navGrid_; }
 
 private:
-
-	/// <summary>
-	/// モデルの頂点情報からステージの範囲(XZ平面の最大最小)を計算する
-	/// </summary>
-	void CalculateStageBounds(int modelHandle, float& outMinX, float& outMaxX, float& outMinZ, float& outMaxZ);
-
 	/// <summary>
 	/// デバッグ用のナビゲーショングリッドの描画
 	/// </summary>
