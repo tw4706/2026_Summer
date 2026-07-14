@@ -6,7 +6,7 @@
 namespace
 {
 	//ˆÚ“®‘¬“x
-	const float kMoveSpeed = 0.5f;
+	const float kMoveSpeed = 0.3f;
 
 	//Œo‰ßŽžŠÔ
 	const float kDeltaTime = 1.0f / 60.0f;

@@ -3,6 +3,7 @@
 #include<memory>
 #include <vector>
 
+class Bg;
 class Player;
 class Stage;
 class GameObject;
@@ -49,6 +50,9 @@ private:
 
 	//ステージ
 	std::shared_ptr<Stage>pStage_;
+
+	//ステージ
+	std::shared_ptr<Bg>pBg_;
 
 	//プレイヤー
 	std::shared_ptr<Player>pPlayer_;

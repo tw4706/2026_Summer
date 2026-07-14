@@ -1,4 +1,5 @@
 #include "GameScene.h"
+#include"Bg.h"
 #include"Stage.h"
 #include"Input.h"
 #include"Katana.h"
@@ -30,6 +31,7 @@ GameScene::GameScene(SceneManager& sceneManager) :
 	draw_(&GameScene::FadeDraw),
 	frameCount_(kFadeInterval)
 {
+	pBg_ = std::make_shared<Bg>();
 	pPlayer_ = std::make_shared<Player>();
 	pCameraManager_ = std::make_unique<CameraManager>();
 	pEnemyManager_ = std::make_unique<EnemyManager>();
@@ -67,6 +69,8 @@ void GameScene::Init()
 {
 	//カリングの設定（裏面のポリゴンは見えないようにする）
 	SetUseBackCulling(true);
+
+	pBg_->Init();
 
 	//現在のアクティブカメラを取得
 	auto activeCam = pCameraManager_->GetActiveCamera();
@@ -280,6 +284,8 @@ void GameScene::FadeDraw()
 
 void GameScene::NormalDraw()
 {
+	pBg_->Draw(pCameraManager_->GetActiveCamera()->GetPos());
+
 	//すべてのオブジェクトの描画
 	for (auto& obj : gameObjects_)
 	{

@@ -118,7 +118,7 @@ private:
 	bool isGuarding_ = false;				//ガード中かどうか
 	bool isLockOn_ = false;					//ロックオンしているかどうか
 	int hpUIHandle_;						//HPUIハンドル
-	int hpBarUIHandle_;						//HPバーUIハンドル
+	int hpUIFrameHandle_;					//HPバーUIハンドル
 	int hpUIX_, hpUIY_;						//グラフィックハンドルのサイズ取得用
 	int hpBarUIX_, hpBarUIY_;				//グラフィックハンドルのサイズ取得用
 	int reticleUIHandle_;					//レティクルUIハンドル

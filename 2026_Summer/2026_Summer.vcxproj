@@ -146,6 +146,7 @@
     <ClCompile Include="AttackSelect.cpp" />
     <ClCompile Include="CSV\EnemySpawnDataLoader.cpp" />
     <ClCompile Include="CSV\EnemyAttackDataLoader.cpp" />
+    <ClCompile Include="GameObject\Bg.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyStateGuard.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateAttack.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateChance.cpp" />
@@ -215,6 +216,7 @@
     <ClInclude Include="CSV\EnemyAttackType.h" />
     <ClInclude Include="CSV\EnemyAttackData.h" />
     <ClInclude Include="CSV\EnemyAttackDataLoader.h" />
+    <ClInclude Include="GameObject\Bg.h" />
     <ClInclude Include="GameObject\Enemy\EnemyStateGuard.h" />
     <ClInclude Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateAttack.h" />
     <ClInclude Include="GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateChance.h" />

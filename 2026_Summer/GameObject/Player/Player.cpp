@@ -37,7 +37,7 @@ Player::Player() :
 	moveAngle_(0.0f),
 	handFrameIndex_(-1),
 	hpUIHandle_(-1),
-	hpBarUIHandle_(-1),
+	hpUIFrameHandle_(-1),
 	hpUIX_(0.0f),
 	hpUIY_(0.0f),
 	hpBarUIX_(0.0f),
@@ -64,14 +64,17 @@ void Player::Init()
 	hp_ = kMaxHP;
 
 	//画像のロード
+	//HPUI
 	hpUIHandle_ = LoadGraph(L"data/UI/PlayerHP.png");
 	assert(hpUIHandle_ >= 0);
 	GetGraphSize(hpUIHandle_, &hpUIX_, &hpUIY_);
 
-	hpBarUIHandle_ = LoadGraph(L"data/UI/HPBar.png");
-	assert(hpBarUIHandle_ >= 0);
-	GetGraphSize(hpBarUIHandle_, &hpBarUIX_, &hpBarUIY_);
+	//HPUIFrame
+	hpUIFrameHandle_ = LoadGraph(L"data/UI/HPBar.png");
+	assert(hpUIFrameHandle_ >= 0);
+	GetGraphSize(hpUIFrameHandle_, &hpBarUIX_, &hpBarUIY_);
 
+	//レティクルUI
 	reticleUIHandle_ = LoadGraph(L"data/UI/reticle.png");
 	int reticleX, reticleY;
 	GetGraphSize(reticleUIHandle_, &reticleX, &reticleY);
@@ -119,6 +122,7 @@ void Player::Update()
 		pCurrentState_->Update();
 	}
 
+	//アニメーションの更新
 	animation_.Update(1.0f / 60.0f);
 
 	//行列を作成
@@ -147,6 +151,7 @@ void Player::Update()
 
 void Player::Draw()
 {
+	//行列で描画位置や回転などの計算
 	Matrix4x4 scaleMat = Matrix4x4::Scale(kFirstScale.x_, kFirstScale.y_, kFirstScale.z_);
 	Matrix4x4 rotMat = Matrix4x4::RotateY(moveAngle_);
 	Matrix4x4 transMat = Matrix4x4::Translate(pos_.x_, pos_.y_, pos_.z_);
@@ -206,7 +211,7 @@ void Player::Draw()
 			VECTOR top = VGet(pCap->GetWorldB().x_, pCap->GetWorldB().y_, pCap->GetWorldB().z_);
 			VECTOR bottom = VGet(pCap->GetWorldA().x_, pCap->GetWorldA().y_, pCap->GetWorldA().z_);
 
-			//当たっていたら赤（255,0,0）、通常時は水色
+			//当たっていたら赤色通常時は水色
 			unsigned int lineColor = isHit_ ? GetColor(255, 0, 0) : GetColor(0, 255, 255);
 
 			//描画
@@ -217,6 +222,7 @@ void Player::Draw()
 	//HPのデバッグ表示
 	DrawFormatString(100, 150, 0xffffff, L"PlayerHP:%d", hp_);
 
+	//プレイヤーの座標のデバッグ表示
 	DrawFormatString(100, 100, 0x00ffff, L"PlayerPosX : %.2f,PlayerPosY : %.2f,PlayerPosZ : %.2f", pos_.x_, pos_.y_, pos_.z_);
 #endif
 
@@ -237,7 +243,7 @@ void Player::Draw()
 	DrawRectGraph(Game::kScreenWidth / 2 - 250, Game::kScreenHeight - 150,
 		0, 0,
 		hpBarUIX_, hpBarUIY_,
-		hpBarUIHandle_, true);
+		hpUIFrameHandle_, true);
 
 	//HPバーの描画
 	DrawRectGraph(Game::kScreenWidth / 2 - 250, Game::kScreenHeight - 150,
@@ -254,7 +260,10 @@ void Player::OnCollision(Collidable& coll)
 	//衝突した相手が敵だった場合ダメージ状態に遷移
 	if (EnemyBase* pEnemy = dynamic_cast<EnemyBase*>(&coll))
 	{
-		if (pEnemy->GetAttackCollider())
+		auto attackCollider = pEnemy->GetAttackCollider();
+
+		//当たったものが攻撃コライダーならダメージを通す(敵の当たり判定はダメージ判定に含めない)
+		if (attackCollider&& static_cast<const void*>(attackCollider) == static_cast<const void*>(&coll))
 		{
 			OnDamage(kEnemyDamage);
 		}
