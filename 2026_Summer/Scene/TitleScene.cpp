@@ -28,6 +28,15 @@ TitleScene::~TitleScene()
 void TitleScene::Init()
 {
 	titleLogoHandle_ = LoadGraph(L"data/UI/titleLogo.png");
+
+	//ディゾルブ用ノイズ画像のロード
+	noiseHandle_ = LoadGraph(L"data/Shader/noise.png");
+	//ピクセルシェーダのロード
+	dissolvePSHandle_ = LoadPixelShader(L"../DissolvePS.pso");
+	dissolveConstBufferHandle_ = CreateShaderConstantBuffer(sizeof(DissolveBufferData));
+
+	//画面全体を一旦描き込むためのレンダーターゲット
+	renderHandle_ = MakeScreen(Game::kScreenWidth, Game::kScreenHeight, true);
 }
 
 void TitleScene::Update()
@@ -87,8 +96,6 @@ void TitleScene::FadeOutUpdate()
 
 void TitleScene::FadeDraw()
 {
-	NormalDraw();
-
 	float rate;
 
 	if (update_ == &TitleScene::FadeInUpdate)
@@ -103,9 +110,33 @@ void TitleScene::FadeDraw()
 	}
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(255 * rate));
-	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	// ① 通常描画分をオフスクリーンに描く
+	int prevScreen = GetDrawScreen();
+	SetDrawScreen(renderHandle_);
+	ClearDrawScreen();
+	NormalDraw();
+	SetDrawScreen(prevScreen);
+
+	// ② 定数バッファを更新
+	DissolveBufferData* bufferData =
+		(DissolveBufferData*)GetBufferShaderConstantBuffer(dissolveConstBufferHandle_);
+	bufferData->dissolve[0] = rate;		//進行度
+	bufferData->dissolve[1] = 0.08f;	//境界のぼかし幅
+	bufferData->dissolve[2] = 0.0f;
+	bufferData->dissolve[3] = 0.0f;
+	UpdateShaderConstantBuffer(dissolveConstBufferHandle_);
+	SetShaderConstantBuffer(dissolveConstBufferHandle_, DX_SHADERTYPE_PIXEL, 0);
+
+	//ノイズテクスチャをスロット1にセット
+	SetUseTextureToShader(1, noiseHandle_);
+
+	//ピクセルシェーダーをレンダリング用スクリーンに描画
+	SetUsePixelShader(dissolvePSHandle_);
+	DrawGraph(0, 0, renderHandle_, TRUE);
+	SetUsePixelShader(-1);
+
+	//シェーダの削除
+	SetUseTextureToShader(1, -1);
 }
 
 void TitleScene::NormalDraw()
