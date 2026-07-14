@@ -1,17 +1,18 @@
-Texture2D tex : register(t0);   //描画する黒い画面(今のところは)
-Texture2D noiseTex : register(t1);  //ディゾルブ用のノイズの画像
-SamplerState smp : register(s0);    //画像のサンプリング
+Texture2D tex : register(t4); //描画する黒い画面(今のところは)
+Texture2D noiseTex : register(t5); //ディゾルブ用のノイズの画像
+SamplerState smp : register(s4);
+SamplerState noiseSmp : register(s5); //画像のサンプリング
 
 //描画から渡すための構造体
 struct PSInput
 {
-    float4 pos : SV_Position;   //画面の座標
-    float4 color : COLOR0;      //頂点座標の色
-    float2 texCoord : TEXCOORD0;//UV座標
+    float4 pos : SV_Position; //画面の座標
+    float4 color : COLOR0; //頂点座標の色
+    float2 texCoord : TEXCOORD0; //UV座標
 };
 
 //フェードの割合を受け取るためのバッファ
-cbuffer DissolveBuffer : register(b0)
+cbuffer DissolveBuffer : register(b1)
 {
     float4 dissolve;
 };
@@ -19,7 +20,7 @@ cbuffer DissolveBuffer : register(b0)
 float4 main(PSInput input) : SV_TARGET
 {
     float4 color = tex.Sample(smp, input.texCoord);
-    float noise = noiseTex.Sample(smp, input.texCoord).r;
+    float noise = noiseTex.Sample(noiseSmp, input.texCoord).r;
 
     float progress = dissolve.x;
     float edgeWidth = max(dissolve.y, 0.0001f);
@@ -37,6 +38,8 @@ float4 main(PSInput input) : SV_TARGET
 
     //最終的な色を補間
     float3 finalColor = lerp(color.rgb, edgeColor, edge);
+    
+    float finalAlpha = max(color.a, edge);
 
-    return float4(finalColor, color.a);
+    return float4(finalColor, finalAlpha);
 }

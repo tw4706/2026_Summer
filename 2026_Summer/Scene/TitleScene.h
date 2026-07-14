@@ -30,8 +30,6 @@ private:
 		float dissolve[4];
 	};
 
-
-
 	int frameCount_ = 0;
 
 	int currentIndex_ = 0;	//現在選ばれている要素
@@ -40,7 +38,7 @@ private:
 	int titleLogoHandle_ = -1;
 	int noiseHandle_ = -1;				//ノイズテクスチャハンドル
 	int dissolvePSHandle_ = -1;			//ディゾルブピクセルシェーダ用のハンドル
-	int dissolveConstBufferHandle_ = -1;//コンスタントバッファはンドル
+	int dissolveConstBufferHandle_ = -1;//コンスタントバッファハンドル
 	int renderHandle_ = -1;				//レンダリング用はンドル
 };
 

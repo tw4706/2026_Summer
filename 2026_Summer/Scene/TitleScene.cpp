@@ -32,11 +32,17 @@ void TitleScene::Init()
 	//ディゾルブ用ノイズ画像のロード
 	noiseHandle_ = LoadGraph(L"data/Shader/noise.png");
 	//ピクセルシェーダのロード
-	dissolvePSHandle_ = LoadPixelShader(L"../DissolvePS.pso");
+	dissolvePSHandle_ = LoadPixelShader(L"DissolvePS.pso");
 	dissolveConstBufferHandle_ = CreateShaderConstantBuffer(sizeof(DissolveBufferData));
+
+	char log[256];
+	sprintf_s(log, "PS Handle: %d, Noise Handle: %d\n", dissolvePSHandle_, noiseHandle_);
+	OutputDebugStringA(log);
 
 	//画面全体を一旦描き込むためのレンダーターゲット
 	renderHandle_ = MakeScreen(Game::kScreenWidth, Game::kScreenHeight, true);
+
+	frameCount_ = kFadeInterval;
 }
 
 void TitleScene::Update()
@@ -51,7 +57,9 @@ void TitleScene::Draw()
 
 void TitleScene::FadeInUpdate()
 {
-	if (frameCount_-- <= 0)
+	frameCount_--;
+
+	if (frameCount_ <= 0)
 	{
 		update_ = &TitleScene::NormalUpdate;
 		draw_ = &TitleScene::NormalDraw;
@@ -88,7 +96,9 @@ void TitleScene::NormalUpdate()
 
 void TitleScene::FadeOutUpdate()
 {
-	if (frameCount_-- <= 0)
+	frameCount_--;
+
+	if (frameCount_ <= 0)
 	{
 		sceneManager_.ChangeScene(std::make_shared<GameScene>(sceneManager_));
 	}
@@ -96,6 +106,8 @@ void TitleScene::FadeOutUpdate()
 
 void TitleScene::FadeDraw()
 {
+	OutputDebugStringA("FadeDraw called\n");
+
 	float rate;
 
 	if (update_ == &TitleScene::FadeInUpdate)
@@ -110,33 +122,40 @@ void TitleScene::FadeDraw()
 	}
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
-	// ① 通常描画分をオフスクリーンに描く
+	//通常描画分をオフスクリーンに描く
 	int prevScreen = GetDrawScreen();
 	SetDrawScreen(renderHandle_);
 	ClearDrawScreen();
 	NormalDraw();
 	SetDrawScreen(prevScreen);
 
-	// ② 定数バッファを更新
-	DissolveBufferData* bufferData =
-		(DissolveBufferData*)GetBufferShaderConstantBuffer(dissolveConstBufferHandle_);
+	//定数バッファを更新
+	DissolveBufferData* bufferData =(DissolveBufferData*)GetBufferShaderConstantBuffer(dissolveConstBufferHandle_);
 	bufferData->dissolve[0] = rate;		//進行度
 	bufferData->dissolve[1] = 0.08f;	//境界のぼかし幅
 	bufferData->dissolve[2] = 0.0f;
 	bufferData->dissolve[3] = 0.0f;
 	UpdateShaderConstantBuffer(dissolveConstBufferHandle_);
-	SetShaderConstantBuffer(dissolveConstBufferHandle_, DX_SHADERTYPE_PIXEL, 0);
+	SetShaderConstantBuffer(dissolveConstBufferHandle_, DX_SHADERTYPE_PIXEL, 1);
 
 	//ノイズテクスチャをスロット1にセット
-	SetUseTextureToShader(1, noiseHandle_);
+	SetUseTextureToShader(4, renderHandle_);
+	SetUseTextureToShader(5, noiseHandle_);
 
-	//ピクセルシェーダーをレンダリング用スクリーンに描画
+	//ピクセルシェーダーを適用して描画
 	SetUsePixelShader(dissolvePSHandle_);
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+
 	DrawGraph(0, 0, renderHandle_, TRUE);
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
 	SetUsePixelShader(-1);
 
-	//シェーダの削除
-	SetUseTextureToShader(1, -1);
+	//シェーダのテクスチャ割り当てを解除
+	SetUseTextureToShader(4, -1);
+	SetUseTextureToShader(5, -1);
 }
 
 void TitleScene::NormalDraw()

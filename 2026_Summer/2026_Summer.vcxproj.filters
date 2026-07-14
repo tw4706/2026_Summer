@@ -428,4 +428,7 @@
       <Filter>リソース ファイル</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="DissolvePS.hlsl" />
+  </ItemGroup>
 </Project>
