@@ -17,5 +17,13 @@ public:
 	bool Init();
 	void Run();
 	void Terminate();
+
+	/// <summary>
+	/// ゲームを終了する関数
+	/// </summary>
+	void GameEnd() { isGameEnd_ = true; }
+
+private:
+	bool isGameEnd_=false;	//ゲームを終了するかどうかのフラグ
 };
 

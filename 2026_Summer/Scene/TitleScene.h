@@ -26,6 +26,8 @@ public:
 private:
 	int frameCount_ = 0;
 
+	int currentIndex_ = 0;	//現在選ばれている要素
+
 	//タイトルロゴハンドル
 	int titleLogoHandle_ = -1;
 };

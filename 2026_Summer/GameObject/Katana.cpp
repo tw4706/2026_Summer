@@ -21,7 +21,8 @@ namespace
 }
 
 Katana::Katana(Vector3 pos, Vector3 vel, float dir) :
-	Collidable(pos, vel, dir)
+	Collidable(pos, vel, dir),
+	worldMat_(0)
 {
 }
 
@@ -78,8 +79,7 @@ void Katana::Update(const MATRIX& handMat, AnimationState ownerState)
 		CapsuleCollider* pCapsule = static_cast<CapsuleCollider*>(colliders_[0].get());
 		if (pCapsule)
 		{
-			pCapsule->SetWorldPos(Vector3{ worldStart.x, worldStart.y, worldStart.z },
-				Vector3{ worldEnd.x,  worldEnd.y, worldEnd.z });
+			pCapsule->SetWorldPos(worldStart,worldEnd);
 		}
 	}
 }

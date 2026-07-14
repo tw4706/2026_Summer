@@ -60,7 +60,7 @@ void  Application::Run()
 		sceneManager.Update();
 		sceneManager.Draw();
 
-		if (CheckHitKey(KEY_INPUT_ESCAPE))
+		if (isGameEnd_||CheckHitKey(KEY_INPUT_ESCAPE))
 		{
 			break;
 		}
