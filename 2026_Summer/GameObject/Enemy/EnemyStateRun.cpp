@@ -111,8 +111,10 @@ void EnemyStateRun::Update()
 	//ƒvƒŒƒCƒ„[‚ÖŽ‹ü‚ª’Ê‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ð”»’è
 	bool hasLineOfSight = HasLineOfSight(enemy->GetStageModelHandle(), enemyPos, playerPos);
 
+	float visionAngle = 90.0f;
+
 	//õ“G‚Ì”ÍˆÍ‚É“ü‚Á‚Ä‚È‚©‚Á‚½‚ç
-	if ((PlayerSearchDistance(searchRadius_) == false || !hasLineOfSight) && !enemy->IsHit())
+	if ((!enemy->IsPlayerInVision(searchRadius_, visionAngle) || !hasLineOfSight) && !enemy->IsHit())
 	{
 		auto nextState = std::make_shared<EnemyStateReturn>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);

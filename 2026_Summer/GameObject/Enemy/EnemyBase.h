@@ -18,6 +18,7 @@ class EnemyBase :public Character
 	friend class EnemyStateIdle;
 	friend class EnemyStateRun;
 	friend class EnemyStateReturn;
+	friend class EnemyStateJump;
 public:
 	EnemyBase();
 	virtual~EnemyBase();
@@ -66,7 +67,6 @@ public:
 	/// 攻撃データローダーの取得
 	/// </summary>
 	const EnemyAttackDataLoader* GetAttackDataLoader() const { return pAttackDataLoader_; }
-
 
 	/// <summary>
 	/// プレイヤーの位置の取得
@@ -130,9 +130,17 @@ public:
 	/// </summary>
 	void SetAttackAnimationSpeed();
 
+	/// <summary>
+	/// プレイヤーが視界に入っているかどうか
+	/// </summary>
+	bool IsPlayerInVision(float maxDist, float visionAngle) const;
+
 protected:
 	//移動の際に向いている角度
 	float moveAngle_;
+
+	//ジャンプの着地位置の座標
+	Vector3 jumpTargetPos_;
 
 	//ステージのモデルハンドル(視線判定用)
 	int stageModelHandle_ = -1;

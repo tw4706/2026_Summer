@@ -62,6 +62,18 @@ void EnemyBase::Update()
 	// Collidableクラスの更新
 	Collidable::Update();
 
+	//HPバーの表示・非表示
+	if (isDrawHPVisible_)
+	{
+		drawHPVisibleTimer_ -= (1.0f / 60.0f);
+
+		//描画をひょうじするたいまーが0以下かつHPが0の場合
+		if (drawHPVisibleTimer_ <= 0.0f && drawHP_ - static_cast<float>(hp_) < 0.1f)
+		{
+			isDrawHPVisible_ = false;
+		}
+	}
+
 	//描画用HPの更新(lerpで減らす)
 	drawHP_ = Vector3::Lerp(drawHP_, static_cast<float>(hp_), 0.1f);
 
@@ -121,17 +133,51 @@ void EnemyBase::Draw()
 	model_.Draw();
 #ifdef _DEBUG
 	//索敵範囲のデバッグ表示
-	Vector3 center = pos_;
-	Vector3 playerPos = GetPlayerPos();
-	Vector3 toPlayer = playerPos - pos_;
-	float distSq = toPlayer.LengthSq();
+	float visionDist = searchRadius_; //半径を距離として利用
+	float visionAngle = 90.0f;       //視野角を90度に設定
 
-	unsigned int searchColor = GetColor(0, 255, 0);
-	if (distSq <= searchRadius_ * searchRadius_)
+	Vector3 playerPos = GetPlayerPos();
+
+	// プレイヤーが「扇状の視界」に入っているかで色を変える
+	unsigned int searchColor = GetColor(0, 255, 0); //通常は緑色
+	if (IsPlayerInVision(visionDist, visionAngle))
 	{
-		searchColor = GetColor(255, 0, 0);
+		searchColor = GetColor(255, 0, 0); //見つけたら赤色
 	}
-	DrawSphere3D(center.ToDxlibVector(), searchRadius_, 8, searchColor, GetColor(0, 0, 0), FALSE);
+
+	//左右の線の描画
+	float halfAngleRad = (visionAngle * 0.5f) * (DX_PI_F / 180.0f);
+
+	//正面から左右に視野角の半分回転させた方向の単位ベクトル
+	Vector3 leftDir = { sinf(moveAngle_ - halfAngleRad), 0.0f, -cosf(moveAngle_ - halfAngleRad) };
+	Vector3 rightDir = { sinf(moveAngle_ + halfAngleRad), 0.0f, -cosf(moveAngle_ + halfAngleRad) };
+
+	//敵の位置からその方向に視界距離だけ伸びた点を計算
+	Vector3 leftLineEnd = pos_ + leftDir * visionDist;
+	Vector3 rightLineEnd = pos_ + rightDir * visionDist;
+
+	//3D空間に線を描画
+	Vector3 drawOffset = { 0.0f, 0.0f, 0.0f };
+	DrawLine3D((pos_ + drawOffset).ToDxlibVector(), (leftLineEnd + drawOffset).ToDxlibVector(), searchColor);
+	DrawLine3D((pos_ + drawOffset).ToDxlibVector(), (rightLineEnd + drawOffset).ToDxlibVector(), searchColor);
+
+	//先端の円弧の描画
+	//左右の線の先端の間をさらにいくつかの線で繋いで円を作る
+	const int DIV_NUM = 10; //円弧の分割数
+	for (int i = 0; i < DIV_NUM; ++i)
+	{
+		//左右の角度の間を線形補間する
+		float angleA = (moveAngle_ - halfAngleRad) + (visionAngle * (DX_PI_F / 180.0f) / DIV_NUM) * i;
+		float angleB = (moveAngle_ - halfAngleRad) + (visionAngle * (DX_PI_F / 180.0f) / DIV_NUM) * (i + 1);
+
+		Vector3 dirA = { sinf(angleA), 0.0f, -cosf(angleA) };
+		Vector3 dirB = { sinf(angleB), 0.0f, -cosf(angleB) };
+
+		Vector3 posA = pos_ + dirA * visionDist + drawOffset;
+		Vector3 posB = pos_ + dirB * visionDist + drawOffset;
+
+		DrawLine3D(posA.ToDxlibVector(), posB.ToDxlibVector(), searchColor);
+	}
 
 	//当たり判定のデバッグ表示
 	for (const auto& pCol : colliders_)
@@ -252,7 +298,7 @@ void EnemyBase::OnCollision(Collidable& coll, Collider* pColliderA, Collider* pC
 		int rand = std::rand() % 100;
 
 		//20パーセントの確率でダメージアニメーションに遷移する
-		if (rand < 1)
+		if (rand < 20)
 		{
 			//ダメージ状態に遷移する
 			auto nextState = std::make_shared<EnemyStateDamage>(enemy, searchRadius_);
@@ -272,17 +318,6 @@ void EnemyBase::OnDamage(int damage)
 	isDrawHPVisible_ = true;
 
 	drawHPVisibleTimer_ = 3.0f;
-
-	if (isDrawHPVisible_)
-	{
-		drawHPVisibleTimer_ --;
-
-		//描画をひょうじするたいまーが0以下かつHPが0の場合
-		if (drawHPVisibleTimer_ <= 0.0f && drawHP_ - static_cast<float>(hp_) < 0.1f)
-		{
-			isDrawHPVisible_ = false;
-		}
-	}
 
 	//HPが0の場合
 	if (hp_ <= 0)
@@ -409,6 +444,7 @@ const PlayerActionCounter* EnemyBase::GetPlayerActionCounter() const
 	{
 		return nullptr;
 	}
+
 	//プレイヤーのカウンタを返す
 	return &pPlayer->GetActionCounter();
 }
@@ -427,4 +463,48 @@ void EnemyBase::SetSlowAnimationSpeed()
 void EnemyBase::SetAttackAnimationSpeed()
 {
 	animation_.SetEnemyAttackAnimationSpeed();
+}
+
+bool EnemyBase::IsPlayerInVision(float maxDist, float visionAngle) const
+{
+	auto pPlayer = pPlayer_.lock();
+	if (!pPlayer) return false;
+
+	//プレイヤーから敵のベクトルを計算
+	Vector3 playerPos = pPlayer->GetPos();
+	Vector3 toPlayer = playerPos - pos_;
+	toPlayer.y_ = 0.0f;//高さは使わないので0に
+
+	//距離の判定
+	float distSq = toPlayer.LengthSq();
+	if (distSq > maxDist * maxDist)
+	{
+		return false; //最大範囲より外にいる
+	}
+	
+	//0除算を防止するため重なっている場合は見えている判定にする
+	if (distSq < 0.0001f) return true;
+
+	float dist = sqrtf(distSq);
+	Vector3 dirToPlayer = { toPlayer.x_ / dist, 0.0f, toPlayer.z_ / dist };
+
+	//正面ベクトル
+	Vector3 forward = { sinf(moveAngle_), 0.0f, -cosf(moveAngle_) };
+
+	//正面ベクトルとターゲットへの方向ベクトルの内積を計算
+	float dot = forward.Dot(dirToPlayer);
+
+	//視野角の半分をラジアンに変換する
+	float halfFovRad = (visionAngle * 0.5f) * (DX_PI_F / 180.0f);
+
+	//視野角の半分のcosの値を求める
+	float cosHalfFov = cosf(halfFovRad);
+
+	//内積が視野角の半分のcosの値以上であれば視野に入っている
+	if (dot >= cosHalfFov)
+	{
+		return true; //視界に入っている！
+	}
+
+	return false; //視野角の外にいる
 }

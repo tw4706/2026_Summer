@@ -1,5 +1,6 @@
 #include "EnemyStateIdle.h"
 #include "EnemyStateRun.h"
+#include "EnemyStateJump.h"
 #include "EnemyBase.h"
 #include "System/NavigationGrid.h"
 
@@ -20,6 +21,13 @@ namespace
 	//視線の高さ(Rayで障害物の判定を行うのに使用)
 	const float kEyeHeight = 50.0f;
 
+	//段差を検知する用の前方向のチェックする距離
+	const float kJumpDistance = 60.0f;
+
+	//跳び越え可能と判断する高低差
+	const float kMinJumpableHeight = 20.0f;
+	const float kMaxJumpableHeight = 100.0f;
+
 	//敵の視線の先に障害物があるかどうかをレイを飛ばして判定する
 	//hitしていなければ視線が通っている(=true)
 	bool HasLineOfSight(int stageModelHandle, const Vector3& from, const Vector3& to)
@@ -30,6 +38,42 @@ namespace
 		MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(stageModelHandle, -1, start, end);
 
 		return hit.HitFlag == false;
+	}
+
+	//指定座標の真下にレイを飛ばして地面の高さを取得する
+	//地面にhitしなければfalseを返す
+	bool GetGroundHeight(int stageModelHandle, const Vector3& pos, float& outHeight)
+	{
+		VECTOR start = VGet(pos.x_, pos.y_ + 500.0f, pos.z_);
+		VECTOR end = VGet(pos.x_, pos.y_ - 500.0f, pos.z_);
+
+		MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(stageModelHandle, -1, start, end);
+		if (!hit.HitFlag) return false;
+
+		outHeight = hit.HitPosition.y;
+		return true;
+	}
+
+	bool TryDetectJumpableStep(int stageModelHandle, const Vector3& from, const Vector3& moveDir, Vector3& landingPos)
+	{
+		Vector3 dir = moveDir;
+		dir.y_ = 0.0f;
+		if (dir.Length() <= 0.0001f) return false;
+		dir.Normalize();
+
+		float currentHeight = 0.0f;
+		if (!GetGroundHeight(stageModelHandle, from, currentHeight)) return false;
+
+		Vector3 probePos = from + dir * kJumpDistance;
+
+		float probeHeight = 0.0f;
+		if (!GetGroundHeight(stageModelHandle, probePos, probeHeight)) return false;
+
+		float heightDiff = probeHeight - currentHeight;
+		if (heightDiff < kMinJumpableHeight || heightDiff > kMaxJumpableHeight) return false;
+
+		landingPos = Vector3(probePos.x_, probeHeight, probePos.z_);
+		return true;
 	}
 
 	//直線上に歩行不可のマスが無いかを一定間隔でチェック
@@ -123,7 +167,9 @@ void EnemyStateIdle::Update()
 	Vector3 playerPos = enemy->GetPlayerPos();
 	bool hasLineOfSight = HasLineOfSight(enemy->GetStageModelHandle(), enemyPos, playerPos);
 
-	if (PlayerSearchDistance(searchRadius_) && hasLineOfSight)
+	float visionAngle = 90.0f;
+
+	if (enemy->IsPlayerInVision(searchRadius_, visionAngle) && hasLineOfSight)
 	{
 		//状態を遷移する前に経路をクリア
 		if (enemy->pathFollower_.HasPath())
@@ -201,6 +247,17 @@ void EnemyStateIdle::Update()
 
 	//正規化
 	toTarget.Normalize();
+
+	Vector3 landingPos;
+	//着地地点を保存しジャンプ状態に遷移
+	if (TryDetectJumpableStep(enemy->GetStageModelHandle(), enemyPos, toTarget, landingPos))
+	{
+		enemy->jumpTargetPos_ = landingPos;
+
+		auto nextState = std::make_shared<EnemyStateJump>(pEnemy_, searchRadius_);
+		enemy->ChangeState(nextState);
+		return;
+	}
 
 	//移動速度を設定
 	Vector3 moveVec = { toTarget.x_ * kMoveSpeed * kDeltaTime, 0.0f, toTarget.z_ * kMoveSpeed * kDeltaTime };
