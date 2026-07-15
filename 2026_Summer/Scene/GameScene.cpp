@@ -211,7 +211,6 @@ void GameScene::NormalUpdate()
 	//すべてのゲームオブジェクトの更新
 	for (auto& obj : gameObjects_)
 	{
-
 		if (!obj->IsDead())
 		{
 			obj->Update();

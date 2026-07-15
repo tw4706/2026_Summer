@@ -25,9 +25,12 @@ public:
 
 private:
 	//ディゾルブ用の定数バッファ
-	struct DissolveBufferData
+	struct ConstantBuffer
 	{
-		float dissolve[4];
+		float value;
+		float strength;
+		float lightX;
+		float lightY;
 	};
 
 	int frameCount_ = 0;
@@ -38,7 +41,10 @@ private:
 	int titleLogoHandle_ = -1;
 	int noiseHandle_ = -1;				//ノイズテクスチャハンドル
 	int dissolvePSHandle_ = -1;			//ディゾルブピクセルシェーダ用のハンドル
-	int dissolveConstBufferHandle_ = -1;//コンスタントバッファハンドル
 	int renderHandle_ = -1;				//レンダリング用はンドル
+
+	int cBuffH_ = -1;
+
+	ConstantBuffer* pCBuff_ = nullptr;
 };
 

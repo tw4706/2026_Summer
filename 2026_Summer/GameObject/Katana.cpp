@@ -17,7 +17,7 @@ namespace
 	const Vector3 kKatanaTransform = { 20.0f, 10.0f, 0.0f };
 
 	//“‚Ìƒ_ƒ[ƒW
-	constexpr int kAttackDamage = 10;
+	constexpr int kAttackDamage = 50;
 }
 
 Katana::Katana(Vector3 pos, Vector3 vel, float dir) :

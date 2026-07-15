@@ -1,45 +1,50 @@
-Texture2D tex : register(t4); //描画する黒い画面(今のところは)
-Texture2D noiseTex : register(t5); //ディゾルブ用のノイズの画像
-SamplerState smp : register(s4);
-SamplerState noiseSmp : register(s5); //画像のサンプリング
+Texture2D tex : register(t0);
+Texture2D noiseTex : register(t1);
+SamplerState smp : register(s0);
 
 //描画から渡すための構造体
 struct PSInput
 {
-    float4 pos : SV_Position; //画面の座標
-    float4 color : COLOR0; //頂点座標の色
-    float2 texCoord : TEXCOORD0; //UV座標
+    float4 pos : SV_Position;   //画面の座標
+    float4 diff : COLOR0;       //ディフーズ
+    float4 spc : COLOR1;        //スペキュラー
+    float2 uv : TEXCOORD0;      //テクスチャ座標
+    float2 suv: TEXCOORD1;      //サブテクスチャ座標
 };
 
 //フェードの割合を受け取るためのバッファ
-cbuffer DissolveBuffer : register(b1)
+cbuffer DissolveBuffer : register(b4)
 {
-    float4 dissolve;
+    float value;
+    float strength;
+    float lightX;
+    float lightY;
 };
 
 float4 main(PSInput input) : SV_TARGET
 {
-    float4 color = tex.Sample(smp, input.texCoord);
-    float noise = noiseTex.Sample(noiseSmp, input.texCoord).r;
+    float noise = noiseTex.Sample(smp, input.uv.xy).r;
 
-    float progress = dissolve.x;
-    float edgeWidth = max(dissolve.y, 0.0001f);
-
-    //ノイズ値が進行度を下回ったときは削除
-    float diff = noise - progress;
-    if (diff < 0.0f)
+    if (noise > value)
     {
         discard;
     }
-
-    //エッジをかけて消えているふちを光らせる
-    float edge = 1.0f - smoothstep(0.0f, edgeWidth, diff);
-    float3 edgeColor = float3(1.0f, 0.6f, 0.1f);
-
-    //最終的な色を補間
-    float3 finalColor = lerp(color.rgb, edgeColor, edge);
     
-    float finalAlpha = max(color.a, edge);
-
-    return float4(finalColor, finalAlpha);
+    float4 texColor = tex.Sample(smp, input.uv.xy);
+    
+    float edgeDist = value - noise;
+    
+    if (edgeDist < strength && value < 1.0f) //完全に表示(1.0)されている時はエッジを出さない
+    {
+        //境界線に近いほど 1.0 に近づく比率を作成
+        float edgeLerp = 1.0 - (edgeDist / strength);
+        
+        //エッジの発光
+        float4 edgeColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
+        
+        //元の色とエッジのブレンド
+        texColor = lerp(texColor, edgeColor, edgeLerp);
+    }
+    
+    return texColor;
 }

@@ -5,12 +5,66 @@
 #include "Application.h"
 #include<Dxlib.h>
 #include<memory>
+#include<cassert>
 #include<algorithm>
 
 namespace
 {
 	//フェードの間隔
 	constexpr int kFadeInterval = 60;
+
+
+	void DrawGraphUseOrigShader(const int x, const int y, const int texH, const int psH, const int psShaderH)
+	{
+		// 板ポリゴンを構成するための4つの頂点を宣言
+		const int kVertNum = 4;
+		std::array<VERTEX2DSHADER, 4> vertices{};
+
+		for (auto& vertex : vertices)
+		{
+			vertex.rhw = 1.0f;
+			vertex.dif = GetColorU8(255, 255, 255, 255);
+			vertex.spc = GetColorU8(0, 0, 0, 0);
+		}
+
+		int graphWidth, graphHeight;
+		GetGraphSize(texH, &graphWidth, &graphHeight);
+		float rectStartX = x;
+		float rectStartY = y;
+		float rectEndX = x + graphWidth;
+		float rectEndY = y + graphHeight;
+
+		//座標
+		vertices[0].pos = { rectStartX, rectStartY, 0 };
+		vertices[0].u = 0.0f; vertices[0].v = 0.0f;
+		vertices[0].su = 0.0f; vertices[0].sv = 0.0f;
+
+		vertices[1].pos = { rectEndX, rectStartY, 0 };
+		vertices[1].u = 1.0f; vertices[1].v = 0.0f;
+		vertices[1].su = 1.0f; vertices[1].sv = 0.0f;
+
+		vertices[2].pos = { rectStartX, rectEndY, 0 };
+		vertices[2].u = 0.0f; vertices[2].v = 1.0f;
+		vertices[2].su = 0.0f; vertices[2].sv = 1.0f;
+
+		vertices[3].pos = { rectEndX, rectEndY, 0 };
+		vertices[3].u = 1.0f; vertices[3].v = 1.0f;
+		vertices[3].su = 1.0f; vertices[3].sv = 1.0f;
+
+		//インデックスデータ
+		unsigned short index[6] = { 0, 1, 2, 2, 1, 3 };
+
+		//シェーダーの適用
+		SetUsePixelShader(psShaderH);
+
+		//テクスチャの適用
+		SetUseTextureToShader(0, texH);     //register(t0)に描画先スクリーン
+		SetUseTextureToShader(1, psH);		//register(t1)にノイズ画像
+
+		//ポリゴン数は三角形の二つ
+		const int kPolyNum = 2;
+		DrawPolygonIndexed2DToShader(vertices.data(), static_cast<int>(vertices.size()), index, kPolyNum);
+	}
 }
 
 TitleScene::TitleScene(SceneManager& sceneManager) :
@@ -23,6 +77,7 @@ TitleScene::TitleScene(SceneManager& sceneManager) :
 
 TitleScene::~TitleScene()
 {
+	DeleteShaderConstantBuffer(cBuffH_);
 }
 
 void TitleScene::Init()
@@ -31,16 +86,19 @@ void TitleScene::Init()
 
 	//ディゾルブ用ノイズ画像のロード
 	noiseHandle_ = LoadGraph(L"data/Shader/noise.png");
+	assert(noiseHandle_ >= 0);
+
 	//ピクセルシェーダのロード
 	dissolvePSHandle_ = LoadPixelShader(L"DissolvePS.pso");
-	dissolveConstBufferHandle_ = CreateShaderConstantBuffer(sizeof(DissolveBufferData));
+	assert(dissolvePSHandle_ >= 0);
 
-	char log[256];
-	sprintf_s(log, "PS Handle: %d, Noise Handle: %d\n", dissolvePSHandle_, noiseHandle_);
-	OutputDebugStringA(log);
-
-	//画面全体を一旦描き込むためのレンダーターゲット
 	renderHandle_ = MakeScreen(Game::kScreenWidth, Game::kScreenHeight, true);
+
+	//メモリの確保
+	cBuffH_ = CreateShaderConstantBuffer(sizeof(ConstantBuffer));
+
+	//CPU側にメモリを作る
+	pCBuff_ = static_cast<ConstantBuffer*>(GetBufferShaderConstantBuffer(cBuffH_));
 
 	frameCount_ = kFadeInterval;
 }
@@ -90,7 +148,6 @@ void TitleScene::NormalUpdate()
 		{
 			Application::GetInstance().GameEnd();
 		}
-
 	}
 }
 
@@ -106,71 +163,54 @@ void TitleScene::FadeOutUpdate()
 
 void TitleScene::FadeDraw()
 {
-	OutputDebugStringA("FadeDraw called\n");
-
 	float rate;
 
 	if (update_ == &TitleScene::FadeInUpdate)
 	{
-		// フェードイン
-		rate = (float)frameCount_ / kFadeInterval;
+		//フェードイン
+		rate = 1.0f - (float)frameCount_ / kFadeInterval;
 	}
 	else
 	{
 		//フェードアウト
-		rate = 1.0f - (float)frameCount_ / kFadeInterval;
+		rate = (float)frameCount_ / kFadeInterval;
 	}
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
-	//通常描画分をオフスクリーンに描く
 	int prevScreen = GetDrawScreen();
 	SetDrawScreen(renderHandle_);
 	ClearDrawScreen();
 	NormalDraw();
 	SetDrawScreen(prevScreen);
 
-	//定数バッファを更新
-	DissolveBufferData* bufferData =(DissolveBufferData*)GetBufferShaderConstantBuffer(dissolveConstBufferHandle_);
-	bufferData->dissolve[0] = rate;		//進行度
-	bufferData->dissolve[1] = 0.08f;	//境界のぼかし幅
-	bufferData->dissolve[2] = 0.0f;
-	bufferData->dissolve[3] = 0.0f;
-	UpdateShaderConstantBuffer(dissolveConstBufferHandle_);
-	SetShaderConstantBuffer(dissolveConstBufferHandle_, DX_SHADERTYPE_PIXEL, 1);
+	//メモリの値を変更
+	pCBuff_->value = rate;
+	pCBuff_->strength = 0.05f;
+	pCBuff_->lightX = 0.0f;
+	pCBuff_->lightY = 0.0f;
 
-	//ノイズテクスチャをスロット1にセット
-	SetUseTextureToShader(4, renderHandle_);
-	SetUseTextureToShader(5, noiseHandle_);
+	//更新
+	UpdateShaderConstantBuffer(cBuffH_);
+	SetShaderConstantBuffer(cBuffH_, DX_SHADERTYPE_PIXEL, 4);
 
-	//ピクセルシェーダーを適用して描画
-	SetUsePixelShader(dissolvePSHandle_);
-
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
-
-	DrawGraph(0, 0, renderHandle_, TRUE);
-
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-	SetUsePixelShader(-1);
-
-	//シェーダのテクスチャ割り当てを解除
-	SetUseTextureToShader(4, -1);
-	SetUseTextureToShader(5, -1);
+	DrawGraphUseOrigShader(0, 0, renderHandle_, noiseHandle_,dissolvePSHandle_);
 }
 
 void TitleScene::NormalDraw()
 {
+	DrawBox(0,0,Game::kScreenWidth, Game::kScreenWidth, 0xffffff,true);
+
 	int titleColor = 0;
 	int endColor = 0;
 
 	if (currentIndex_ == 0)
 	{
 		titleColor = 0xff0000;
-		endColor = 0xffffff;
+		endColor = 0x000000;
 	}
 	else if (currentIndex_ == 1)
 	{
-		titleColor = 0xffffff;
+		titleColor = 0x000000;
 		endColor = 0xff0000;
 	}
 
