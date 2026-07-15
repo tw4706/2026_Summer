@@ -18,6 +18,7 @@ enum class AnimationState
 	EnemyAttack,
 	EnemyJumpAttack,
 	PrevAttack,
+	KnockBack,
 	Death,
 	Dodge,
 	Jump,

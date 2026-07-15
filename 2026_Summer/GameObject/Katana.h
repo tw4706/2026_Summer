@@ -20,7 +20,7 @@ public:
 	/// Õ“Ë”»’è
 	/// </summary>
 	/// <param name="coll"></param>
-	void OnCollision(Collidable& coll)override;
+	void OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColliderB)override;
 
 	/// <summary>
 	/// “‚Ì“–‚½‚è”»’è‚Ì—LŒø/–³Œø‚ğİ’è‚·‚é

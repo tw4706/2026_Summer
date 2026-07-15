@@ -183,8 +183,8 @@ bool CollisionManager::CheckSphereVsCapsule(Collidable& pSphereObj, Collidable& 
 	if (distSq > (radSum * radSum)) return false;
 
 	// 衝突時の通知
-	pSphereObj.OnCollision(pCapsuleObj);
-	pCapsuleObj.OnCollision(pSphereObj);
+	pSphereObj.OnCollision(pCapsuleObj,pSphere,pCap);
+	pCapsuleObj.OnCollision(pSphereObj,pCap,pSphere);
 
 	return true;
 }
@@ -223,8 +223,8 @@ bool CollisionManager::CheckSphereVsSphere(Collidable& pSphereObjA, Collidable& 
 	//当たっていなければ終了
 	if (distSq > (radSum * radSum)) return false;
 
-	pSphereObjA.OnCollision(pSphereObjB);
-	pSphereObjB.OnCollision(pSphereObjA);
+	pSphereObjA.OnCollision(pSphereObjB,pSphereA, pSphereB);
+	pSphereObjB.OnCollision(pSphereObjA, pSphereB, pSphereA);
 
 	return true;
 }
@@ -302,8 +302,8 @@ bool CollisionManager::CheckCapsuleVsCapsule(Collidable& pCapsuleObjA, Collidabl
 	if (minDistanceSq > (radSum * radSum)) return false;
 
 	// 衝突イベントを通知
-	pCapsuleObjA.OnCollision(pCapsuleObjB);
-	pCapsuleObjB.OnCollision(pCapsuleObjA);
+	pCapsuleObjA.OnCollision(pCapsuleObjB, pCapA, pCapB);
+	pCapsuleObjB.OnCollision(pCapsuleObjA, pCapB, pCapA);
 
 	// 刀が絡んでいる場合は押し戻しをスキップして終了
 	bool isKatanaInvolved = (dynamic_cast<Katana*>(&pCapsuleObjA) != nullptr || dynamic_cast<Katana*>(&pCapsuleObjB) != nullptr);

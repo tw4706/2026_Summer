@@ -224,7 +224,7 @@ void EnemyBase::Draw()
 	}
 }
 
-void EnemyBase::OnCollision(Collidable& coll)
+void EnemyBase::OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColliderB)
 {
 	//衝突相手の型が刀かどうかをチェック
 	if (Katana* pKatana = dynamic_cast<Katana*>(&coll))
@@ -249,9 +249,15 @@ void EnemyBase::OnCollision(Collidable& coll)
 
 		auto enemy = std::dynamic_pointer_cast<EnemyBase>(shared_from_this());
 
-		//ダメージ状態に遷移する
-		auto nextState = std::make_shared<EnemyStateDamage>(enemy, searchRadius_);
-		ChangeState(nextState);
+		int rand = std::rand() % 100;
+
+		//20パーセントの確率でダメージアニメーションに遷移する
+		if (rand < 1)
+		{
+			//ダメージ状態に遷移する
+			auto nextState = std::make_shared<EnemyStateDamage>(enemy, searchRadius_);
+			ChangeState(nextState);
+		}
 	}
 	else
 	{

@@ -32,7 +32,7 @@ public:
 	/// 衝突判定
 	/// </summary>
 	/// <param name="obj">衝突したゲームオブジェクト</param>
-	void OnCollision(Collidable& coll)override;
+	void OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColliderB)override;
 
 	/// <summary>
 	/// 被ダメージ処理

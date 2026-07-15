@@ -17,7 +17,7 @@ public:
 	/// Õ“Ë”»’è
 	/// </summary>
 	/// <param name="coll"></param>
-	void OnCollision(Collidable& coll)override {}
+	void OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColliderB)override {}
 
 	/// <summary>
 	/// ƒnƒ“ƒhƒ‹‚Ìæ“¾

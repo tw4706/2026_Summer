@@ -70,15 +70,19 @@ void GameScene::Init()
 	//カリングの設定（裏面のポリゴンは見えないようにする）
 	SetUseBackCulling(true);
 
+	//背景の初期化
 	pBg_->Init();
 
 	//現在のアクティブカメラを取得
 	auto activeCam = pCameraManager_->GetActiveCamera();
-	//プレイヤーカメラへのセット
+
+	//プレイヤーカメラへの変換
 	auto playerCam = std::dynamic_pointer_cast<PlayerCamera>(activeCam);
 
+	//予約されているゲームオブジェクトがない場合
 	if (!reserveObjList_.empty())
 	{
+		//優先度順に処理する
 		gameObjects_.insert(gameObjects_.end(), reserveObjList_.begin(), reserveObjList_.end());
 		reserveObjList_.clear();
 	}

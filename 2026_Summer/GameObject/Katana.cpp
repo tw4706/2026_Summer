@@ -17,7 +17,7 @@ namespace
 	const Vector3 kKatanaTransform = { 20.0f, 10.0f, 0.0f };
 
 	//“‚Ìƒ_ƒ[ƒW
-	constexpr int kAttackDamage = 50;
+	constexpr int kAttackDamage = 10;
 }
 
 Katana::Katana(Vector3 pos, Vector3 vel, float dir) :
@@ -122,7 +122,7 @@ void Katana::Draw()
 #endif
 }
 
-void Katana::OnCollision(Collidable& coll)
+void Katana::OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColliderB)
 {
 	//“–‚½‚è”»’è‚ª–³Œø‚ÈŽž‚Í‰½‚à‚µ‚È‚¢
 	if (!IsEnabled())return;
@@ -138,7 +138,7 @@ void Katana::OnCollision(Collidable& coll)
 	if (pEnemy)
 	{
 		pEnemy->OnDamage(kAttackDamage);
-		pEnemy->OnCollision(*this);
+		pEnemy->OnCollision(*this,pColliderA,pColliderB);
 		isAttacked_ = true;
 	}
 }

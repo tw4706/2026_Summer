@@ -48,7 +48,7 @@ public:
 	/// 衝突判定
 	/// </summary>
 	/// <param name="obj">ゲームオブジェクト</param>
-	virtual void OnCollision(Collidable& coll)abstract;
+	virtual void OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColliderB)abstract;
 
 	/// <summary>
 	/// 当たり判定の有効/無効を設定する

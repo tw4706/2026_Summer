@@ -33,7 +33,7 @@ void LockOnManager::Update(std::shared_ptr<Player> pPlayer, const std::vector<st
 {
 	if (!pPlayer || !pCameraManager) return;
 
-	//ロックオン中なら何もしない
+	//ロックオン中でなら何もしない
 	if (!IsLockOn()) return;
 
 	//ターゲットが死んでいるとき
@@ -44,9 +44,6 @@ void LockOnManager::Update(std::shared_ptr<Player> pPlayer, const std::vector<st
 		std::shared_ptr<EnemyBase> nextEnemy = nullptr;
 
 		Vector3 playerPos = pPlayer->GetPos();
-		Vector3 playerForward = pPlayer->GetCameraTarget() - playerPos;
-		playerForward.y_ = 0.0f;
-		playerForward = playerForward.Normalize();
 
 		for (const auto& enemy : pEnemies)
 		{
@@ -63,8 +60,8 @@ void LockOnManager::Update(std::shared_ptr<Player> pPlayer, const std::vector<st
 			toEnemyDir.y_ = 0.0f;
 			toEnemyDir = toEnemyDir.Normalize();
 
-			float dotResult = playerForward.Dot(toEnemyDir);
-			if (dotResult < kLockOnAngle) continue;
+			//範囲外の敵は無視
+			if (distSq > kTargetChangeDistanceSq) continue;
 
 			if (distSq < closestDistanceSq)
 			{
@@ -253,6 +250,7 @@ void LockOnManager::StartLockOn(std::shared_ptr<Player> pPlayer, const std::vect
 		{
 			//ターゲットのセット(敵)
 			lockOnCamera->SetTargetEnemy(closestEnemy);
+
 			//プレイヤーのセット
 			lockOnCamera->SetPlayer(pPlayer);
 

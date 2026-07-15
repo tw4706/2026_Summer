@@ -10,6 +10,7 @@
 #include "PlayerStateDeath.h"
 #include "Enemy/EnemyBase.h"
 #include "Collider/CapsuleCollider.h"
+#include "Collider/SphereCollider.h"
 #include<Dxlib.h>
 #include<memory>
 #include<cassert>
@@ -252,7 +253,7 @@ void Player::Draw()
 		hpUIHandle_, true);
 }
 
-void Player::OnCollision(Collidable& coll)
+void Player::OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColliderB)
 {
 	//無敵の場合は何もしない
 	if (isInvincible_)return;
@@ -260,10 +261,11 @@ void Player::OnCollision(Collidable& coll)
 	//衝突した相手が敵だった場合ダメージ状態に遷移
 	if (EnemyBase* pEnemy = dynamic_cast<EnemyBase*>(&coll))
 	{
-		auto attackCollider = pEnemy->GetAttackCollider();
+		const SphereCollider* attackCollider = pEnemy->GetAttackCollider();
 
-		//当たったものが攻撃コライダーならダメージを通す(敵の当たり判定はダメージ判定に含めない)
-		if (attackCollider&& static_cast<const void*>(attackCollider) == static_cast<const void*>(&coll))
+		//当たったものが攻撃コライダーの場合ならダメージを通す
+		if (attackCollider != nullptr &&
+			static_cast<const Collider*>(pColliderB) == static_cast<const Collider*>(attackCollider))
 		{
 			OnDamage(kEnemyDamage);
 		}

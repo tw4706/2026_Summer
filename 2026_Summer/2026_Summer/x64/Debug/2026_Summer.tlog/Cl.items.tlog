@@ -48,6 +48,7 @@ C:\GitHub\2026_Summer\2026_Summer\GameObject\Player\PlayerStateDeath.cpp;C:\GitH
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Player\PlayerStateGuard.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerStateGuard.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Player\PlayerStateJumpAttack.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerStateJumpAttack.obj
 C:\GitHub\2026_Summer\2026_Summer\PlayerActionCounter.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerActionCounter.obj
+C:\GitHub\2026_Summer\2026_Summer\GameObject\Player\PlayerStateKnockBack.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerStateKnockBack.obj
 C:\GitHub\2026_Summer\2026_Summer\Scene\SceneManager.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\SceneManager.obj
 C:\GitHub\2026_Summer\2026_Summer\Scene\Scene.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Scene.obj
 C:\GitHub\2026_Summer\2026_Summer\Scene\ResultScene.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\ResultScene.obj

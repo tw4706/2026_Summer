@@ -3,6 +3,7 @@ C:\GitHub\2026_Summer\2026_Summer\AStarPathFinder.cpp;C:\GitHub\2026_Summer\2026
 C:\GitHub\2026_Summer\2026_Summer\AttackSelect.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\AttackSelect.obj
 C:\GitHub\2026_Summer\2026_Summer\CSV\EnemySpawnDataLoader.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemySpawnDataLoader.obj
 C:\GitHub\2026_Summer\2026_Summer\CSV\EnemyAttackDataLoader.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyAttackDataLoader.obj
+C:\GitHub\2026_Summer\2026_Summer\GameObject\Bg.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\Bg.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\EnemyStateGuard.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyStateGuard.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateAttack.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyAttackSubStateAttack.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\EnemyAttackSubState\EnemyAttackSubStateChance.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyAttackSubStateChance.obj
@@ -47,6 +48,7 @@ C:\GitHub\2026_Summer\2026_Summer\GameObject\Player\PlayerStateDeath.cpp;C:\GitH
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Player\PlayerStateGuard.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\PlayerStateGuard.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Player\PlayerStateJumpAttack.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\PlayerStateJumpAttack.obj
 C:\GitHub\2026_Summer\2026_Summer\PlayerActionCounter.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\PlayerActionCounter.obj
+C:\GitHub\2026_Summer\2026_Summer\GameObject\Player\PlayerStateKnockBack.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\PlayerStateKnockBack.obj
 C:\GitHub\2026_Summer\2026_Summer\Scene\SceneManager.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\SceneManager.obj
 C:\GitHub\2026_Summer\2026_Summer\Scene\Scene.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\Scene.obj
 C:\GitHub\2026_Summer\2026_Summer\Scene\ResultScene.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\ResultScene.obj

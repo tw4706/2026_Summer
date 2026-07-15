@@ -5,7 +5,11 @@
       <FullPath>C:\GitHub\2026_Summer\2026_Summer\x64\Release\2026_Summer.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
-  <ContentFiles />
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>C:\GitHub\2026_Summer\2026_Summer\DissolvePS.pso</FullPath>
+    </ContentFile>
+  </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />
 </Project>
