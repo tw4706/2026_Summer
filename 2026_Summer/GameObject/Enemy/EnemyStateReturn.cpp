@@ -10,9 +10,6 @@ namespace
 	//移動速度
 	const float kMoveSpeed = 0.5f;
 
-	//経過時間
-	const float kDeltaTime = 1.0f / 60.0f;
-
 	//線形補間の割合
 	const float kRotateLerpRate = 0.3f;
 
@@ -132,31 +129,11 @@ void EnemyStateReturn::Update()
 	//正規化
 	toTarget.Normalize();
 
-	//移動速度を設定
-	Vector3 moveVec = { toTarget.x_ * kMoveSpeed * kDeltaTime, 0.0f, toTarget.z_ * kMoveSpeed * kDeltaTime };
-	//速度の適用
-	enemy->SetVelocity(moveVec);
-	//計算した位置を適用
-	Vector3 nextPos = enemyPos + moveVec;
-	//位置のセット
-	enemy->SetPos(nextPos);
+	//速度・位置の適用
+	ApplyMove(enemy, enemyPos, toTarget, kMoveSpeed);
 
-	//進行方向の角度
-	float targetAngle = std::atan2f(toTarget.x_, -toTarget.z_);
-	//現在の角度
-	float currentAngle = enemy->moveAngle_;
-
-	float angleDiff = targetAngle - currentAngle;
-
-	//差分を-πからπの範囲に正規化
-	while (angleDiff > DX_PI_F)  angleDiff -= 2.0f * DX_PI_F;
-	while (angleDiff < -DX_PI_F) angleDiff += 2.0f * DX_PI_F;
-
-	//線形補間を用いて滑らかに回転する
-	float nextAngle = currentAngle + angleDiff * kRotateLerpRate;
-
-	//計算した角度を適用
-	enemy->moveAngle_ = nextAngle;
+	//角度を線形補間して適用
+	enemy->moveAngle_ = RotateAngle(enemy->moveAngle_, toTarget, kRotateLerpRate);
 }
 
 void EnemyStateReturn::Exit()

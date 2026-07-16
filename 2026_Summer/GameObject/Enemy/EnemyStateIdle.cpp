@@ -9,9 +9,6 @@ namespace
 	//移動速度
 	const float kMoveSpeed = 0.3f;
 
-	//経過時間
-	const float kDeltaTime = 1.0f / 60.0f;
-
 	//線形補間の割合
 	const float kRotateLerpRate = 0.3f;
 
@@ -27,18 +24,6 @@ namespace
 	//跳び越え可能と判断する高低差
 	const float kMinJumpableHeight = 20.0f;
 	const float kMaxJumpableHeight = 100.0f;
-
-	//敵の視線の先に障害物があるかどうかをレイを飛ばして判定する
-	//hitしていなければ視線が通っている(=true)
-	bool HasLineOfSight(int stageModelHandle, const Vector3& from, const Vector3& to)
-	{
-		VECTOR start = VGet(from.x_, from.y_ + kEyeHeight, from.z_);
-		VECTOR end = VGet(to.x_, to.y_ + kEyeHeight, to.z_);
-
-		MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(stageModelHandle, -1, start, end);
-
-		return hit.HitFlag == false;
-	}
 
 	//指定座標の真下にレイを飛ばして地面の高さを取得する
 	//地面にhitしなければfalseを返す
@@ -73,46 +58,6 @@ namespace
 		if (heightDiff < kMinJumpableHeight || heightDiff > kMaxJumpableHeight) return false;
 
 		landingPos = Vector3(probePos.x_, probeHeight, probePos.z_);
-		return true;
-	}
-
-	//直線上に歩行不可のマスが無いかを一定間隔でチェック
-	bool IsPathWalkable(const NavigationGrid* pNaviGrid, const Vector3& from, const Vector3& to)
-	{
-		if (!pNaviGrid) return true; //グリッドが無ければチェックしようがないので許可する
-
-		float cellSize = pNaviGrid->GetCellSize();
-		if (cellSize <= 0.0f) return true;
-
-		Vector3 diff = to - from;
-		diff.y_ = 0.0f;
-		float distance = diff.Length();
-
-		//距離が短ければチェック不要
-		if (distance < cellSize)
-		{
-			return true;
-		}
-
-		int sampleCount = static_cast<int>(distance / cellSize) + 1;
-
-		for (int i = 0; i <= sampleCount; ++i)
-		{
-			float t = static_cast<float>(i) / static_cast<float>(sampleCount);
-			Vector3 samplePos = from + diff * t;
-
-			int gx, gz;
-			pNaviGrid->WorldPosToGrid(samplePos, gx, gz);
-
-			const NavigationGrid::NodeData* node = pNaviGrid->GetNode(gx, gz);
-
-			//グリッド範囲外または歩行不可なら直進不可と判定
-			if (!node || !node->iswalked)
-			{
-				return false;
-			}
-		}
-
 		return true;
 	}
 }
@@ -259,33 +204,11 @@ void EnemyStateIdle::Update()
 		return;
 	}
 
-	//移動速度を設定
-	Vector3 moveVec = { toTarget.x_ * kMoveSpeed * kDeltaTime, 0.0f, toTarget.z_ * kMoveSpeed * kDeltaTime };
+	//速度・位置の適用
+	ApplyMove(enemy, enemyPos, toTarget, kMoveSpeed);
 
-	//速度の適用
-	enemy->SetVelocity(moveVec);
-
-	//計算した位置を適用
-	Vector3 nextPos = enemyPos + moveVec;
-	//位置のセット
-	enemy->SetPos(nextPos);
-
-	//進行方向の角度
-	float targetAngle = std::atan2f(toTarget.x_, -toTarget.z_);
-	//現在の角度
-	float currentAngle = enemy->moveAngle_;
-
-	float angleDiff = targetAngle - currentAngle;
-
-	//差分を-πからπの範囲に正規化
-	while (angleDiff > DX_PI_F)  angleDiff -= 2.0f * DX_PI_F;
-	while (angleDiff < -DX_PI_F) angleDiff += 2.0f * DX_PI_F;
-
-	//線形補間を用いて滑らかに回転する
-	float nextAngle = currentAngle + angleDiff * kRotateLerpRate;
-
-	//計算した角度を適用
-	enemy->moveAngle_ = nextAngle;
+	//角度を線形補間して適用
+	enemy->moveAngle_ = RotateAngle(enemy->moveAngle_, toTarget, kRotateLerpRate);
 }
 
 void EnemyStateIdle::Exit()
