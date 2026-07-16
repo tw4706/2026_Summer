@@ -27,7 +27,7 @@ namespace
 	const Vector3 kFirstRotate = { 0.0f, DX_PI_F, 0.0f };
 
 	//プレイヤーの最大体力
-	constexpr int kMaxHP = 50;
+	constexpr int kMaxHP = 100;
 
 	//敵から食らうダメージ
 	constexpr int kEnemyDamage = 10;
@@ -241,13 +241,13 @@ void Player::Draw()
 	int distY2 = static_cast<int>(hpUIY_ * scale);
 
 	//HPバーフレームの描画
-	DrawRectGraph(Game::kScreenWidth / 2 - 250, Game::kScreenHeight - 150,
+	DrawRectGraph(Game::kScreenWidth / 2 - 250, Game::kScreenHeight - 100,
 		0, 0,
 		hpBarUIX_, hpBarUIY_,
 		hpUIFrameHandle_, true);
 
 	//HPバーの描画
-	DrawRectGraph(Game::kScreenWidth / 2 - 250, Game::kScreenHeight - 150,
+	DrawRectGraph(Game::kScreenWidth / 2 - 250, Game::kScreenHeight - 100,
 		0, 0,
 		drawHPWidth, hpUIY_,
 		hpUIHandle_, true);

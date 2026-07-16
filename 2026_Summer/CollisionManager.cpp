@@ -301,11 +301,11 @@ bool CollisionManager::CheckCapsuleVsCapsule(Collidable& pCapsuleObjA, Collidabl
 	//当たっていなければ終了
 	if (minDistanceSq > (radSum * radSum)) return false;
 
-	// 衝突イベントを通知
+	//衝突イベントを通知
 	pCapsuleObjA.OnCollision(pCapsuleObjB, pCapA, pCapB);
 	pCapsuleObjB.OnCollision(pCapsuleObjA, pCapB, pCapA);
 
-	// 刀が絡んでいる場合は押し戻しをスキップして終了
+	//刀が絡んでいる場合は押し戻しをスキップして終了
 	bool isKatanaInvolved = (dynamic_cast<Katana*>(&pCapsuleObjA) != nullptr || dynamic_cast<Katana*>(&pCapsuleObjB) != nullptr);
 	if (isKatanaInvolved) return true;
 

@@ -23,8 +23,10 @@ bool Application::Init()
 {
 	//ウィンドウモード設定
 	ChangeWindowMode(true);
+
 	//ウィンドウのタイトル変更
 	SetMainWindowText(L"SamuraiAdapt");
+
 	//画面のサイズ変更
 	SetGraphMode(Game::kScreenWidth, Game::kScreenHeight, Game::kColorBitNum);
 

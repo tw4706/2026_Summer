@@ -23,6 +23,7 @@ enum class AnimationState
 	Dodge,
 	Jump,
 	Chance,
+	React
 };
 
 class Animation

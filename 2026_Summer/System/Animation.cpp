@@ -224,7 +224,8 @@ void Animation::ChangeState(AnimationState state, const std::wstring& animName)
 			state_ == AnimationState::KnockBack ||
 			state_ == AnimationState::Death ||
 			state_ == AnimationState::Spawn ||
-			state_ == AnimationState::Chance)
+			state_ == AnimationState::Chance ||
+			state_ == AnimationState::React)
 		{
 			loop = false;
 		}
