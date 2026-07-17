@@ -24,7 +24,7 @@ void PlayerActionCounter::RecordAttack()
 	totalCount_++;
 }
 
-//ˆê’è”‚ð’´‚¦‚½‚ç”¼•ª‚ÉŒ¸Š‚³‚¹‚é
+//ˆê’è”‚ð’´‚¦‚½‚ç”¼•ª‚É‚µ‚ÄŠm—§‚ð•Î‚ç‚¹‚È‚¢‚æ‚¤‚É‚·‚é
 void PlayerActionCounter::DecayIfNeeded()
 {
 	if (totalCount_ > kDecayThreshold)

@@ -170,6 +170,7 @@ bool CollisionManager::CheckSphereVsCapsule(Collidable& pSphereObj, Collidable& 
 	//長さの二乗の計算
 	float abLenSq = ab.LengthSq();
 
+	//クランプ処理
 	float t = (abLenSq > 0.0f) ? (dot / abLenSq) : 0.0f;
 	if (t < 0.0f) t = 0.0f;
 	if (t > 1.0f) t = 1.0f;
@@ -179,10 +180,10 @@ bool CollisionManager::CheckSphereVsCapsule(Collidable& pSphereObj, Collidable& 
 	float distSq = (sphereCenter - closestPointC).LengthSq();
 	float radSum = sphereRadius + capRadius;
 
-	// 当たっていなければ終了
+	//当たっていなければ終了
 	if (distSq > (radSum * radSum)) return false;
 
-	// 衝突時の通知
+	//衝突したときに呼び出される
 	pSphereObj.OnCollision(pCapsuleObj,pSphere,pCap);
 	pCapsuleObj.OnCollision(pSphereObj,pCap,pSphere);
 
@@ -301,11 +302,11 @@ bool CollisionManager::CheckCapsuleVsCapsule(Collidable& pCapsuleObjA, Collidabl
 	//当たっていなければ終了
 	if (minDistanceSq > (radSum * radSum)) return false;
 
-	//衝突イベントを通知
+	//衝突したときに呼び出される
 	pCapsuleObjA.OnCollision(pCapsuleObjB, pCapA, pCapB);
 	pCapsuleObjB.OnCollision(pCapsuleObjA, pCapB, pCapA);
 
-	//刀が絡んでいる場合は押し戻しをスキップして終了
+	//刀が場合は押し戻しをせずに終了する
 	bool isKatanaInvolved = (dynamic_cast<Katana*>(&pCapsuleObjA) != nullptr || dynamic_cast<Katana*>(&pCapsuleObjB) != nullptr);
 	if (isKatanaInvolved) return true;
 
@@ -318,10 +319,11 @@ bool CollisionManager::CheckCapsuleVsCapsule(Collidable& pCapsuleObjA, Collidabl
 		float weightA = 0.5f;
 		float weightB = 0.5f;
 
-		//直接キャストを判定する
+		//直接キャストしたものを判定する
 		if (dynamic_cast<Player*>(&pCapsuleObjA)) { weightA = 1.0f; weightB = 0.0f; }
 		else if (dynamic_cast<Player*>(&pCapsuleObjB)) { weightA = 0.0f; weightB = 1.0f; }
 
+		//各A,Bの押し戻し位置の適用
 		Vector3 posA = pCapsuleObjA.GetPos();
 		posA.x_ += dirBtoA.x_ * overlap * weightA;
 		posA.z_ += dirBtoA.z_ * overlap * weightA;

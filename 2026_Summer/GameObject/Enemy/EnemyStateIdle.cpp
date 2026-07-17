@@ -1,6 +1,7 @@
 #include "EnemyStateIdle.h"
 #include "EnemyStateReact.h"
 #include "EnemyStateJump.h"
+#include "EnemyStateAttack.h"
 #include "EnemyBase.h"
 #include "System/NavigationGrid.h"
 
@@ -24,6 +25,9 @@ namespace
 	//跳び越え可能と判断する高低差
 	const float kMinJumpableHeight = 20.0f;
 	const float kMaxJumpableHeight = 100.0f;
+
+	//反応行動を開始する範囲
+	constexpr float kSearchReactRange = 700.0f;
 
 	//指定座標の真下にレイを飛ばして地面の高さを取得する
 	//地面にhitしなければfalseを返す
@@ -112,9 +116,7 @@ void EnemyStateIdle::Update()
 	Vector3 playerPos = enemy->GetPlayerPos();
 	bool hasLineOfSight = HasLineOfSight(enemy->GetStageModelHandle(), enemyPos, playerPos);
 
-	float visionAngle = 90.0f;
-
-	if (enemy->IsPlayerInRange(searchRadius_)&& hasLineOfSight)
+	if (enemy->IsPlayerInRange(kSearchReactRange)&& hasLineOfSight)
 	{
 		//状態を遷移する前に経路をクリア
 		if (enemy->pathFollower_.HasPath())

@@ -10,15 +10,15 @@ public:
 
 	void Update()override {};
 
-	float GetRadius()const { return r_; }
+	float GetRadius()const { return radius_; }
 
-	void SetRadian(float r) { r_ = r; }
+	void SetRadian(float r) { radius_ = r; }
 
 	const Vector3& GetPos()const { return pos_; }
 
 	void SetPos(const Vector3& pos) { pos_ = pos; }
 private:
 	Vector3 pos_;
-	float r_;	//”¼Œa
+	float radius_;	//”¼Œa
 };
 

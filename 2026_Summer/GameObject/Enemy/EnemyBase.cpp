@@ -132,8 +132,11 @@ void EnemyBase::Draw()
 	//モデルの描画
 	model_.Draw();
 #ifdef _DEBUG
+	//反応行動を開始する範囲
+	constexpr float kSearchReactRange = 700.0f;
+
 	//索敵範囲のデバッグ表示
-	DrawDebugRange(pos_, searchRadius_, 0xff0000);
+	DrawDebugRange(pos_, kSearchReactRange, 0xff0000);
 
 	//敵の視線範囲のデバッグ描画
 	float visionDist = searchRadius_; //半径を距離として利用

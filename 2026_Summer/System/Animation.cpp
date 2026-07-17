@@ -6,6 +6,22 @@ namespace
 {
 	//アニメーションの進むスピード
 	constexpr float kAnimationSpeed = 30.0f;
+
+	//スローアニメーションのスピード
+	constexpr float kSlowAnimationSpeed = 24.0f;
+
+	//敵の攻撃アニメーションのスピード
+	constexpr float kEnemyAttackAnimationSpeed = 60.0f;
+
+	//アニメーションをブレンドする割合
+	constexpr float kBlendDuration = 0.3f;
+
+	//アニメーションのスピード
+	constexpr float kSpeed = 1.0f;
+
+	//ブレンド率
+	constexpr float kBlendRate1 = 1.0f;
+	constexpr float kBlendRate0 = 0.0f;
 }
 
 Animation::Animation() :
@@ -34,8 +50,8 @@ Animation::~Animation()
 void Animation::Init(int modelHandle)
 {
 	modelHandle_ = modelHandle;
-	blendDuration_ = 0.3f;
-	speed_ = 1.0f;
+	blendDuration_ = kBlendDuration;
+	speed_ = kSpeed;
 }
 
 void Animation::Update(float deltaTime)
@@ -113,7 +129,7 @@ void Animation::Update(float deltaTime)
 		//ブレンドタイムを進行
 		blendTime_ += deltaTime;
 
-		float t = 1.0f;
+		float t = kBlendRate1;
 
 		//ブレンドタイムがDurationを超えないように0.0f~1.0fで正規化する
 		if (blendDuration_ > 0.0f)
@@ -130,7 +146,7 @@ void Animation::Update(float deltaTime)
 		//古いアニメーション
 		if (prevAttach_ != -1)
 		{
-			MV1SetAttachAnimBlendRate(modelHandle_, prevAttach_, 1.0f - t);
+			MV1SetAttachAnimBlendRate(modelHandle_, prevAttach_, kBlendRate1 - t);
 		}
 
 		//アニメーションのブレンドが完了したら古いアニメをデタッチ
@@ -186,12 +202,12 @@ void Animation::Play(int animIndex, float speed, bool isLoop)
 	isBlending_ = true;
 
 	//ブレンド比率の初期化
-	MV1SetAttachAnimBlendRate(modelHandle_, currentAttachAnim_, 0.0f);
+	MV1SetAttachAnimBlendRate(modelHandle_, currentAttachAnim_, kBlendRate0);
 
 	if (prevAttach_ != -1)
 	{
 		//ブレンドを最初はしないまま表示
-		MV1SetAttachAnimBlendRate(modelHandle_, prevAttach_, 1.0f);
+		MV1SetAttachAnimBlendRate(modelHandle_, prevAttach_, kBlendRate1);
 	}
 
 	//アニメーションの動きに応じてブレンド率を適用
@@ -223,8 +239,7 @@ void Animation::ChangeState(AnimationState state, const std::wstring& animName)
 			state_ == AnimationState::Damage ||
 			state_ == AnimationState::KnockBack ||
 			state_ == AnimationState::Death ||
-			state_ == AnimationState::Spawn ||
-			state_ == AnimationState::Chance)
+			state_ == AnimationState::Spawn)
 		{
 			loop = false;
 		}
@@ -263,10 +278,10 @@ void Animation::ResetAnimation()
 
 void Animation::SetSlowAnimationSpeed()
 {
-	speed_ = kAnimationSpeed * 0.8f;
+	speed_ = kSlowAnimationSpeed;
 }
 
 void Animation::SetEnemyAttackAnimationSpeed()
 {
-	speed_ = kAnimationSpeed * 2.0f;
+	speed_ = kEnemyAttackAnimationSpeed;
 }

@@ -4,7 +4,7 @@
 namespace
 {
 	//–Ú•W“_‚É“ž’B‚µ‚½‚Æ”»’è‚·‚é‹——£
-	const float kReachDistance = 30.0f;
+	constexpr float kReachDistance = 30.0f;
 }
 
 PathFollower::PathFollower()

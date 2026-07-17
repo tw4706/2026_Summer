@@ -193,7 +193,7 @@ void Player::Draw()
 			SetUseZBuffer3D(false);
 
 			//ƒŒƒeƒBƒNƒ‹UI‚Ì•`‰æ
-			DrawRotaGraph3(reticleScreenPos.x - 100.0f, reticleScreenPos.y - 80.0f,
+			DrawRotaGraph3(static_cast<int>(reticleScreenPos.x - 100.0f), static_cast<int>(reticleScreenPos.y - 80.0f),
 				0, 0,
 				0.2f, 0.2f,
 				0.0f, reticleUIHandle_, true);

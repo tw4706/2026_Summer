@@ -1,5 +1,5 @@
 #include "EnemyStateDamage.h"
-#include "EnemyStateIdle.h"
+#include "EnemyStateRun.h"
 #include "EnemyBase.h"
 
 EnemyStateDamage::EnemyStateDamage(std::weak_ptr<EnemyBase> pEnemy, float searchRadius):
@@ -25,7 +25,7 @@ void EnemyStateDamage::Update()
 	if (enemy->IsAnimationEnd())
 	{
 		//Idleó‘Ô‚É‘JˆÚ
-		auto nextState = std::make_shared<EnemyStateIdle>(pEnemy_, searchRadius_);
+		auto nextState = std::make_shared<EnemyStateRun>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);
 		return;
 	}

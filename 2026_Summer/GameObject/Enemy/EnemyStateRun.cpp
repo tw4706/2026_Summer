@@ -22,6 +22,9 @@ namespace
 
 	//視線の高さ(Rayで障害物の判定を行うのに使用)
 	const float kEyeHeight = 50.0f;
+
+	//視線の追従範囲の角度
+	const float kVisionAngle = DX_PI_F / 4.0f;
 }
 
 EnemyStateRun::EnemyStateRun(std::weak_ptr<EnemyBase> pEnemy, float searchRadius) :
@@ -56,10 +59,10 @@ void EnemyStateRun::Update()
 	//プレイヤーへ視線が通っているかどうかを判定
 	bool hasLineOfSight = HasLineOfSight(enemy->GetStageModelHandle(), enemyPos, playerPos);
 
-	float visionAngle = 45.0f;
+	//プレイヤーが反応範囲に入っているかどうかを判定
+	bool isPlayerInRange = enemy->IsPlayerInRange(searchRadius_);
 
-	//索敵の範囲に入ってなかったら
-	if ((!enemy->IsPlayerInVision(searchRadius_, visionAngle) || !hasLineOfSight) && !enemy->IsHit())
+	if ((!isPlayerInRange || !hasLineOfSight) && !enemy->IsHit())
 	{
 		auto nextState = std::make_shared<EnemyStateReturn>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);
@@ -81,7 +84,7 @@ void EnemyStateRun::Update()
 	else//視線が通らない(障害物などで遮られている場合)
 	{
 		//経路がない場合は再度探索して経路をセットする
-		//A*探索で障害物を回避した経路を作り、その経路に沿って移動する
+		//A*探索で障害物を回避した経路を作り経路に沿って移動する
 		if (!enemy->pathFollower_.HasPath())
 		{
 			std::vector<Vector3> path = enemy->pathFinder_.FindPath(enemyPos, playerPos);
@@ -125,7 +128,7 @@ void EnemyStateRun::Update()
 	//正規化
 	toTarget.Normalize();
 
-	//もしプレイヤーとぶつかっていない場合
+	//プレイヤーとぶつかっていない場合
 	if (!enemy->IsHit())
 	{
 		//速度・位置の適用

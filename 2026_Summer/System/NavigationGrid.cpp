@@ -14,7 +14,7 @@ namespace
 	constexpr float kGroundNormalThreshold = 0.7f;
 
 	//地面の高さの許容誤差(これを超えて高い/低い位置にヒットしたら障害物とみなす)
-	constexpr float kGroundYTolerance = 100.0f;
+	constexpr float kGroundPermissible = 100.0f;
 }
 
 void NavigationGrid::CreateGrid(int stageModelHandle, float minX, float maxX, float minZ, float maxZ, float cellSize, int margin)
@@ -29,7 +29,7 @@ void NavigationGrid::CreateGrid(int stageModelHandle, float minX, float maxX, fl
 	height_ = static_cast<int>((maxZ - minZ) / cellSize_) + 1;
 
 	//assignは値を明示的に指定できる
-	//「既存の要素を消して新しく指定個数・指定値で埋め直す」関数
+	//「既存の要素を消して新しく指定個数・指定値で埋め直す」関数←覚える用のメモ
 	nodes_.assign(width_ * height_, NodeData{});
 
 	//各マスにRayを飛ばす
@@ -57,12 +57,12 @@ void NavigationGrid::CreateGrid(int stageModelHandle, float minX, float maxX, fl
 
 			//地面の高さの取得(ヒットしていた場合)
 			float groundY = hit.HitPosition.y;
-			node.pos = Vector3{ worldPos.x_, groundY, worldPos.z_ };
+			node.pos =worldPos;
 
 			//当たっているポリゴンの法線のY成分が閾値よりも高いかどうか判定
 			//これにより「平坦な道かどうか」判定している
 			bool isFlatEnough = hit.Normal.y >= kGroundNormalThreshold;
-			bool isExpectedHeight = std::abs(groundY - expectedGroundY_) <= kGroundYTolerance;
+			bool isExpectedHeight = std::abs(groundY - expectedGroundY_) <= kGroundPermissible;
 
 			node.iswalked = isFlatEnough && isExpectedHeight;
 		}

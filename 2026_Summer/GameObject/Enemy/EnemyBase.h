@@ -174,7 +174,7 @@ protected:
 	//HP‚ð•`‰æ‚µ‚Ä‚¢‚¢‚©‚Ç‚¤‚©
 	bool isDrawHPVisible_;
 
-	int drawHPVisibleTimer_;
+	float drawHPVisibleTimer_;
 
 	//ƒ‚ƒfƒ‹‚ÌŠg‘å—¦
 	Vector3 scale_;
