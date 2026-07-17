@@ -56,7 +56,7 @@ void EnemyStateRun::Update()
 	//ƒvƒŒƒCƒ„[‚ÖŽ‹ü‚ª’Ê‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ð”»’è
 	bool hasLineOfSight = HasLineOfSight(enemy->GetStageModelHandle(), enemyPos, playerPos);
 
-	float visionAngle = 90.0f;
+	float visionAngle = 45.0f;
 
 	//õ“G‚Ì”ÍˆÍ‚É“ü‚Á‚Ä‚È‚©‚Á‚½‚ç
 	if ((!enemy->IsPlayerInVision(searchRadius_, visionAngle) || !hasLineOfSight) && !enemy->IsHit())

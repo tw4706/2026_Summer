@@ -28,5 +28,6 @@ struct EnemyData
 	std::wstring jumpAttackAnim_;
 	std::wstring damageAnim_;
 	std::wstring deathAnim_;
+	std::wstring reactAnim_;
 };
 

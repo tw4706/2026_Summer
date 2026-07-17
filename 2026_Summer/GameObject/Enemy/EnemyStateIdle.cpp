@@ -1,5 +1,5 @@
 #include "EnemyStateIdle.h"
-#include "EnemyStateRun.h"
+#include "EnemyStateReact.h"
 #include "EnemyStateJump.h"
 #include "EnemyBase.h"
 #include "System/NavigationGrid.h"
@@ -114,7 +114,7 @@ void EnemyStateIdle::Update()
 
 	float visionAngle = 90.0f;
 
-	if (enemy->IsPlayerInVision(searchRadius_, visionAngle) && hasLineOfSight)
+	if (enemy->IsPlayerInRange(searchRadius_)&& hasLineOfSight)
 	{
 		//ó‘Ô‚ğ‘JˆÚ‚·‚é‘O‚ÉŒo˜H‚ğƒNƒŠƒA
 		if (enemy->pathFollower_.HasPath())
@@ -122,8 +122,8 @@ void EnemyStateIdle::Update()
 			enemy->pathFollower_.ClearPath();
 		}
 
-		//Runó‘Ô‚Ö‘JˆÚ
-		auto nextState = std::make_shared<EnemyStateRun>(pEnemy_, searchRadius_);
+		//”½‰‚µ‚Ä‚¢‚éó‘Ô‚Ö‘JˆÚ
+		auto nextState = std::make_shared<EnemyStateReact>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);
 		return;
 	}

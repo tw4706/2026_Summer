@@ -133,6 +133,9 @@ void EnemyBase::Draw()
 	model_.Draw();
 #ifdef _DEBUG
 	//索敵範囲のデバッグ表示
+	DrawDebugRange(pos_, searchRadius_, 0xff0000);
+
+	//敵の視線範囲のデバッグ描画
 	float visionDist = searchRadius_; //半径を距離として利用
 	float visionAngle = 90.0f;       //視野角を90度に設定
 
@@ -411,6 +414,7 @@ void EnemyBase::ApplyData(const EnemyData& data, const EnemySpawnData& spawnData
 	animation_.RegisterAnimName(AnimationState::EnemyJumpAttack, data.jumpAttackAnim_);
 	animation_.RegisterAnimName(AnimationState::Damage, data.damageAnim_);
 	animation_.RegisterAnimName(AnimationState::Death, data.deathAnim_);
+	animation_.RegisterAnimName(AnimationState::React, data.reactAnim_);
 }
 
 Vector3 EnemyBase::GetPlayerPos() const
@@ -465,6 +469,15 @@ void EnemyBase::SetAttackAnimationSpeed()
 	animation_.SetEnemyAttackAnimationSpeed();
 }
 
+bool EnemyBase::IsPlayerInRange(float radius) const
+{
+	Vector3 toPlayer = pos_ - GetPlayerPos();
+
+	toPlayer.y_ = 0.0f;
+	return toPlayer.Length() <= radius;
+
+}
+
 bool EnemyBase::IsPlayerInVision(float maxDist, float visionAngle) const
 {
 	auto pPlayer = pPlayer_.lock();
@@ -477,12 +490,14 @@ bool EnemyBase::IsPlayerInVision(float maxDist, float visionAngle) const
 
 	//距離の判定
 	float distSq = toPlayer.LengthSq();
+
+	//最大範囲より外側にいる場合は見えていないからfalseを返す
 	if (distSq > maxDist * maxDist)
 	{
-		return false; //最大範囲より外にいる
+		return false;
 	}
 	
-	//0除算を防止するため重なっている場合は見えている判定にする
+	//0除算を防止するため重なっているときは見えているのでtrueを返す
 	if (distSq < 0.0001f) return true;
 
 	float dist = sqrtf(distSq);
@@ -491,10 +506,10 @@ bool EnemyBase::IsPlayerInVision(float maxDist, float visionAngle) const
 	//正面ベクトル
 	Vector3 forward = { sinf(moveAngle_), 0.0f, -cosf(moveAngle_) };
 
-	//正面ベクトルとターゲットへの方向ベクトルの内積を計算
+	//正面ベクトルとターゲットの方向ベクトルとの内積を計算
 	float dot = forward.Dot(dirToPlayer);
 
-	//視野角の半分をラジアンに変換する
+	//視野角の半分をラジアンに変換
 	float halfFovRad = (visionAngle * 0.5f) * (DX_PI_F / 180.0f);
 
 	//視野角の半分のcosの値を求める
@@ -503,8 +518,15 @@ bool EnemyBase::IsPlayerInVision(float maxDist, float visionAngle) const
 	//内積が視野角の半分のcosの値以上であれば視野に入っている
 	if (dot >= cosHalfFov)
 	{
-		return true; //視界に入っている！
+		return true;
 	}
 
-	return false; //視野角の外にいる
+	return false;
+}
+
+void EnemyBase::DrawDebugRange(const Vector3& centerPos, float radius, unsigned int color)
+{
+	VECTOR pos = VGet(centerPos.x_, centerPos.y_, centerPos.z_);
+
+	DrawSphere3D(pos, radius, 16, color, color, false);
 }

@@ -19,6 +19,7 @@ class EnemyBase :public Character
 	friend class EnemyStateRun;
 	friend class EnemyStateReturn;
 	friend class EnemyStateJump;
+	friend class EnemyStateReact;
 public:
 	EnemyBase();
 	virtual~EnemyBase();
@@ -131,9 +132,18 @@ public:
 	void SetAttackAnimationSpeed();
 
 	/// <summary>
+	/// プレイヤーが範囲の中に入っているか
+	/// </summary>
+	/// <returns>入ってたらtrue,入ってなかったらfalse</returns>
+	bool IsPlayerInRange(float radius)const;
+
+
+	/// <summary>
 	/// プレイヤーが視界に入っているかどうか
 	/// </summary>
 	bool IsPlayerInVision(float maxDist, float visionAngle) const;
+	
+	void DrawDebugRange(const Vector3& centerPos, float radius, unsigned int color);
 
 protected:
 	//移動の際に向いている角度
