@@ -35,6 +35,7 @@ public:
 
 	void PlayEffect();
 
+	void StopEffect();
 private:
 	int currentEffectHandle_ = -1;//現在再生中のエフェクトハンドル
 	bool isAttacked_ = false;//攻撃したかどうか

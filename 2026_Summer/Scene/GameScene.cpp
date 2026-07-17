@@ -231,13 +231,13 @@ void GameScene::NormalUpdate()
 	//カメラマネージャーの更新
 	pCameraManager_->Update(pStage_->GetHandle());
 
-	Effekseer_Sync3DSetting();
-
 	//当たり判定の更新
 	CollisionManager::GetInstance().UpdateCheckCollision();
 
 	//ロックオンマネージャーの更新
 	pLockOnManager_->Update(pPlayer_, pEnemyManager_->GetEnemies(), pCameraManager_.get());
+
+	Effekseer_Sync3DSetting();
 
 	//死んでいるゲームオブジェクトの削除
 	gameObjects_.erase(std::remove_if(gameObjects_.begin(), gameObjects_.end(), 

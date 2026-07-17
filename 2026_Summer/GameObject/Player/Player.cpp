@@ -324,3 +324,8 @@ void Player::PlayKatanaEffect()
 	//刀のエフェクト再生
 	pKatana_->PlayEffect();
 }
+
+void Player::StopKatanaEffect()
+{
+	if (pKatana_) pKatana_->StopEffect();
+}

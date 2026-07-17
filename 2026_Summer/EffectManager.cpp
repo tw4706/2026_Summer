@@ -13,7 +13,7 @@ void EffectManager::Update()
 {
 	for (auto it = handles_.begin(); it != handles_.end();)
 	{
-		if (IsEffekseer3DEffectPlaying(*it) == FALSE)
+		if (IsEffekseer3DEffectPlaying(*it) == false)
 		{
 			it = handles_.erase(it);
 		}
@@ -26,6 +26,12 @@ void EffectManager::Update()
 
 void EffectManager::Load(const std::wstring& name, const char* path)
 {
+	//‚·‚Å‚Éƒ[ƒh‚³‚ê‚½‚¢‚½‚ç‰½‚à‚µ‚È‚¢
+	if (effects_.count(name) > 0)
+	{
+		return;
+	}
+
 	int handle = LoadEffekseerEffect(path);
 	effects_[name] = handle;
 }

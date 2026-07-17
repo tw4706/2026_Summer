@@ -67,5 +67,7 @@ void PlayerStateAttack::Exit()
 	if (pPlayer)
 	{
 		pPlayer->SetKatanaColliderEnabled(false);
+
+		pPlayer->StopKatanaEffect();
 	}
 }

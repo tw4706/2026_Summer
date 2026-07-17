@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "TitleScene.h"
 #include "SceneManager.h"
+#include "EffectManager.h"
 #include "EffekseerForDXLib.h"
 #include<Dxlib.h>
 #include<memory>
@@ -94,6 +95,7 @@ void  Application::Run()
 		Input::GetInstance().Update();
 		sceneManager.Update();
 		UpdateEffekseer3D();
+		EffectManager::GetInstance().Update();
 		sceneManager.Draw();
 		DrawEffekseer3D();
 

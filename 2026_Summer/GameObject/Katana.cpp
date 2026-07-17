@@ -87,6 +87,19 @@ void Katana::Update(const MATRIX& handMat, AnimationState ownerState)
 			pCapsule->SetWorldPos(worldStart,worldEnd);
 		}
 	}
+
+	Vector3 katanaWorldPos = 
+	{
+		worldMat_.m[3][0],
+		worldMat_.m[3][1],
+		worldMat_.m[3][2]
+	};
+
+	if (currentEffectHandle_ != -1)
+	{
+		SetPosPlayingEffekseer3DEffect(currentEffectHandle_, worldEnd.x, worldEnd.y, worldEnd.z);
+	}
+
 }
 
 void Katana::Draw()
@@ -160,7 +173,6 @@ void Katana::SetColliderEnabled(bool isEnabled)
 
 void Katana::PlayEffect()
 {
-
 	//刀の最新のワールド座標
 	Vector3 katanaWorldPos =
 	{
@@ -170,4 +182,13 @@ void Katana::PlayEffect()
 	};
 
 	currentEffectHandle_ = EffectManager::GetInstance().Play(L"Slash", katanaWorldPos);
+}
+
+void Katana::StopEffect()
+{
+	if (currentEffectHandle_ != -1)
+	{
+		EffectManager::GetInstance().Stop(currentEffectHandle_);
+		currentEffectHandle_ = -1;
+	}
 }
