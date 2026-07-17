@@ -33,7 +33,10 @@ public:
 	void SetOwnerCharacter(Character* pOwner) { pOwnerCharacter_ = pOwner; }
 	Character* GetOwnerCharacter() const { return pOwnerCharacter_; }
 
+	void PlayEffect();
+
 private:
+	int currentEffectHandle_ = -1;//現在再生中のエフェクトハンドル
 	bool isAttacked_ = false;//攻撃したかどうか
 
 	Model katanaModel_;//刀のモデル

@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "TitleScene.h"
 #include "SceneManager.h"
+#include "EffekseerForDXLib.h"
 #include<Dxlib.h>
 #include<memory>
 
@@ -37,10 +38,42 @@ bool Application::Init()
 
 	SetDrawScreen(DX_SCREEN_BACK);
 
-	//Zバッファの設定
-	SetUseZBuffer3D(true);		//Zバッファを使う
-	SetWriteZBuffer3D(true);	//Zバッファ書き込み
+	//------------------------------//
+		// エフェクトの初期化
+		//------------------------------//
+	{
+		// DirectX9を使用するようにする。(DirectX11も可)
+		// Effekseerを使用するには必ず設定する。
+		SetUseDirect3DVersion(DX_DIRECT3D_11);
 
+		// Effekseerを初期化する。
+		// 引数には画面に表示する最大パーティクル数を設定する。
+		if (Effkseer_Init(2000) == -1)
+		{
+			DxLib_End();
+			return false;
+		}
+
+		// フルスクリーンウインドウの切り替えでリソースが消えるのを防ぐ。
+		// Effekseerを使用する場合は必ず設定する。
+		SetChangeScreenModeGraphicsSystemResetFlag(FALSE);
+
+		// DXライブラリのデバイスロストした時のコールバックを設定する。
+		// ウインドウとフルスクリーンの切り替えが発生する場合は必ず実行する。
+		// ただし、DirectX11を使用する場合は実行する必要はない。
+		Effekseer_SetGraphicsDeviceLostCallbackFunctions();
+
+		// Effekseerに2D描画の設定をする。
+		Effekseer_Set2DSetting(Game::kScreenWidth, Game::kScreenHeight);
+
+		// Zバッファを有効にする。
+		// Effekseerを使用する場合、2DゲームでもZバッファを使用する。
+		SetUseZBuffer3D(TRUE);
+
+		// Zバッファへの書き込みを有効にする。
+		// Effekseerを使用する場合、2DゲームでもZバッファを使用する。
+		SetWriteZBuffer3D(TRUE);
+	}
 	return true;
 }
 
@@ -60,7 +93,9 @@ void  Application::Run()
 		ClearDrawScreen();
 		Input::GetInstance().Update();
 		sceneManager.Update();
+		UpdateEffekseer3D();
 		sceneManager.Draw();
+		DrawEffekseer3D();
 
 		if (isGameEnd_||CheckHitKey(KEY_INPUT_ESCAPE))
 		{
@@ -80,6 +115,8 @@ void  Application::Run()
 
 void Application::Terminate()
 {
+	Effkseer_End();
+
 	//メモリの開放
 	DxLib_End();				//ＤＸライブラリ使用の終了処理
 }

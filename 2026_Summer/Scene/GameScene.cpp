@@ -16,6 +16,7 @@
 #include"Camera/CameraManager.h"
 #include"LockOnManager.h"
 #include"Game.h"
+#include"EffekseerForDXLib.h"
 #include <DxLib.h>
 #include <algorithm>
 
@@ -229,6 +230,8 @@ void GameScene::NormalUpdate()
 
 	//カメラマネージャーの更新
 	pCameraManager_->Update(pStage_->GetHandle());
+
+	Effekseer_Sync3DSetting();
 
 	//当たり判定の更新
 	CollisionManager::GetInstance().UpdateCheckCollision();

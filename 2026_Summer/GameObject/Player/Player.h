@@ -110,6 +110,8 @@ public:
 	/// </summary>
 	const PlayerActionCounter& GetActionCounter() const { return actionCounter_; }
 
+	void PlayKatanaEffect();
+
 private:
 	float moveAngle_;						//プレイヤーの向く角度
 	int handFrameIndex_;					//右手の刀を持つ手のフレームインデックス

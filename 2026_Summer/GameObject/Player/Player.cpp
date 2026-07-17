@@ -318,3 +318,9 @@ void Player::SetKatanaColliderEnabled(bool isEnabled)
 		pKatana_->SetColliderEnabled(isEnabled);
 	}
 }
+
+void Player::PlayKatanaEffect()
+{
+	//刀のエフェクト再生
+	pKatana_->PlayEffect();
+}
