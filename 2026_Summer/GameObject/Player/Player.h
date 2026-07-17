@@ -131,4 +131,3 @@ private:
 	std::unique_ptr<Katana> pKatana_;		//刀
 	PlayerActionCounter actionCounter_; //プレイヤーの行動傾向カウンタ
 };
-

@@ -37,6 +37,7 @@ void Katana::Init()
 	//刀モデルのロード
 	katanaModel_.Load(L"data/MV1/Tachi.mv1");
 
+	//エフェクトのロード
 	EffectManager::GetInstance().Load(L"Slash", "data/Effect/KatanaFrame.efk");
 	
 	auto pCapsule = std::make_unique<CapsuleCollider>(10.0f, 60.0f, Vector3{ 0.0f, 0.0f, 0.0f });
@@ -68,37 +69,6 @@ void Katana::Update(const MATRIX& handMat, AnimationState ownerState)
 
 	worldMat_ = MMult(mat.ToDxLibMatrix(), handMat);
 	katanaModel_.SetMatrix(worldMat_);
-
-	//エフェクトの再生
-	if (currentEffectHandle_ != -1)
-	{
-		//エフェクトがまだ再生中か確認
-		if (IsEffekseer3DEffectPlaying(currentEffectHandle_) == true)
-		{
-			SetPosPlayingEffekseer3DEffect(
-				currentEffectHandle_,
-				worldMat_.m[3][0],
-				worldMat_.m[3][1],
-				worldMat_.m[3][2]);
-
-			SetRotationPlayingEffekseer3DEffect(
-				currentEffectHandle_,
-				katanaRotate.x_,
-				katanaRotate.y_,
-				katanaRotate.z_);
-
-			SetScalePlayingEffekseer3DEffect(
-				currentEffectHandle_,
-				katanaScale.x_,
-				katanaScale.y_,
-				katanaScale.z_);
-		}
-		else
-		{
-			//再生が終わっていたら-1にする
-			currentEffectHandle_ = -1;
-		}
-	}
 
 	//当たり判定の更新：worldMat_を使って自分のpos_を刀の位置に合成させる
 	//ローカル座標での始点と終点
@@ -190,13 +160,10 @@ void Katana::SetColliderEnabled(bool isEnabled)
 
 void Katana::PlayEffect()
 {
-	if (currentEffectHandle_ != -1)
-	{
-		EffectManager::GetInstance().Stop(currentEffectHandle_);
-	}
 
-	// 刀の最新のワールド座標（worldMat_ の4行目）を抽出
-	Vector3 katanaWorldPos = {
+	//刀の最新のワールド座標
+	Vector3 katanaWorldPos =
+	{
 		worldMat_.m[3][0],
 		worldMat_.m[3][1],
 		worldMat_.m[3][2]

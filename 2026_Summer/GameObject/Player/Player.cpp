@@ -107,25 +107,6 @@ void Player::Update()
 	activeCamera_ = GetActiveCamera();
 	if (!activeCamera_)return;
 
-	if (!pCurrentState_)
-	{
-		auto sharedSelf = std::dynamic_pointer_cast<Player>(shared_from_this());
-		std::weak_ptr<Player> weakSelf = sharedSelf;
-
-		//ステートパターンの生成
-		pCurrentState_ = std::make_shared<PlayerStateIdle>(weakSelf);
-
-		pCurrentState_->Enter();
-	}
-
-	if (pCurrentState_)
-	{
-		pCurrentState_->Update();
-	}
-
-	//アニメーションの更新
-	animation_.Update(1.0f / 60.0f);
-
 	//行列を作成
 	//拡縮
 	Matrix4x4 scaleMat = Matrix4x4::Scale(kFirstScale.x_, kFirstScale.y_, kFirstScale.z_);
@@ -146,6 +127,25 @@ void Player::Update()
 		MATRIX handMat = MV1GetFrameLocalWorldMatrix(model_.GetHandle(), handFrameIndex_);
 		pKatana_->Update(handMat, animation_.GetState());
 	}
+
+	if (!pCurrentState_)
+	{
+		auto sharedSelf = std::dynamic_pointer_cast<Player>(shared_from_this());
+		std::weak_ptr<Player> weakSelf = sharedSelf;
+
+		//ステートパターンの生成
+		pCurrentState_ = std::make_shared<PlayerStateIdle>(weakSelf);
+
+		pCurrentState_->Enter();
+	}
+
+	if (pCurrentState_)
+	{
+		pCurrentState_->Update();
+	}
+
+	//アニメーションの更新
+	animation_.Update(1.0f / 60.0f);
 
 	DrawFormatString(0, 0, GetColor(255, 255, 255), L"Hand Index: %d", handFrameIndex_);
 }
