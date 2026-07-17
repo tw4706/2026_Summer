@@ -11,7 +11,7 @@ namespace
 	const float kMoveSpeed = 0.5f;
 
 	//線形補間の割合
-	const float kRotateLerpRate = 0.3f;
+	const float kRotateLerpRate = 0.01f;
 
 	//復帰目標地点に到達したとみなす距離
 	const float kArriveThreshold = 30.0f;

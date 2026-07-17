@@ -45,12 +45,6 @@ void EnemyStateReact::Update()
 	reactTimer_++;
 	enemy->moveAngle_ = RotateAngle(enemy->moveAngle_, toPlayerDir_, kRotateLerpRate);
 
-	//このフレーム数だけはアニメーションを行う
-	if (reactTimer_ < kReactFrame)
-	{
-		return;
-	}
-
 	Vector3 enemyPos = enemy->GetPos();
 	Vector3 playerPos = enemy->GetPlayerPos();
 	//障害物越しには気づかれないようにしたいので敵の視線の判定を行う
@@ -63,6 +57,12 @@ void EnemyStateReact::Update()
 		//プレイヤーを発見したら追いかける
 		auto nextState = std::make_shared<EnemyStateRun>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);
+		return;
+	}
+
+	//このフレーム数だけはアニメーションを行う
+	if (reactTimer_ < kReactFrame)
+	{
 		return;
 	}
 

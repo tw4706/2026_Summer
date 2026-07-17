@@ -27,7 +27,7 @@ namespace
 	const float kMaxJumpableHeight = 100.0f;
 
 	//反応行動を開始する範囲
-	constexpr float kSearchReactRange = 700.0f;
+	constexpr float kSearchReactRange = 1000.0f;
 
 	//指定座標の真下にレイを飛ばして地面の高さを取得する
 	//地面にhitしなければfalseを返す

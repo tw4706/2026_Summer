@@ -15,7 +15,7 @@ public:
 	void SetRadian(float r) { radius_ = r; }
 
 	const Vector3& GetPos()const { return pos_; }
-
+	 
 	void SetPos(const Vector3& pos) { pos_ = pos; }
 private:
 	Vector3 pos_;

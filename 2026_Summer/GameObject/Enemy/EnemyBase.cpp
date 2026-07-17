@@ -133,7 +133,7 @@ void EnemyBase::Draw()
 	model_.Draw();
 #ifdef _DEBUG
 	//反応行動を開始する範囲
-	constexpr float kSearchReactRange = 700.0f;
+	constexpr float kSearchReactRange = 1000.0f;
 
 	//索敵範囲のデバッグ表示
 	DrawDebugRange(pos_, kSearchReactRange, 0xff0000);
