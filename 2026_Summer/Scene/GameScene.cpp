@@ -24,6 +24,9 @@ namespace
 {
 	//フェードの間隔
 	constexpr int kFadeInterval = 60;
+
+	//最大敵エリアのスポーン数
+	constexpr int kMaxSpawnArea= 3;
 }
 
 GameScene::GameScene(SceneManager& sceneManager) :
@@ -110,7 +113,7 @@ void GameScene::Init()
 	}
 
 	//敵の生成
-	for (int areaId = 0; areaId < 3; ++areaId)
+	for (int areaId = 0; areaId < kMaxSpawnArea; ++areaId)
 	{
 		auto enemies = pEnemyManager_->SpawnEnemyArea(areaId);
 
@@ -204,13 +207,6 @@ void GameScene::NormalUpdate()
 			{
 				return a->GetPriority() < b->GetPriority();
 			});
-	}
-
-	auto playerCam = std::dynamic_pointer_cast<PlayerCamera>(pCameraManager_->GetActiveCamera());
-	if (playerCam)
-	{
-		Vector3 stickR = Input::GetInstance().GetStickRight();
-		playerCam->AddRotation(-stickR.x_ * 0.03f, -stickR.z_ * 0.03f);
 	}
 
 	//すべてのゲームオブジェクトの更新

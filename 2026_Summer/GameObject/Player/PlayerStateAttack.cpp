@@ -24,6 +24,9 @@ void PlayerStateAttack::Enter()
 	//攻撃開始と同時に刀の当たり判定を有効化
 	player->SetKatanaColliderEnabled(true);
 
+	//速度を0にする
+	player->SetVelocity({ 0.0f, 0.0f, 0.0f });
+
 	//刀のエフェクトの再生
 	player->PlayKatanaEffect();
 

@@ -13,7 +13,32 @@ namespace
 	//フェードの間隔
 	constexpr int kFadeInterval = 60;
 
+	//タイトル画面の選択肢の描画時のオフセット
+	constexpr float kTitleTextOffsetY = 100.0f;
+	constexpr float kEndTextOffsetY = 130.0f;
 
+	//ロゴの描画時のオフセット
+	constexpr float kLogoOffsetX = -600.0f;
+	constexpr float kLogoOffsetY = -500.0f;
+	constexpr float kLogoScaleX = 0.6f;
+	constexpr float kLogoScaleY = 0.6f;
+
+	//選択肢の色
+	constexpr unsigned int kColorSelected = 0xff0000;
+	constexpr unsigned int kColorUnselected = 0x000000;
+	constexpr unsigned int kColorBackground = 0xffffff;
+
+	//シェーダーの登録番号
+	constexpr int kDissolveShaderSlot = 4;
+
+	//ディゾルブシェーダの強さ
+	constexpr float kDissolveStrength = 0.05f;
+
+	//選択肢の文字列
+	const wchar_t* kTextStart = L"始める";
+	const wchar_t* kTextEnd = L"ゲームを終了";
+
+	//自作のシェーダを適用させた描画関数
 	void DrawGraphUseOrigShader(const int x, const int y, const int texH, const int psH, const int psShaderH)
 	{
 		// 板ポリゴンを構成するための4つの頂点を宣言
@@ -185,20 +210,20 @@ void TitleScene::FadeDraw()
 
 	//メモリの値を変更
 	pCBuff_->value = rate;
-	pCBuff_->strength = 0.05f;
+	pCBuff_->strength = kDissolveStrength;
 	pCBuff_->lightX = 0.0f;
 	pCBuff_->lightY = 0.0f;
 
 	//更新
 	UpdateShaderConstantBuffer(cBuffH_);
-	SetShaderConstantBuffer(cBuffH_, DX_SHADERTYPE_PIXEL, 4);
+	SetShaderConstantBuffer(cBuffH_, DX_SHADERTYPE_PIXEL, kDissolveShaderSlot);
 
-	DrawGraphUseOrigShader(0, 0, renderHandle_, noiseHandle_,dissolvePSHandle_);
+	DrawGraphUseOrigShader(0, 0, renderHandle_, noiseHandle_, dissolvePSHandle_);
 }
 
 void TitleScene::NormalDraw()
 {
-	DrawBox(0,0,Game::kScreenWidth, Game::kScreenWidth, 0xffffff,true);
+	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenWidth, 0xffffff, true);
 
 	int titleColor = 0;
 	int endColor = 0;
@@ -214,13 +239,13 @@ void TitleScene::NormalDraw()
 		endColor = 0xff0000;
 	}
 
-	int titleWidth = GetDrawStringWidth(L"始める", 4);
-	int endWidth = GetDrawStringWidth(L"ゲームを終了", 6);
+	int titleWidth = GetDrawStringWidth(kTextStart, 4);
+	int endWidth = GetDrawStringWidth(kTextEnd, 6);
 
-	DrawFormatString(Game::kScreenWidth / 2.0f - (titleWidth / 2), Game::kScreenHeight / 2.0f+100, titleColor, L"始める");
-	DrawFormatString(Game::kScreenWidth / 2.0f - (endWidth/2), Game::kScreenHeight / 2.0f + 130, endColor, L"ゲームを終了");
+	DrawFormatString(Game::kScreenWidth / 2 - (titleWidth / 2), Game::kScreenHeight / 2 + kTitleTextOffsetY, titleColor, kTextStart);
+	DrawFormatString(Game::kScreenWidth / 2 - (endWidth / 2), Game::kScreenHeight / 2 + kEndTextOffsetY, endColor, kTextEnd);
 
 	//タイトルロゴの描画
-	DrawRotaGraph3(Game::kScreenWidth / 2 - 600, Game::kScreenHeight / 2 - 500, 0, 0,
-		0.6f, 0.6f, 0.0f, titleLogoHandle_, true);
+	DrawRotaGraph3(Game::kScreenWidth / 2 + kLogoOffsetX, Game::kScreenHeight / 2 + kLogoOffsetY, 0, 0,
+		kLogoScaleX, kLogoScaleY, 0.0f, titleLogoHandle_, true);
 }

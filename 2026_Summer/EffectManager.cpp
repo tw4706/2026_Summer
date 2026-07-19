@@ -57,7 +57,6 @@ void EffectManager::Stop(int handle)
 
 	//エフェクトを停止したらリストからも削除する
 	handles_.erase(std::remove(handles_.begin(), handles_.end(), handle),handles_.end());
-
 }
 
 void EffectManager::StopAll()

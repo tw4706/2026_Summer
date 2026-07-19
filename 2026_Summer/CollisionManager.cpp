@@ -255,8 +255,8 @@ bool CollisionManager::CheckCapsuleVsCapsule(Collidable& pCapsuleObjA, Collidabl
 	//垂線チェックループ
 	for (int i = 0; i < 2; ++i)
 	{
-		// i=0 の時は線分B(b1->b2)に対して、カプセルAの端点を下ろす
-		// i=1 の時は線分A(a1->a2)に対して、カプセルBの端点を下ろす
+		// i=0 の時は線分B(b1->b2)に対してカプセルAの端点を下ろす
+		// i=1 の時は線分A(a1->a2)に対してカプセルBの端点を下ろす
 		Vector3 lineStart = (i == 0) ? b1 : a1;
 		Vector3 lineEnd = (i == 0) ? b2 : a2;
 		Vector3 ab = lineEnd - lineStart;
@@ -272,7 +272,7 @@ bool CollisionManager::CheckCapsuleVsCapsule(Collidable& pCapsuleObjA, Collidabl
 			//点から線分の始点へのベクトル
 			Vector3 ap = checkPoint - lineStart;
 
-			//内積から垂線の位置 t を計算してクランプ
+			//内積から垂線の位置を計算してクランプする
 			float t = (abSqMag > 0.0f) ? ap.Dot(ab) / abSqMag : 0.0f;
 			if (t < 0.0f) t = 0.0f;
 			if (t > 1.0f) t = 1.0f;
