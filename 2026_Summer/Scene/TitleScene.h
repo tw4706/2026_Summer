@@ -37,11 +37,13 @@ private:
 
 	int currentIndex_ = 0;	//現在選ばれている要素
 
+	int currentEffectHandle_=-1;//現在のエフェクトはンドル
+
 	//タイトルロゴハンドル
 	int titleLogoHandle_ = -1;
 	int noiseHandle_ = -1;				//ノイズテクスチャハンドル
 	int dissolvePSHandle_ = -1;			//ディゾルブピクセルシェーダ用のハンドル
-	int renderHandle_ = -1;				//レンダリング用はンドル
+	int renderHandle_ = -1;				//レンダリング用ハンドル
 
 	int cBuffH_ = -1;
 

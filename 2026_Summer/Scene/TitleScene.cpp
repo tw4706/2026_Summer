@@ -3,7 +3,9 @@
 #include "Game.h"
 #include "System/Input.h"
 #include "Application.h"
+#include "EffectManager.h"
 #include<Dxlib.h>
+#include<EffekseerForDXLib.h>
 #include<memory>
 #include<cassert>
 #include<algorithm>
@@ -117,6 +119,9 @@ void TitleScene::Init()
 	dissolvePSHandle_ = LoadPixelShader(L"DissolvePS.pso");
 	assert(dissolvePSHandle_ >= 0);
 
+	//エフェクトのロード
+	EffectManager::GetInstance().Load(L"TitleCursole", "data/Effect/TitleCursole.efk");
+
 	renderHandle_ = MakeScreen(Game::kScreenWidth, Game::kScreenHeight, true);
 
 	//メモリの確保
@@ -126,6 +131,10 @@ void TitleScene::Init()
 	pCBuff_ = static_cast<ConstantBuffer*>(GetBufferShaderConstantBuffer(cBuffH_));
 
 	frameCount_ = kFadeInterval;
+
+	Vector3 firstEffectPos = {Game::kScreenWidth / 2.0f,Game::kScreenHeight / 2.0f + kTitleTextOffsetY,0.0f};
+	currentEffectHandle_ = EffectManager::GetInstance().Play(L"TitleCursole", firstEffectPos);
+	SetPosPlayingEffekseer3DEffect(currentEffectHandle_, firstEffectPos.x_, firstEffectPos.y_, firstEffectPos.z_);
 }
 
 void TitleScene::Update()
@@ -151,13 +160,30 @@ void TitleScene::FadeInUpdate()
 
 void TitleScene::NormalUpdate()
 {
+	bool isChanged = false;
+
 	if (Input::GetInstance().IsTriggered("up"))
 	{
 		currentIndex_ = 0;
+		isChanged = true;
 	}
 	else if (Input::GetInstance().IsTriggered("down"))
 	{
 		currentIndex_ = 1;
+		isChanged = true;
+	}
+
+	if (isChanged)
+	{
+		//エフェクトを停止
+		EffectManager::GetInstance().Stop(currentEffectHandle_);
+
+		//選択肢に応じたY軸のオフセットを計算
+		float offsetY = (currentIndex_ == 0) ? kTitleTextOffsetY : kEndTextOffsetY;
+		Vector3 nextPos = {Game::kScreenWidth / 2.0f,Game::kScreenHeight / 2.0f + offsetY,0.0f};
+
+		//新しい位置で再生してハンドルを保存
+		currentEffectHandle_ = EffectManager::GetInstance().Play(L"TitleCursole", nextPos);
 	}
 
 	if (Input::GetInstance().IsTriggered("next"))
@@ -223,7 +249,7 @@ void TitleScene::FadeDraw()
 
 void TitleScene::NormalDraw()
 {
-	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenWidth, 0xffffff, true);
+	//DrawBox(0, 0, Game::kScreenWidth, Game::kScreenWidth, 0xffffff, true);
 
 	int titleColor = 0;
 	int endColor = 0;
