@@ -12,7 +12,22 @@ namespace
 	const float kGridCellSize = 100.0f;
 
 	//バウンディングボックスを作成する際の余白
-	const float kBoundsMargin = 50.0f;
+	const float kBoundMargin = 120.0f;
+
+	//ステージのY軸回転
+	constexpr float kStageRotateY = -DX_PI_F / 2.0f;
+
+	//ステージの初期位置
+	const Vector3 kFirstStagePos = { 0.0f, -100.0f, 0.0f };
+
+	//地面の高さの限界
+	constexpr float kGroundY = -100.0f;
+
+	//デバッグ描画用のグリッドの半径
+	constexpr float kDebugGridRadius = 5.0f;
+
+	//デバッグ描画用のDivNum
+	constexpr int kDebugGridDiv = 6;
 }
 
 Stage::Stage(Vector3 pos, Vector3 vel, float dir) :
@@ -29,8 +44,8 @@ void Stage::Init()
 	//モデルのロード
 	stageModel_.Load(L"data/MV1/Stage.mv1");
 
-	MV1SetRotationXYZ(stageModel_.GetHandle(), VGet(0.0f, -DX_PI_F / 2.0f, 0.0f));
-	MV1SetPosition(stageModel_.GetHandle(), VGet(0.0f, -100.0f, 0.0f));
+	MV1SetRotationXYZ(stageModel_.GetHandle(), VGet(0.0f, kStageRotateY, 0.0f));
+	MV1SetPosition(stageModel_.GetHandle(), kFirstStagePos.ToDxlibVector());
 
 	//モデルの総ポリゴン当たり判定データを構築
 	MV1SetupCollInfo(stageModel_.GetHandle(), -1);
@@ -40,8 +55,8 @@ void Stage::Init()
 	this->CreateCollider<PolygonCollider>(stageModel_.GetHandle());
 
 	//ナビゲーショングリッドの生成
-	navGrid_.SetExpectedGroundY(-100.0f);
-	navGrid_.CreateGrid(stageModel_.GetHandle(), kGridMinX, kGridMaxX, kGridMinZ, kGridMaxZ, kGridCellSize, 120.0f);
+	navGrid_.SetExpectedGroundY(kGroundY);
+	navGrid_.CreateGrid(stageModel_.GetHandle(), kGridMinX, kGridMaxX, kGridMinZ, kGridMaxZ, kGridCellSize, kBoundMargin);
 
 }
 
@@ -76,7 +91,7 @@ void Stage::DrawNavGridDebug() const
 			//歩行可能なら緑、不可能なら赤
 			unsigned int color = node->iswalked ? GetColor(0, 255, 0) : GetColor(0, 255, 255);
 
-			DrawSphere3D(pos.ToDxlibVector(), 5.0f, 6, color, color, TRUE);
+			DrawSphere3D(pos.ToDxlibVector(), kDebugGridRadius, kDebugGridDiv, color, color, TRUE);
 		}
 	}
 }

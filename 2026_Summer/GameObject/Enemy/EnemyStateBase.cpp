@@ -52,7 +52,8 @@ bool EnemyStateBase::HasLineOfSight(int stageModelHandle, const Vector3& from, c
 
 bool EnemyStateBase::IsPathWalkable(const NavigationGrid* pNaviGrid, const Vector3& from, const Vector3& to)
 {
-	if (!pNaviGrid) return true; //グリッドが無ければチェックしようがないので許可する
+	//グリッドが無ければチェックできないので歩かせる
+	if (!pNaviGrid) return true; 
 
 	float cellSize = pNaviGrid->GetCellSize();
 	if (cellSize <= 0.0f) return true;

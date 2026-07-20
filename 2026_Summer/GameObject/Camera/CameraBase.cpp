@@ -5,7 +5,7 @@ namespace
 {
     //ƒJƒƒ‰‚ÌNearEFar
     constexpr float kCameraNear = 10.0f;
-    constexpr float kCameraFar = 8000.0f;
+    constexpr float kCameraFar = 10000.0f;
 
     constexpr float kCameraFov = DX_PI_F / 3.0f;
     constexpr float kCameraFovTarget = DX_PI_F / 3.0f;

@@ -20,6 +20,12 @@ namespace
 
 	//刀のダメージ
 	constexpr int kAttackDamage = 10;
+
+	//コライダーの半径
+	constexpr float kColliderRadius = 10.0f;
+
+	//コライダーの高さ
+	constexpr float kColliderHeight = 60.0f;
 }
 
 Katana::Katana(Vector3 pos, Vector3 vel, float dir) :
@@ -40,7 +46,7 @@ void Katana::Init()
 	//エフェクトのロード
 	EffectManager::GetInstance().Load(L"Slash", L"data/Effect/KatanaFrame.efk");
 	
-	auto pCapsule = std::make_unique<CapsuleCollider>(10.0f, 60.0f, Vector3{ 0.0f, 0.0f, 0.0f });
+	auto pCapsule = std::make_unique<CapsuleCollider>(kColliderRadius, kColliderHeight, Vector3{ 0.0f, 0.0f, 0.0f });
 	pCapsule->SetUseWorldPos(true);
 	this->AddCollider(std::move(pCapsule));
 }
@@ -70,7 +76,7 @@ void Katana::Update(const MATRIX& handMat, AnimationState ownerState)
 	worldMat_ = MMult(mat.ToDxLibMatrix(), handMat);
 	katanaModel_.SetMatrix(worldMat_);
 
-	//当たり判定の更新：worldMat_を使って自分のpos_を刀の位置に合成させる
+	//worldMat_を使ってプレイヤーのpos_を刀の位置に合成させる
 	//ローカル座標での始点と終点
 	VECTOR localStart = VGet(0.0f, -30.0f, 0.0f);
 	VECTOR localEnd = VGet(0.0f, 70.0f, 0.0f);
