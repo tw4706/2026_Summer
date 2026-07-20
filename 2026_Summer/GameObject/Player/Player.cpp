@@ -31,6 +31,30 @@ namespace
 
 	//敵から食らうダメージ
 	constexpr int kEnemyDamage = 10;
+
+	//1フレームの時間
+	constexpr float kDeltaTime = 1.0f / 60.0f;
+
+	//コライダーの半径と高さ
+	constexpr float kColliderRadius = 40.0f;
+	constexpr float kColliderHeight = 160.0f;
+	//コライダーのオフセット
+	const Vector3 kColliderOffset = { 0.0f, 120.0f, 0.0f };
+	//注視点の高さのオフセット
+	constexpr float kCameraTargetHeightOffset = 150.0f;
+
+	//レイ(視線)の高さ
+	constexpr float kRayStartHeight = 80.0f;
+	//レティクルの倍率
+	constexpr float kReticleScale = 0.2f;
+	//画面座標のX補正値
+	constexpr float kReticleOffsetX = 100.0f;
+	//画面座標のY補正値
+	constexpr float kReticleOffsetY = 80.0f;           
+
+	//HPバーの描画オフセット
+	constexpr int kHPBarOffsetX = 250;
+	constexpr int kHPBarOffsetY = 100;
 }
 
 Player::Player() :
@@ -89,8 +113,8 @@ void Player::Init()
 	animation_.ChangeState(AnimationState::Idle);
 
 	//コライダーの登録
-	Vector3 colOffset = { 0.0f, 120.0f, 0.0f };
-	this->CreateCollider<CapsuleCollider>(40.0f, 160.0f, colOffset);
+	Vector3 colOffset = kColliderOffset;
+	this->CreateCollider<CapsuleCollider>(kColliderRadius, kColliderHeight, colOffset);
 
 	//刀の生成・初期化
 	pKatana_ = std::make_unique<Katana>(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f);
@@ -145,7 +169,7 @@ void Player::Update()
 	}
 
 	//アニメーションの更新
-	animation_.Update(1.0f / 60.0f);
+	animation_.Update(kDeltaTime);
 
 	DrawFormatString(0, 0, GetColor(255, 255, 255), L"Hand Index: %d", handFrameIndex_);
 }
@@ -175,7 +199,7 @@ void Player::Draw()
 		{
 			//始点(始点はプレイヤーの位置から高さをプラスしている)
 			Vector3 startPos = pos_;
-			startPos.y_ += 80.0f;
+			startPos.y_ += kRayStartHeight;
 
 			//終点(敵の半分くらいの位置)
 			Vector3 endPos = target->GetCameraTarget();
@@ -193,9 +217,9 @@ void Player::Draw()
 			SetUseZBuffer3D(false);
 
 			//レティクルUIの描画
-			DrawRotaGraph3(static_cast<int>(reticleScreenPos.x - 100.0f), static_cast<int>(reticleScreenPos.y - 80.0f),
+			DrawRotaGraph3(static_cast<int>(reticleScreenPos.x - kReticleOffsetX), static_cast<int>(reticleScreenPos.y - kReticleOffsetY),
 				0, 0,
-				0.2f, 0.2f,
+				kReticleScale, kReticleScale,
 				0.0f, reticleUIHandle_, true);
 
 			SetUseZBuffer3D(true);
@@ -241,13 +265,13 @@ void Player::Draw()
 	int distY2 = static_cast<int>(hpUIY_ * scale);
 
 	//HPバーフレームの描画
-	DrawRectGraph(Game::kScreenWidth / 2 - 250, Game::kScreenHeight - 100,
+	DrawRectGraph(Game::kScreenWidth / 2 - kHPBarOffsetX, Game::kScreenHeight - kHPBarOffsetY,
 		0, 0,
 		hpBarUIX_, hpBarUIY_,
 		hpUIFrameHandle_, true);
 
 	//HPバーの描画
-	DrawRectGraph(Game::kScreenWidth / 2 - 250, Game::kScreenHeight - 100,
+	DrawRectGraph(Game::kScreenWidth / 2 - kHPBarOffsetX, Game::kScreenHeight - kHPBarOffsetY,
 		0, 0,
 		drawHPWidth, hpUIY_,
 		hpUIHandle_, true);
@@ -308,7 +332,7 @@ void Player::OnDamage(const int damage)
 
 Vector3 Player::GetCameraTarget() const
 {
-	return Vector3{ pos_.x_,pos_.y_ + 150.0f,pos_.z_ };
+	return Vector3{ pos_.x_,pos_.y_ + kCameraTargetHeightOffset,pos_.z_ };
 }
 
 void Player::SetKatanaColliderEnabled(bool isEnabled)

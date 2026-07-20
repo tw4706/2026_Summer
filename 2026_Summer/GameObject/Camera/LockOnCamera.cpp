@@ -2,6 +2,15 @@
 #include "Enemy/EnemyBase.h"
 #include "Player/Player.h"
 
+namespace
+{
+	//lerpにかかる時間
+	constexpr float kLerpRate = 0.1f;
+
+	//正規化した視線方向のベクトル
+	const float kMinDirLengthSq = 1.0f;
+}
+
 LockOnCamera::LockOnCamera()
 {
 }
@@ -27,7 +36,7 @@ void LockOnCamera::Update(int stageModelHandle)
 	Vector3 enemyTargetPos = enemy->GetCameraTarget();
 
 	//カメラのターゲット座標に代入
-	cameraTarget_ = Vector3::Lerp(cameraTarget_,enemyTargetPos,0.1f);
+	cameraTarget_ = Vector3::Lerp(cameraTarget_,enemyTargetPos, kLerpRate);
 
 	Vector3 playerCameraPos = player->GetCameraTarget();
 
@@ -36,8 +45,6 @@ void LockOnCamera::Update(int stageModelHandle)
 
 	directionVec.y_ = 0.0f;
 
-	//正規化した視線方向のベクトル
-	const float kMinDirLengthSq = 1.0f;
 	if (directionVec.LengthSq() < kMinDirLengthSq)
 	{
 		//前回の向きを保存

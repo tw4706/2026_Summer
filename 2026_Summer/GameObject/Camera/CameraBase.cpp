@@ -7,18 +7,29 @@ namespace
     constexpr float kCameraNear = 10.0f;
     constexpr float kCameraFar = 8000.0f;
 
+    constexpr float kCameraFov = DX_PI_F / 3.0f;
+    constexpr float kCameraFovTarget = DX_PI_F / 3.0f;
+
     //経過時間
     constexpr float kDeltaTime = 1.0f / 60.0f;
 
     //光の方向
     constexpr float kLightDirection = -1.8f;
+
+    //押し出し方向
+    constexpr float kHitDirection = 15.0f;
+
+    //乱数のオフセット
+    constexpr float kRandomOffset = 0.5f;
+    //乱数の範囲
+    constexpr float kRandomScale = 2.0f;
 }
 
 CameraBase::CameraBase():
     pos_({ 0.0f, 0.0f, 0.0f }),
     cameraTarget_(0.0f, 0.0f, 0.0f),
-    fov_(DX_PI_F / 3.0f),
-    fovTarget_(DX_PI_F / 3.0f),
+    fov_(kCameraFov),
+    fovTarget_(kCameraFovTarget),
     yaw_(0.0f),
     pitch_(0.0f),
     currentYaw_(0.0f),
@@ -65,7 +76,7 @@ Vector3 CameraBase::CheckCollCameraToStage(int stageModelHandle,const Vector3&st
         Vector3 normal = result.Normal;
 
         //押し出し処理
-        hitPos += normal * 15.0f;
+        hitPos += normal * kHitDirection;
 
         //押し出した座標を返す
         return hitPos;
@@ -85,9 +96,9 @@ Vector3 CameraBase::UpdateShake()
     if (shakeTime_ <= 0.0f) return Vector3(0, 0, 0);
     shakeTime_ -= kDeltaTime;
 
-    float rx = ((float)rand() / RAND_MAX - 0.5f) * 2.0f;
-    float ry = ((float)rand() / RAND_MAX - 0.5f) * 2.0f;
-    float rz = ((float)rand() / RAND_MAX - 0.5f) * 2.0f;
+    float rx = ((float)rand() / RAND_MAX - kRandomOffset) * kRandomScale;
+    float ry = ((float)rand() / RAND_MAX - kRandomOffset) * kRandomScale;
+    float rz = ((float)rand() / RAND_MAX - kRandomOffset) * kRandomScale;
 
     return Vector3(rx * shakePower_, ry * shakePower_, rz * shakePower_);
 }

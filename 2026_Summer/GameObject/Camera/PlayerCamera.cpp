@@ -11,6 +11,9 @@ namespace
 
 	//限界の角度
 	const float kLimitPitch = DX_PI_F / 4.0f;
+
+	//らーぷにかかる時間
+	constexpr float kLerpRate = 0.5f;
 }
 
 PlayerCamera::PlayerCamera() :
@@ -44,8 +47,8 @@ void PlayerCamera::Update(int stageModelHandle)
 	cameraTarget_ = pPlayer_->GetCameraTarget();
 
 	//カメラの回転を線形補間で行う
-	currentYaw_ = Vector3::Lerp(currentYaw_, yaw_, 0.5f);
-	currentPitch_ = Vector3::Lerp(currentPitch_, pitch_, 0.5f);
+	currentYaw_ = Vector3::Lerp(currentYaw_, yaw_, kLerpRate);
+	currentPitch_ = Vector3::Lerp(currentPitch_, pitch_, kLerpRate);
 
 	//行列を用いて位置を計算
 	Matrix4x4 rot = Matrix4x4::RotateY(currentYaw_) * Matrix4x4::RotateX(currentPitch_);

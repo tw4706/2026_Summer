@@ -10,6 +10,10 @@ namespace
 {
 	//フェードの間隔
 	constexpr int kFadeInterval = 60;
+
+	//タイトルに戻る選択肢の座標
+	constexpr int kBackTitlePosX = 0;
+	constexpr int kBackTitlePosY = 30;
 }
 
 ResultScene::ResultScene(SceneManager& sceneManager):
@@ -90,5 +94,5 @@ void ResultScene::FadeDraw()
 void ResultScene::NormalDraw()
 {
 	DrawFormatString(0, 0, 0xffffff, L"リザルトシーン");
-	DrawFormatString(0, 30, 0xffffff, L"ボタンを押してタイトルに戻る");
+	DrawFormatString(kBackTitlePosX, kBackTitlePosY, 0xffffff, L"ボタンを押してタイトルに戻る");
 }

@@ -119,9 +119,6 @@ void TitleScene::Init()
 	dissolvePSHandle_ = LoadPixelShader(L"DissolvePS.pso");
 	assert(dissolvePSHandle_ >= 0);
 
-	//エフェクトのロード
-	EffectManager::GetInstance().Load(L"TitleCursole", L"data/Effect/TitleCursole.efk");
-
 	renderHandle_ = MakeScreen(Game::kScreenWidth, Game::kScreenHeight, true);
 
 	//メモリの確保
@@ -131,17 +128,6 @@ void TitleScene::Init()
 	pCBuff_ = static_cast<ConstantBuffer*>(GetBufferShaderConstantBuffer(cBuffH_));
 
 	frameCount_ = kFadeInterval;
-
-	Vector3 firstEffectPos = {Game::kScreenWidth / 2.0f,Game::kScreenHeight / 2.0f,0.0f};
-	currentEffectHandle_ = EffectManager::GetInstance().Play(L"TitleCursole", firstEffectPos);
-	SetPosPlayingEffekseer3DEffect(currentEffectHandle_, firstEffectPos.x_, firstEffectPos.y_, firstEffectPos.z_);
-	{
-		wchar_t buf[256];
-		swprintf_s(buf, L"[Effect Init] handle=%d pos=(%.1f, %.1f, %.1f)\n",
-			currentEffectHandle_, firstEffectPos.x_, firstEffectPos.y_, firstEffectPos.z_);
-		OutputDebugString(buf);
-	}
-
 }
 
 void TitleScene::Update()
@@ -167,37 +153,13 @@ void TitleScene::FadeInUpdate()
 
 void TitleScene::NormalUpdate()
 {
-	bool isChanged = false;
-
 	if (Input::GetInstance().IsTriggered("up"))
 	{
 		currentIndex_ = 0;
-		isChanged = true;
 	}
 	else if (Input::GetInstance().IsTriggered("down"))
 	{
 		currentIndex_ = 1;
-		isChanged = true;
-	}
-
-	if (isChanged)
-	{
-		//エフェクトを停止
-		EffectManager::GetInstance().Stop(currentEffectHandle_);
-
-		//選択肢に応じたY軸のオフセットを計算
-		float offsetY = (currentIndex_ == 0) ? kTitleTextOffsetY : kEndTextOffsetY;
-		Vector3 nextPos = {Game::kScreenWidth / 2.0f,Game::kScreenHeight / 2.0f + offsetY,0.0f};
-
-		//新しい位置で再生してハンドルを保存
-		currentEffectHandle_ = EffectManager::GetInstance().Play(L"TitleCursole", nextPos);
-
-		{
-			wchar_t buf[256];
-			swprintf_s(buf, L"[Effect Update] index=%d handle=%d pos=(%.1f, %.1f, %.1f)\n",
-				currentIndex_, currentEffectHandle_, nextPos.x_, nextPos.y_, nextPos.z_);
-			OutputDebugString(buf);
-		}
 	}
 
 	if (Input::GetInstance().IsTriggered("next"))

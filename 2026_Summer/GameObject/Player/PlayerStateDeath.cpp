@@ -34,7 +34,6 @@ void PlayerStateDeath::Update()
 		//ƒvƒŒƒCƒ„[‚ðÁ‚·
 		player->Destory();
 	}
-
 }
 
 void PlayerStateDeath::Exit()
