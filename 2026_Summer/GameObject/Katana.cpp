@@ -38,7 +38,7 @@ void Katana::Init()
 	katanaModel_.Load(L"data/MV1/Tachi.mv1");
 
 	//エフェクトのロード
-	EffectManager::GetInstance().Load(L"Slash", "data/Effect/KatanaFrame.efk");
+	EffectManager::GetInstance().Load(L"Slash", L"data/Effect/KatanaFrame.efk");
 	
 	auto pCapsule = std::make_unique<CapsuleCollider>(10.0f, 60.0f, Vector3{ 0.0f, 0.0f, 0.0f });
 	pCapsule->SetUseWorldPos(true);

@@ -304,7 +304,6 @@ void GameScene::NormalDraw()
 	pLockOnManager_->Draw(pPlayer_,pCameraManager_.get());
 
 	DrawGrid();
-
 #ifdef _DEBUG
 	DrawString(0, 0, L"GameScene", GetColor(255, 255, 255));
 	DrawFormatString(0, 30, GetColor(255, 255, 255), L"FRAME:%d", frameCount_);

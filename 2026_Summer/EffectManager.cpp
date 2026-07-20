@@ -24,7 +24,7 @@ void EffectManager::Update()
 	}
 }
 
-void EffectManager::Load(const std::wstring& name, const char* path)
+void EffectManager::Load(const std::wstring& name, const std::wstring& path)
 {
 	//すでにロードされたいたら何もしない
 	if (effects_.count(name) > 0)
@@ -32,7 +32,8 @@ void EffectManager::Load(const std::wstring& name, const char* path)
 		return;
 	}
 
-	int handle = LoadEffekseerEffect(path);
+	int handle = LoadEffekseerEffect(path.c_str());
+	assert(handle >= 0 && "エフェクトのロードに失敗しました");
 	effects_[name] = handle;
 }
 

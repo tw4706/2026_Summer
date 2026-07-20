@@ -120,7 +120,7 @@ void TitleScene::Init()
 	assert(dissolvePSHandle_ >= 0);
 
 	//エフェクトのロード
-	EffectManager::GetInstance().Load(L"TitleCursole", "data/Effect/TitleCursole.efk");
+	EffectManager::GetInstance().Load(L"TitleCursole", L"data/Effect/TitleCursole.efk");
 
 	renderHandle_ = MakeScreen(Game::kScreenWidth, Game::kScreenHeight, true);
 
@@ -132,9 +132,16 @@ void TitleScene::Init()
 
 	frameCount_ = kFadeInterval;
 
-	Vector3 firstEffectPos = {Game::kScreenWidth / 2.0f,Game::kScreenHeight / 2.0f + kTitleTextOffsetY,0.0f};
+	Vector3 firstEffectPos = {Game::kScreenWidth / 2.0f,Game::kScreenHeight / 2.0f,0.0f};
 	currentEffectHandle_ = EffectManager::GetInstance().Play(L"TitleCursole", firstEffectPos);
 	SetPosPlayingEffekseer3DEffect(currentEffectHandle_, firstEffectPos.x_, firstEffectPos.y_, firstEffectPos.z_);
+	{
+		wchar_t buf[256];
+		swprintf_s(buf, L"[Effect Init] handle=%d pos=(%.1f, %.1f, %.1f)\n",
+			currentEffectHandle_, firstEffectPos.x_, firstEffectPos.y_, firstEffectPos.z_);
+		OutputDebugString(buf);
+	}
+
 }
 
 void TitleScene::Update()
@@ -184,6 +191,13 @@ void TitleScene::NormalUpdate()
 
 		//新しい位置で再生してハンドルを保存
 		currentEffectHandle_ = EffectManager::GetInstance().Play(L"TitleCursole", nextPos);
+
+		{
+			wchar_t buf[256];
+			swprintf_s(buf, L"[Effect Update] index=%d handle=%d pos=(%.1f, %.1f, %.1f)\n",
+				currentIndex_, currentEffectHandle_, nextPos.x_, nextPos.y_, nextPos.z_);
+			OutputDebugString(buf);
+		}
 	}
 
 	if (Input::GetInstance().IsTriggered("next"))
@@ -249,7 +263,7 @@ void TitleScene::FadeDraw()
 
 void TitleScene::NormalDraw()
 {
-	//DrawBox(0, 0, Game::kScreenWidth, Game::kScreenWidth, 0xffffff, true);
+	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenWidth, 0xffffff, true);
 
 	int titleColor = 0;
 	int endColor = 0;

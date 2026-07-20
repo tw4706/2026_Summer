@@ -16,7 +16,7 @@ public:
 	/// </summary>
 	/// <param name="name">エフェクトの文字列</param>
 	/// <param name="path">エフェクトのパス</param>
-	void Load(const std::wstring& name, const char* path);
+	void Load(const std::wstring& name, const std::wstring& path);
 
 	/// <summary>
 	/// エフェクトの再生
