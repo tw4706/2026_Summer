@@ -38,6 +38,9 @@ void PlayerStateIdle::Enter()
 
     //‘¬“x‚ð0‚É‚·‚é
     pPlayer->SetVelocity({ 0.0f, 0.0f, 0.0f });
+
+	//–³“G‚ðƒIƒt‚É‚·‚é
+	pPlayer->isInvincible_ = false;
 }
 
 void PlayerStateIdle::Update()

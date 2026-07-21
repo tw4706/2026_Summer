@@ -14,7 +14,7 @@ namespace
 	const float kRotateLerpRate = 0.3f;
 
 	//WayPointに到達したとみなす距離
-	const float kArriveThreshold = 50.0f;
+	const float kArriveThreshold = 150.0f;
 
 	//視線の高さ(Rayで障害物の判定を行うのに使用)
 	const float kEyeHeight = 50.0f;
@@ -31,39 +31,33 @@ namespace
 
 	//指定座標の真下にレイを飛ばして地面の高さを取得する
 	//地面にhitしなければfalseを返す
-	bool GetGroundHeight(int stageModelHandle, const Vector3& pos, float& outHeight)
-	{
-		VECTOR start = VGet(pos.x_, pos.y_ + 500.0f, pos.z_);
-		VECTOR end = VGet(pos.x_, pos.y_ - 500.0f, pos.z_);
+	//bool GetGroundHeight(int stageModelHandle, const Vector3& pos, float& outHeight)
+	//{
+	//	VECTOR start = VGet(pos.x_, pos.y_ + 500.0f, pos.z_);
+	//	VECTOR end = VGet(pos.x_, pos.y_ - 500.0f, pos.z_);
+	//	MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(stageModelHandle, -1, start, end);
+	//	if (!hit.HitFlag) return false;
+	//	outHeight = hit.HitPosition.y;
+	//	return true;
+	//}
 
-		MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(stageModelHandle, -1, start, end);
-		if (!hit.HitFlag) return false;
-
-		outHeight = hit.HitPosition.y;
-		return true;
-	}
-
-	bool TryDetectJumpableStep(int stageModelHandle, const Vector3& from, const Vector3& moveDir, Vector3& landingPos)
-	{
-		Vector3 dir = moveDir;
-		dir.y_ = 0.0f;
-		if (dir.Length() <= 0.0001f) return false;
-		dir.Normalize();
-
-		float currentHeight = 0.0f;
-		if (!GetGroundHeight(stageModelHandle, from, currentHeight)) return false;
-
-		Vector3 probePos = from + dir * kJumpDistance;
-
-		float probeHeight = 0.0f;
-		if (!GetGroundHeight(stageModelHandle, probePos, probeHeight)) return false;
-
-		float heightDiff = probeHeight - currentHeight;
-		if (heightDiff < kMinJumpableHeight || heightDiff > kMaxJumpableHeight) return false;
-
-		landingPos = Vector3(probePos.x_, probeHeight, probePos.z_);
-		return true;
-	}
+	////敵の視線方向で飛び越えれる障害物かどうかを判定する関数
+	//bool IsJumpable(int stageModelHandle, const Vector3& start, const Vector3& moveDir, Vector3& landingPos)
+	//{
+	//	Vector3 dir = moveDir;
+	//	dir.y_ = 0.0f;
+	//	if (dir.Length() <= 0.0001f) return false;
+	//	dir.Normalize();
+	//	float currentHeight = 0.0f;
+	//	if (!GetGroundHeight(stageModelHandle, start, currentHeight)) return false;
+	//	Vector3 probePos = start + dir * kJumpDistance;
+	//	float probeHeight = 0.0f;
+	//	if (!GetGroundHeight(stageModelHandle, probePos, probeHeight)) return false;
+	//	float heightDiff = probeHeight - currentHeight;
+	//	if (heightDiff < kMinJumpableHeight || heightDiff > kMaxJumpableHeight) return false;
+	//	landingPos = Vector3(probePos.x_, probeHeight, probePos.z_);
+	//	return true;
+	//}
 }
 
 EnemyStateIdle::EnemyStateIdle(std::weak_ptr<EnemyBase> pEnemy, float searchRadius) :
@@ -103,7 +97,10 @@ void EnemyStateIdle::Enter()
 	int nearestId = pLoader_->FindNearestWayPointId(wayPoints, enemy->GetPos());
 	enemy->currentWayPointId_ = nearestId;
 
+	//次のwayPointのIDを取得
 	int nextId = pLoader_->GetNextWayPointId(wayPoints, nearestId, -1);
+
+	//敵の次に向かうwayPointのIdを更新
 	enemy->nextWayPointId_ = nextId;
 }
 
@@ -112,10 +109,14 @@ void EnemyStateIdle::Update()
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
 
+	//敵の位置とプレイヤーのPosを取得
 	Vector3 enemyPos = enemy->GetPos();
 	Vector3 playerPos = enemy->GetPlayerPos();
+
+	//視線が通っているかの判定
 	bool hasLineOfSight = HasLineOfSight(enemy->GetStageModelHandle(), enemyPos, playerPos);
 
+	//プレイヤーが索敵範囲に入っているかつ視線が通っていたら(障害物にさえぎられていない)
 	if (enemy->IsPlayerInRange(kSearchReactRange)&& hasLineOfSight)
 	{
 		//状態を遷移する前に経路をクリア
@@ -130,9 +131,11 @@ void EnemyStateIdle::Update()
 		return;
 	}
 
+	//wayPointの配列を取得
 	const auto& wayPoints = enemy->pWayPointLoader_->GetWayPoints(enemy->areaId_);
 	if (wayPoints.empty()) return;
 
+	//次のターゲットIDを代入
 	int targetId = enemy->nextWayPointId_;
 	const WayPointLoader::WayPoint* pTargetWp = pLoader_->FindWayPointById(wayPoints, targetId);
 	if (!pTargetWp) return;
@@ -144,9 +147,10 @@ void EnemyStateIdle::Update()
 	//経路が無い時だけ直進判定をする
 	if (!enemy->pathFollower_.HasPath())
 	{
-		bool canWalkDirect = IsPathWalkable(enemy->pNaviGrid_, enemyPos, pTargetWp->pos);
+		bool canWalkDir = IsPathWalkable(enemy->pNaviGrid_, enemyPos, pTargetWp->pos);
 
-		if (!canWalkDirect)
+		//次のパスに歩行できない場合は経路を再検索してセットする
+		if (!canWalkDir)
 		{
 			std::vector<Vector3> path = enemy->pathFinder_.FindPath(enemyPos, pTargetWp->pos);
 			if (!path.empty())
@@ -172,15 +176,16 @@ void EnemyStateIdle::Update()
 	float wayPointDistance = toWayPoint.Length();
 
 	//経路が無い状態かつWayPointに到達したら次の接続先へ切り替える
-	bool pathFinishedOrNone = !enemy->pathFollower_.HasPath() || enemy->pathFollower_.IsPathFinished();
+	bool isPathFinished = !enemy->pathFollower_.HasPath() || enemy->pathFollower_.IsPathFinished();
 
-	if (wayPointDistance < kArriveThreshold && pathFinishedOrNone)
+	if (wayPointDistance < kArriveThreshold && isPathFinished)
 	{
 		int arrivedId = targetId;
 		int oldCurrentId = enemy->currentWayPointId_;
 
 		enemy->currentWayPointId_ = arrivedId;
 
+		//次のIDを取得
 		int nextId = pLoader_->GetNextWayPointId(wayPoints, arrivedId, oldCurrentId);
 		enemy->nextWayPointId_ = nextId;
 
@@ -195,16 +200,16 @@ void EnemyStateIdle::Update()
 	//正規化
 	toTarget.Normalize();
 
-	Vector3 landingPos;
-	//着地地点を保存しジャンプ状態に遷移
-	if (TryDetectJumpableStep(enemy->GetStageModelHandle(), enemyPos, toTarget, landingPos))
-	{
-		enemy->jumpTargetPos_ = landingPos;
+	//Vector3 landingPos;
+	////着地地点を保存しジャンプ状態に遷移
+	//if (IsJumpable(enemy->GetStageModelHandle(), enemyPos, toTarget, landingPos))
+	//{
+	//	enemy->jumpTargetPos_ = landingPos;
 
-		auto nextState = std::make_shared<EnemyStateJump>(pEnemy_, searchRadius_);
-		enemy->ChangeState(nextState);
-		return;
-	}
+	//	auto nextState = std::make_shared<EnemyStateJump>(pEnemy_, searchRadius_);
+	//	enemy->ChangeState(nextState);
+	//	return;
+	//}
 
 	//速度・位置の適用
 	ApplyMove(enemy, enemyPos, toTarget, kMoveSpeed);

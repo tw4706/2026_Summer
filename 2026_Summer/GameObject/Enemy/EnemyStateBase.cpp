@@ -23,6 +23,7 @@ bool EnemyStateBase::PlayerSearchDistance(float radius) const
 {
 	//敵の参照
 	auto enemy = pEnemy_.lock();
+
 	//敵が存在しない場合はreturn
 	if (!enemy) return false;
 
@@ -32,11 +33,12 @@ bool EnemyStateBase::PlayerSearchDistance(float radius) const
 
 	//敵からプレイヤーへのベクトルを計算
 	Vector3 toPlayer = playerPos - enemyPos;
+
 	//距離を計算
-	float distSq = (toPlayer.x_ * toPlayer.x_) + (toPlayer.y_ * toPlayer.y_) + (toPlayer.z_ * toPlayer.z_);
+	float distSq = toPlayer.LengthSq();
 
 	float radiusSq = radius * radius;
-	//E->Pの距離がE+Pより小さかったら検知する
+	//Enemy->Playerの距離がEnemy+Playerより小さかったら検知
 	return distSq <= radiusSq;
 }
 

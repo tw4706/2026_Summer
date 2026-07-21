@@ -7,7 +7,7 @@
 namespace
 {
 	//Œ©“n‚·Šp“x
-	constexpr float kAngle = DX_PI_F / 6.0f;
+	constexpr float kLookAngle = DX_PI_F / 6.0f;
 
 	//Œ©“n‚µ‚Ä‚¢‚éƒtƒŒ[ƒ€”
 	constexpr float kReactFrame = 135.0f;

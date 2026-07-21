@@ -3,6 +3,8 @@ C:\GitHub\2026_Summer\2026_Summer\AStarPathFinder.cpp;C:\GitHub\2026_Summer\2026
 C:\GitHub\2026_Summer\2026_Summer\AttackSelect.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\AttackSelect.obj
 C:\GitHub\2026_Summer\2026_Summer\CSV\EnemySpawnDataLoader.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemySpawnDataLoader.obj
 C:\GitHub\2026_Summer\2026_Summer\CSV\EnemyAttackDataLoader.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyAttackDataLoader.obj
+C:\GitHub\2026_Summer\2026_Summer\EffectManager.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EffectManager.obj
+C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\EnemyStateReact.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyStateReact.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\EnemyStateJump.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyStateJump.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Bg.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\Bg.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\EnemyStateGuard.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyStateGuard.obj

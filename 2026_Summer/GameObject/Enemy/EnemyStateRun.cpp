@@ -14,9 +14,6 @@ namespace
 	//üŒ`•âŠÔ‚ÌŠ„‡
 	const float kRotateLerpRate = 0.1f;
 
-	//õ“G”ÍˆÍ‚Ì”¼Œa
-	const float kDebugSearchRadius = 500.0f;
-
 	//UŒ‚ŠJn‚Ì”ÍˆÍ
 	const float kAttackRange = 180.0f;
 
@@ -62,8 +59,10 @@ void EnemyStateRun::Update()
 	//ƒvƒŒƒCƒ„[‚ª”½‰”ÍˆÍ‚É“ü‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’è
 	bool isPlayerInRange = enemy->IsPlayerInRange(searchRadius_);
 
+	//ƒvƒŒƒCƒ„[‚ªõ“G”ÍˆÍ‚É“ü‚Á‚Ä‚¢‚È‚¢‚Ü‚½‚Í‹ü‚ª’Ê‚Á‚Ä‚È‚¢‚©‚Â“G‚Æ“–‚½‚Á‚Ä‚¢‚È‚©‚Á‚½‚ç
 	if ((!isPlayerInRange || !hasLineOfSight) && !enemy->IsHit())
 	{
+		//‚à‚Æ‚ÌˆÊ’u‚É–ß‚éreturnó‘Ô‚É‘JˆÚ
 		auto nextState = std::make_shared<EnemyStateReturn>(pEnemy_, searchRadius_);
 		enemy->ChangeState(nextState);
 		return;
@@ -72,16 +71,17 @@ void EnemyStateRun::Update()
 	//ƒ^[ƒQƒbƒgÀ•W
 	Vector3 targetPos;
 
+	//‹ü‚ª’Ê‚Á‚Ä‚¢‚éê‡
 	if (hasLineOfSight)
 	{
-		//‹ü‚ª’Ê‚Á‚Ä‚¢‚éê‡‚ÍŒo˜H’Ç]‚ğ‚â‚ß‚Ä’¼i‚·‚é
+		//Œo˜H’Ç]‚ğ‚â‚ß‚Ä’¼i‚·‚é
 		if (enemy->pathFollower_.HasPath())
 		{
 			enemy->pathFollower_.ClearPath();
 		}
 		targetPos = playerPos;
 	}
-	else//‹ü‚ª’Ê‚ç‚È‚¢(áŠQ•¨‚È‚Ç‚ÅÕ‚ç‚ê‚Ä‚¢‚éê‡)
+	else//‹ü‚ª’Ê‚ç‚È‚¢ê‡(áŠQ•¨‚È‚Ç‚ÅÕ‚ç‚ê‚Ä‚¢‚éê‡)
 	{
 		//Œo˜H‚ª‚È‚¢ê‡‚ÍÄ“x’Tõ‚µ‚ÄŒo˜H‚ğƒZƒbƒg‚·‚é
 		//A*’Tõ‚ÅáŠQ•¨‚ğ‰ñ”ğ‚µ‚½Œo˜H‚ğì‚èŒo˜H‚É‰ˆ‚Á‚ÄˆÚ“®‚·‚é
@@ -95,8 +95,10 @@ void EnemyStateRun::Update()
 			}
 		}
 
+		//“G‚ªŸ‚ÌŒo˜H‚ğ‚Á‚Ä‚¢‚éê‡
 		if (enemy->pathFollower_.HasPath())
 		{
+			//Ÿ‚Éi‚ŞˆÊ’u‚É‘ã“ü
 			targetPos = enemy->pathFollower_.GetCurrentTarget(enemyPos);
 		}
 		else

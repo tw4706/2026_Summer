@@ -36,6 +36,7 @@ Katana::Katana(Vector3 pos, Vector3 vel, float dir) :
 
 Katana::~Katana()
 {
+	katanaModel_.Release();
 }
 
 void Katana::Init()

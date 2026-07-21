@@ -7,10 +7,44 @@
 #include "EnemyStateDamage.h"
 #include "EnemyStateDeath.h"
 #include "CollisionManager.h"
+#include "EffectManager.h"
 #include"Collider/CapsuleCollider.h"
 #include"Collider/SphereCollider.h"
 #include<cassert>
 
+namespace
+{
+	//ダメージに行く確率
+	constexpr int kRandomToDamage = 20;
+
+	//経過時間
+	constexpr float kDeltaTime = 1.0f / 60.0f;
+
+	//描画時のlerpのrate
+	constexpr float kDrawLerpRate = 0.1f;
+
+	//半分
+	constexpr float kHalf = 0.5f;
+
+	//反応行動を開始する範囲
+	constexpr float kSearchReactRange = 1000.0f;
+
+	//敵の見ている視野角
+	constexpr float kVisionAngle = 90.0f;
+
+	//分割数
+	constexpr int kDivNum = 10;
+
+	//攻撃コライダーのデバッグDivNum
+	constexpr int kDebugAttackColliderDivNum = 8;
+
+	//HPUIの拡大率
+	constexpr float kHPUIScale = 0.2f;
+
+	//HPUIの見えている時間
+	constexpr float kHPUIVisibleTime = 3.0f;
+
+}
 
 EnemyBase::EnemyBase() :
 	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f),
@@ -18,9 +52,9 @@ EnemyBase::EnemyBase() :
 	isDrawHPVisible_(false),
 	drawHPVisibleTimer_(0.0f),
 	scale_({ 1.0f,1.0f,1.0f }),
-	searchRadius_(500.0f),
-	colliderRadius_(70.0f),
-	colliderHeight_(120.0f),
+	searchRadius_(0.0f),
+	colliderRadius_(0.0f),
+	colliderHeight_(0.0f),
 	pathFinder_(),
 	pAttackCollider_(nullptr),
 	attackColliderDistance_(0.0f)
@@ -30,6 +64,9 @@ EnemyBase::EnemyBase() :
 
 EnemyBase::~EnemyBase()
 {
+	//ハンドルの削除
+	DeleteGraph(hpHandle_);
+	DeleteGraph(hpFrameHandle_);
 }
 
 void EnemyBase::Init()
@@ -46,6 +83,9 @@ void EnemyBase::Init()
 	assert(hpFrameHandle_ >= 0);
 	GetGraphSize(hpFrameHandle_, &hpBarUIX_, &hpBarUIY_);
 
+	//エフェクトのロード
+	EffectManager::GetInstance().Load(L"Hit", L"data/Effect/HitEffect.efk");
+
 	//アニメーションの初期化
 	animation_.Init(model_.GetHandle());
 
@@ -59,15 +99,15 @@ void EnemyBase::Init()
 
 void EnemyBase::Update()
 {
-	// Collidableクラスの更新
+	//Collidableクラスの更新
 	Collidable::Update();
 
 	//HPバーの表示・非表示
 	if (isDrawHPVisible_)
 	{
-		drawHPVisibleTimer_ -= (1.0f / 60.0f);
+		drawHPVisibleTimer_ -= (kDeltaTime);
 
-		//描画をひょうじするたいまーが0以下かつHPが0の場合
+		//描画を表示するタイマーが0以下かつHPが0の場合
 		if (drawHPVisibleTimer_ <= 0.0f && drawHP_ - static_cast<float>(hp_) < 0.1f)
 		{
 			isDrawHPVisible_ = false;
@@ -75,7 +115,7 @@ void EnemyBase::Update()
 	}
 
 	//描画用HPの更新(lerpで減らす)
-	drawHP_ = Vector3::Lerp(drawHP_, static_cast<float>(hp_), 0.1f);
+	drawHP_ = Vector3::Lerp(drawHP_, static_cast<float>(hp_), kDrawLerpRate);
 
 	//ステートが入ってない場合
 	if (!pCurrentState_)
@@ -92,7 +132,7 @@ void EnemyBase::Update()
 	}
 
 	//アニメーションの更新
-	animation_.Update(1.0f / 60.0f);
+	animation_.Update(kDeltaTime);
 
 	//行列の計算
 	Matrix4x4 scaleMat = Matrix4x4::Scale(scale_.x_, scale_.y_, scale_.z_);
@@ -109,7 +149,7 @@ void EnemyBase::Update()
 		if (pCap)
 		{
 			//高さの半分
-			float halfH = colliderHeight_ * 0.5f;
+			float halfH = colliderHeight_ * kHalf;
 
 			Vector3 centerPos = pos_ + Vector3{ 0.0f, colliderHeight_, 0.0f };
 			Vector3 top = centerPos + Vector3{ 0.0f, halfH, 0.0f };
@@ -122,7 +162,7 @@ void EnemyBase::Update()
 	if (pAttackCollider_)
 	{
 		Vector3 forward = { sinf(moveAngle_), 0.0f, -cosf(moveAngle_) };
-		Vector3 offset = pos_ + forward * attackColliderDistance_ + Vector3{ 0.0f, colliderHeight_ * 0.5f, 0.0f };
+		Vector3 offset = pos_ + forward * attackColliderDistance_ + Vector3{ 0.0f, colliderHeight_ * kHalf, 0.0f };
 		pAttackCollider_->SetPos(offset);
 	}
 }
@@ -132,27 +172,26 @@ void EnemyBase::Draw()
 	//モデルの描画
 	model_.Draw();
 #ifdef _DEBUG
-	//反応行動を開始する範囲
-	constexpr float kSearchReactRange = 1000.0f;
+
 
 	//索敵範囲のデバッグ表示
 	DrawDebugRange(pos_, kSearchReactRange, 0xff0000);
 
 	//敵の視線範囲のデバッグ描画
-	float visionDist = searchRadius_; //半径を距離として利用
-	float visionAngle = 90.0f;       //視野角を90度に設定
+	float visionDist = searchRadius_;		//半径を距離として利用
+	float visionAngle = kVisionAngle;       //視野角の設定
 
 	Vector3 playerPos = GetPlayerPos();
 
-	// プレイヤーが「扇状の視界」に入っているかで色を変える
-	unsigned int searchColor = GetColor(0, 255, 0); //通常は緑色
+	// プレイヤーが扇の視界に入っているかで色を変える
+	unsigned int searchColor = GetColor(0, 255, 0);
 	if (IsPlayerInVision(visionDist, visionAngle))
 	{
 		searchColor = GetColor(255, 0, 0); //見つけたら赤色
 	}
 
 	//左右の線の描画
-	float halfAngleRad = (visionAngle * 0.5f) * (DX_PI_F / 180.0f);
+	float halfAngleRad = (visionAngle * kHalf) * (DX_PI_F / 180.0f);
 
 	//正面から左右に視野角の半分回転させた方向の単位ベクトル
 	Vector3 leftDir = { sinf(moveAngle_ - halfAngleRad), 0.0f, -cosf(moveAngle_ - halfAngleRad) };
@@ -169,12 +208,11 @@ void EnemyBase::Draw()
 
 	//先端の円弧の描画
 	//左右の線の先端の間をさらにいくつかの線で繋いで円を作る
-	const int DIV_NUM = 10; //円弧の分割数
-	for (int i = 0; i < DIV_NUM; ++i)
+	for (int i = 0; i < kDivNum; ++i)
 	{
 		//左右の角度の間を線形補間する
-		float angleA = (moveAngle_ - halfAngleRad) + (visionAngle * (DX_PI_F / 180.0f) / DIV_NUM) * i;
-		float angleB = (moveAngle_ - halfAngleRad) + (visionAngle * (DX_PI_F / 180.0f) / DIV_NUM) * (i + 1);
+		float angleA = (moveAngle_ - halfAngleRad) + (visionAngle * (DX_PI_F / 180.0f) / kDivNum) * i;
+		float angleB = (moveAngle_ - halfAngleRad) + (visionAngle * (DX_PI_F / 180.0f) / kDivNum) * (i + 1);
 
 		Vector3 dirA = { sinf(angleA), 0.0f, -cosf(angleA) };
 		Vector3 dirB = { sinf(angleB), 0.0f, -cosf(angleB) };
@@ -198,7 +236,7 @@ void EnemyBase::Draw()
 		else if (SphereCollider* pSphere = dynamic_cast<SphereCollider*>(pCol.get()))
 		{
 			//攻撃コライダーはオレンジ色で表示
-			DrawSphere3D(pSphere->GetPos().ToDxlibVector(), pSphere->GetRadius(), 8, GetColor(255, 128, 0), GetColor(0, 0, 0), FALSE);
+			DrawSphere3D(pSphere->GetPos().ToDxlibVector(), pSphere->GetRadius(), kDebugAttackColliderDivNum, GetColor(255, 128, 0), GetColor(0, 0, 0), FALSE);
 		}
 	}
 
@@ -236,7 +274,8 @@ void EnemyBase::Draw()
 	}
 #endif
 	if (isDrawHPVisible_)
-	{//敵の頭上の3D座標を計算
+	{
+		//敵の頭上の3D座標を計算
 		Vector3 headWorldPos = GetCameraTarget() + Vector3{ 0.0f, 70.0f, 0.0f };
 
 		//D座標を画面の2D座標に変換
@@ -247,7 +286,7 @@ void EnemyBase::Draw()
 		if (screenPos.z >= 0.0f && screenPos.z <= 1.0f)
 		{
 			//拡大率
-			float scale = 0.2f;
+			float scale = kHPUIScale;
 
 			//HPの割合
 			float hpRate = drawHP_ / maxHP_;
@@ -304,7 +343,7 @@ void EnemyBase::OnCollision(Collidable& coll, Collider* pColliderA, Collider* pC
 		int rand = std::rand() % 100;
 
 		//20パーセントの確率でダメージアニメーションに遷移する
-		if (rand < 20)
+		if (rand < kRandomToDamage)
 		{
 			//ダメージ状態に遷移する
 			auto nextState = std::make_shared<EnemyStateDamage>(enemy, searchRadius_);
@@ -323,7 +362,12 @@ void EnemyBase::OnDamage(int damage)
 
 	isDrawHPVisible_ = true;
 
-	drawHPVisibleTimer_ = 3.0f;
+	drawHPVisibleTimer_ = kHPUIVisibleTime;
+
+	Vector3 effectPos = pos_ + Vector3{ 0.0f,70.0f,0.0f };
+
+	//エフェクトの再生
+	EffectManager::GetInstance().Play(L"Hit", effectPos);
 
 	//HPが0の場合
 	if (hp_ <= 0)
@@ -332,7 +376,7 @@ void EnemyBase::OnDamage(int damage)
 
 		auto enemy = std::dynamic_pointer_cast<EnemyBase>(shared_from_this());
 
-		//ダメージ状態に遷移する
+		//死亡状態に遷移する
 		auto nextState = std::make_shared<EnemyStateDeath>(enemy, searchRadius_);
 		ChangeState(nextState);
 	}
@@ -499,7 +543,7 @@ bool EnemyBase::IsPlayerInVision(float maxDist, float visionAngle) const
 	{
 		return false;
 	}
-	
+
 	//0除算を防止するため重なっているときは見えているのでtrueを返す
 	if (distSq < 0.0001f) return true;
 

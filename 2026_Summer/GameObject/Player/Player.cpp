@@ -63,10 +63,10 @@ Player::Player() :
 	handFrameIndex_(-1),
 	hpUIHandle_(-1),
 	hpUIFrameHandle_(-1),
-	hpUIX_(0.0f),
-	hpUIY_(0.0f),
-	hpBarUIX_(0.0f),
-	hpBarUIY_(0.0f),
+	hpUIX_(0),
+	hpUIY_(0),
+	hpBarUIX_(0),
+	hpBarUIY_(0),
 	reticleUIHandle_(-1),
 	pKatana_(nullptr)
 {
@@ -74,6 +74,13 @@ Player::Player() :
 
 Player::~Player()
 {
+	//ハンドルの削除
+	DeleteGraph(hpUIHandle_);
+	DeleteGraph(hpUIFrameHandle_);
+	DeleteGraph(reticleUIHandle_);
+
+	//モデルの削除
+	model_.Release();
 }
 
 void Player::Init()
@@ -254,15 +261,6 @@ void Player::Draw()
 	//HPの割合
 	float hpRate = static_cast<float>(hp_) / kMaxHP;
 	int drawHPWidth = static_cast<int>(hpUIX_ * hpRate);
-
-	//拡大率
-	float scale = 1.0f;
-
-	int distX = static_cast<int>(hpBarUIX_ * scale);
-	int distY = static_cast<int>(hpBarUIY_ * scale);
-
-	int distX2 = static_cast<int>(drawHPWidth * scale);
-	int distY2 = static_cast<int>(hpUIY_ * scale);
 
 	//HPバーフレームの描画
 	DrawRectGraph(Game::kScreenWidth / 2 - kHPBarOffsetX, Game::kScreenHeight - kHPBarOffsetY,

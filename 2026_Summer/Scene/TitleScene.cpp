@@ -16,12 +16,12 @@ namespace
 	constexpr int kFadeInterval = 60;
 
 	//タイトル画面の選択肢の描画時のオフセット
-	constexpr float kTitleTextOffsetY = 100.0f;
-	constexpr float kEndTextOffsetY = 130.0f;
+	constexpr int kTitleTextOffsetY = 100;
+	constexpr int kEndTextOffsetY = 130;
 
 	//ロゴの描画時のオフセット
-	constexpr float kLogoOffsetX = -600.0f;
-	constexpr float kLogoOffsetY = -500.0f;
+	constexpr int kLogoOffsetX = -600;
+	constexpr int kLogoOffsetY = -500;
 	constexpr float kLogoScaleX = 0.6f;
 	constexpr float kLogoScaleY = 0.6f;
 
@@ -40,10 +40,14 @@ namespace
 	const wchar_t* kTextStart = L"始める";
 	const wchar_t* kTextEnd = L"ゲームを終了";
 
+	//選択肢の文字列の文字数
+	constexpr int kTitleTextNum = 4;
+	constexpr int kEndTextNum = 6;
+
 	//自作のシェーダを適用させた描画関数
 	void DrawGraphUseOrigShader(const int x, const int y, const int texH, const int psH, const int psShaderH)
 	{
-		// 板ポリゴンを構成するための4つの頂点を宣言
+		//板ポリゴンを構成するための4つの頂点
 		const int kVertNum = 4;
 		std::array<VERTEX2DSHADER, 4> vertices{};
 
@@ -56,10 +60,10 @@ namespace
 
 		int graphWidth, graphHeight;
 		GetGraphSize(texH, &graphWidth, &graphHeight);
-		float rectStartX = x;
-		float rectStartY = y;
-		float rectEndX = x + graphWidth;
-		float rectEndY = y + graphHeight;
+		float rectStartX = static_cast<float>(x);
+		float rectStartY = static_cast<float>(y);
+		float rectEndX = static_cast<float>(x + graphWidth);
+		float rectEndY = static_cast<float>(y + graphHeight);
 
 		//座標
 		vertices[0].pos = { rectStartX, rectStartY, 0 };
@@ -104,6 +108,12 @@ TitleScene::TitleScene(SceneManager& sceneManager) :
 
 TitleScene::~TitleScene()
 {
+	//ハンドルの削除
+	DeleteGraph(titleLogoHandle_);
+	DeleteGraph(noiseHandle_);
+	DeleteGraph(dissolvePSHandle_);
+
+	//バッファの削除
 	DeleteShaderConstantBuffer(cBuffH_);
 }
 
@@ -241,8 +251,8 @@ void TitleScene::NormalDraw()
 		endColor = 0xff0000;
 	}
 
-	int titleWidth = GetDrawStringWidth(kTextStart, 4);
-	int endWidth = GetDrawStringWidth(kTextEnd, 6);
+	int titleWidth = GetDrawStringWidth(kTextStart, kTitleTextNum);
+	int endWidth = GetDrawStringWidth(kTextEnd, kEndTextNum);
 
 	DrawFormatString(Game::kScreenWidth / 2 - (titleWidth / 2), Game::kScreenHeight / 2 + kTitleTextOffsetY, titleColor, kTextStart);
 	DrawFormatString(Game::kScreenWidth / 2 - (endWidth / 2), Game::kScreenHeight / 2 + kEndTextOffsetY, endColor, kTextEnd);

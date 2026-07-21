@@ -4,15 +4,15 @@
 namespace
 {
 	//ナビゲーショングリッドを生成する範囲
-	const float kGridMinX = -5000.0f;
-	const float kGridMaxX = 1000.0f;
-	const float kGridMinZ = -8500.0f;
-	const float kGridMaxZ = 0.0f;
+	constexpr float kGridMinX = -5000.0f;
+	constexpr float kGridMaxX = 1000.0f;
+	constexpr float kGridMinZ = -8500.0f;
+	constexpr float kGridMaxZ = 0.0f;
 	//グリッド1マスのサイズ
-	const float kGridCellSize = 100.0f;
+	constexpr float kGridCellSize = 100.0f;
 
 	//バウンディングボックスを作成する際の余白
-	const float kBoundMargin = 120.0f;
+	constexpr int kBoundMargin = 120;
 
 	//ステージのY軸回転
 	constexpr float kStageRotateY = -DX_PI_F / 2.0f;
@@ -37,6 +37,8 @@ Stage::Stage(Vector3 pos, Vector3 vel, float dir) :
 
 Stage::~Stage()
 {
+	//モデルの削除
+	stageModel_.Release();
 }
 
 void Stage::Init()
@@ -62,7 +64,7 @@ void Stage::Init()
 
 void Stage::Update()
 {
-
+	//今のところステージはおいているだけなので何もしない
 }
 
 void Stage::Draw()
@@ -88,7 +90,7 @@ void Stage::DrawNavGridDebug() const
 			//地面に埋まって見えなくなるのを防ぐため少し浮かせる
 			Vector3 pos = VGet(node->pos.x_, node->pos.y_ + 5.0f, node->pos.z_);
 
-			//歩行可能なら緑、不可能なら赤
+			//歩行可能なら緑不可能なら赤
 			unsigned int color = node->iswalked ? GetColor(0, 255, 0) : GetColor(0, 255, 255);
 
 			DrawSphere3D(pos.ToDxlibVector(), kDebugGridRadius, kDebugGridDiv, color, color, TRUE);

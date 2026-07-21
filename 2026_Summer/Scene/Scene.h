@@ -6,6 +6,8 @@ class Scene
 public:
 	Scene(SceneManager& scene);
 
+	virtual ~Scene();
+
 	/// <summary>
 	/// ‰Šú‰»
 	/// </summary>

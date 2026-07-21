@@ -67,13 +67,13 @@ void EnemyStateReturn::Enter()
 	//ルートの中から、現在地に最も近い点を探す
 	for (const auto& wp : wayPoints)
 	{
-		for (int connId : wp.connections)
+		for (int connectID : wp.connections)
 		{
 			//接続先のWayPointを検索
 			const WayPointLoader::WayPoint* pTo = nullptr;
 			for (const auto& wp2 : wayPoints)
 			{
-				if (wp2.id == connId)
+				if (wp2.id == connectID)
 				{
 					pTo = &wp2;
 					break;
@@ -90,7 +90,7 @@ void EnemyStateReturn::Enter()
 				nearestDistSq = distSq;
 				returnNextPos_ = closest;
 				fromWayPointId_ = wp.id;
-				toWayPointId_ = connId;
+				toWayPointId_ = connectID;
 			}
 		}
 	}

@@ -25,7 +25,7 @@ void PlayerStateAttack::Enter()
 	player->SetKatanaColliderEnabled(true);
 
 	//速度を0にする
-	player->SetVelocity({ 0.0f, 0.0f, 0.0f });
+	player->SetVelocity(Vector3{ 0.0f, 0.0f, 0.0f });
 
 	//刀のエフェクトの再生
 	player->PlayKatanaEffect();

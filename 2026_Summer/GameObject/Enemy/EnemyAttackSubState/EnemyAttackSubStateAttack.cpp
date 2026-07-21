@@ -1,11 +1,12 @@
 #include "EnemyAttackSubStateAttack.h"
 #include "EnemyAttackSubStateChance.h"
 #include "EnemyAttackSubStateBase.h"
+#include "../EnemyStateIdle.h"
 #include "../EnemyStateAttack.h"
 #include "../EnemyBase.h"
 
-EnemyAttackSubStateAttack::EnemyAttackSubStateAttack(std::weak_ptr<EnemyBase> pEnemy, EnemyStateAttack* pEnemyAttack, const AttackData& attackData):
-	EnemyAttackSubStateBase(pEnemy, pEnemyAttack,attackData)
+EnemyAttackSubStateAttack::EnemyAttackSubStateAttack(std::weak_ptr<EnemyBase> pEnemy, EnemyStateAttack* pEnemyAttack, const AttackData& attackData) :
+	EnemyAttackSubStateBase(pEnemy, pEnemyAttack, attackData)
 {
 }
 
@@ -26,15 +27,14 @@ void EnemyAttackSubStateAttack::Update()
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
 
+	//アニメーションが終了したら
 	if (enemy->IsAnimationEnd())
 	{
-		auto nextAttackState = std::make_shared<EnemyAttackSubStateChance>(pEnemy_, pEnemyAttack_);
+		//攻撃コライダーの削除
+		enemy->RemoveAttackCollider();
 
-		//攻撃のサブステートがある場合は次の隙状態に遷移
-		if (pEnemyAttack_)
-		{
-			pEnemyAttack_->ChangeAttackState(nextAttackState);
-		}
+		auto nextState = std::make_shared<EnemyStateIdle>(pEnemy_, enemy->GetSearchRadius());
+		enemy->ChangeState(nextState);
 	}
 }
 
@@ -42,7 +42,4 @@ void EnemyAttackSubStateAttack::Exit()
 {
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
-
-	//攻撃コライダーの削除
-	enemy->RemoveAttackCollider();
 }

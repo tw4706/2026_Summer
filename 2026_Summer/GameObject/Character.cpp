@@ -25,6 +25,7 @@ void Character::ChangeState(std::shared_ptr<CharacterStateBase> pNextState)
 
 	//次のステートを更新
 	pCurrentState_ = pNextState;
+
 	//初期化処理を行う
 	pCurrentState_->Enter();
 }

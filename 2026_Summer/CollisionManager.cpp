@@ -84,7 +84,7 @@ void CollisionManager::UpdateCheckCollision()
 			}
 
 			//敵同士の衝突はスキップ
-			if (dynamic_cast<EnemyBase*>(&pObjA) && dynamic_cast<EnemyBase*>(&pObjB))continue;
+			//if (dynamic_cast<EnemyBase*>(&pObjA) && dynamic_cast<EnemyBase*>(&pObjB))continue;
 
 			ColliderType typeA = pColA->GetType();
 			ColliderType typeB = pColB->GetType();

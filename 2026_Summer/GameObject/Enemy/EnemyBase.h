@@ -56,7 +56,7 @@ public:
 	/// CSVデータの適用
 	/// </summary>
 	/// <param name="data">CSVファイルのデータ</param>
-	virtual void ApplyData(const EnemyData& data,const EnemySpawnData&spawnData, const WayPointLoader* pWayPointLoader);
+	virtual void ApplyData(const EnemyData& data, const EnemySpawnData& spawnData, const WayPointLoader* pWayPointLoader);
 
 	/// <summary>
 	/// 攻撃データローダーのセット
@@ -142,7 +142,7 @@ public:
 	/// プレイヤーが視界に入っているかどうか
 	/// </summary>
 	bool IsPlayerInVision(float maxDist, float visionAngle) const;
-	
+
 	void DrawDebugRange(const Vector3& centerPos, float radius, unsigned int color);
 
 protected:
@@ -156,25 +156,28 @@ protected:
 	int stageModelHandle_ = -1;
 
 	//HPバーのハンドル
-	int hpHandle_;
+	int hpHandle_ = -1;
 
 	//HPバーフレームハンドル
-	int hpFrameHandle_;
+	int hpFrameHandle_ = -1;
 
 	//グラフィックハンドルのサイズ取得用
-	int hpUIX_, hpUIY_;
-	int hpBarUIX_, hpBarUIY_;
+	int hpUIX_ = -1;
+	int hpUIY_ = -1;
+	int hpBarUIX_ = -1;
+	int hpBarUIY_ = -1;
 
 	//最大体力
-	int maxHP_;
+	int maxHP_ = 0;
 
 	//描画用体力
-	float drawHP_;
+	float drawHP_ = 0.0f;
 
 	//HPを描画していいかどうか
-	bool isDrawHPVisible_;
+	bool isDrawHPVisible_ = false;
 
-	float drawHPVisibleTimer_;
+	//HPバーの表示タイマー
+	float drawHPVisibleTimer_ = 0.0f;
 
 	//モデルの拡大率
 	Vector3 scale_;
@@ -207,7 +210,7 @@ protected:
 	bool hasDebugTarget_ = false;
 
 	//攻撃コライダー
-	SphereCollider* pAttackCollider_;
+	SphereCollider* pAttackCollider_ = nullptr;
 	float attackColliderDistance_ = 0.0f;
 
 	//WayPointLoaderの参照
