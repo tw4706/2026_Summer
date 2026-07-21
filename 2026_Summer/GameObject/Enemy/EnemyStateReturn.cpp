@@ -8,7 +8,7 @@
 namespace
 {
 	//ˆÚ“®‘¬“x
-	const float kMoveSpeed = 0.5f;
+	const float kMoveSpeed = 0.3f;
 
 	//üŒ`•âŠÔ‚ÌŠ„‡
 	const float kRotateLerpRate = 0.01f;

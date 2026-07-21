@@ -9,19 +9,19 @@
 namespace
 {
 	//移動速度
-	const float kMoveSpeed = 0.3f;
+	constexpr float kMoveSpeed = 0.3f;
 
 	//線形補間の割合
-	const float kRotateLerpRate = 0.1f;
+	constexpr float kRotateLerpRate = 0.1f;
 
 	//攻撃開始の範囲
-	const float kAttackRange = 180.0f;
+	constexpr float kAttackRange = 180.0f;
 
 	//視線の高さ(Rayで障害物の判定を行うのに使用)
-	const float kEyeHeight = 50.0f;
+	constexpr float kEyeHeight = 50.0f;
 
 	//視線の追従範囲の角度
-	const float kVisionAngle = DX_PI_F / 4.0f;
+	constexpr float kVisionAngle = DX_PI_F / 4.0f;
 }
 
 EnemyStateRun::EnemyStateRun(std::weak_ptr<EnemyBase> pEnemy, float searchRadius) :

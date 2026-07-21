@@ -19,45 +19,8 @@ namespace
 	//視線の高さ(Rayで障害物の判定を行うのに使用)
 	const float kEyeHeight = 50.0f;
 
-	//段差を検知する用の前方向のチェックする距離
-	const float kJumpDistance = 60.0f;
-
-	//跳び越え可能と判断する高低差
-	const float kMinJumpableHeight = 20.0f;
-	const float kMaxJumpableHeight = 100.0f;
-
 	//反応行動を開始する範囲
 	constexpr float kSearchReactRange = 1000.0f;
-
-	//指定座標の真下にレイを飛ばして地面の高さを取得する
-	//地面にhitしなければfalseを返す
-	//bool GetGroundHeight(int stageModelHandle, const Vector3& pos, float& outHeight)
-	//{
-	//	VECTOR start = VGet(pos.x_, pos.y_ + 500.0f, pos.z_);
-	//	VECTOR end = VGet(pos.x_, pos.y_ - 500.0f, pos.z_);
-	//	MV1_COLL_RESULT_POLY hit = MV1CollCheck_Line(stageModelHandle, -1, start, end);
-	//	if (!hit.HitFlag) return false;
-	//	outHeight = hit.HitPosition.y;
-	//	return true;
-	//}
-
-	////敵の視線方向で飛び越えれる障害物かどうかを判定する関数
-	//bool IsJumpable(int stageModelHandle, const Vector3& start, const Vector3& moveDir, Vector3& landingPos)
-	//{
-	//	Vector3 dir = moveDir;
-	//	dir.y_ = 0.0f;
-	//	if (dir.Length() <= 0.0001f) return false;
-	//	dir.Normalize();
-	//	float currentHeight = 0.0f;
-	//	if (!GetGroundHeight(stageModelHandle, start, currentHeight)) return false;
-	//	Vector3 probePos = start + dir * kJumpDistance;
-	//	float probeHeight = 0.0f;
-	//	if (!GetGroundHeight(stageModelHandle, probePos, probeHeight)) return false;
-	//	float heightDiff = probeHeight - currentHeight;
-	//	if (heightDiff < kMinJumpableHeight || heightDiff > kMaxJumpableHeight) return false;
-	//	landingPos = Vector3(probePos.x_, probeHeight, probePos.z_);
-	//	return true;
-	//}
 }
 
 EnemyStateIdle::EnemyStateIdle(std::weak_ptr<EnemyBase> pEnemy, float searchRadius) :
@@ -190,7 +153,7 @@ void EnemyStateIdle::Update()
 		enemy->nextWayPointId_ = nextId;
 
 		//次のWayPointへ向かうため古い経路をクリア
-		if (enemy->pathFollower_.HasPath())
+		if (enemy->pathFollower_.HasPath() && enemy->pathFollower_.IsPathFinished())
 		{
 			enemy->pathFollower_.ClearPath();
 		}
@@ -199,17 +162,6 @@ void EnemyStateIdle::Update()
 
 	//正規化
 	toTarget.Normalize();
-
-	//Vector3 landingPos;
-	////着地地点を保存しジャンプ状態に遷移
-	//if (IsJumpable(enemy->GetStageModelHandle(), enemyPos, toTarget, landingPos))
-	//{
-	//	enemy->jumpTargetPos_ = landingPos;
-
-	//	auto nextState = std::make_shared<EnemyStateJump>(pEnemy_, searchRadius_);
-	//	enemy->ChangeState(nextState);
-	//	return;
-	//}
 
 	//速度・位置の適用
 	ApplyMove(enemy, enemyPos, toTarget, kMoveSpeed);

@@ -25,7 +25,8 @@ void PathFollower::ClearPath()
 
 bool PathFollower::HasPath() const
 {
-	return !path_.empty();
+	//経路データが存在するかつまだ最後まで進みきっていない時を返す
+	return !path_.empty() && currentIndex_ < static_cast<int>(path_.size());
 }
 
 bool PathFollower::IsPathFinished() const

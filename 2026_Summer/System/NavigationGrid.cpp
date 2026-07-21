@@ -14,7 +14,7 @@ namespace
 	constexpr float kGroundNormalThreshold = 0.7f;
 
 	//地面の高さの許容誤差(これを超えて高い/低い位置にヒットしたら障害物とみなす)
-	constexpr float kGroundPermissible = 100.0f;
+	constexpr float kGroundPermissible = 120.0f;
 }
 
 void NavigationGrid::CreateGrid(int stageModelHandle, float minX, float maxX, float minZ, float maxZ, float cellSize, int margin)

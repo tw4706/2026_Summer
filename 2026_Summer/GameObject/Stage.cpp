@@ -18,7 +18,7 @@ namespace
 	constexpr float kStageRotateY = -DX_PI_F / 2.0f;
 
 	//ステージの初期位置
-	const Vector3 kFirstStagePos = { 0.0f, -100.0f, 0.0f };
+	const Vector3 kFirstStagePos = { 0.0f, -110.0f, 0.0f };
 
 	//地面の高さの限界
 	constexpr float kGroundY = -100.0f;

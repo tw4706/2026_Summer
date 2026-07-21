@@ -32,14 +32,16 @@ namespace
 	//敵から食らうダメージ
 	constexpr int kEnemyDamage = 10;
 
-	//1フレームの時間
+	//経過時間
 	constexpr float kDeltaTime = 1.0f / 60.0f;
 
 	//コライダーの半径と高さ
 	constexpr float kColliderRadius = 40.0f;
 	constexpr float kColliderHeight = 160.0f;
+
 	//コライダーのオフセット
-	const Vector3 kColliderOffset = { 0.0f, 120.0f, 0.0f };
+	const Vector3 kColliderOffset = { 0.0f, 100.0f, 0.0f };
+
 	//注視点の高さのオフセット
 	constexpr float kCameraTargetHeightOffset = 150.0f;
 

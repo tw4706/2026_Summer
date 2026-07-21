@@ -31,5 +31,6 @@
 *.out
 *.app
 *.vs
+*.obj
 *x64
 *2026_Summer
