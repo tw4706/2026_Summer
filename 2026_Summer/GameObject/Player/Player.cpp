@@ -55,8 +55,11 @@ namespace
 	constexpr float kReticleOffsetY = 80.0f;
 
 	//HPバーの描画オフセット
-	constexpr int kHPBarOffsetX = 60;
+	constexpr int kHPBarOffsetX = 50;
 	constexpr int kHPBarOffsetY = 50;
+
+	//HPUIの拡大率
+	constexpr float kHPUIScale = 0.8f;
 }
 
 Player::Player() :
@@ -253,19 +256,28 @@ void Player::Draw()
 	DrawFormatString(100, 100, 0x00ffff, L"PlayerPosX : %.2f,PlayerPosY : %.2f,PlayerPosZ : %.2f", pos_.x_, pos_.y_, pos_.z_);
 #endif
 
+	//拡大率
+	float scale = kHPUIScale;
+
 	//HPの割合
 	float hpRate = static_cast<float>(hp_) / kMaxHP;
 	int drawHPWidth = static_cast<int>(hpUIX_ * hpRate);
 
+	int scaledBarW = static_cast<int>(hpBarUIX_ * scale); //フレームの幅
+	int scaledBarH = static_cast<int>(hpBarUIY_ * scale); //フレームの高さ
+	int scaledHPW = static_cast<int>(drawHPWidth * scale); //バーの幅
+
 	//HPバーフレームの描画
-	DrawRectGraph(kHPBarOffsetX, kHPBarOffsetY,
-		0, 0,
+	DrawRectExtendGraph(kHPBarOffsetX, kHPBarOffsetY,
+		kHPBarOffsetX + scaledBarW, kHPBarOffsetY + scaledBarH,
+		0,0,
 		hpBarUIX_, hpBarUIY_,
 		hpUIFrameHandle_, true);
 
 	//HPバーの描画
-	DrawRectGraph(kHPBarOffsetX, kHPBarOffsetY,
-		0, 0,
+	DrawRectExtendGraph(kHPBarOffsetX, kHPBarOffsetY,
+		kHPBarOffsetX + scaledBarW, kHPBarOffsetY + scaledBarH,
+		0,0,
 		drawHPWidth, hpUIY_,
 		hpUIHandle_, true);
 }
@@ -345,4 +357,9 @@ void Player::PlayKatanaEffect()
 void Player::StopKatanaEffect()
 {
 	if (pKatana_) pKatana_->StopEffect();
+}
+
+float Player::GetAnimationCurrentTime() const
+{
+	return animation_.GetCurrentAnimTime();
 }

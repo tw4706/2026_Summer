@@ -110,9 +110,21 @@ public:
 	/// </summary>
 	const PlayerActionCounter& GetActionCounter() const { return actionCounter_; }
 
+	/// <summary>
+	/// 刀エフェクトの再生
+	/// </summary>
 	void PlayKatanaEffect();
 
+	/// <summary>
+	/// 刀エフェクトの停止
+	/// </summary>
 	void StopKatanaEffect();
+
+	/// <summary>
+	/// アニメーションの現在の時間を取得
+	/// </summary>
+	/// <returns>アニメーションの現在時間を返す</returns>
+	float GetAnimationCurrentTime() const;
 private:
 	float moveAngle_;						//プレイヤーの向く角度
 	int handFrameIndex_;					//右手の刀を持つ手のフレームインデックス

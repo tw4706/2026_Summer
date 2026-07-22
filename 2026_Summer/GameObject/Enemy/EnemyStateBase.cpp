@@ -121,3 +121,39 @@ void EnemyStateBase::ApplyMove(const std::shared_ptr<EnemyBase>& enemy, const Ve
 	Vector3 nextPos = enemyPos + moveVec;
 	enemy->SetPos(nextPos);
 }
+
+Vector3 EnemyStateBase::MoveTargetPath(const std::shared_ptr<EnemyBase>& enemy, const Vector3& startPos, const Vector3& endPos, bool& outHasLineOfSight)
+{
+	//目的地が存在しない場合はそのまま返す
+	if (!enemy)
+	{
+		outHasLineOfSight = true;
+		return endPos;
+	}
+	//目的地までの視線が通っているか判定
+	outHasLineOfSight = HasLineOfSight(enemy->GetStageModelHandle(), startPos, endPos);
+	if (outHasLineOfSight)
+	{
+		//障害物が無ければ経路探索は不要なのでクリアして直進する
+		if (enemy->pathFollower_.HasPath())
+		{
+			enemy->pathFollower_.ClearPath();
+		}
+		return endPos;
+	}
+	//視線が通らない場合はA*で経路を探索する
+	if (!enemy->pathFollower_.HasPath())
+	{
+		std::vector<Vector3> path = enemy->pathFinder_.FindPath(startPos, endPos);
+		if (!path.empty())
+		{
+			enemy->pathFollower_.SetPath(path);
+		}
+	}
+	//経路があればその中継地点へ無ければ直接目的地へ向かう
+	if (enemy->pathFollower_.HasPath())
+	{
+		return enemy->pathFollower_.GetCurrentTarget(startPos);
+	}
+	return endPos;
+}

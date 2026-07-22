@@ -11,7 +11,7 @@ namespace
 	const float kMoveSpeed = 0.3f;
 
 	//線形補間の割合
-	const float kRotateLerpRate = 0.01f;
+	const float kRotateLerpRate = 0.3f;
 
 	//復帰目標地点に到達したとみなす距離
 	const float kArriveThreshold = 30.0f;
@@ -103,12 +103,15 @@ void EnemyStateReturn::Update()
 
 	Vector3 enemyPos = enemy->GetPos();
 
-	//敵から復帰目標地点までのベクトルを計算
-	Vector3 toTarget = returnNextPos_ - enemyPos;
-	toTarget.y_ = 0.0f;
+	//視線が通っているか判定して通らない場合はA*経路探索の地点を計算
+	bool hasLineOfSight = false;
+	Vector3 targetPos = MoveTargetPath(enemy, enemyPos, returnNextPos_, hasLineOfSight);
 
-	//距離の計算
-	float distance = std::sqrt(toTarget.x_ * toTarget.x_ + toTarget.z_ * toTarget.z_);
+
+	//到達判定は経路の中継地点ではなく最終的な地点を求める
+	Vector3 toEnd = returnNextPos_ - enemyPos;
+	toEnd.y_ = 0.0f;
+	float distance = toEnd.Length();
 
 	//復帰目標地点に到達したら巡回状態へ遷移する
 	if (distance < kArriveThreshold)
@@ -125,6 +128,10 @@ void EnemyStateReturn::Update()
 		enemy->ChangeState(nextState);
 		return;
 	}
+
+	//敵から復帰目標地点までのベクトルを計算
+	Vector3 toTarget = returnNextPos_ - enemyPos;
+	toTarget.y_ = 0.0f;
 
 	//正規化
 	toTarget.Normalize();

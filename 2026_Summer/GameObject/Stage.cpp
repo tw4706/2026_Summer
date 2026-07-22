@@ -21,7 +21,7 @@ namespace
 	const Vector3 kFirstStagePos = { 0.0f, -110.0f, 0.0f };
 
 	//地面の高さの限界
-	constexpr float kGroundY = -100.0f;
+	constexpr float kGroundY = -105.0f;
 
 	//デバッグ描画用のグリッドの半径
 	constexpr float kDebugGridRadius = 5.0f;
