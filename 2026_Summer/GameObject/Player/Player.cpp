@@ -52,11 +52,11 @@ namespace
 	//画面座標のX補正値
 	constexpr float kReticleOffsetX = 100.0f;
 	//画面座標のY補正値
-	constexpr float kReticleOffsetY = 80.0f;           
+	constexpr float kReticleOffsetY = 80.0f;
 
 	//HPバーの描画オフセット
-	constexpr int kHPBarOffsetX = 250;
-	constexpr int kHPBarOffsetY = 100;
+	constexpr int kHPBarOffsetX = 60;
+	constexpr int kHPBarOffsetY = 50;
 }
 
 Player::Player() :
@@ -258,13 +258,13 @@ void Player::Draw()
 	int drawHPWidth = static_cast<int>(hpUIX_ * hpRate);
 
 	//HPバーフレームの描画
-	DrawRectGraph(Game::kScreenWidth / 2 - kHPBarOffsetX, Game::kScreenHeight - kHPBarOffsetY,
+	DrawRectGraph(kHPBarOffsetX, kHPBarOffsetY,
 		0, 0,
 		hpBarUIX_, hpBarUIY_,
 		hpUIFrameHandle_, true);
 
 	//HPバーの描画
-	DrawRectGraph(Game::kScreenWidth / 2 - kHPBarOffsetX, Game::kScreenHeight - kHPBarOffsetY,
+	DrawRectGraph(kHPBarOffsetX, kHPBarOffsetY,
 		0, 0,
 		drawHPWidth, hpUIY_,
 		hpUIHandle_, true);
