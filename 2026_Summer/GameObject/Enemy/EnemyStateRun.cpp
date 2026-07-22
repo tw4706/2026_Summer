@@ -9,7 +9,7 @@
 namespace
 {
 	//ˆÚ“®‘¬“x
-	constexpr float kMoveSpeed = 0.3f;
+	constexpr float kMoveSpeed = 0.5f;
 
 	//üŒ`•âŠÔ‚ÌŠ„‡
 	constexpr float kRotateLerpRate = 0.1f;

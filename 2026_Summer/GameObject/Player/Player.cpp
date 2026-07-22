@@ -18,7 +18,7 @@
 namespace
 {
 	//初期位置
-	const Vector3 kFirstPos = { 0.0f, 0.0f, 0.0f };
+	const Vector3 kFirstPos = { 0.0f, 5.0f, 0.0f };
 
 	//初期スケール
 	const Vector3 kFirstScale = { 1.0f, 1.0f, 1.0f };
@@ -40,7 +40,7 @@ namespace
 	constexpr float kColliderHeight = 160.0f;
 
 	//コライダーのオフセット
-	const Vector3 kColliderOffset = { 0.0f, 100.0f, 0.0f };
+	const Vector3 kColliderOffset = { 0.0f, 115.0f, 0.0f };
 
 	//注視点の高さのオフセット
 	constexpr float kCameraTargetHeightOffset = 150.0f;

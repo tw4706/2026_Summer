@@ -175,7 +175,7 @@ void EnemyBase::Draw()
 
 
 	//索敵範囲のデバッグ表示
-	DrawDebugRange(pos_, kSearchReactRange, 0xff0000);
+	DrawDebugRange(pos_, kSearchReactRange, 0xffff00);
 
 	//敵の視線範囲のデバッグ描画
 	float visionDist = searchRadius_;		//半径を距離として利用

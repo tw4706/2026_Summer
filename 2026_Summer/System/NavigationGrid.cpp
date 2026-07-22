@@ -11,7 +11,7 @@ namespace
 	const float kRayEndHeight = -1000.0f;
 
 	//地面とみなす法線yの値
-	constexpr float kGroundNormalThreshold = 0.7f;
+	constexpr float kGroundYNormalThreshold = 0.8f;
 
 	//地面の高さの許容誤差(これを超えて高い/低い位置にヒットしたら障害物とみなす)
 	constexpr float kGroundPermissible = 120.0f;
@@ -61,7 +61,7 @@ void NavigationGrid::CreateGrid(int stageModelHandle, float minX, float maxX, fl
 
 			//当たっているポリゴンの法線のY成分が閾値よりも高いかどうか判定
 			//これにより「平坦な道かどうか」判定している
-			bool isFlatEnough = hit.Normal.y >= kGroundNormalThreshold;
+			bool isFlatEnough = hit.Normal.y >= kGroundYNormalThreshold;
 			bool isExpectedHeight = std::abs(groundY - expectedGroundY_) <= kGroundPermissible;
 
 			node.iswalked = isFlatEnough && isExpectedHeight;
