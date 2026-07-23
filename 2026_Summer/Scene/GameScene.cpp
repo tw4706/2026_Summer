@@ -15,8 +15,12 @@
 #include"Camera/LockOnCamera.h"
 #include"Camera/CameraManager.h"
 #include"LockOnManager.h"
+#include"UIManager.h"
+#include"../UI/EnemyHPGaugeUI.h"
+#include"../UI/PlayerHPGaugeUI.h"
 #include"Game.h"
 #include"EffekseerForDXLib.h"
+#include <memory>
 #include <DxLib.h>
 #include <algorithm>
 
@@ -40,6 +44,7 @@ GameScene::GameScene(SceneManager& sceneManager) :
 	pCameraManager_ = std::make_unique<CameraManager>();
 	pEnemyManager_ = std::make_unique<EnemyManager>();
 	pLockOnManager_ = std::make_unique<LockOnManager>();
+	pUiManager_ = std::make_shared<UIManager>();
 
 	//ゲームオブジェクトの登録
 	//カメラの登録
@@ -102,6 +107,9 @@ void GameScene::Init()
 		{
 			player->SetCameraManager(pCameraManager_.get());
 			player->Init();
+
+			auto playerGauge = std::make_shared<PlayerHPGaugeUI>(player);
+			pUiManager_->AddUI(playerGauge);
 		}
 	}
 
@@ -122,6 +130,10 @@ void GameScene::Init()
 			enemy->SetPlayer(pPlayer_);
 			enemy->SetNavigationGrid(pStage_->GetNaviGrid());
 			enemy->SetStageModelHandle(pStage_->GetHandle());
+
+			auto enemyGauge = std::make_shared<EnemyHPGaugeUI>(enemy);
+			pUiManager_->AddUI(enemyGauge);
+			enemy->SetHPGaugeUI(enemyGauge);
 		}
 	}
 
@@ -233,6 +245,9 @@ void GameScene::NormalUpdate()
 	//ロックオンマネージャーの更新
 	pLockOnManager_->Update(pPlayer_, pEnemyManager_->GetEnemies(), pCameraManager_.get());
 
+	//UIマネージャーの更新
+	pUiManager_->Update();
+
 	Effekseer_Sync3DSetting();
 
 	//死んでいるゲームオブジェクトの削除
@@ -302,6 +317,9 @@ void GameScene::NormalDraw()
 
 	//ロックオンマネージャーの描画(デバッグ)
 	pLockOnManager_->Draw(pPlayer_,pCameraManager_.get());
+
+	//UIマネージャーの描画
+	pUiManager_->Draw();
 
 	DrawGrid();
 #ifdef _DEBUG

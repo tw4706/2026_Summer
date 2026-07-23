@@ -45,6 +45,18 @@ public:
 	/// ==============================
 	
 	/// <summary>
+	/// 現在のHPの取得
+	/// </summary>
+	/// <returns></returns>
+	int GetHP()const { return hp_; }
+
+	/// <summary>
+	/// 最大体力の取得
+	/// </summary>
+	/// <returns>最大体力を返す</returns>
+	int GetMaxHP()const;
+
+	/// <summary>
 	/// 正面ベクトルの取得
 	/// </summary>
 	/// <returns>正面ベクトルを返す</returns>
@@ -132,10 +144,6 @@ private:
 	bool isInvincible_ = false;				//無敵中かどうか
 	bool isGuarding_ = false;				//ガード中かどうか
 	bool isLockOn_ = false;					//ロックオンしているかどうか
-	int hpUIHandle_;						//HPUIハンドル
-	int hpUIFrameHandle_;					//HPバーUIハンドル
-	int hpUIX_, hpUIY_;						//グラフィックハンドルのサイズ取得用
-	int hpBarUIX_, hpBarUIY_;				//グラフィックハンドルのサイズ取得用
 	int reticleUIHandle_;					//レティクルUIハンドル
 
 	CameraManager* pCameraManager_=nullptr;			//カメラマネージャー

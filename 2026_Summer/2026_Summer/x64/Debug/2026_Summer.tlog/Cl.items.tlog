@@ -4,6 +4,7 @@ C:\GitHub\2026_Summer\2026_Summer\AttackSelect.cpp;C:\GitHub\2026_Summer\2026_Su
 C:\GitHub\2026_Summer\2026_Summer\CSV\EnemySpawnDataLoader.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\EnemySpawnDataLoader.obj
 C:\GitHub\2026_Summer\2026_Summer\CSV\EnemyAttackDataLoader.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\EnemyAttackDataLoader.obj
 C:\GitHub\2026_Summer\2026_Summer\EffectManager.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\EffectManager.obj
+C:\GitHub\2026_Summer\2026_Summer\UI\EnemyHPGaugeUI.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\EnemyHPGaugeUI.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\EnemyStateReact.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\EnemyStateReact.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\EnemyStateJump.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\EnemyStateJump.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Bg.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Bg.obj
@@ -41,6 +42,8 @@ C:\GitHub\2026_Summer\2026_Summer\GameObject\Camera\PlayerCamera.cpp;C:\GitHub\2
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\Oni.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Oni.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Katana.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Katana.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Camera\LockOnCamera.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\LockOnCamera.obj
+C:\GitHub\2026_Summer\2026_Summer\UI\PlayerHPGaugeUI.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\PlayerHPGaugeUI.obj
+C:\GitHub\2026_Summer\2026_Summer\UI\HPGaugeUI.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\HPGaugeUI.obj
 C:\GitHub\2026_Summer\2026_Summer\LockOnManager.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\LockOnManager.obj
 C:\GitHub\2026_Summer\2026_Summer\Model.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Model.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Stage.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Stage.obj
@@ -67,3 +70,5 @@ C:\GitHub\2026_Summer\2026_Summer\Scene\GameScene.cpp;C:\GitHub\2026_Summer\2026
 C:\GitHub\2026_Summer\2026_Summer\Math\Vector3.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Vector3.obj
 C:\GitHub\2026_Summer\2026_Summer\Scene\TitleScene.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\TitleScene.obj
 C:\GitHub\2026_Summer\2026_Summer\CSV\WayPointLoader.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\WayPointLoader.obj
+C:\GitHub\2026_Summer\2026_Summer\UI\UIBase.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\UIBase.obj
+C:\GitHub\2026_Summer\2026_Summer\UIManager.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Debug\UIManager.obj

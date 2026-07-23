@@ -149,6 +149,7 @@
     <ClCompile Include="CSV\EnemySpawnDataLoader.cpp" />
     <ClCompile Include="CSV\EnemyAttackDataLoader.cpp" />
     <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="UI\EnemyHPGaugeUI.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyStateReact.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyStateJump.cpp" />
     <ClCompile Include="GameObject\Bg.cpp" />
@@ -186,6 +187,8 @@
     <ClCompile Include="GameObject\Enemy\Oni.cpp" />
     <ClCompile Include="GameObject\Katana.cpp" />
     <ClCompile Include="GameObject\Camera\LockOnCamera.cpp" />
+    <ClCompile Include="UI\PlayerHPGaugeUI.cpp" />
+    <ClCompile Include="UI\HPGaugeUI.cpp" />
     <ClCompile Include="LockOnManager.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="GameObject\Stage.cpp" />
@@ -212,6 +215,8 @@
     <ClCompile Include="Math\Vector3.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="CSV\WayPointLoader.cpp" />
+    <ClCompile Include="UI\UIBase.cpp" />
+    <ClCompile Include="UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -223,6 +228,7 @@
     <ClInclude Include="CSV\EnemyAttackData.h" />
     <ClInclude Include="CSV\EnemyAttackDataLoader.h" />
     <ClInclude Include="EffectManager.h" />
+    <ClInclude Include="UI\EnemyHPGaugeUI.h" />
     <ClInclude Include="GameObject\Enemy\EnemyStateReact.h" />
     <ClInclude Include="GameObject\Enemy\EnemyStateJump.h" />
     <ClInclude Include="GameObject\Bg.h" />
@@ -261,6 +267,8 @@
     <ClInclude Include="GameObject\Enemy\Oni.h" />
     <ClInclude Include="GameObject\Katana.h" />
     <ClInclude Include="GameObject\Camera\LockOnCamera.h" />
+    <ClInclude Include="UI\PlayerHPGaugeUI.h" />
+    <ClInclude Include="UI\HPGaugeUI.h" />
     <ClInclude Include="LockOnManager.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="GameObject\Collider\PolygonCollider.h" />
@@ -288,6 +296,8 @@
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="CSV\WayPointLoader.h" />
+    <ClInclude Include="UI\UIBase.h" />
+    <ClInclude Include="UIManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="2026_Summer.rc" />

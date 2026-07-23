@@ -53,25 +53,12 @@ namespace
 	constexpr float kReticleOffsetX = 100.0f;
 	//画面座標のY補正値
 	constexpr float kReticleOffsetY = 80.0f;
-
-	//HPバーの描画オフセット
-	constexpr int kHPBarOffsetX = 50;
-	constexpr int kHPBarOffsetY = 50;
-
-	//HPUIの拡大率
-	constexpr float kHPUIScale = 0.8f;
 }
 
 Player::Player() :
 	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f),
 	moveAngle_(0.0f),
 	handFrameIndex_(-1),
-	hpUIHandle_(-1),
-	hpUIFrameHandle_(-1),
-	hpUIX_(0),
-	hpUIY_(0),
-	hpBarUIX_(0),
-	hpBarUIY_(0),
 	reticleUIHandle_(-1),
 	pKatana_(nullptr)
 {
@@ -80,8 +67,6 @@ Player::Player() :
 Player::~Player()
 {
 	//ハンドルの削除
-	DeleteGraph(hpUIHandle_);
-	DeleteGraph(hpUIFrameHandle_);
 	DeleteGraph(reticleUIHandle_);
 
 	//モデルの削除
@@ -101,16 +86,6 @@ void Player::Init()
 	hp_ = kMaxHP;
 
 	//画像のロード
-	//HPUI
-	hpUIHandle_ = LoadGraph(L"data/UI/PlayerHP.png");
-	assert(hpUIHandle_ >= 0);
-	GetGraphSize(hpUIHandle_, &hpUIX_, &hpUIY_);
-
-	//HPUIFrame
-	hpUIFrameHandle_ = LoadGraph(L"data/UI/HPBar.png");
-	assert(hpUIFrameHandle_ >= 0);
-	GetGraphSize(hpUIFrameHandle_, &hpBarUIX_, &hpBarUIY_);
-
 	//レティクルUI
 	reticleUIHandle_ = LoadGraph(L"data/UI/reticle.png");
 	int reticleX, reticleY;
@@ -262,31 +237,6 @@ void Player::Draw()
 	//プレイヤーの座標のデバッグ表示
 	DrawFormatString(100, 100, 0x00ffff, L"PlayerPosX : %.2f,PlayerPosY : %.2f,PlayerPosZ : %.2f", pos_.x_, pos_.y_, pos_.z_);
 #endif
-
-	//拡大率
-	float scale = kHPUIScale;
-
-	//HPの割合
-	float hpRate = static_cast<float>(hp_) / kMaxHP;
-	int drawHPWidth = static_cast<int>(hpUIX_ * hpRate);
-
-	int scaledBarW = static_cast<int>(hpBarUIX_ * scale); //フレームの幅
-	int scaledBarH = static_cast<int>(hpBarUIY_ * scale); //フレームの高さ
-	int scaledHPW = static_cast<int>(drawHPWidth * scale); //バーの幅
-
-	//HPバーフレームの描画
-	DrawRectExtendGraph(kHPBarOffsetX, kHPBarOffsetY,
-		kHPBarOffsetX + scaledBarW, kHPBarOffsetY + scaledBarH,
-		0,0,
-		hpBarUIX_, hpBarUIY_,
-		hpUIFrameHandle_, true);
-
-	//HPバーの描画
-	DrawRectExtendGraph(kHPBarOffsetX, kHPBarOffsetY,
-		kHPBarOffsetX + scaledBarW, kHPBarOffsetY + scaledBarH,
-		0,0,
-		drawHPWidth, hpUIY_,
-		hpUIHandle_, true);
 }
 
 void Player::OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColliderB)
@@ -340,6 +290,11 @@ void Player::OnDamage(const int damage)
 		auto nextState = std::make_shared<PlayerStateDeath>(weakSelf);
 		ChangeState(nextState);
 	}
+}
+
+int Player::GetMaxHP() const
+{
+	return kMaxHP;
 }
 
 Vector3 Player::GetCameraTarget() const

@@ -11,6 +11,7 @@ class EnemyManager;
 class CameraManager;
 class CollisionManager;
 class LockOnManager;
+class UIManager;
 class GameScene :public Scene
 {
 public:
@@ -48,10 +49,13 @@ private:
 	//フレームカウンタ
 	int frameCount_;
 
+	//UIマネージャー
+	std::shared_ptr<UIManager> pUiManager_;
+
 	//ステージ
 	std::shared_ptr<Stage>pStage_;
 
-	//ステージ
+	//背景
 	std::shared_ptr<Bg>pBg_;
 
 	//プレイヤー

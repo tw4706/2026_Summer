@@ -32,17 +32,11 @@ namespace
 	//攻撃コライダーのデバッグDivNum
 	constexpr int kDebugAttackColliderDivNum = 8;
 
-	//HPUIの拡大率
-	constexpr float kHPUIScale = 0.2f;
-
 	//HPUIの見えている時間
 	constexpr float kHPUIVisibleTime = 3.0f;
 
 	//HPUIが消える時の条件の一つであるHPの基準
 	constexpr float kDrawVisibleMinHP = 0.1f;
-
-	//頭上に表示するための座標のオフセット
-	const Vector3 kDrawHeadOffset = { 0.0f,70.0f,0.0f };
 
 	//ヒットエフェクトを表示する座標のオフセット
 	const Vector3 kHitEffectOffset = { 0.0f,70.0f,0.0f };
@@ -78,8 +72,6 @@ namespace
 EnemyBase::EnemyBase() :
 	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f),
 	moveAngle_(0.0f),
-	isDrawHPVisible_(false),
-	drawHPVisibleTimer_(0.0f),
 	scale_({ 1.0f,1.0f,1.0f }),
 	searchRadius_(0.0f),
 	colliderRadius_(0.0f),
@@ -93,24 +85,12 @@ EnemyBase::EnemyBase() :
 
 EnemyBase::~EnemyBase()
 {
-	//ハンドルの削除
-	DeleteGraph(hpHandle_);
-	DeleteGraph(hpFrameHandle_);
 }
 
 void EnemyBase::Init()
 {
 	vel_ = { 0.0f, 0.0f, 0.0f };
 	isHit_ = false;
-
-	//画像のロード
-	hpHandle_ = LoadGraph(L"data/UI/EnemyHP.png");
-	assert(hpHandle_ >= 0);
-	GetGraphSize(hpHandle_, &hpUIX_, &hpUIY_);
-
-	hpFrameHandle_ = LoadGraph(L"data/UI/HPBar.png");
-	assert(hpFrameHandle_ >= 0);
-	GetGraphSize(hpFrameHandle_, &hpBarUIX_, &hpBarUIY_);
 
 	//エフェクトのロード
 	EffectManager::GetInstance().Load(L"Hit", L"data/Effect/HitEffect.efk");
@@ -130,21 +110,6 @@ void EnemyBase::Update()
 {
 	//Collidableクラスの更新
 	Collidable::Update();
-
-	//HPバーの表示・非表示
-	if (isDrawHPVisible_)
-	{
-		drawHPVisibleTimer_ -= (kDeltaTime);
-
-		//描画を表示するタイマーが0以下かつHPが0の場合
-		if (drawHPVisibleTimer_ <= 0.0f && drawHP_ - static_cast<float>(hp_) < kDrawVisibleMinHP)
-		{
-			isDrawHPVisible_ = false;
-		}
-	}
-
-	//描画用HPの更新(lerpで減らす)
-	drawHP_ = Vector3::Lerp(drawHP_, static_cast<float>(hp_), kDrawLerpRate);
 
 	//ステートが入ってない場合
 	if (!pCurrentState_)
@@ -303,46 +268,6 @@ void EnemyBase::Draw()
 		}
 	}
 #endif
-	if (isDrawHPVisible_)
-	{
-		//敵の頭上の3D座標を計算
-		Vector3 headWorldPos = GetCameraTarget() + kDrawHeadOffset;
-
-		//D座標を画面の2D座標に変換
-		VECTOR screenPos = ConvWorldPosToScreenPos(headWorldPos.ToDxlibVector());
-
-		//画面外にいる場合は描画しない判定
-		//0.0f～1,0fの範囲にいると映る
-		if (screenPos.z >= 0.0f && screenPos.z <= 1.0f)
-		{
-			//拡大率
-			float scale = kHPUIScale;
-
-			//HPの割合
-			float hpRate = drawHP_ / maxHP_;
-			int drawHPWidth = static_cast<int>(hpUIX_ * hpRate);
-
-			int scaledBarW = static_cast<int>(hpBarUIX_ * scale); //フレームの幅
-			int scaledBarH = static_cast<int>(hpBarUIY_ * scale); //フレームの高さ
-			int scaledHPW = static_cast<int>(drawHPWidth * scale); //バーの幅
-
-			//HPバーの基準点を計算
-			int drawX = static_cast<int>(screenPos.x) - (scaledBarW / 2);
-			int drawY = static_cast<int>(screenPos.y) - (scaledBarH / 2);
-
-			//HPバーフレームの描画
-			DrawRectExtendGraph(drawX, drawY,
-				drawX + scaledBarW, drawY + scaledBarH, 0, 0,
-				hpBarUIX_, hpBarUIY_,
-				hpFrameHandle_, true);
-
-			//HPバーの描画
-			DrawRectExtendGraph(drawX, drawY,
-				drawX + scaledHPW, drawY + scaledBarH, 0, 0,
-				drawHPWidth, hpUIY_,
-				hpHandle_, true);
-		}
-	}
 }
 
 void EnemyBase::OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColliderB)
@@ -390,9 +315,11 @@ void EnemyBase::OnDamage(int damage)
 {
 	hp_ -= damage;
 
-	isDrawHPVisible_ = true;
-
-	drawHPVisibleTimer_ = kHPUIVisibleTime;
+	//被弾したらHPUIを出現させる
+	if (auto pGauge = pHPGaugeUI_.lock())
+	{
+		pGauge->VisbleDamage();
+	}
 
 	Vector3 effectPos = pos_ + kHitEffectOffset;
 
@@ -460,9 +387,6 @@ void EnemyBase::ApplyData(const EnemyData& data, const EnemySpawnData& spawnData
 
 	//最大体力
 	maxHP_ = spawnData.hp_;
-
-	//描画用体力
-	drawHP_ = static_cast<float>(hp_);
 
 	//トランスフォーム
 	pos_ = spawnData.spawnPos_;

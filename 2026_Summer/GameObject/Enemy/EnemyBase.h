@@ -8,6 +8,7 @@
 #include "EnemyData.h"
 #include "EnemySpawnData.h"
 #include "PlayerActionCounter.h"
+#include "../UI/EnemyHPGaugeUI.h"
 
 class Player;
 class SphereCollider;
@@ -33,6 +34,18 @@ public:
 	/// </summary>
 	/// <param name="obj">衝突したゲームオブジェクト</param>
 	void OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColliderB)override;
+
+	/// <summary>
+	/// 体力を取得
+	/// </summary>
+	/// <returns>体力を返す</returns>
+	int GetHP()const { return hp_; }
+
+	/// <summary>
+	/// 最大体力の取得
+	/// </summary>
+	/// <returns>最大体力を返す</returns>
+	int GetMaxHP()const { return maxHP_; }
 
 	/// <summary>
 	/// ダメージ処理
@@ -144,6 +157,12 @@ public:
 	bool IsPlayerInVision(float maxDist, float visionAngle) const;
 
 	/// <summary>
+	/// HPUIのセット
+	/// </summary>
+	/// <param name="pGauge">ゲージの弱参照</param>
+	void SetHPGaugeUI(std::weak_ptr<EnemyHPGaugeUI> pGauge) { pHPGaugeUI_ = pGauge; }
+
+	/// <summary>
 	/// デバッグ用の索敵範囲の描画
 	/// </summary>
 	/// <param name="centerPos">中心座標</param>
@@ -161,29 +180,8 @@ protected:
 	//ステージのモデルハンドル(視線判定用)
 	int stageModelHandle_ = -1;
 
-	//HPバーのハンドル
-	int hpHandle_ = -1;
-
-	//HPバーフレームハンドル
-	int hpFrameHandle_ = -1;
-
-	//グラフィックハンドルのサイズ取得用
-	int hpUIX_ = -1;
-	int hpUIY_ = -1;
-	int hpBarUIX_ = -1;
-	int hpBarUIY_ = -1;
-
 	//最大体力
 	int maxHP_ = 0;
-
-	//描画用体力
-	float drawHP_ = 0.0f;
-
-	//HPを描画していいかどうか
-	bool isDrawHPVisible_ = false;
-
-	//HPバーの表示タイマー
-	float drawHPVisibleTimer_ = 0.0f;
 
 	//モデルの拡大率
 	Vector3 scale_;
@@ -224,5 +222,8 @@ protected:
 
 	//攻撃データローダーの参照
 	const EnemyAttackDataLoader* pAttackDataLoader_ = nullptr;
+
+	//自身のHPゲージUIへの弱参照
+	std::weak_ptr<EnemyHPGaugeUI> pHPGaugeUI_; 
 };
 
