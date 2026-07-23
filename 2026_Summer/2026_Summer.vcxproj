@@ -149,6 +149,7 @@
     <ClCompile Include="CSV\EnemySpawnDataLoader.cpp" />
     <ClCompile Include="CSV\EnemyAttackDataLoader.cpp" />
     <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="UI\RethicleUI.cpp" />
     <ClCompile Include="UI\EnemyHPGaugeUI.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyStateReact.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyStateJump.cpp" />
@@ -228,6 +229,7 @@
     <ClInclude Include="CSV\EnemyAttackData.h" />
     <ClInclude Include="CSV\EnemyAttackDataLoader.h" />
     <ClInclude Include="EffectManager.h" />
+    <ClInclude Include="UI\RethicleUI.h" />
     <ClInclude Include="UI\EnemyHPGaugeUI.h" />
     <ClInclude Include="GameObject\Enemy\EnemyStateReact.h" />
     <ClInclude Include="GameObject\Enemy\EnemyStateJump.h" />

@@ -40,6 +40,7 @@ void EnemyHPGaugeUI::Init()
 	auto enemy = pEnemy_.lock();
 	if (!enemy) return;
 
+	//“G‚Ì•\¦HPUI‚Ì‰Šú‰»
 	if (enemy)
 	{
 		maxHP_ = static_cast<float>(enemy->GetMaxHP());
