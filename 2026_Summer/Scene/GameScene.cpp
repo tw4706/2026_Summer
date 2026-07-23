@@ -16,8 +16,9 @@
 #include"Camera/CameraManager.h"
 #include"LockOnManager.h"
 #include"UIManager.h"
-#include"../UI/EnemyHPGaugeUI.h"
-#include"../UI/PlayerHPGaugeUI.h"
+#include"UI/EnemyHPGaugeUI.h"
+#include"UI/PlayerHPGaugeUI.h"
+#include"UI/ReticleUI.h"
 #include"Game.h"
 #include"EffekseerForDXLib.h"
 #include <memory>
@@ -110,6 +111,9 @@ void GameScene::Init()
 
 			auto playerGauge = std::make_shared<PlayerHPGaugeUI>(player);
 			pUiManager_->AddUI(playerGauge);
+
+			auto reticleUI = std::make_shared<ReticleUI>(player);
+			pUiManager_->AddUI(reticleUI);
 		}
 	}
 

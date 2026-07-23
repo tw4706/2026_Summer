@@ -144,11 +144,10 @@ private:
 	bool isInvincible_ = false;				//無敵中かどうか
 	bool isGuarding_ = false;				//ガード中かどうか
 	bool isLockOn_ = false;					//ロックオンしているかどうか
-	int reticleUIHandle_;					//レティクルUIハンドル
 
-	CameraManager* pCameraManager_=nullptr;			//カメラマネージャー
+	CameraManager* pCameraManager_=nullptr;	//カメラマネージャー
 	CameraBase* activeCamera_ = nullptr;	//アクティブなカメラ
 	std::weak_ptr<EnemyBase>pLockOnEnemy_;	//敵のポインタ
 	std::unique_ptr<Katana> pKatana_;		//刀
-	PlayerActionCounter actionCounter_; //プレイヤーの行動傾向カウンタ
+	PlayerActionCounter actionCounter_;		//プレイヤーの行動傾向カウンタ
 };

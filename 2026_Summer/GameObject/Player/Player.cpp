@@ -44,31 +44,18 @@ namespace
 
 	//注視点の高さのオフセット
 	constexpr float kCameraTargetHeightOffset = 150.0f;
-
-	//レイ(視線)の高さ
-	constexpr float kRayStartHeight = 80.0f;
-	//レティクルの倍率
-	constexpr float kReticleScale = 0.2f;
-	//画面座標のX補正値
-	constexpr float kReticleOffsetX = 100.0f;
-	//画面座標のY補正値
-	constexpr float kReticleOffsetY = 80.0f;
 }
 
 Player::Player() :
 	Character(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f),
 	moveAngle_(0.0f),
 	handFrameIndex_(-1),
-	reticleUIHandle_(-1),
 	pKatana_(nullptr)
 {
 }
 
 Player::~Player()
 {
-	//ハンドルの削除
-	DeleteGraph(reticleUIHandle_);
-
 	//モデルの削除
 	model_.Release();
 }
@@ -84,12 +71,6 @@ void Player::Init()
 
 	//HPの初期化
 	hp_ = kMaxHP;
-
-	//画像のロード
-	//レティクルUI
-	reticleUIHandle_ = LoadGraph(L"data/UI/reticle.png");
-	int reticleX, reticleY;
-	GetGraphSize(reticleUIHandle_, &reticleX, &reticleY);
 
 	//モデルのロード
 	model_.Load(L"data/MV1/Player.mv1");
@@ -178,37 +159,6 @@ void Player::Draw()
 	if (pKatana_)
 	{
 		pKatana_->Draw();
-	}
-
-	//ロックオンのレティクルUI
-	if (IsLockOn())
-	{
-		//ターゲットのロックができているなら
-		if (auto target = pLockOnEnemy_.lock())
-		{
-			//始点(始点はプレイヤーの位置から高さをプラスしている)
-			Vector3 startPos = pos_;
-			startPos.y_ += kRayStartHeight;
-			//終点(敵の半分くらいの位置)
-			Vector3 endPos = target->GetCameraTarget();
-			//DxLibのVECTOR型に変換
-			VECTOR start = startPos.ToDxlibVector();
-			VECTOR end = endPos.ToDxlibVector();
-			//レイを黄色で描画
-			unsigned int rayColor = Game::kYellowColor;
-			DrawLine3D(start, end, rayColor);
-			VECTOR reticleScreenPos = ConvWorldPosToScreenPos(end);
-
-			SetUseZBuffer3D(false);
-
-			//レティクルUIの描画
-			DrawRotaGraph3(static_cast<int>(reticleScreenPos.x - kReticleOffsetX), static_cast<int>(reticleScreenPos.y - kReticleOffsetY),
-				0, 0,
-				kReticleScale, kReticleScale,
-				0.0f, reticleUIHandle_, true);
-
-			SetUseZBuffer3D(true);
-		}
 	}
 
 #ifdef _DEBUG
