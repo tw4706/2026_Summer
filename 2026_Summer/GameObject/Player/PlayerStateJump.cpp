@@ -12,6 +12,24 @@ namespace
 {
 	//Jump
 	const std::wstring_view kPlayerJump = L"Player|Jump";
+
+	//Lerpの割合時間
+	constexpr float kLerpRate = 0.25f;
+
+	//回転の補間割合
+	constexpr float kLerpAngleRate = 0.15f;
+
+	//カメラの回転スピード
+	constexpr float kCameraRotateSpeed = 0.03f;
+
+	//向かう速度
+	constexpr float kTagetVelocity = 8.0f;
+
+	//地面と設置しているフレーム数
+	constexpr int kGroundFrame = 2;
+
+	//Run状態にせんいする閾値のスピード
+	constexpr float kRunTransitionThereshouldSpeed = 1.5f;
 }
 
 PlayerStateJump::PlayerStateJump(std::weak_ptr<Player> pPlayer) :
@@ -63,9 +81,9 @@ void PlayerStateJump::Update()
 
 		if (playerDir.LengthSq() > 0.001f)
 		{
-			Vector3 targetVel = playerDir * 8.0f;
-			currentVel.x_ = Vector3::Lerp(currentVel.x_, targetVel.x_, 0.25f);
-			currentVel.z_ = Vector3::Lerp(currentVel.z_, targetVel.z_, 0.25f);
+			Vector3 targetVel = playerDir * kTagetVelocity;
+			currentVel.x_ = Vector3::Lerp(currentVel.x_, targetVel.x_, kLerpRate);
+			currentVel.z_ = Vector3::Lerp(currentVel.z_, targetVel.z_, kLerpRate);
 
 			//向きの変更
 			float playerAngle = atan2f(playerDir.x_, -playerDir.z_);
@@ -73,7 +91,7 @@ void PlayerStateJump::Update()
 			while (diff > DX_PI_F) diff -= DX_PI_F * 2;
 			while (diff < -DX_PI_F) diff += DX_PI_F * 2;
 
-			currentAngle += diff * 0.15f;
+			currentAngle += diff * kLerpAngleRate;
 		}
 	}
 
@@ -93,7 +111,7 @@ void PlayerStateJump::Update()
 	{
 		//カメラ回転
 		Vector3 stickR = Input::GetInstance().GetStickRight();
-		pCamera->AddRotation(-stickR.x_ * 0.03f, -stickR.z_ * 0.03f);
+		pCamera->AddRotation(-stickR.x_ * kCameraRotateSpeed, -stickR.z_ * kCameraRotateSpeed);
 	}
 
 	//状態遷移判定
@@ -101,7 +119,7 @@ void PlayerStateJump::Update()
 	{
 		landingFrameCount_++;
 		//2フレーム以上連続で接地していたら着地確定
-		if (landingFrameCount_ >= 2)
+		if (landingFrameCount_ >= kGroundFrame)
 		{
 			//着地を確定した際、Yの速度をリセット
 			Vector3 vel = pPlayer->GetVelocity();
@@ -109,7 +127,7 @@ void PlayerStateJump::Update()
 			pPlayer->SetVelocity(vel);
 
 			float speedXZ = sqrtf(currentVel.x_ * currentVel.x_ + currentVel.z_ * currentVel.z_);
-			if (speedXZ > 1.5f)
+			if (speedXZ > kRunTransitionThereshouldSpeed)
 			{
 				pPlayer->ChangeState(std::make_shared<PlayerStateRun>(pPlayer_));
 			}

@@ -1,14 +1,29 @@
 #include "LockOnCamera.h"
 #include "Enemy/EnemyBase.h"
 #include "Player/Player.h"
+#include "Game.h"
 
 namespace
 {
-	//lerpにかかる時間
-	constexpr float kLerpRate = 0.1f;
+	//lerpに割合(カメラのターゲット用)
+	constexpr float kCameraTargetLerpRate = 0.1f;
 
 	//正規化した視線方向のベクトル
 	const float kMinDirLengthSq = 1.0f;
+
+	//ターゲットまでの距離
+	constexpr float kTargetDistance = 300.0f;
+
+	//ターゲット座標のオフセット
+	const Vector3 kTargetPosOffest = { 0.0f,100.0f,50.0f };
+
+	//Lerpの割合(ターゲット座標の追従用)
+	constexpr float kTargetPosLerpRate = 0.3f;
+
+	//各デバッグ描画の定数
+	constexpr int kDebugCameraPosY = 100;
+	constexpr int kDebugTargetPosY = 130;
+	constexpr int kDebugdirectionVecPosY = 160;
 }
 
 LockOnCamera::LockOnCamera()
@@ -36,7 +51,7 @@ void LockOnCamera::Update(int stageModelHandle)
 	Vector3 enemyTargetPos = enemy->GetCameraTarget();
 
 	//カメラのターゲット座標に代入
-	cameraTarget_ = Vector3::Lerp(cameraTarget_,enemyTargetPos, kLerpRate);
+	cameraTarget_ = Vector3::Lerp(cameraTarget_,enemyTargetPos, kCameraTargetLerpRate);
 
 	Vector3 playerCameraPos = player->GetCameraTarget();
 
@@ -57,17 +72,18 @@ void LockOnCamera::Update(int stageModelHandle)
 	}
 
 	//ロックオン時のカメラのターゲット座標の計算
-	Vector3 targetPos = playerCameraPos + (directionVec * 300.0f) + Vector3{ 0.0f,100.0f,50.0f };
+	Vector3 targetPos = playerCameraPos + (directionVec * kTargetDistance) + kTargetPosOffest;
 
 	//線形補間を行い、滑らかな追従を行う
-	pos_ = Vector3::Lerp(pos_, targetPos, 0.3f);
+	pos_ = Vector3::Lerp(pos_, targetPos, kTargetPosLerpRate);
 
 	//カメラとステージの消灯判定を行う
 	pos_ = CheckCollCameraToStage(stageModelHandle, playerCameraPos, pos_);
-
-	DrawFormatString(0, 100, GetColor(255, 0, 0), L"CameraPos: %.2f, %.2f, %.2f", pos_.x_, pos_.y_, pos_.z_);
-	DrawFormatString(0, 130, GetColor(255, 255, 0), L"TargetPos: %.2f, %.2f, %.2f", targetPos.x_, targetPos.y_, targetPos.z_);
-	DrawFormatString(0, 160, GetColor(0, 255, 0), L"DirVec: %.2f, %.2f, %.2f", directionVec.x_, directionVec.y_, directionVec.z_);
+#ifdef _DEBUG
+	DrawFormatString(0, kDebugCameraPosY, Game::kRedColor, L"CameraPos: %.2f, %.2f, %.2f", pos_.x_, pos_.y_, pos_.z_);
+	DrawFormatString(0, kDebugTargetPosY, Game::kYellowColor, L"TargetPos: %.2f, %.2f, %.2f", targetPos.x_, targetPos.y_, targetPos.z_);
+	DrawFormatString(0, kDebugdirectionVecPosY, Game::kGreenColor, L"DirVec: %.2f, %.2f, %.2f", directionVec.x_, directionVec.y_, directionVec.z_);
+#endif
 
 	//基底クラスの更新
 	CameraBase::Update(stageModelHandle);

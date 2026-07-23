@@ -59,20 +59,25 @@ void EnemyStateReturn::Enter()
 	fromWayPointId_ = -1;
 	toWayPointId_ = -1;
 
+	//waypoitの取得
 	const auto& wayPoints = enemy->pWayPointLoader_->GetWayPoints(enemy->areaId_);
 	if (wayPoints.empty()) return;
 
-	float nearestDistSq = (std::numeric_limits<float>::max)();
+	//floatの最大値を取得
+	float nearestDistSq = FLT_MAX;
 
-	//ルートの中から、現在地に最も近い点を探す
+	//ルートの中から、現在地に最も近いwayPointを探す
 	for (const auto& wp : wayPoints)
 	{
+		//殺族先のIdをループ
 		for (int connectID : wp.connections)
 		{
 			//接続先のWayPointを検索
 			const WayPointLoader::WayPoint* pTo = nullptr;
+			//次のwayPointを探す
 			for (const auto& wp2 : wayPoints)
 			{
+				//次のwayPointが接続先のIDの場合
 				if (wp2.id == connectID)
 				{
 					pTo = &wp2;
@@ -82,12 +87,19 @@ void EnemyStateReturn::Enter()
 			if (!pTo) continue;
 
 			Vector3 closest = ClosestPointOnSegment(wp.pos, pTo->pos, enemyPos);
+
+			//差分のベクトル
 			Vector3 diff = closest - enemyPos;
+
+			//距離
 			float distSq = diff.LengthSq();
 
+			//waypointの距離が近い場合は
 			if (distSq < nearestDistSq)
 			{
+				//一番近い距離に代入
 				nearestDistSq = distSq;
+				//次の座標を一番近い点にする
 				returnNextPos_ = closest;
 				fromWayPointId_ = wp.id;
 				toWayPointId_ = connectID;

@@ -23,17 +23,11 @@ namespace
 	//描画時のlerpのrate
 	constexpr float kDrawLerpRate = 0.1f;
 
-	//半分
-	constexpr float kHalf = 0.5f;
-
 	//反応行動を開始する範囲
 	constexpr float kSearchReactRange = 1000.0f;
 
 	//敵の見ている視野角
 	constexpr float kVisionAngle = 90.0f;
-
-	//分割数
-	constexpr int kDivNum = 10;
 
 	//攻撃コライダーのデバッグDivNum
 	constexpr int kDebugAttackColliderDivNum = 8;
@@ -44,6 +38,41 @@ namespace
 	//HPUIの見えている時間
 	constexpr float kHPUIVisibleTime = 3.0f;
 
+	//HPUIが消える時の条件の一つであるHPの基準
+	constexpr float kDrawVisibleMinHP = 0.1f;
+
+	//頭上に表示するための座標のオフセット
+	const Vector3 kDrawHeadOffset = { 0.0f,70.0f,0.0f };
+
+	//ヒットエフェクトを表示する座標のオフセット
+	const Vector3 kHitEffectOffset = { 0.0f,70.0f,0.0f };
+
+	//デバッグ描画用のY座標オフセット
+	constexpr float kDrawDebugEnemyOffsetY = 10.0f;
+
+	//wayPointの描画用の半径
+	constexpr float kDrawWayPointRadius = 15.0f;
+
+	//WayPointPosのステージ上に見えるように少し上にあげるためのオフセット
+	constexpr float kWayPointPosY = 10.0f;
+
+	//ラジアンに変換する定数
+	constexpr float kRadian = (DX_PI_F / 180.0f);
+
+	//パーセンテージのマックス
+	constexpr int kRandMax = 100;
+
+	//分割数
+	constexpr int kDivNum = 10;
+
+	//当たり判定の描画用Div
+	constexpr int kDrawColliderDiv = 8;
+
+	//wayPointの描画用のDiv
+	constexpr int kDrawWayPointDiv = 8;
+
+	//索敵範囲のデバッグ描画用のDiv
+	constexpr int kDrawDebugRangeDiv = 16;
 }
 
 EnemyBase::EnemyBase() :
@@ -108,7 +137,7 @@ void EnemyBase::Update()
 		drawHPVisibleTimer_ -= (kDeltaTime);
 
 		//描画を表示するタイマーが0以下かつHPが0の場合
-		if (drawHPVisibleTimer_ <= 0.0f && drawHP_ - static_cast<float>(hp_) < 0.1f)
+		if (drawHPVisibleTimer_ <= 0.0f && drawHP_ - static_cast<float>(hp_) < kDrawVisibleMinHP)
 		{
 			isDrawHPVisible_ = false;
 		}
@@ -149,7 +178,7 @@ void EnemyBase::Update()
 		if (pCap)
 		{
 			//高さの半分
-			float halfH = colliderHeight_ * kHalf;
+			float halfH = colliderHeight_ * Game::kHalf;
 
 			Vector3 centerPos = pos_ + Vector3{ 0.0f, colliderHeight_, 0.0f };
 			Vector3 top = centerPos + Vector3{ 0.0f, halfH, 0.0f };
@@ -162,7 +191,7 @@ void EnemyBase::Update()
 	if (pAttackCollider_)
 	{
 		Vector3 forward = { sinf(moveAngle_), 0.0f, -cosf(moveAngle_) };
-		Vector3 offset = pos_ + forward * attackColliderDistance_ + Vector3{ 0.0f, colliderHeight_ * kHalf, 0.0f };
+		Vector3 offset = pos_ + forward * attackColliderDistance_ + Vector3{ 0.0f, colliderHeight_ * Game::kHalf, 0.0f };
 		pAttackCollider_->SetPos(offset);
 	}
 }
@@ -175,7 +204,7 @@ void EnemyBase::Draw()
 
 
 	//索敵範囲のデバッグ表示
-	DrawDebugRange(pos_, kSearchReactRange, 0xffff00);
+	DrawDebugSearchRange(pos_, kSearchReactRange, 0xffff00);
 
 	//敵の視線範囲のデバッグ描画
 	float visionDist = searchRadius_;		//半径を距離として利用
@@ -183,15 +212,16 @@ void EnemyBase::Draw()
 
 	Vector3 playerPos = GetPlayerPos();
 
-	// プレイヤーが扇の視界に入っているかで色を変える
-	unsigned int searchColor = GetColor(0, 255, 0);
+	//プレイヤーが扇状の視界に入っているかで色を変える
+	//最初は緑
+	unsigned int searchColor = Game::kGreenColor;
 	if (IsPlayerInVision(visionDist, visionAngle))
 	{
-		searchColor = GetColor(255, 0, 0); //見つけたら赤色
+		searchColor = Game::kRedColor; //見つけたら赤色
 	}
 
 	//左右の線の描画
-	float halfAngleRad = (visionAngle * kHalf) * (DX_PI_F / 180.0f);
+	float halfAngleRad = (visionAngle * Game::kHalf) * kRadian;
 
 	//正面から左右に視野角の半分回転させた方向の単位ベクトル
 	Vector3 leftDir = { sinf(moveAngle_ - halfAngleRad), 0.0f, -cosf(moveAngle_ - halfAngleRad) };
@@ -211,8 +241,8 @@ void EnemyBase::Draw()
 	for (int i = 0; i < kDivNum; ++i)
 	{
 		//左右の角度の間を線形補間する
-		float angleA = (moveAngle_ - halfAngleRad) + (visionAngle * (DX_PI_F / 180.0f) / kDivNum) * i;
-		float angleB = (moveAngle_ - halfAngleRad) + (visionAngle * (DX_PI_F / 180.0f) / kDivNum) * (i + 1);
+		float angleA = (moveAngle_ - halfAngleRad) + (visionAngle * kRadian / kDivNum) * i;
+		float angleB = (moveAngle_ - halfAngleRad) + (visionAngle * kRadian / kDivNum) * (i + 1);
 
 		Vector3 dirA = { sinf(angleA), 0.0f, -cosf(angleA) };
 		Vector3 dirB = { sinf(angleB), 0.0f, -cosf(angleB) };
@@ -230,13 +260,13 @@ void EnemyBase::Draw()
 		{
 			Vector3 top = pCap->GetWorldB();
 			Vector3 bottom = pCap->GetWorldA();
-			unsigned int lineColor = isHit_ ? GetColor(255, 0, 0) : GetColor(0, 255, 255);
-			DrawCapsule3D(top.ToDxlibVector(), bottom.ToDxlibVector(), pCap->GetRadius(), 8, lineColor, GetColor(0, 0, 0), FALSE);
+			unsigned int lineColor = isHit_ ? Game::kRedColor : Game::kLightBlueColor;
+			DrawCapsule3D(top.ToDxlibVector(), bottom.ToDxlibVector(), pCap->GetRadius(), kDrawColliderDiv, lineColor, GetColor(0, 0, 0), FALSE);
 		}
 		else if (SphereCollider* pSphere = dynamic_cast<SphereCollider*>(pCol.get()))
 		{
 			//攻撃コライダーはオレンジ色で表示
-			DrawSphere3D(pSphere->GetPos().ToDxlibVector(), pSphere->GetRadius(), kDebugAttackColliderDivNum, GetColor(255, 128, 0), GetColor(0, 0, 0), FALSE);
+			DrawSphere3D(pSphere->GetPos().ToDxlibVector(), pSphere->GetRadius(), kDebugAttackColliderDivNum, Game::kOrangeColor, GetColor(0, 0, 0), FALSE);
 		}
 	}
 
@@ -244,10 +274,10 @@ void EnemyBase::Draw()
 	if (hasDebugTarget_)
 	{
 		Vector3 enemyPos = GetPos();
-		Vector3 startPos = { enemyPos.x_, enemyPos.y_ + 10.0f, enemyPos.z_ };
-		Vector3 endPos = { debugNextPos_.x_, debugNextPos_.y_ + 10.0f, debugNextPos_.z_ };
+		Vector3 startPos = { enemyPos.x_, enemyPos.y_ + kDrawDebugEnemyOffsetY, enemyPos.z_ };
+		Vector3 endPos = { debugNextPos_.x_, debugNextPos_.y_ + kDrawDebugEnemyOffsetY, debugNextPos_.z_ };
 
-		unsigned int colorLine = GetColor(255, 0, 0);
+		unsigned int colorLine = Game::kRedColor;
 		DrawLine3D(startPos.ToDxlibVector(), endPos.ToDxlibVector(), colorLine);
 	}
 	if (pWayPointLoader_)
@@ -257,32 +287,32 @@ void EnemyBase::Draw()
 
 		for (const auto& wp : wayPoints)
 		{
-			Vector3 wayPointPos = { wp.pos.x_, wp.pos.y_ + 10.0f, wp.pos.z_ };
+			Vector3 wayPointPos = { wp.pos.x_, wp.pos.y_ + kWayPointPosY, wp.pos.z_ };
 
-			//通常のWayPointは青色にする
-			unsigned int wayPointColor = GetColor(0, 0, 255);
+			//デフォルトは青色
+			unsigned int wayPointColor = Game::kBlueColor;
 
-			//もしこのWayPointが、現在敵が目指しているターゲットIDと同じなら黄色にする
+			//WayPointが敵が目指しているターゲットIDと同じ場合黄色
 			if (hasDebugTarget_ && wp.id == nextWayPointId_)
 			{
-				wayPointColor = GetColor(255, 255, 0);
+				wayPointColor = Game::kYellowColor;
 			}
 
-			//WayPointの位置に球を描画
-			DrawSphere3D(wayPointPos.ToDxlibVector(), 15.0f, 8, wayPointColor, wayPointColor, TRUE);
+			//WayPointを球で描画
+			DrawSphere3D(wayPointPos.ToDxlibVector(), kDrawWayPointRadius, kDrawWayPointDiv, wayPointColor, wayPointColor, TRUE);
 		}
 	}
 #endif
 	if (isDrawHPVisible_)
 	{
 		//敵の頭上の3D座標を計算
-		Vector3 headWorldPos = GetCameraTarget() + Vector3{ 0.0f, 70.0f, 0.0f };
+		Vector3 headWorldPos = GetCameraTarget() + kDrawHeadOffset;
 
 		//D座標を画面の2D座標に変換
 		VECTOR screenPos = ConvWorldPosToScreenPos(headWorldPos.ToDxlibVector());
 
 		//画面外にいる場合は描画しない判定
-		//変換結果の Z 値が 0.0f ～ 1.0f の間にあれば画面内に映っています
+		//0.0f～1,0fの範囲にいると映る
 		if (screenPos.z >= 0.0f && screenPos.z <= 1.0f)
 		{
 			//拡大率
@@ -340,7 +370,7 @@ void EnemyBase::OnCollision(Collidable& coll, Collider* pColliderA, Collider* pC
 
 		auto enemy = std::dynamic_pointer_cast<EnemyBase>(shared_from_this());
 
-		int rand = std::rand() % 100;
+		int rand = std::rand() % kRandMax;
 
 		//20パーセントの確率でダメージアニメーションに遷移する
 		if (rand < kRandomToDamage)
@@ -364,7 +394,7 @@ void EnemyBase::OnDamage(int damage)
 
 	drawHPVisibleTimer_ = kHPUIVisibleTime;
 
-	Vector3 effectPos = pos_ + Vector3{ 0.0f,70.0f,0.0f };
+	Vector3 effectPos = pos_ + kHitEffectOffset;
 
 	//エフェクトの再生
 	EffectManager::GetInstance().Play(L"Hit", effectPos);
@@ -392,7 +422,7 @@ void EnemyBase::CreateAttackCollider(float radius, float distance)
 	pAttackCollider_ = this->CreateCollider<SphereCollider>(radius);
 
 	Vector3 forward = { sinf(moveAngle_),0.0f,cosf(moveAngle_) };
-	Vector3 offset = pos_ + forward * attackColliderDistance_ + Vector3{ 0.0f, colliderHeight_ * 0.5f, 0.0f };
+	Vector3 offset = pos_ + forward * attackColliderDistance_ + Vector3{ 0.0f, colliderHeight_ * Game::kHalf, 0.0f };
 
 	pAttackCollider_->SetPos(offset);
 }
@@ -557,7 +587,7 @@ bool EnemyBase::IsPlayerInVision(float maxDist, float visionAngle) const
 	float dot = forward.Dot(dirToPlayer);
 
 	//視野角の半分をラジアンに変換
-	float halfFovRad = (visionAngle * 0.5f) * (DX_PI_F / 180.0f);
+	float halfFovRad = (visionAngle * Game::kHalf) * kRadian;
 
 	//視野角の半分のcosの値を求める
 	float cosHalfFov = cosf(halfFovRad);
@@ -571,9 +601,9 @@ bool EnemyBase::IsPlayerInVision(float maxDist, float visionAngle) const
 	return false;
 }
 
-void EnemyBase::DrawDebugRange(const Vector3& centerPos, float radius, unsigned int color)
+void EnemyBase::DrawDebugSearchRange(const Vector3& centerPos, float radius, unsigned int color)
 {
 	VECTOR pos = VGet(centerPos.x_, centerPos.y_, centerPos.z_);
 
-	DrawSphere3D(pos, radius, 16, color, color, false);
+	DrawSphere3D(pos, radius, kDrawDebugRangeDiv, color, color, false);
 }

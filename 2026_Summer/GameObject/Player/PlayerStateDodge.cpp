@@ -44,7 +44,7 @@ void PlayerStateDodge::Enter()
 	//現在カメラ基準の入力方向を直接取得する
 	Vector3 moveDir = GetCameraLookMoveDirection();
 
-	//入力がない、または直立状態ならプレイヤーの向いている正面方向にする
+	//入力がないならプレイヤーの向いている正面方向にする
 	if (moveDir.LengthSq() < 0.001f)
 	{
 		float angle = player->moveAngle_;

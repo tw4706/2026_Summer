@@ -143,7 +143,13 @@ public:
 	/// </summary>
 	bool IsPlayerInVision(float maxDist, float visionAngle) const;
 
-	void DrawDebugRange(const Vector3& centerPos, float radius, unsigned int color);
+	/// <summary>
+	/// デバッグ用の索敵範囲の描画
+	/// </summary>
+	/// <param name="centerPos">中心座標</param>
+	/// <param name="radius">半径</param>
+	/// <param name="color">色</param>
+	void DrawDebugSearchRange(const Vector3& centerPos, float radius, unsigned int color);
 
 protected:
 	//移動の際に向いている角度

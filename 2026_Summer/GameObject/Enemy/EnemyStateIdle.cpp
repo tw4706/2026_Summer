@@ -112,10 +112,13 @@ void EnemyStateIdle::Update()
 	{
 		bool canWalkDir = IsPathWalkable(enemy->pNaviGrid_, enemyPos, pTargetWp->pos);
 
-		//次のパスに歩行できない場合は経路を再検索してセットする
+		//次の経路に歩行できない場合
 		if (!canWalkDir)
 		{
+			//経路を再検索
 			std::vector<Vector3> path = enemy->pathFinder_.FindPath(enemyPos, pTargetWp->pos);
+
+			//経路はない場合はさっき再検索した経路をセットする
 			if (!path.empty())
 			{
 				enemy->pathFollower_.SetPath(path);
@@ -136,23 +139,32 @@ void EnemyStateIdle::Update()
 	Vector3 toWayPoint = pTargetWp->pos - enemyPos;
 	toWayPoint.y_ = 0.0f;
 
+	//wayPoint間の距離
 	float wayPointDistance = toWayPoint.Length();
 
 	//経路が無い状態かつWayPointに到達したら次の接続先へ切り替える
 	bool isPathFinished = !enemy->pathFollower_.HasPath() || enemy->pathFollower_.IsPathFinished();
 
+	//距離が到達しているかつ経路が終わっている場合
 	if (wayPointDistance < kArriveThreshold && isPathFinished)
 	{
-		int arrivedId = targetId;
-		int oldCurrentId = enemy->currentWayPointId_;
+		//次のIDを代入
+		int currentId = targetId;
 
-		enemy->currentWayPointId_ = arrivedId;
+		//現在のIDを保存
+		int prevId = enemy->currentWayPointId_;
+
+		//敵の現在のwaypointIdを代入
+		enemy->currentWayPointId_ = currentId;
 
 		//次のIDを取得
-		int nextId = pLoader_->GetNextWayPointId(wayPoints, arrivedId, oldCurrentId);
+		int nextId = pLoader_->GetNextWayPointId(wayPoints, currentId, prevId);
+
+		//次のIdに代入
 		enemy->nextWayPointId_ = nextId;
 
-		//次のWayPointへ向かうため古い経路をクリア
+		//次のWayPointへ向かうため
+		//敵が経路を持っている場合かつ敵が経路に到達していたら古い経路をクリア
 		if (enemy->pathFollower_.HasPath() && enemy->pathFollower_.IsPathFinished())
 		{
 			enemy->pathFollower_.ClearPath();

@@ -175,6 +175,7 @@ void Player::Update()
 		pCurrentState_->Enter();
 	}
 
+	//ステートパターンの更新
 	if (pCurrentState_)
 	{
 		pCurrentState_->Update();
@@ -182,8 +183,9 @@ void Player::Update()
 
 	//アニメーションの更新
 	animation_.Update(kDeltaTime);
-
-	DrawFormatString(0, 0, GetColor(255, 255, 255), L"Hand Index: %d", handFrameIndex_);
+#ifdef _DEBUG
+	DrawFormatString(0, 0, Game::kWhiteColor, L"Hand Index: %d", handFrameIndex_);
+#endif
 }
 
 void Player::Draw()
@@ -204,34 +206,39 @@ void Player::Draw()
 	}
 
 	//ロックオンのレティクルUI
-	//if (IsLockOn())
-	//{
-	//	//ターゲットのロックができているなら
-	//	if (auto target = pLockOnEnemy_.lock())
-	//	{
-	//		//始点(始点はプレイヤーの位置から高さをプラスしている)
-	//		Vector3 startPos = pos_;
-	//		startPos.y_ += kRayStartHeight;
-	//		//終点(敵の半分くらいの位置)
-	//		Vector3 endPos = target->GetCameraTarget();
-	//		//DxLibのVECTOR型に変換
-	//		VECTOR start = startPos.ToDxlibVector();
-	//		VECTOR end = endPos.ToDxlibVector();
-	//		//ロックオン中は「黄色」の太い線でレイを描画
-	//		unsigned int rayColor = GetColor(255, 255, 0);
-	//		DrawLine3D(start, end, rayColor);
-	//		VECTOR reticleScreenPos = ConvWorldPosToScreenPos(end);
-	//		SetUseZBuffer3D(false);
-	//		//レティクルUIの描画
-	//		DrawRotaGraph3(static_cast<int>(reticleScreenPos.x - kReticleOffsetX), static_cast<int>(reticleScreenPos.y - kReticleOffsetY),
-	//			0, 0,
-	//			kReticleScale, kReticleScale,
-	//			0.0f, reticleUIHandle_, true);
-	//		SetUseZBuffer3D(true);
-	//	}
-	//}
+	if (IsLockOn())
+	{
+		//ターゲットのロックができているなら
+		if (auto target = pLockOnEnemy_.lock())
+		{
+			//始点(始点はプレイヤーの位置から高さをプラスしている)
+			Vector3 startPos = pos_;
+			startPos.y_ += kRayStartHeight;
+			//終点(敵の半分くらいの位置)
+			Vector3 endPos = target->GetCameraTarget();
+			//DxLibのVECTOR型に変換
+			VECTOR start = startPos.ToDxlibVector();
+			VECTOR end = endPos.ToDxlibVector();
+			//レイを黄色で描画
+			unsigned int rayColor = Game::kYellowColor;
+			DrawLine3D(start, end, rayColor);
+			VECTOR reticleScreenPos = ConvWorldPosToScreenPos(end);
+
+			SetUseZBuffer3D(false);
+
+			//レティクルUIの描画
+			DrawRotaGraph3(static_cast<int>(reticleScreenPos.x - kReticleOffsetX), static_cast<int>(reticleScreenPos.y - kReticleOffsetY),
+				0, 0,
+				kReticleScale, kReticleScale,
+				0.0f, reticleUIHandle_, true);
+
+			SetUseZBuffer3D(true);
+		}
+	}
 
 #ifdef _DEBUG
+
+	//当たり判定の描画
 	if (!colliders_.empty())
 	{
 		CapsuleCollider* pCap = static_cast<CapsuleCollider*>(colliders_[0].get());
@@ -242,7 +249,7 @@ void Player::Draw()
 			VECTOR bottom = VGet(pCap->GetWorldA().x_, pCap->GetWorldA().y_, pCap->GetWorldA().z_);
 
 			//当たっていたら赤色通常時は水色
-			unsigned int lineColor = isHit_ ? GetColor(255, 0, 0) : GetColor(0, 255, 255);
+			unsigned int lineColor = isHit_ ? Game::kRedColor : Game::kLightBlueColor;
 
 			//描画
 			DrawCapsule3D(top, bottom, pCap->GetRadius(), 8, lineColor, GetColor(0, 0, 0), false);
