@@ -8,13 +8,13 @@ namespace
 	const std::wstring_view kPlayerAttack = L"Player|Attack";
 
 	//刀エフェクトを再生し始めるフレーム
-	constexpr float kEffectStartFrame = 10.0f;
+	constexpr float kEffectStartFrame = 17.0f;
 
 	//刀エフェクトを止めるフレーム
-	constexpr float kEffectEndFrame = 30.0f;
+	constexpr float kEffectEndFrame = 25.0f;
 
 	//当たり判定を有効にするフレーム
-	constexpr float kColliderStartFrame = 15.0f;
+	constexpr float kColliderStartFrame = 17.0f;
 
 	//当たり判定を無効にするフレーム
 	constexpr float kColliderEndFrame = 25.0f;

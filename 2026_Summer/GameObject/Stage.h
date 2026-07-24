@@ -23,7 +23,7 @@ public:
 	/// ハンドルの取得
 	/// </summary>
 	/// <returns>ハンドルを返す</returns>
-	int GetHandle()const { return stageModel_.GetHandle(); }
+	int GetHandle()const { return stageColModel_.GetHandle(); }
 
 	/// <summary>
 	/// ナビゲーショングリッドの取得
@@ -38,7 +38,8 @@ private:
 	void DrawNavGridDebug() const;
 
 private:
-	Model stageModel_;
+	Model stageColModel_;	//当たり判定用のモデル
+	Model stageModel_;		//見た目用のモデル
 	NavigationGrid navGrid_;
 };
 

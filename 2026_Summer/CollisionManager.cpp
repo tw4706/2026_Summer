@@ -397,6 +397,15 @@ bool CollisionManager::CheckCapsuleVsPolygon(Collidable& pCapsuleObj, Collidable
 					capB.y_ += diffY;
 				}
 
+				//°•ûŒü‚Ì‘¬“x‚ğ0‚É‚·‚é
+				Vector3 v = pCapsuleObj.GetVelocity();
+				float vDotN = v.Dot(normal);
+				if (vDotN < 0.0f)
+				{
+					v -= normal * vDotN;
+					pCapsuleObj.SetVelocity(v);
+				}
+
 				pCapsuleObj.SetIsGround(true);
 			}
 			//•Ç‚Ìê‡

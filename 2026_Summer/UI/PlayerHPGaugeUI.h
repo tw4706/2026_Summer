@@ -10,7 +10,6 @@ public:
 	virtual~PlayerHPGaugeUI();
 
 	virtual void Init()override;
-
 protected:	
 	virtual const wchar_t* GetHPGraphPath() const override;
 	virtual void UpdateHP() override;

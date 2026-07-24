@@ -1,4 +1,5 @@
 #include "NavigationGrid.h"
+#include "Game.h"
 #include <Dxlib.h>
 #include <cmath>
 
@@ -14,7 +15,7 @@ namespace
 	constexpr float kGroundYNormalThreshold = 0.8f;
 
 	//地面の高さの許容誤差(これを超えて高い/低い位置にヒットしたら障害物とみなす)
-	constexpr float kGroundPermissible = 120.0f;
+	constexpr float kGroundPermissible = 100.0f;
 }
 
 void NavigationGrid::CreateGrid(int stageModelHandle, float minX, float maxX, float minZ, float maxZ, float cellSize, int margin)
@@ -119,6 +120,6 @@ Vector3 NavigationGrid::GridToWorldPos(int x, int z) const
 void NavigationGrid::WorldPosToGrid(const Vector3& worldPos, int& outX, int& outZ) const
 {
 	//今一番近いノードに変換する
-	outX = static_cast<int>((worldPos.x_ - gridPos_.x_) / cellSize_ + 0.5f);
-	outZ = static_cast<int>((worldPos.z_ - gridPos_.z_) / cellSize_ + 0.5f);
+	outX = static_cast<int>((worldPos.x_ - gridPos_.x_) / cellSize_ + Game::kHalf);
+	outZ = static_cast<int>((worldPos.z_ - gridPos_.z_) / cellSize_ + Game::kHalf);
 }

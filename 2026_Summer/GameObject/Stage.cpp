@@ -18,10 +18,14 @@ namespace
 	constexpr float kStageRotateY = -DX_PI_F / 2.0f;
 
 	//ステージの初期位置
-	const Vector3 kFirstStagePos = { 0.0f, -110.0f, 0.0f };
+	const Vector3 kFirstStageColPos = { 0.0f, -100.0f, 0.0f };
+	const Vector3 kFirstStageModelPos = { 0.0f, -70.0f, 0.0f };
 
 	//地面の高さの限界
-	constexpr float kGroundY = -105.0f;
+	constexpr float kGroundY = -100.0f;
+
+	//デバッグノードのオフセット
+	constexpr float kDebugNodeOffset = -5.0f;
 
 	//デバッグ描画用のグリッドの半径
 	constexpr float kDebugGridRadius = 5.0f;
@@ -38,27 +42,31 @@ Stage::Stage(Vector3 pos, Vector3 vel, float dir) :
 Stage::~Stage()
 {
 	//モデルの削除
-	stageModel_.Release();
+	stageColModel_.Release();
 }
 
 void Stage::Init()
 {
 	//モデルのロード
-	stageModel_.Load(L"data/MV1/Stage.mv1");
+	stageColModel_.Load(L"data/MV1/StageCol.mv1");
+	stageModel_.Load(L"data/MV1/StageModel.mv1");
+
+	MV1SetRotationXYZ(stageColModel_.GetHandle(), VGet(0.0f, kStageRotateY, 0.0f));
+	MV1SetPosition(stageColModel_.GetHandle(), kFirstStageColPos.ToDxlibVector());
 
 	MV1SetRotationXYZ(stageModel_.GetHandle(), VGet(0.0f, kStageRotateY, 0.0f));
-	MV1SetPosition(stageModel_.GetHandle(), kFirstStagePos.ToDxlibVector());
+	MV1SetPosition(stageModel_.GetHandle(), kFirstStageModelPos.ToDxlibVector());
 
 	//モデルの総ポリゴン当たり判定データを構築
-	MV1SetupCollInfo(stageModel_.GetHandle(), -1);
-	MV1RefreshCollInfo(stageModel_.GetHandle(), -1);
+	MV1SetupCollInfo(stageColModel_.GetHandle(), -1);
+	MV1RefreshCollInfo(stageColModel_.GetHandle(), -1);
 
 	//コライダーの生成
-	this->CreateCollider<PolygonCollider>(stageModel_.GetHandle());
+	this->CreateCollider<PolygonCollider>(stageColModel_.GetHandle());
 
 	//ナビゲーショングリッドの生成
 	navGrid_.SetExpectedGroundY(kGroundY);
-	navGrid_.CreateGrid(stageModel_.GetHandle(), kGridMinX, kGridMaxX, kGridMinZ, kGridMaxZ, kGridCellSize, kBoundMargin);
+	navGrid_.CreateGrid(stageColModel_.GetHandle(), kGridMinX, kGridMaxX, kGridMinZ, kGridMaxZ, kGridCellSize, kBoundMargin);
 
 }
 
@@ -88,7 +96,8 @@ void Stage::DrawNavGridDebug() const
 			if (!node) continue;
 
 			//地面に埋まって見えなくなるのを防ぐため少し浮かせる
-			Vector3 pos = VGet(node->pos.x_, node->pos.y_ + 5.0f, node->pos.z_);
+			Vector3 pos = node->pos;
+			pos.y_ += kDebugNodeOffset;
 
 			//歩行可能なら緑不可能なら赤
 			unsigned int color = node->iswalked ? GetColor(0, 255, 0) : GetColor(0, 255, 255);

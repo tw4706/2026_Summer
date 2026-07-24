@@ -40,7 +40,7 @@ namespace
 	constexpr float kColliderHeight = 160.0f;
 
 	//コライダーのオフセット
-	const Vector3 kColliderOffset = { 0.0f, 115.0f, 0.0f };
+	const Vector3 kColliderOffset = { 0.0f, 120.0f, 0.0f };
 
 	//注視点の高さのオフセット
 	constexpr float kCameraTargetHeightOffset = 150.0f;

@@ -9,5 +9,8 @@ public:
 	void Enter()  override;
 	void Update() override;
 	void Exit()   override;
+
+private:
+	float invisibleTimer_ = 0.0f;//無敵時間のタイマー
 };
 

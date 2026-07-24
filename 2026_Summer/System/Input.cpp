@@ -17,10 +17,10 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 {
 	inputTable_["up"] = { {PeripheralType::keyboard,KEY_INPUT_UP},
 						{PeripheralType::pad1,PAD_INPUT_UP},
-						{PeripheralType::padXInput,XINPUT_BUTTON_DPAD_UP} };
+						{PeripheralType::padXInput,XINPUT_BUTTON_DPAD_DOWN} };
 	inputTable_["down"] = { {PeripheralType::keyboard,KEY_INPUT_DOWN},
 						{PeripheralType::pad1,PAD_INPUT_DOWN},
-						{PeripheralType::padXInput,XINPUT_BUTTON_DPAD_DOWN} };
+						{PeripheralType::padXInput,XINPUT_BUTTON_DPAD_UP} };
 	inputTable_["left"] = { {PeripheralType::keyboard,KEY_INPUT_LEFT},
 						{PeripheralType::pad1,PAD_INPUT_LEFT},
 						{PeripheralType::padXInput,XINPUT_BUTTON_DPAD_LEFT} };
@@ -43,7 +43,7 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 	inputTable_["jump"] = { {PeripheralType::keyboard,KEY_INPUT_SPACE},
 						{PeripheralType::pad1,PAD_INPUT_A},
 						{PeripheralType::padXInput,XINPUT_BUTTON_A} };
-	inputTable_["next"] = { {PeripheralType::keyboard,KEY_INPUT_SPACE},
+	inputTable_["next"] = { {PeripheralType::keyboard,KEY_INPUT_RETURN},
 						{PeripheralType::pad1,PAD_INPUT_A},
 						{PeripheralType::padXInput,XINPUT_BUTTON_A} };
 
