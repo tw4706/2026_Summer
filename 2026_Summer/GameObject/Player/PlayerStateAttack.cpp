@@ -80,7 +80,7 @@ void PlayerStateAttack::Update()
 	float currentFrame = player->GetAnimationCurrentTime();
 
 	//攻撃入力が行われたら
-	if (Input::GetInstance().IsPressed("attack"))
+	if (Input::GetInstance().IsTriggered("attack"))
 	{
 		//コンボで入力を受け付ける
 		combo.OnAttackInput(currentFrame);
@@ -150,6 +150,10 @@ void PlayerStateAttack::Update()
 	{
 		//刀の当たり判定を無効化
 		player->SetKatanaColliderEnabled(false);
+
+		//コンボのリセット
+		combo.ResetCombo();
+
 		player->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_));
 		return;
 	}

@@ -110,8 +110,8 @@ private:
 	bool isAnimEnd_;            //アニメーションが終わったかどうか
 	float totalTime_;           //アニメーションのトータルタイム
 
+	std::wstring currentAnimName_; //現在再生中のアニメーション名
 	AnimationState state_;      //アニメーションの状態
 	AnimationState prevState_;  //アニメーションの前の状態
 	std::unordered_map<AnimationState, std::wstring>animNames_;//状態ごとのアニメーション名
 };
-

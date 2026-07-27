@@ -38,7 +38,8 @@ Animation::Animation() :
 	isAnimEnd_(false),
 	totalTime_(0.0f),
 	state_(AnimationState::None),
-	prevState_(AnimationState::None)
+	prevState_(AnimationState::None),
+	currentAnimName_(L"")
 {
 
 }
@@ -216,8 +217,11 @@ void Animation::Play(int animIndex, float speed, bool isLoop)
 
 void Animation::ChangeState(AnimationState state, const std::wstring& animName)
 {
-	if (state_ == state && currentAttachAnim_ != -1) return;
-
+	//stateとアニメーション名の名前がどっちも同じ場合だったときのみ何もしない
+	if (state_ == state && currentAttachAnim_ != -1) return;	if (state_ == state && currentAttachAnim_ != -1 && currentAnimName_ == animName)
+	{
+		return;
+	}
 	prevState_ = state_;
 	state_ = state;
 
@@ -246,7 +250,7 @@ void Animation::ChangeState(AnimationState state, const std::wstring& animName)
 
 		if (state_ == AnimationState::Attack)
 		{
-			speed = kAnimationSpeed * 2.0f;
+			speed = kAnimationSpeed;
 		}
 
 		Play(animIndex, speed, loop);
