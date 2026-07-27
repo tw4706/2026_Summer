@@ -70,6 +70,8 @@ void PlayerStateIdle::Update()
 	// UŒ‚‚ª‰Ÿ‚³‚ê‚½‚çAttackó‘Ô‚Ö‘JˆÚ
 	if (Input::GetInstance().IsTriggered("attack"))
 	{
+		pPlayer->GetComboManager().ResetCombo();
+
 		pPlayer->ChangeState(std::make_shared<PlayerStateAttack>(pPlayer_));
 		return;
 	}

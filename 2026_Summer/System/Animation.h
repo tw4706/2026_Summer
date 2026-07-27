@@ -93,6 +93,12 @@ public:
 	/// </summary>
 	void SetEnemyAttackAnimationSpeed();
 
+	/// <summary>
+	/// 現在のアニメーション名の取得
+	/// </summary>
+	/// <returns>現在のアニメーション名を返す</returns>
+	const std::wstring& GetCurrentAnimName() const { return currentAnimName_; }
+
 private:
 	int modelHandle_;           //モデルハンドル
 

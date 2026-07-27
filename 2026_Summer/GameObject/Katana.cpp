@@ -22,10 +22,10 @@ namespace
 	constexpr int kAttackDamage = 10;
 
 	//コライダーの半径
-	constexpr float kColliderRadius = 10.0f;
+	constexpr float kColliderRadius = 25.0f;
 
 	//コライダーの高さ
-	constexpr float kColliderHeight = 60.0f;
+	constexpr float kColliderHeight = 80.0f;
 }
 
 Katana::Katana(Vector3 pos, Vector3 vel, float dir) :
@@ -171,11 +171,7 @@ void Katana::OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColl
 void Katana::SetColliderEnabled(bool isEnabled)
 {
 	this->SetEnabled(isEnabled);
-
-	if (isEnabled)
-	{
-		isAttacked_ = false;
-	}
+	isAttacked_ = false;
 }
 
 void Katana::PlayEffect()

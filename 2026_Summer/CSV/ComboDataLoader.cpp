@@ -63,7 +63,7 @@ const ComboData* ComboDataLoader::GetComboData(const std::string& key) const
 
 int ComboDataLoader::GetComboCount() const
 {
-	return 0;
+	return static_cast<int>(comboDataMap_.size());
 }
 
 std::wstring ComboDataLoader::ToWString(const std::string& str)

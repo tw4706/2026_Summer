@@ -218,12 +218,13 @@ void Animation::Play(int animIndex, float speed, bool isLoop)
 void Animation::ChangeState(AnimationState state, const std::wstring& animName)
 {
 	//stateとアニメーション名の名前がどっちも同じ場合だったときのみ何もしない
-	if (state_ == state && currentAttachAnim_ != -1) return;	if (state_ == state && currentAttachAnim_ != -1 && currentAnimName_ == animName)
+	if (state_ == state && currentAttachAnim_ != -1 && currentAnimName_ == animName)
 	{
 		return;
 	}
 	prevState_ = state_;
 	state_ = state;
+	currentAnimName_ = animName;
 
 	//animNameで受け取ったアニメーション名を使用する
 	int animIndex = MV1GetAnimIndex(modelHandle_, animName.c_str());
@@ -250,7 +251,7 @@ void Animation::ChangeState(AnimationState state, const std::wstring& animName)
 
 		if (state_ == AnimationState::Attack)
 		{
-			speed = kAnimationSpeed;
+			speed = kAnimationSpeed * 1.5f;
 		}
 
 		Play(animIndex, speed, loop);

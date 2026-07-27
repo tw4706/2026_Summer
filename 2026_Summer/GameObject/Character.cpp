@@ -32,13 +32,9 @@ void Character::ChangeState(std::shared_ptr<CharacterStateBase> pNextState)
 
 void Character::ChangeAnimation(AnimationState state,const std::wstring&animName)
 {
-	if (animation_.GetState() != state)
+	if (animation_.GetState() != state || animation_.GetCurrentAnimName() != animName)
 	{
-		animation_.ChangeState(state,animName);
-	}
-	else if(state==AnimationState::Attack)
-	{
-		animation_.ResetAnimation();
+		animation_.ChangeState(state, animName);
 	}
 }
 
