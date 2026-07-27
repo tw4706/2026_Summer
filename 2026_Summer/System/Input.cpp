@@ -5,6 +5,19 @@ namespace
 {
 	//はじきの閾値
 	constexpr float kFlickThreshold = 0.6f;
+
+	//左右スティックのlerpの割合
+	constexpr float kStickLeftLerpRate = 0.2f;
+	constexpr float kStickRightLerpRate = 0.15f;
+
+	//左スティックの閾値
+	constexpr float kStickLeftThereshould = 0.09f;
+
+	//左スティックのデッドゾーン
+	constexpr float kSthickLeftDeadZone = 0.04f;
+
+	//右スティックのデッドゾーン
+	constexpr float kSthickRightDeadZone = 0.04f;
 }
 
 Input& Input::GetInstance()
@@ -140,12 +153,12 @@ void Input::UpdateAnalogStick()
 	}
 
 	//左スティックのデッドゾーン
-	if (stickLeft.LengthSq() < 0.04f)
+	if (stickLeft.LengthSq() < kSthickLeftDeadZone)
 	{
 		stickLeft = { 0,0,0 };
 	}
 	//右スティックのデッドゾーン
-	if (targetRight.LengthSq() < 0.04f)
+	if (targetRight.LengthSq() < kSthickRightDeadZone)
 	{
 		targetRight = { 0,0,0 };
 	}
@@ -157,12 +170,12 @@ void Input::UpdateAnalogStick()
 	}
 
 	//線形補間(Lerp)
-	stickLeft_.x_ = Vector3::Lerp(stickLeft_.x_, stickLeft.x_, 0.2f);
-	stickLeft_.z_ = Vector3::Lerp(stickLeft_.z_, stickLeft.z_, 0.2f);
+	stickLeft_.x_ = Vector3::Lerp(stickLeft_.x_, stickLeft.x_, kStickLeftLerpRate);
+	stickLeft_.z_ = Vector3::Lerp(stickLeft_.z_, stickLeft.z_, kStickLeftLerpRate);
 
 	//線形補間(Lerp)
-	stickRight_.x_ = Vector3::Lerp(stickRight_.x_, targetRight.x_, 0.15f);
-	stickRight_.z_ = Vector3::Lerp(stickRight_.z_, targetRight.z_, 0.15f);
+	stickRight_.x_ = Vector3::Lerp(stickRight_.x_, targetRight.x_, kStickRightLerpRate);
+	stickRight_.z_ = Vector3::Lerp(stickRight_.z_, targetRight.z_, kStickRightLerpRate);
 
 	float currentX = stickRight_.x_;
 
@@ -189,7 +202,7 @@ bool Input::HasMoveInput() const
 
 	//左アナログスティックのチェック
 	//スティック推している長さが基準以上なら入力があるとしている
-	if (stickLeft_.LengthSq() > 0.09f)
+	if (stickLeft_.LengthSq() > kStickLeftThereshould)
 	{
 		return true;
 	}
