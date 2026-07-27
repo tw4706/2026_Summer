@@ -119,6 +119,11 @@ public:
 	void SetLockOnEnemy(std::weak_ptr<EnemyBase> enemy) { pLockOnEnemy_ = enemy; }
 
 	/// <summary>
+	/// ロックオンしている敵の方向に向く
+	/// </summary>
+	void LooktoLockOnEnemy();
+
+	/// <summary>
 	/// プレイヤーの行動カウンタの取得
 	/// </summary>
 	const PlayerActionCounter& GetActionCounter() const { return actionCounter_; }

@@ -32,6 +32,9 @@ void PlayerStateAttack::Enter()
 	auto player = pPlayer_.lock();
 	if (!player) return;
 
+	//ƒƒbƒNƒIƒ“’†‚Íí‚É“G‚Ì‚Ù‚¤‚ðŒü‚­
+	player->LooktoLockOnEnemy();
+
 	ComboManager& combo = player->GetComboManager();
 	const ComboData* data = combo.GetCurrentComboData();
 

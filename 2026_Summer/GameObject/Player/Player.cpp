@@ -13,6 +13,7 @@
 #include "Collider/SphereCollider.h"
 #include<Dxlib.h>
 #include<memory>
+#include<cmath>
 #include<cassert>
 
 namespace
@@ -260,6 +261,24 @@ void Player::SetKatanaColliderEnabled(bool isEnabled)
 	if (pKatana_)
 	{
 		pKatana_->SetColliderEnabled(isEnabled);
+	}
+}
+
+void Player::LooktoLockOnEnemy()
+{
+	if (!IsLockOn())return;
+
+	if (auto enemy = GetLockOnEnemy().lock())
+	{
+		Vector3 diff = enemy->GetPos() - pos_;
+		diff.y_ = 0.0f;//…•½•ûŒü‚¾‚¯•ÛŠÇ‚·‚é‚©‚çY‚Í0
+
+		//0œZ–h~‚Ì‚½‚ß
+		if (diff.LengthSq() > 0.0001f)
+		{
+			//ƒvƒŒƒCƒ„[‚ÌŒü‚«‚ğ’è‹`
+			SetMoveAngle(std::atan2f(diff.x_, -diff.z_));
+		}
 	}
 }
 
