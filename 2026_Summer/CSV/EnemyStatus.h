@@ -19,7 +19,6 @@ public:
 	const EnemyData* GetEnemyData(const std::string& type) const;
 
 private:
-
 	/// <summary>
 	/// stringŒ^‚Ì•¶š—ñ‚ğwstringŒ^‚É•ÏŠ·‚·‚éŠÖ”
 	/// </summary>

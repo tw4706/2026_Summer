@@ -88,6 +88,9 @@ void Player::Init()
 	pKatana_ = std::make_unique<Katana>(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f);
 	pKatana_->SetOwnerCharacter(this);
 	pKatana_->Init();
+
+	//コンボデータの読み込み
+	comboManager_.Init(L"data/CSV/ComboData.csv");
 }
 
 void Player::Update()

@@ -146,6 +146,8 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AStarPathFinder.cpp" />
     <ClCompile Include="AttackSelect.cpp" />
+    <ClCompile Include="ComboManager.cpp" />
+    <ClCompile Include="CSV\ComboDataLoader.cpp" />
     <ClCompile Include="CSV\EnemySpawnDataLoader.cpp" />
     <ClCompile Include="CSV\EnemyAttackDataLoader.cpp" />
     <ClCompile Include="EffectManager.cpp" />
@@ -223,6 +225,9 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="AStarPathFinder.h" />
     <ClInclude Include="AttackSelect.h" />
+    <ClInclude Include="ComboManager.h" />
+    <ClInclude Include="CSV\ComboData.h" />
+    <ClInclude Include="CSV\ComboDataLoader.h" />
     <ClInclude Include="CSV\EnemySpawnData.h" />
     <ClInclude Include="CSV\EnemySpawnDataLoader.h" />
     <ClInclude Include="CSV\EnemyAttackType.h" />

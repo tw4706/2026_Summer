@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "Animation.h"
 #include "Camera/CameraManager.h"
+#include "ComboManager.h"
 #include "../../PlayerActionCounter.h"
 
 class Input;
@@ -123,6 +124,12 @@ public:
 	const PlayerActionCounter& GetActionCounter() const { return actionCounter_; }
 
 	/// <summary>
+	/// コンボマネージャーの取得
+	/// </summary>
+	/// <returns></returns>
+	ComboManager& GetComboManager() { return comboManager_; }
+
+	/// <summary>
 	/// 刀エフェクトの再生
 	/// </summary>
 	void PlayKatanaEffect();
@@ -145,6 +152,7 @@ private:
 	bool isGuarding_ = false;				//ガード中かどうか
 	bool isLockOn_ = false;					//ロックオンしているかどうか
 
+	ComboManager comboManager_;				//コンボマネージャー
 	CameraManager* pCameraManager_=nullptr;	//カメラマネージャー
 	CameraBase* activeCamera_ = nullptr;	//アクティブなカメラ
 	std::weak_ptr<EnemyBase>pLockOnEnemy_;	//敵のポインタ

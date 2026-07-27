@@ -1,6 +1,8 @@
 #include "PlayerStateAttack.h"
 #include "PlayerStateIdle.h"
+#include "ComboManager.h"
 #include "Player.h"
+#include "Input.h"
 
 namespace
 {
@@ -30,8 +32,19 @@ void PlayerStateAttack::Enter()
 	auto player = pPlayer_.lock();
 	if (!player) return;
 
+	ComboManager& combo = player->GetComboManager();
+	const ComboData* data = combo.GetCurrentComboData();
+
+	if (!data)
+	{
+		//コンボのリセット
+		combo.ResetCombo();
+		player->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_));
+		return;
+	}
+
 	//攻撃アニメーションに遷移
-	player->ChangeAnimation(AnimationState::Attack, kPlayerAttack.data());
+	player->ChangeAnimation(AnimationState::Attack, data->animName.c_str());
 
 	//速度を0にする
 	player->SetVelocity(Vector3{ 0.0f, 0.0f, 0.0f });
@@ -41,6 +54,10 @@ void PlayerStateAttack::Enter()
 
 	//当たり判定は指定したフレームから有効にするため最初は無効化
 	player->SetKatanaColliderEnabled(false);
+
+	//コンボのフラグをクリア
+	combo.ClearNextComboRequest();
+
 	isEffectPlaying_ = false;
 	isColliderEnabled_ = false;
 }
@@ -50,11 +67,28 @@ void PlayerStateAttack::Update()
 	auto player = pPlayer_.lock();
 	if (!player) return;
 
+	ComboManager& combo = player->GetComboManager();
+	const ComboData* data = combo.GetCurrentComboData();
+	if (!data)
+	{
+		combo.ResetCombo();
+		player->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_));
+		return;
+	}
+
 	//現在のアニメーションフレームを取得
 	float currentFrame = player->GetAnimationCurrentTime();
 
+	//攻撃入力が行われたら
+	if (Input::GetInstance().IsPressed("attack"))
+	{
+		//コンボで入力を受け付ける
+		combo.OnAttackInput(currentFrame);
+	}
+
 	//指定フレームでエフェクトの切り替え
-	bool isEffectEnabled = (currentFrame >= kEffectStartFrame && currentFrame <= kEffectEndFrame);
+	bool isEffectEnabled = (currentFrame >= static_cast<float>(data->effectStartFrame) &&
+		currentFrame <= static_cast<float>(data->effectEndFrame));
 	if (isEffectEnabled && !isEffectPlaying_)
 	{
 		player->PlayKatanaEffect();
@@ -67,7 +101,8 @@ void PlayerStateAttack::Update()
 	}
 
 	//コライダーが有効なフレームかつ現在有効でない場合
-	bool isColliderEnableFrame = (currentFrame >= kColliderStartFrame && currentFrame <= kColliderEndFrame);
+	bool isColliderEnableFrame = (currentFrame >= static_cast<float>(data->colliderStartFrame) &&
+		currentFrame <= static_cast<float>(data->colliderEndFrame));
 
 	// コライダーが出せるときは
 	if (isColliderEnableFrame && !isColliderEnabled_)
@@ -89,6 +124,27 @@ void PlayerStateAttack::Update()
 
 	player->AddPosition();
 
+	if (player->GetIsGround())
+	{
+		Vector3 vel = player->GetVelocity();
+		vel.y_ = 0.0f;
+		player->SetVelocity(vel);
+	}
+
+	if (combo.CanTransToNextCombo(currentFrame) &&
+		combo.IsNextComboRequested() &&!combo.IsMaxCombo())
+	{
+		//次段へ進む前に現在の演出を止めておく
+		player->SetKatanaColliderEnabled(false);
+		player->StopKatanaEffect();
+
+		combo.AdvancedCombo();
+
+		//Enterをもう一度通す形で次段の攻撃状態へ遷移
+		player->ChangeState(std::make_shared<PlayerStateAttack>(pPlayer_));
+		return;
+	}
+
 	//アニメーションが終了したらIdle状態へ戻る
 	if (player->IsAnimationEnd())
 	{
@@ -97,12 +153,7 @@ void PlayerStateAttack::Update()
 		player->ChangeState(std::make_shared<PlayerStateIdle>(pPlayer_));
 		return;
 	}
-	if (player->GetIsGround())
-	{
-		Vector3 vel = player->GetVelocity();
-		vel.y_ = 0.0f;
-		player->SetVelocity(vel);
-	}
+
 }
 
 void PlayerStateAttack::Exit()
