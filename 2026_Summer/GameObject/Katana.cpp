@@ -25,7 +25,7 @@ namespace
 	constexpr float kColliderRadius = 25.0f;
 
 	//コライダーの高さ
-	constexpr float kColliderHeight = 80.0f;
+	constexpr float kColliderHeight = 120.0f;
 }
 
 Katana::Katana(Vector3 pos, Vector3 vel, float dir) :

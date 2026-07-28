@@ -12,6 +12,12 @@ struct AttackData
 	//予備動作から攻撃に移行するアニメーションのフレーム
 	float attackTransFrame_ = 0.0f;
 
+	//攻撃コライダーの有効となる開始フレーム
+	float attackColliderStartFrame_ = 0.0f;
+
+	//攻撃コライダーの無効となる終了フレーム
+	float attackColliderEndFrame_ = 0.0f;
+
 	//攻撃コライダーの半径
 	float colliderRadius_ = 0.0f;
 

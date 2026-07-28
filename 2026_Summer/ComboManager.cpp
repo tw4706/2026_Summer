@@ -38,7 +38,7 @@ void ComboManager::OnAttackInput(float currentFrame)
 	//入力の受付が可能になったら
 	if (CanAcceptInput(currentFrame))
 	{
-		//リクエストフラグをtrueにする
+		//リクエストをtrueにする
 		isNextComboRequested_ = true;
 	}
 }
@@ -68,6 +68,8 @@ void ComboManager::AdvancedCombo()
 		//カウントする
 		comboCount_++;
 	}
+
+	//リクエストをfalse
 	isNextComboRequested_ = false;
 }
 

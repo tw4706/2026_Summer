@@ -9,5 +9,8 @@ public:
 	virtual void Enter() override;
 	virtual void Update() override;
 	virtual void Exit() override;
+
+private:
+	bool isAttackColliderActive_ = false;//攻撃コライダーがアクティブかどうか
 };
 

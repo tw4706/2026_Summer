@@ -20,7 +20,7 @@ bool EnemyAttackDataLoader::Load(const std::wstring& filePath)
 
 		auto cols = SplitCsvLine(line);
 		//列が足りない行はスキップ
-		if (cols.size() < 7)continue;
+		if (cols.size() < 9)continue;
 
 		AttackData data;
 		int i = 0;
@@ -33,6 +33,12 @@ bool EnemyAttackDataLoader::Load(const std::wstring& filePath)
 
 		//予備動作から攻撃に移行するフレーム
 		data.attackTransFrame_ = std::stof(cols[i++]);
+
+		//攻撃コライダーの有効となる開始フレーム
+		data.attackColliderStartFrame_ = std::stof(cols[i++]);
+
+		//攻撃コライダーの無効となる終了フレーム
+		data.attackColliderEndFrame_ = std::stof(cols[i++]);
 
 		//コライダーの半径
 		data.colliderRadius_ = std::stof(cols[i++]);
