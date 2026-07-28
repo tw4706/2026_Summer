@@ -29,14 +29,14 @@ void EnemyAttackSubStateAttack::Update()
 	//Attackステートに入ってからの経過フレームを取得
 	float currentFrame = enemy->GetCurrentAnimTime();
 
-	//有効開始フレームに達したらコライダー生成
+	//有効開始フレームに達したら攻撃コライダーを生成
 	if (!isAttackColliderActive_ && currentFrame >= attackData_.attackColliderStartFrame_)
 	{
 		enemy->CreateAttackCollider(attackData_.colliderRadius_, attackData_.colliderHeight_);
 		isAttackColliderActive_ = true;
 	}
 
-	//有効終了フレームに達したらコライダー削除
+	//有効終了フレームに達したら攻撃コライダーを削除
 	if (isAttackColliderActive_ && currentFrame >= attackData_.attackColliderEndFrame_)
 	{
 		enemy->RemoveAttackCollider();
