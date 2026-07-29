@@ -9,6 +9,7 @@
 #include"SceneManager.h"
 #include"ResultScene.h"
 #include"Enemy/BigMan.h"
+#include"Enemy/Boss.h"
 #include"Player/Player.h"
 #include"CollisionManager.h"
 #include"Camera/PlayerCamera.h"
@@ -32,13 +33,19 @@ namespace
 
 	//最大敵エリアのスポーン数
 	constexpr int kMaxSpawnArea= 3;
+
+	//ボス用のエリアID
+	constexpr int kBossAreaId = 3;
 }
 
 GameScene::GameScene(SceneManager& sceneManager) :
 	Scene(sceneManager),
 	update_(&GameScene::FadeInUpdate),
 	draw_(&GameScene::FadeDraw),
-	frameCount_(kFadeInterval)
+	frameCount_(kFadeInterval),
+	bossTriggerPosZ_( -10400.0f),
+	bossTriggerRadius_(1500.0f),
+	isBossSpawned_(false)
 {
 	pBg_ = std::make_shared<Bg>();
 	pPlayer_ = std::make_shared<Player>();
@@ -196,6 +203,9 @@ void GameScene::NormalUpdate()
 		return;
 	}
 
+	//ボストリガー判定
+	CheckBossTrigger();
+
 	//ロックオンボタンを押したらロックオンを開始する
 	if (Input::GetInstance().IsTriggered("lockOn"))
 	{
@@ -335,4 +345,33 @@ void GameScene::RegisterGameObject(std::shared_ptr<GameObject> obj)
 {
 	//予約リストへの追加
 	reserveObjList_.push_back(obj);
+}
+
+void GameScene::CheckBossTrigger()
+{
+	//既に出現しているなら何もしない
+	if (isBossSpawned_)return;
+
+	if (pPlayer_->GetPos().z_ <= bossTriggerPosZ_)
+	{
+		isBossSpawned_ = true;
+		SpawnBoss();
+	}
+}
+
+void GameScene::SpawnBoss()
+{
+	//ボス専用エリアIDのみ生成
+	auto enemies = pEnemyManager_->SpawnEnemyArea(kBossAreaId);
+
+	for (auto& enemy : enemies)
+	{
+		enemy->SetPlayer(pPlayer_);
+		enemy->SetNavigationGrid(pStage_->GetNaviGrid());
+		enemy->SetStageModelHandle(pStage_->GetHandle());
+
+		auto enemyGauge = std::make_shared<EnemyHPGaugeUI>(enemy);
+		pUiManager_->AddUI(enemyGauge);
+		enemy->SetHPGaugeUI(enemyGauge);
+	}
 }

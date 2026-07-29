@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+#include "Math/Vector3.h"
 #include<memory>
 #include <vector>
 
@@ -40,14 +41,23 @@ public:
 	void RegisterGameObject(std::shared_ptr<GameObject>obj);
 
 private:
+	//ボストリガーの判定
+	void CheckBossTrigger();
 
-	/// <summary>
-	/// グリッド線の描画
-	/// </summary>
-	void DrawGrid();
+	//ボスの生成
+	void SpawnBoss();
 private:
 	//フレームカウンタ
 	int frameCount_;
+
+	//ボス出現をトリガーするZ座標
+	float bossTriggerPosZ_;
+
+	//トリガー判定半径
+	float bossTriggerRadius_;
+
+	//ボスが出現済みかどうか
+	bool isBossSpawned_;
 
 	//UIマネージャー
 	std::shared_ptr<UIManager> pUiManager_;

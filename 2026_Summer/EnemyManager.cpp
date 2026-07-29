@@ -2,6 +2,7 @@
 #include "Enemy/EnemyBase.h"
 #include "Enemy/Oni.h"
 #include "Enemy/BigMan.h"
+#include "Enemy/Boss.h"
 #include <algorithm>
 
 EnemyManager::EnemyManager()
@@ -124,6 +125,10 @@ std::shared_ptr<EnemyBase> EnemyManager::CreateInstance(const std::string& type)
 	if (type == "BigMan")
 	{
 		return std::make_shared<BigMan>();
+	}
+	if (type == "Boss")
+	{
+		return std::make_shared<Boss>();
 	}
 	return nullptr;
 }
