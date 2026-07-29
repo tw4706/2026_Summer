@@ -1,4 +1,4 @@
 AnimName,EffectStartFrame,EffectEndFrame,ColliderStartFrame,ColliderEndFrame,inputAcceptStartFrame,inputAcceptEndFrame,cobmoTransitionFrame
-Player|Combo1,7,15,4,22,8,22,26
-Player|Combo2,5,25,1,25,13,25,27
+Player|Combo1,7,15,4,22,8,32,26
+Player|Combo2,5,25,15,25,13,30,27
 Player|Combo3,20,70,20,70,9999,9999,9999
