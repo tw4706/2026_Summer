@@ -1,5 +1,5 @@
 #include "Boss.h"
-#include "EnemyStateIdle.h"
+#include "BossStateIdle.h"
 #include<memory>
 
 namespace
@@ -29,7 +29,7 @@ void Boss::Update()
 	{
 		//ボスとして弱参照を作成
 		auto boss = std::dynamic_pointer_cast<Boss>(shared_from_this());
-		ChangeState(std::make_shared<EnemyStateIdle>(boss, searchRadius_));
+		ChangeState(std::make_shared<BossStateIdle>(boss, searchRadius_));
 	}
 
 	//敵の基底クラスの更新

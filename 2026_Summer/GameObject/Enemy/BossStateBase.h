@@ -12,5 +12,7 @@ public:
     virtual void Enter() = 0;
     virtual void Update() = 0;
     virtual void Exit() = 0;
+protected:
+    std::weak_ptr<Boss> pBoss_;
 };
 
