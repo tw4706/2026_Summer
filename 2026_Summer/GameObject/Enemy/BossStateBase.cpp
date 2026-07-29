@@ -1,6 +1,6 @@
 #include "BossStateBase.h"
 
-BossStateBase::BossStateBase(std::weak_ptr<EnemyBase>pEnemy, float searchRadius):
-	EnemyStateBase(pEnemy,searchRadius)
+BossStateBase::BossStateBase(std::weak_ptr<Boss>pBoss, float searchRadius):
+	EnemyStateBase(pEnemy_,searchRadius)
 {
 }

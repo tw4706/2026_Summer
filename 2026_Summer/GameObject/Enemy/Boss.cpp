@@ -18,6 +18,7 @@ Boss::~Boss()
 
 void Boss::Init()
 {
+	//“G‚ÌŠî’êƒNƒ‰ƒX‚Ì‰Šú‰»
 	EnemyBase::Init();
 }
 
