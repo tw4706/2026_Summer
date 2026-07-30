@@ -45,11 +45,11 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 						{PeripheralType::pad1,PAD_INPUT_Y},
 						{PeripheralType::padXInput,XINPUT_BUTTON_RIGHT_THUMB} };
 	inputTable_["attack"] = { {PeripheralType::keyboard,KEY_INPUT_Z},
-						{PeripheralType::pad1,PAD_INPUT_6},
-						{PeripheralType::padXInput,XINPUT_BUTTON_RIGHT_SHOULDER} };
-	inputTable_["guard"] = { {PeripheralType::keyboard,KEY_INPUT_G},
 						{PeripheralType::pad1,PAD_INPUT_4},
-						{PeripheralType::padXInput,XINPUT_BUTTON_LEFT_SHOULDER} };
+						{PeripheralType::padXInput,XINPUT_BUTTON_Y} };
+	inputTable_["guard"] = { {PeripheralType::keyboard,KEY_INPUT_G},
+						//{PeripheralType::pad1,PAD_INPUT_6},
+						{PeripheralType::padXInput,XINPUT_BUTTON_RIGHT_SHOULDER} };
 	inputTable_["dodge"] = { {PeripheralType::keyboard,KEY_INPUT_D},
 						{PeripheralType::pad1,PAD_INPUT_7},
 						{PeripheralType::padXInput,XINPUT_BUTTON_X} };

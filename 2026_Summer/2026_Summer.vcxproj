@@ -146,6 +146,7 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AStarPathFinder.cpp" />
     <ClCompile Include="AttackSelect.cpp" />
+    <ClCompile Include="EnemyNavigation.cpp" />
     <ClCompile Include="GameObject\Enemy\BossStateAttack.cpp" />
     <ClCompile Include="GameObject\Enemy\BossStateDamage.cpp" />
     <ClCompile Include="GameObject\Enemy\BossStateDeath.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="AStarPathFinder.h" />
     <ClInclude Include="AttackSelect.h" />
+    <ClInclude Include="EnemyNavigation.h" />
     <ClInclude Include="GameObject\Enemy\BossStateAttack.h" />
     <ClInclude Include="GameObject\Enemy\BossStateDamage.h" />
     <ClInclude Include="GameObject\Enemy\BossStateDeath.h" />

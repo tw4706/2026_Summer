@@ -76,10 +76,18 @@ std::vector<std::shared_ptr<EnemyBase>> EnemyManager::SpawnEnemyArea(int areaId)
 			continue;
 		}
 
-		//パラメータ + 配置データの両方を適用
+		//経路探索をする敵だけナビゲーショングリッドのコンポーネントを生成
+		if (pSpawn->type_ != "Boss")
+		{
+			enemy->CreateNavigation();
+		}
+
+		//パラメータと配置データの両方を適用
 		enemy->ApplyData(*pData, *pSpawn, &wayPointLoader_);
+
 		//攻撃データの適用
 		enemy->SetAttackDataLoader(&attackDataLoader_);
+
 		//敵の初期化
 		enemy->Init();
 

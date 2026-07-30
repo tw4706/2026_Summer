@@ -9,5 +9,7 @@ public:
 	void Enter()override;
 	void Update()override;
 	void Exit()override;
+private:
+	float attackTime_=0.0f;
 };
 

@@ -76,7 +76,6 @@ EnemyBase::EnemyBase() :
 	searchRadius_(0.0f),
 	colliderRadius_(0.0f),
 	colliderHeight_(0.0f),
-	pathFinder_(),
 	pAttackCollider_(nullptr),
 	attackColliderDistance_(0.0f)
 
@@ -236,35 +235,41 @@ void EnemyBase::Draw()
 	}
 
 	//経路探索のデバッグ表示
-	if (hasDebugTarget_)
+	//ナビゲーショングリッドが存在するなら
+	if (pNavigation_)
 	{
-		Vector3 enemyPos = GetPos();
-		Vector3 startPos = { enemyPos.x_, enemyPos.y_ + kDrawDebugEnemyOffsetY, enemyPos.z_ };
-		Vector3 endPos = { debugNextPos_.x_, debugNextPos_.y_ + kDrawDebugEnemyOffsetY, debugNextPos_.z_ };
-
-		unsigned int colorLine = Game::kRedColor;
-		DrawLine3D(startPos.ToDxlibVector(), endPos.ToDxlibVector(), colorLine);
-	}
-	if (pWayPointLoader_)
-	{
-		//敵と同じエリアIDのWayPointを取得
-		const auto& wayPoints = pWayPointLoader_->GetWayPoints(areaId_);
-
-		for (const auto& wp : wayPoints)
+		if (pNavigation_->HasDebugTarget())
 		{
-			Vector3 wayPointPos = { wp.pos.x_, wp.pos.y_ + kWayPointPosY, wp.pos.z_ };
+			Vector3 enemyPos = GetPos();
+			Vector3 startPos = { enemyPos.x_, enemyPos.y_ + kDrawDebugEnemyOffsetY, enemyPos.z_ };
+			const Vector3& debugNextPos = pNavigation_->GetDebugNextPos();
+			Vector3 endPos = { debugNextPos.x_, debugNextPos.y_ + kDrawDebugEnemyOffsetY, debugNextPos.z_ };
 
-			//デフォルトは青色
-			unsigned int wayPointColor = Game::kBlueColor;
+			unsigned int colorLine = Game::kRedColor;
+			DrawLine3D(startPos.ToDxlibVector(), endPos.ToDxlibVector(), colorLine);
+		}
 
-			//WayPointが敵が目指しているターゲットIDと同じ場合黄色
-			if (hasDebugTarget_ && wp.id == nextWayPointId_)
+		if (const WayPointLoader* pWayPointLoader = pNavigation_->GetWayPointLoader())
+		{
+			//敵と同じエリアIDのWayPointを取得
+			const auto& wayPoints = pWayPointLoader->GetWayPoints(pNavigation_->GetAreaId());
+
+			for (const auto& wp : wayPoints)
 			{
-				wayPointColor = Game::kYellowColor;
-			}
+				Vector3 wayPointPos = { wp.pos.x_, wp.pos.y_ + kWayPointPosY, wp.pos.z_ };
 
-			//WayPointを球で描画
-			DrawSphere3D(wayPointPos.ToDxlibVector(), kDrawWayPointRadius, kDrawWayPointDiv, wayPointColor, wayPointColor, TRUE);
+				//デフォルトは青色
+				unsigned int wayPointColor = Game::kBlueColor;
+
+				//WayPointが敵が目指しているターゲットIDと同じ場合黄色
+				if (pNavigation_->HasDebugTarget() && wp.id == pNavigation_->GetNextWayPointId())
+				{
+					wayPointColor = Game::kYellowColor;
+				}
+
+				//WayPointを球で描画
+				DrawSphere3D(wayPointPos.ToDxlibVector(), kDrawWayPointRadius, kDrawWayPointDiv, wayPointColor, wayPointColor, TRUE);
+			}
 		}
 	}
 #endif
@@ -376,11 +381,14 @@ void EnemyBase::RemoveAttackCollider()
 
 void EnemyBase::ApplyData(const EnemyData& data, const EnemySpawnData& spawnData, const WayPointLoader* pWayPointLoader)
 {
-	//WayPointのローダー
-	pWayPointLoader_ = pWayPointLoader;
-
-	//エリアID
-	areaId_ = spawnData.areaId_;
+	//経路探索を行う敵の場合
+	//Waypointのloaderと
+	//エリアIDを設定
+	if (pNavigation_)
+	{
+		pNavigation_->SetWayPointLoader(pWayPointLoader);
+		pNavigation_->SetAreaId(spawnData.areaId_);
+	}
 
 	//ステータス
 	hp_ = spawnData.hp_;
@@ -456,8 +464,11 @@ const PlayerActionCounter* EnemyBase::GetPlayerActionCounter() const
 
 void EnemyBase::SetNavigationGrid(const NavigationGrid* pNavGrid)
 {
-	pNaviGrid_ = pNavGrid;
-	pathFinder_.SetNavigationGrid(pNavGrid);
+	//経路探索をしない敵は何もしない
+	if (!pNavigation_)return;
+
+	pNavigation_->SetNavigationGrid(pNavGrid);
+
 }
 
 void EnemyBase::SetSlowAnimationSpeed()
@@ -530,4 +541,12 @@ void EnemyBase::DrawDebugSearchRange(const Vector3& centerPos, float radius, uns
 	VECTOR pos = VGet(centerPos.x_, centerPos.y_, centerPos.z_);
 
 	DrawSphere3D(pos, radius, kDrawDebugRangeDiv, color, color, false);
+}
+
+void EnemyBase::CreateNavigation()
+{
+	if (!pNavigation_)
+	{
+		pNavigation_ = std::make_unique<EnemyNavigation>();
+	}
 }

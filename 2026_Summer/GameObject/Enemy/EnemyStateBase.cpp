@@ -132,28 +132,35 @@ Vector3 EnemyStateBase::MoveTargetPath(const std::shared_ptr<EnemyBase>& enemy, 
 	}
 	//–Ú“I’n‚Ü‚Å‚ÌŽ‹ü‚ª’Ê‚Á‚Ä‚¢‚é‚©”»’è
 	outHasLineOfSight = HasLineOfSight(enemy->GetStageModelHandle(), startPos, endPos);
+
+	//Œo˜H’Tõ‚ðŽ‚Á‚Ä‚È‚¢“G‚ÍŽ‹ü”»’è‚¾‚¯s‚¤
+	if (!enemy->pNavigation_)
+	{
+		return endPos;
+	}
+
 	if (outHasLineOfSight)
 	{
 		//áŠQ•¨‚ª–³‚¯‚ê‚ÎŒo˜H’Tõ‚Í•s—v‚È‚Ì‚ÅƒNƒŠƒA‚µ‚Ä’¼i‚·‚é
-		if (enemy->pathFollower_.HasPath())
+		if (enemy->pNavigation_->GetPathFollower().HasPath())
 		{
-			enemy->pathFollower_.ClearPath();
+			enemy->pNavigation_->GetPathFollower().ClearPath();
 		}
 		return endPos;
 	}
 	//Ž‹ü‚ª’Ê‚ç‚È‚¢ê‡‚ÍA*‚ÅŒo˜H‚ð’Tõ‚·‚é
-	if (!enemy->pathFollower_.HasPath())
+	if (!enemy->pNavigation_->GetPathFollower().HasPath())
 	{
-		std::vector<Vector3> path = enemy->pathFinder_.FindPath(startPos, endPos);
+		std::vector<Vector3> path = enemy->pNavigation_->GetPathFinder().FindPath(startPos, endPos);
 		if (!path.empty())
 		{
-			enemy->pathFollower_.SetPath(path);
+			enemy->pNavigation_->GetPathFollower().SetPath(path);
 		}
 	}
 	//Œo˜H‚ª‚ ‚ê‚Î‚»‚Ì’†Œp’n“_‚Ö–³‚¯‚ê‚Î’¼Ú–Ú“I’n‚ÖŒü‚©‚¤
-	if (enemy->pathFollower_.HasPath())
+	if (enemy->pNavigation_->GetPathFollower().HasPath())
 	{
-		return enemy->pathFollower_.GetCurrentTarget(startPos);
+		return enemy->pNavigation_->GetPathFollower().GetCurrentTarget(startPos);
 	}
 	return endPos;
 }

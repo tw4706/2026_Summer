@@ -34,23 +34,31 @@ void EnemyStateIdle::Enter()
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
 
+	//経路探索を持たない敵何もしない
+	if (!enemy->pNavigation_) return;
+
+	//ここで定義することによって長く変数を書かなくてもOKみたい
+	//usingみたいな感じで使う
+	auto& navigation = *enemy->pNavigation_;
+
 	enemy->ChangeAnimation(AnimationState::Walk);
 
 	//視線が通っている場合は経路追従をやめて直進する
-	if (enemy->pathFollower_.HasPath())
+	if (enemy->pNavigation_->GetPathFollower().HasPath())
 	{
-		enemy->pathFollower_.ClearPath();
+		enemy->pNavigation_->GetPathFollower().ClearPath();
 	}
 
-	const WayPointLoader* pLoader = enemy->pWayPointLoader_;
+	//WayPointLoaderの取得
+	const WayPointLoader* pLoader = navigation.GetWayPointLoader();
 	if (!pLoader) return;
 
-	const auto& wayPoints = pLoader->GetWayPoints(enemy->areaId_);
+	const auto& wayPoints = pLoader->GetWayPoints(navigation.GetAreaId());
 	if (wayPoints.empty()) return;
 
 	//すでに有効な巡回情報を持っている場合はそのまま引き継ぐ
-	bool hasValidCurrent = pLoader_->FindWayPointById(wayPoints, enemy->currentWayPointId_) != nullptr;
-	bool hasValidTarget = pLoader_->FindWayPointById(wayPoints, enemy->nextWayPointId_) != nullptr;
+	bool hasValidCurrent = pLoader_->FindWayPointById(wayPoints, navigation.GetCurrentWayPointId()) != nullptr;
+	bool hasValidTarget = pLoader_->FindWayPointById(wayPoints, navigation.GetNextWayPointId()) != nullptr;
 	if (hasValidCurrent && hasValidTarget)
 	{
 		return;
@@ -58,19 +66,21 @@ void EnemyStateIdle::Enter()
 
 	//巡回情報が無い場合は最寄りのWayPointから巡回を開始する
 	int nearestId = pLoader_->FindNearestWayPointId(wayPoints, enemy->GetPos());
-	enemy->currentWayPointId_ = nearestId;
+	enemy->pNavigation_->SetCurrentWayPointId(nearestId);
 
 	//次のwayPointのIDを取得
 	int nextId = pLoader_->GetNextWayPointId(wayPoints, nearestId, -1);
 
 	//敵の次に向かうwayPointのIdを更新
-	enemy->nextWayPointId_ = nextId;
+	enemy->pNavigation_->SetNextWayPointId(nextId);
 }
 
 void EnemyStateIdle::Update()
 {
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
+
+	auto& navigation = *enemy->pNavigation_;
 
 	//敵の位置とプレイヤーのPosを取得
 	Vector3 enemyPos = enemy->GetPos();
@@ -83,9 +93,9 @@ void EnemyStateIdle::Update()
 	if (enemy->IsPlayerInRange(kSearchReactRange)&& hasLineOfSight)
 	{
 		//状態を遷移する前に経路をクリア
-		if (enemy->pathFollower_.HasPath())
+		if (navigation.GetPathFollower().HasPath())
 		{
-			enemy->pathFollower_.ClearPath();
+			navigation.GetPathFollower().ClearPath();
 		}
 
 		//反応している状態へ遷移
@@ -94,41 +104,44 @@ void EnemyStateIdle::Update()
 		return;
 	}
 
+	//WayPointLoaderの取得
+	const WayPointLoader* pLoader = navigation.GetWayPointLoader();
+	if (!pLoader) return;
+
 	//wayPointの配列を取得
-	const auto& wayPoints = enemy->pWayPointLoader_->GetWayPoints(enemy->areaId_);
+	const auto& wayPoints = pLoader->GetWayPoints(navigation.GetAreaId());
 	if (wayPoints.empty()) return;
 
 	//次のターゲットIDを代入
-	int targetId = enemy->nextWayPointId_;
+	int targetId = navigation.GetNextWayPointId();
 	const WayPointLoader::WayPoint* pTargetWp = pLoader_->FindWayPointById(wayPoints, targetId);
 	if (!pTargetWp) return;
 
 	//デバッグ用に目標座標のセット
-	enemy->debugNextPos_ = pTargetWp->pos;
-	enemy->hasDebugTarget_ = true;
+	navigation.SetDebugTarget(pTargetWp->pos);
 
 	//経路が無い時だけ直進判定をする
-	if (!enemy->pathFollower_.HasPath())
+	if (!navigation.GetPathFollower().HasPath())
 	{
-		bool canWalkDir = IsPathWalkable(enemy->pNaviGrid_, enemyPos, pTargetWp->pos);
+		bool canWalkDir = IsPathWalkable(navigation.GetNavigationGrid(), enemyPos, pTargetWp->pos);
 
 		//次の経路に歩行できない場合
 		if (!canWalkDir)
 		{
 			//経路を再検索
-			std::vector<Vector3> path = enemy->pathFinder_.FindPath(enemyPos, pTargetWp->pos);
+			std::vector<Vector3> path = navigation.GetPathFinder().FindPath(enemyPos, pTargetWp->pos);
 
 			//経路はない場合はさっき再検索した経路をセットする
 			if (!path.empty())
 			{
-				enemy->pathFollower_.SetPath(path);
+				navigation.GetPathFollower().SetPath(path);
 			}
 		}
 	}
 
 	//経路上の現在の目標地点を取得
-	Vector3 moveTargetPos = enemy->pathFollower_.HasPath()
-		? enemy->pathFollower_.GetCurrentTarget(enemyPos)
+	Vector3 moveTargetPos = navigation.GetPathFollower().HasPath()
+		? navigation.GetPathFollower().GetCurrentTarget(enemyPos)
 		: pTargetWp->pos;
 
 	//敵から目標WayPointまでのベクトルを計算
@@ -143,7 +156,7 @@ void EnemyStateIdle::Update()
 	float wayPointDistance = toWayPoint.Length();
 
 	//経路が無い状態かつWayPointに到達したら次の接続先へ切り替える
-	bool isPathFinished = !enemy->pathFollower_.HasPath() || enemy->pathFollower_.IsPathFinished();
+	bool isPathFinished = !navigation.GetPathFollower().HasPath() || navigation.GetPathFollower().IsPathFinished();
 
 	//距離が到達しているかつ経路が終わっている場合
 	if (wayPointDistance < kArriveThreshold && isPathFinished)
@@ -152,22 +165,25 @@ void EnemyStateIdle::Update()
 		int currentId = targetId;
 
 		//現在のIDを保存
-		int prevId = enemy->currentWayPointId_;
+		int prevId = navigation.GetCurrentWayPointId();
 
 		//敵の現在のwaypointIdを代入
-		enemy->currentWayPointId_ = currentId;
+		navigation.SetCurrentWayPointId(currentId);
 
 		//次のIDを取得
 		int nextId = pLoader_->GetNextWayPointId(wayPoints, currentId, prevId);
 
 		//次のIdに代入
-		enemy->nextWayPointId_ = nextId;
+		navigation.SetNextWayPointId(nextId);
 
-		//次のWayPointへ向かうため
-		//敵が経路を持っている場合かつ敵が経路に到達していたら古い経路をクリア
-		if (enemy->pathFollower_.HasPath() && enemy->pathFollower_.IsPathFinished())
+		//敵が経路を持っているか
+		bool hasPath = navigation.GetPathFollower().HasPath();
+
+		//敵が経路を渡り終わっているかどうか
+		bool isPathFinished = navigation.GetPathFollower().IsPathFinished();
+		if (hasPath&& isPathFinished)
 		{
-			enemy->pathFollower_.ClearPath();
+			navigation.GetPathFollower().ClearPath();
 		}
 		return;
 	}

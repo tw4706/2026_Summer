@@ -9,6 +9,7 @@
 #include "EnemySpawnData.h"
 #include "PlayerActionCounter.h"
 #include "../UI/EnemyHPGaugeUI.h"
+#include "Enemynavigation.h"
 
 class Player;
 class SphereCollider;
@@ -83,6 +84,16 @@ public:
 	const EnemyAttackDataLoader* GetAttackDataLoader() const { return pAttackDataLoader_; }
 
 	/// <summary>
+	/// 移動角度の取得
+	/// </summary>
+	float GetMoveAngle() const { return moveAngle_; }
+
+	/// <summary>
+	/// 移動角度の設定
+	/// </summary>
+	void SetMoveAngle(float angle) { moveAngle_ = angle; }
+
+	/// <summary>
 	/// プレイヤーの位置の取得
 	/// </summary>
 	/// <returns>PlayerのPos</returns>
@@ -129,12 +140,6 @@ public:
 	void SetStageModelHandle(int handle) { stageModelHandle_ = handle; }
 
 	/// <summary>
-	/// ナビゲーショングリッドの設定
-	/// </summary>
-	/// <param name="pNavGrid">設定するナビゲーショングリッドのポインタ</param>
-	void SetNavigationGrid(const NavigationGrid* pNavGrid);
-
-	/// <summary>
 	/// スローアニメーション速度の設定
 	/// </summary>
 	void SetSlowAnimationSpeed();
@@ -169,6 +174,21 @@ public:
 	/// <param name="color">色</param>
 	void DrawDebugSearchRange(const Vector3& centerPos, float radius, unsigned int color);
 
+	/// <summary>
+	/// 経路探索コンポーネントの生成
+	/// </summary>
+	void CreateNavigation();
+
+	/// <summary>
+	/// 経路探索コンポーネントの取得
+	/// </summary>
+	EnemyNavigation* GetNavigation() const { return pNavigation_.get(); }
+
+	/// <summary>
+	/// ナビゲーショングリッドのセット
+	/// </summary>
+	void SetNavigationGrid(const NavigationGrid* pNavGrid);
+
 protected:
 	//移動の際に向いている角度
 	float moveAngle_;
@@ -195,34 +215,17 @@ protected:
 	//プレイヤーの弱参照
 	std::weak_ptr<Player>pPlayer_;
 
-	///経路探索のA*アルゴリズムとwaypointの管理
-	AStarPathFinder pathFinder_;
-	//パスフォロワー
-	PathFollower pathFollower_;
-	//ナビゲーショングリッド
-	const NavigationGrid* pNaviGrid_ = nullptr;
-	//エリアID
-	int areaId_ = 0;
-	//現在いるWayPointのID
-	int currentWayPointId_ = -1;
-	//目標のWayPointのID
-	int nextWayPointId_ = -1;
-
-	//デバッグ描画用の目標までの座標
-	Vector3 debugNextPos_ = { 0.0f, 0.0f, 0.0f };
-	bool hasDebugTarget_ = false;
-
 	//攻撃コライダー
 	SphereCollider* pAttackCollider_ = nullptr;
 	float attackColliderDistance_ = 0.0f;
-
-	//WayPointLoaderの参照
-	const WayPointLoader* pWayPointLoader_ = nullptr;
 
 	//攻撃データローダーの参照
 	const EnemyAttackDataLoader* pAttackDataLoader_ = nullptr;
 
 	//自身のHPゲージUIへの弱参照
 	std::weak_ptr<EnemyHPGaugeUI> pHPGaugeUI_; 
+
+	//経路探索のコンポーネント
+	std::unique_ptr<EnemyNavigation> pNavigation_;
 };
 

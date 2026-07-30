@@ -205,10 +205,15 @@ void LockOnManager::StartLockOn(std::shared_ptr<Player> pPlayer, const std::vect
 	float closestDistanceSq = FLT_MAX;
 	std::shared_ptr<EnemyBase> closestEnemy = nullptr;
 
+	auto activeCam = pCameraManager->GetActiveCamera();
+	if (!activeCam) return;
+
+	Vector3 cameraPos = activeCam->GetPos();
+	Vector3 cameraForward = activeCam->GetCameraTarget() - cameraPos;
+	cameraForward.y_ = 0.0f;
+	cameraForward = cameraForward.Normalize();
+
 	Vector3 playerPos = pPlayer->GetPos();
-	Vector3 playerForward = pPlayer->GetForWardVec();
-	playerForward.y_ = 0.0f;
-	playerForward = playerForward.Normalize();
 
 	for (const auto& enemy : pEnemies)
 	{
@@ -226,7 +231,7 @@ void LockOnManager::StartLockOn(std::shared_ptr<Player> pPlayer, const std::vect
 		toEnemyDir.y_ = 0.0f;
 		toEnemyDir = toEnemyDir.Normalize();
 
-		float dotResult = playerForward.Dot(toEnemyDir);
+		float dotResult = cameraForward.Dot(toEnemyDir);
 
 		if (dotResult < kLockOnAngle) continue; //Ž‹–ìŠO‚È‚ç–³Ž‹
 

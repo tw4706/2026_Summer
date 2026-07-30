@@ -49,6 +49,11 @@ void EnemyStateReturn::Enter()
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
 
+	//Œo˜H’Tõ‚ğ‚½‚È‚¢“G‚Í‰½‚à‚µ‚È‚¢
+	if (!enemy->pNavigation_) return;
+
+	auto& navigation = *enemy->pNavigation_;
+
 	//ó‘Ô‘JˆÚ
 	enemy->ChangeAnimation(AnimationState::Walk);
 
@@ -59,8 +64,12 @@ void EnemyStateReturn::Enter()
 	fromWayPointId_ = -1;
 	toWayPointId_ = -1;
 
+	//WayPointLoader‚Ìæ“¾
+	const WayPointLoader* pLoader = navigation.GetWayPointLoader();
+	if (!pLoader) return;
+
 	//waypoit‚Ìæ“¾
-	const auto& wayPoints = enemy->pWayPointLoader_->GetWayPoints(enemy->areaId_);
+	const auto& wayPoints = pLoader->GetWayPoints(navigation.GetAreaId());
 	if (wayPoints.empty()) return;
 
 	//float‚ÌÅ‘å’l‚ğæ“¾
@@ -113,6 +122,8 @@ void EnemyStateReturn::Update()
 	auto enemy = pEnemy_.lock();
 	if (!enemy) return;
 
+	auto& navigation = *enemy->pNavigation_;
+
 	Vector3 enemyPos = enemy->GetPos();
 
 	//‹ü‚ª’Ê‚Á‚Ä‚¢‚é‚©”»’è‚µ‚Ä’Ê‚ç‚È‚¢ê‡‚ÍA*Œo˜H’Tõ‚Ì’n“_‚ğŒvZ
@@ -131,8 +142,8 @@ void EnemyStateReturn::Update()
 		//–ß‚Á‚½‹æŠÔ‚Ìî•ñ‚ğ“G‚ÉƒZƒbƒg‚µ‚Ä‚©‚ç‘JˆÚ‚·‚é
 		if (fromWayPointId_ != -1 && toWayPointId_ != -1)
 		{
-			enemy->currentWayPointId_ = fromWayPointId_;
-			enemy->nextWayPointId_ = toWayPointId_;
+			navigation.SetCurrentWayPointId(fromWayPointId_);
+			navigation.SetNextWayPointId(toWayPointId_);
 		}
 
 		//Idleó‘Ô‚É‘JˆÚ
