@@ -2,7 +2,7 @@
 #include "Enemy/EnemyBase.h"
 #include "Enemy/Oni.h"
 #include "Enemy/BigMan.h"
-#include "Enemy/Boss.h"
+#include "Enemy/Boss/Boss.h"
 #include <algorithm>
 
 EnemyManager::EnemyManager()

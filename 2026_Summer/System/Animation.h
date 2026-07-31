@@ -8,6 +8,8 @@ enum class AnimationState
 	Spawn,
 	Idle,
 	Walk,
+	BossLeftWalk,
+	BossRightWalk,
 	Run,
 	Guard,
 	LeftGuard,

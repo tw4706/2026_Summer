@@ -148,35 +148,6 @@ void LockOnManager::Update(std::shared_ptr<Player> pPlayer, const std::vector<st
 	}
 }
 
-void LockOnManager::Draw(std::shared_ptr<Player> pPlayer, CameraManager* pCameraManager)
-{
-#ifdef _DEBUG
-	auto activeCam = pCameraManager->GetActiveCamera();
-	Vector3 cameraPos = activeCam->GetPos();
-
-	//開始座標(始点)
-	Vector3 startPos = pPlayer->GetPos();
-	//プレイヤーの正面のベクトル
-	Vector3 playerForward = pPlayer->GetForWardVec();
-	playerForward.y_ = 0.0f;
-	playerForward.Normalize();//正規化
-
-	Vector3 centerEndPos = startPos + playerForward * kMaxLockOnDistance;
-	Vector3 leftDir = { playerForward.x_ * kLockOnAngle - playerForward.z_ * kLockOnAngle ,0.0f, playerForward.z_ * kLockOnAngle + playerForward.x_ * kLockOnAngle };
-	Vector3 rightDir = { playerForward.x_ * kLockOnAngle + playerForward.z_ * kLockOnAngle ,0.0f, -playerForward.x_ * kLockOnAngle + playerForward.z_ * kLockOnAngle };
-
-	Vector3 leftEndPos = startPos + leftDir * kMaxLockOnDistance;
-	Vector3 rightEndPos = startPos + rightDir * kMaxLockOnDistance;
-
-	//1本目
-	DrawLine3D(startPos.ToDxlibVector(), centerEndPos.ToDxlibVector(), GetColor(255, 0, 0));
-	//2本目
-	DrawLine3D(startPos.ToDxlibVector(), leftEndPos.ToDxlibVector(), GetColor(255, 0, 0));
-	//3本目
-	DrawLine3D(startPos.ToDxlibVector(), rightEndPos.ToDxlibVector(), GetColor(255, 0, 0));
-#endif
-}
-
 void LockOnManager::StartLockOn(std::shared_ptr<Player> pPlayer, const std::vector<std::shared_ptr<EnemyBase>>& pEnemies, CameraManager* pCameraManager)
 {
 	if (!pPlayer || !pCameraManager) return;

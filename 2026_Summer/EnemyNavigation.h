@@ -1,5 +1,5 @@
 #pragma once
-#include "Vector3.h"
+#include "Math/Vector3.h"
 #include "AStarPathFinder.h"
 #include "PathFollower.h"
 #include "CSV/WayPointLoader.h"

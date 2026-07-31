@@ -9,7 +9,7 @@
 #include"SceneManager.h"
 #include"ResultScene.h"
 #include"Enemy/BigMan.h"
-#include"Enemy/Boss.h"
+#include"Enemy/Boss/Boss.h"
 #include"Player/Player.h"
 #include"CollisionManager.h"
 #include"Camera/PlayerCamera.h"
@@ -96,9 +96,21 @@ void GameScene::Init()
 	//プレイヤーカメラへの変換
 	auto playerCam = std::dynamic_pointer_cast<PlayerCamera>(activeCam);
 
-	//予約されているゲームオブジェクトがない場合
+	//ゲームオブジェクトのリストがある場合
 	if (!reserveObjList_.empty())
 	{
+		//各オブジェクトについているコライダーの登録
+		for (auto& obj : reserveObjList_)
+		{
+			if (auto collidableObj = std::dynamic_pointer_cast<Collidable>(obj))
+			{
+				for (const auto& pCollider : collidableObj->GetColliders())
+				{
+					CollisionManager::GetInstance().RegisterCollider(pCollider.get());
+				}
+			}
+		}
+
 		//優先度順に処理する
 		gameObjects_.insert(gameObjects_.end(), reserveObjList_.begin(), reserveObjList_.end());
 		reserveObjList_.clear();
@@ -182,6 +194,9 @@ void GameScene::FadeInUpdate()
 
 	//カメラマネージャーの更新
 	pCameraManager_->Update(pStage_->GetHandle());
+
+	//UIマネージャーの更新
+	pUiManager_->Update();
 
 	if (frameCount_-- <= 0)
 	{
@@ -328,9 +343,6 @@ void GameScene::NormalDraw()
 
 	//敵マネージャーの描画
 	pEnemyManager_->Draw();
-
-	//ロックオンマネージャーの描画(デバッグ)
-	pLockOnManager_->Draw(pPlayer_,pCameraManager_.get());
 
 	//UIマネージャーの描画
 	pUiManager_->Draw();

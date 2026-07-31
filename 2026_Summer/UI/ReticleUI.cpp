@@ -69,9 +69,10 @@ void ReticleUI::Draw()
 
 	VECTOR start = startPos.ToDxlibVector();
 	VECTOR end = endPos.ToDxlibVector();
-
+#ifdef _DEBUG
 	unsigned int rayColor = Game::kYellowColor;
 	DrawLine3D(start, end, rayColor);
+#endif
 
 	VECTOR reticleScreenPos = ConvWorldPosToScreenPos(end);
 

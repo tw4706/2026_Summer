@@ -246,25 +246,25 @@
     <ClCompile Include="ComboManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\Boss.cpp">
+    <ClCompile Include="GameObject\Enemy\Boss\Boss.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\BossStateBase.cpp">
+    <ClCompile Include="GameObject\Enemy\Boss\BossStateBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\BossStateIdle.cpp">
+    <ClCompile Include="GameObject\Enemy\Boss\BossStateIdle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\BossStateRun.cpp">
+    <ClCompile Include="GameObject\Enemy\Boss\BossStateRun.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\BossStateDeath.cpp">
+    <ClCompile Include="GameObject\Enemy\Boss\BossStateDeath.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\BossStateAttack.cpp">
+    <ClCompile Include="GameObject\Enemy\Boss\BossStateAttack.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\BossStateDamage.cpp">
+    <ClCompile Include="GameObject\Enemy\Boss\BossStateDamage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="EnemyNavigation.cpp">
@@ -521,25 +521,25 @@
     <ClInclude Include="ComboManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\Boss.h">
+    <ClInclude Include="GameObject\Enemy\Boss\Boss.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\BossStateBase.h">
+    <ClInclude Include="GameObject\Enemy\Boss\BossStateBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\BossStateIdle.h">
+    <ClInclude Include="GameObject\Enemy\Boss\BossStateIdle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\BossStateRun.h">
+    <ClInclude Include="GameObject\Enemy\Boss\BossStateRun.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\BossStateDeath.h">
+    <ClInclude Include="GameObject\Enemy\Boss\BossStateDeath.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\BossStateAttack.h">
+    <ClInclude Include="GameObject\Enemy\Boss\BossStateAttack.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\BossStateDamage.h">
+    <ClInclude Include="GameObject\Enemy\Boss\BossStateDamage.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="EnemyNavigation.h">
