@@ -59,7 +59,7 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 	inputTable_["next"] = { {PeripheralType::keyboard,KEY_INPUT_RETURN},
 						{PeripheralType::pad1,PAD_INPUT_A},
 						{PeripheralType::padXInput,XINPUT_BUTTON_A} };
-	inputTable_["debugWarp"] = { {PeripheralType::keyboard,KEY_INPUT_D} };
+	inputTable_["debugWarp"] = { {PeripheralType::keyboard,KEY_INPUT_W} };
 
 	//•Ï‚È’l‚ª“ü‚ç‚È‚¢‚æ‚¤‚É˜g‚ðŠJ‚¯‚Ä‚¨‚­
 	for (const auto& input : inputTable_)

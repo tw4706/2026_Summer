@@ -8,13 +8,13 @@ namespace
 	//旋回している時の移動速度
 	constexpr float kOrbitSpeed = 150.0f;
 
-	//距離のズレを補正する速度(放射方向)
+	//距離のズレの補正速度
 	constexpr float kRadialCorrectSpeed = 80.0f;
 
 	//線形補間の割合
 	constexpr float kRotateLerpRate = 0.3f;
 
-	//維持したいプレイヤーとの距離(様子をうかがう距離)
+	//様子をうかがう距離
 	constexpr float kOrbitDistance = 400.0f;
 
 	//このズレ幅で補正速度が最大になる(比例配分の基準)
@@ -88,7 +88,7 @@ void BossStateRun::Update()
 	//接線方向の旋回速度
 	Vector3 tangentVelocity = tangentDir * kOrbitSpeed;
 
-	//二つを合成
+	//移動ベクトルとして合成
 	Vector3 moveVec = radialVelocity + tangentVelocity;
 	float moveSpeed = moveVec.Length();
 
@@ -98,7 +98,7 @@ void BossStateRun::Update()
 		ApplyMove(enemy, enemyPos, moveDir, moveSpeed);
 	}
 
-	//向きは移動方向ではなく常にプレイヤーの方を向かせる
+	//向きは常にプレイヤーの方を向かせる
 	Vector3 toPlayerDir = playerPos - enemyPos;
 	toPlayerDir.y_ = 0.0f;
 	toPlayerDir.Normalize();

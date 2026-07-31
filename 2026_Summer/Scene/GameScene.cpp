@@ -36,6 +36,9 @@ namespace
 
 	//ボス用のエリアID
 	constexpr int kBossAreaId = 3;
+
+	//デバッグワープ後の座標
+	const Vector3 kDebugWarpPlayerPos = { -4100.0f,0.0f,-10000.0f };
 }
 
 GameScene::GameScene(SceneManager& sceneManager) :
@@ -209,9 +212,11 @@ void GameScene::NormalUpdate()
 {
 	frameCount_++;
 #ifdef _DEBUG
+
+	//ワープ(デバッグのみ)
 	if (Input::GetInstance().IsTriggered("debugWarp"))
 	{
-		pPlayer_->SetPos(Vector3{ -4100.0f,0.0f,-10000.0f });
+		pPlayer_->SetPos(kDebugWarpPlayerPos);
 	}
 #endif
 
