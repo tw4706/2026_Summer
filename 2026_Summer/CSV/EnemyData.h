@@ -23,6 +23,8 @@ struct EnemyData
 	//各アニメーションの名前
 	std::wstring chanceAnim_;
 	std::wstring walkAnim_;
+	std::wstring leftWalkAnim_;
+	std::wstring rightWalkAnim_;
 	std::wstring runAnim_;
 	std::wstring attackAnim_;
 	std::wstring jumpAttackAnim_;

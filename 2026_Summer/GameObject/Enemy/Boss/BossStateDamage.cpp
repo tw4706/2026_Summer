@@ -11,6 +11,8 @@ void BossStateDamage::Enter()
 {
 	auto boss = pBoss_.lock();
 	if (!boss)return;
+
+	boss->ChangeAnimation(AnimationState::Damage);
 }
 
 void BossStateDamage::Update()

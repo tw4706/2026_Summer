@@ -1,4 +1,4 @@
-﻿EnemeyType,ModelPath,SearchRadius,ColliderRadius,ColliderHeight,IdleAnim,LeftWalkAnim,RightWalkAnim,RunAnim,AttackAnim,JumpAttackAnim,DamageAnim,DeathAnim,ReactAnim
-Oni,data/MV1/Oni.mv1,500,70,120,Oni|Idle,Oni|Walk,Oni|Walk,Oni|Run,Oni|Attack,Oni|Attack,Oni|Damage,Oni|Death,Oni|React
-BigMan,data/MV1/BigMan.mv1,500,70,180,BigMan|Idle,BigMan|Walk,BigMan|Walk,BigMan|Run,BigMan|Attack,BigMan|JumpAttack,BigMan|Damage,BigMan|Death,BigMan|React
-Boss,data/MV1/Boss.mv1,1000,150,300,Boss|Idle,Boss|LeftWalk,Boss|RightWalk,Boss|Run,Boss|RushAttack,Boss|JumpAttack,Boss|Damage,Boss|Death,Boss|React
+﻿EnemeyType,ModelPath,SearchRadius,ColliderRadius,ColliderHeight,IdleAnim,WalkAnim,LeftWalkAnim,RightWalkAnim,RunAnim,AttackAnim,JumpAttackAnim,DamageAnim,DeathAnim,ReactAnim
+Oni,data/MV1/Oni.mv1,500,70,120,Oni|Idle,Oni|Walk,Oni|Walk,Oni|Walk,Oni|Run,Oni|Attack,Oni|Attack,Oni|Damage,Oni|Death,Oni|React
+BigMan,data/MV1/BigMan.mv1,500,70,180,BigMan|Idle,BigMan|Walk,BigMan|Walk,BigMan|Walk,BigMan|Run,BigMan|Attack,BigMan|JumpAttack,BigMan|Damage,BigMan|Death,BigMan|React
+Boss,data/MV1/Boss.mv1,1000,150,200,Boss|Idle,Boss|LeftWalk,Boss|LeftWalk,Boss|RightWalk,Boss|Run,Boss|RushAttack,Boss|JumpAttack,Boss|Damage,Boss|Death,Boss|React

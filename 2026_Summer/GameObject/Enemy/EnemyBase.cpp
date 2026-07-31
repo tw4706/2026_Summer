@@ -418,6 +418,8 @@ void EnemyBase::ApplyData(const EnemyData& data, const EnemySpawnData& spawnData
 	//アニメーション名をアニメーションクラスに登録
 	animation_.RegisterAnimName(AnimationState::Idle, data.chanceAnim_);
 	animation_.RegisterAnimName(AnimationState::Walk, data.walkAnim_);
+	animation_.RegisterAnimName(AnimationState::BossLeftWalk, data.leftWalkAnim_);
+	animation_.RegisterAnimName(AnimationState::BossRightWalk, data.rightWalkAnim_);
 	animation_.RegisterAnimName(AnimationState::Run, data.runAnim_);
 	animation_.RegisterAnimName(AnimationState::EnemyAttack, data.attackAnim_);
 	animation_.RegisterAnimName(AnimationState::EnemyJumpAttack, data.jumpAttackAnim_);

@@ -208,6 +208,12 @@ void GameScene::FadeInUpdate()
 void GameScene::NormalUpdate()
 {
 	frameCount_++;
+#ifdef _DEBUG
+	if (Input::GetInstance().IsTriggered("debugWarp"))
+	{
+		pPlayer_->SetPos(Vector3{ -4100.0f,0.0f,-10000.0f });
+	}
+#endif
 
 	//プレイヤーが死んだ場合はシーン遷移をする
 	if (pPlayer_->IsDead())

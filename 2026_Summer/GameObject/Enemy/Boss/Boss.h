@@ -20,6 +20,14 @@ public:
 	/// </summary>
 	void AttackCoolDown();
 
+	/// <summary>
+	/// ダー目地処理
+	/// </summary>
+	/// <param name="damage">ダメージ</param>
+	void OnDamage(int damage)override;
+
+	void OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColliderB)override;
+
 private:
 	float attackCoolTime_ = 0.0f;//攻撃のクールタイム
 };

@@ -11,6 +11,8 @@ void BossStateDeath::Enter()
 {
 	auto boss = pBoss_.lock();
 	if (!boss)return;
+
+	boss->ChangeAnimation(AnimationState::Death);
 }
 
 void BossStateDeath::Update()

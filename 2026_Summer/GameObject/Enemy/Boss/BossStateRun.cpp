@@ -31,10 +31,11 @@ void BossStateRun::Enter()
 	auto boss = pBoss_.lock();
 	if (!boss)return;
 
-	//走りアニメーションへ遷移
-	boss->ChangeAnimation(AnimationState::Run);
-
 	isClockwise_ = (std::rand() % 2) == 0;
+
+	//走りアニメーションへ遷移
+	boss->ChangeAnimation(isClockwise_ ? AnimationState::BossRightWalk : AnimationState::BossLeftWalk);
+
 }
 
 void BossStateRun::Update()
@@ -65,10 +66,10 @@ void BossStateRun::Update()
 	//ほぼ重なっている場合は移動処理をしない
 	if (distance < 0.0001f) return;
 
-	//プレイヤーから見た放射方向(外向き)
+	//プレイヤーから見た方向
 	Vector3 radialDir = fromPlayer.Normalize();
 
-	//接線方向(旋回方向)
+	//旋回方向
 	Vector3 tangentDir = { -radialDir.z_, 0.0f, radialDir.x_ };
 	if (!isClockwise_)
 	{
@@ -78,7 +79,7 @@ void BossStateRun::Update()
 	//適正距離からのズレ
 	float diff = distance - kOrbitDistance;
 
-	//ズレ量に応じて補正速度を比例配分
+	//ズレ量に応じて補正速度をクランプする
 	float correctRate = std::clamp(diff / kMaxCorrectRange, -1.0f, 1.0f);
 
 	//放射方向の補正速度

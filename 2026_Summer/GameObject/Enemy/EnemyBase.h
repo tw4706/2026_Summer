@@ -34,7 +34,7 @@ public:
 	/// 衝突判定
 	/// </summary>
 	/// <param name="obj">衝突したゲームオブジェクト</param>
-	void OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColliderB)override;
+	virtual void OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColliderB)override;
 
 	/// <summary>
 	/// 体力を取得
@@ -52,7 +52,7 @@ public:
 	/// ダメージ処理
 	/// </summary>
 	/// <param name="damage">ダメージ</param>
-	void OnDamage(int damage);
+	virtual void OnDamage(int damage);
 
 	/// <summary>
 	/// 攻撃コライダーの生成

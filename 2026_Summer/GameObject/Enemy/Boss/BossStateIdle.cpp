@@ -27,6 +27,7 @@ void BossStateIdle::Update()
 		//Runó‘Ô‚É‘JˆÚ
 		auto nextState = std::make_shared<BossStateRun>(pBoss_, searchRadius_);
 		boss->ChangeState(nextState);
+		return;
 	}
 }
 
