@@ -420,6 +420,7 @@ void EnemyBase::ApplyData(const EnemyData& data, const EnemySpawnData& spawnData
 	animation_.RegisterAnimName(AnimationState::Walk, data.walkAnim_);
 	animation_.RegisterAnimName(AnimationState::BossLeftWalk, data.leftWalkAnim_);
 	animation_.RegisterAnimName(AnimationState::BossRightWalk, data.rightWalkAnim_);
+	animation_.RegisterAnimName(AnimationState::BossRush, data.bossRushAnim_);
 	animation_.RegisterAnimName(AnimationState::Run, data.runAnim_);
 	animation_.RegisterAnimName(AnimationState::EnemyAttack, data.attackAnim_);
 	animation_.RegisterAnimName(AnimationState::EnemyJumpAttack, data.jumpAttackAnim_);

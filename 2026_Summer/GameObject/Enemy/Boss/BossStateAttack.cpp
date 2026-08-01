@@ -9,10 +9,11 @@ namespace
 
 	//攻撃判定の半径
 	constexpr float kAttackRadius = 100.0f;
-	//攻撃判定を出す距離(ボスからのオフセット)
+
+	//攻撃判定を出す距離
 	constexpr float kAttackDistance = 150.0f;
 
-	//攻撃モーション全体の時間(この時間が経ったら接近状態に戻る)
+	//攻撃モーション全体の時間
 	constexpr float kAttackDuration = 1.0f;
 }
 
@@ -32,7 +33,7 @@ void BossStateAttack::Enter()
 	//攻撃アニメーションへ遷移
 	boss->ChangeAnimation(AnimationState::EnemyAttack);
 
-	//雑実装:攻撃コライダーを即座に生成
+	//攻撃コライダーを生成
 	boss->CreateAttackCollider(kAttackRadius, kAttackDistance);
 }
 
@@ -43,10 +44,10 @@ void BossStateAttack::Update()
 
 	attackTime_ += kDeltaTime;
 
-	//一定時間経ったら接近状態に戻る
+	//一定時間経ったらRun状態に戻る
 	if (attackTime_ >= kAttackDuration)
 	{
-		//クールタイムをリセットしてから接近状態に戻る
+		//クールタイムをリセットしRun状態に戻る
 		boss->AttackCoolDown();
 
 		auto nextState = std::make_shared<BossStateRun>(pBoss_, searchRadius_);

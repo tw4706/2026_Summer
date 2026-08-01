@@ -22,7 +22,7 @@ bool EnemyStatus::Load(const std::wstring& filePath)
 
 		auto cols = SplitCsvLine(line);
 		//列が足りない行はスキップ
-		if (cols.size() < 15)continue;
+		if (cols.size() < 16)continue;
 
 		EnemyData data;
 		int i = 0;
@@ -45,6 +45,7 @@ bool EnemyStatus::Load(const std::wstring& filePath)
 		data.walkAnim_ = ToWString(cols[i++]);
 		data.leftWalkAnim_ = ToWString(cols[i++]);
 		data.rightWalkAnim_ = ToWString(cols[i++]);
+		data.bossRushAnim_ = ToWString(cols[i++]);
 		data.runAnim_ = ToWString(cols[i++]);
 		data.attackAnim_ = ToWString(cols[i++]);
 		data.jumpAttackAnim_ = ToWString(cols[i++]);

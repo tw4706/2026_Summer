@@ -10,6 +10,7 @@ enum class AnimationState
 	Walk,
 	BossLeftWalk,
 	BossRightWalk,
+	BossRush,
 	Run,
 	Guard,
 	LeftGuard,

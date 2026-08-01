@@ -1,5 +1,5 @@
 #include "BossStateRun.h"
-#include "BossStateAttack.h"
+#include "BossStateRush.h"
 #include "Boss.h"
 #include <algorithm>
 
@@ -50,7 +50,7 @@ void BossStateRun::Update()
 	if (boss->IsAttackReady())
 	{
 		//UŒ‚ó‘Ô‚É‘JˆÚ
-		auto nextState = std::make_shared<BossStateAttack>(pBoss_, searchRadius_);
+		auto nextState = std::make_shared<BossStateRush>(pBoss_, searchRadius_);
 		boss->ChangeState(nextState);
 		return;
 	}
