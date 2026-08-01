@@ -7,6 +7,7 @@
 #include"GameObject.h"
 #include"EnemyManager.h"
 #include"SceneManager.h"
+#include"FadeManager.h"
 #include"ResultScene.h"
 #include"Enemy/BigMan.h"
 #include"Enemy/Boss/Boss.h"
@@ -201,7 +202,9 @@ void GameScene::FadeInUpdate()
 	//UIマネージャーの更新
 	pUiManager_->Update();
 
-	if (frameCount_-- <= 0)
+	frameCount_--;
+
+	if (frameCount_ <= 0)
 	{
 		update_ = &GameScene::NormalUpdate;
 		draw_ = &GameScene::NormalDraw;
@@ -310,7 +313,9 @@ void GameScene::NormalUpdate()
 
 void GameScene::FadeOutUpdate()
 {
-	if (frameCount_-- <= 0)
+	frameCount_--;
+
+	if (frameCount_ <= 0)
 	{
 		sceneManager_.ChangeScene(std::make_shared<ResultScene>(sceneManager_));
 	}
@@ -318,25 +323,23 @@ void GameScene::FadeOutUpdate()
 
 void GameScene::FadeDraw()
 {
-	NormalDraw();
-
 	float rate;
 
 	if (update_ == &GameScene::FadeInUpdate)
 	{
-		// フェードイン
-		rate = (float)frameCount_ / kFadeInterval;
+		//フェードイン
+		rate = 1.0f - (float)frameCount_ / kFadeInterval;
 	}
 	else
 	{
 		//フェードアウト
-		rate = 1.0f - (float)frameCount_ / kFadeInterval;
+		rate = (float)frameCount_ / kFadeInterval;
 	}
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(255 * rate));
-	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	NormalDraw();
+	//FadeManager::GetInstance().StartCapture();
+	//FadeManager::GetInstance().EndCaptureAndDraw(rate);
 }
 
 void GameScene::NormalDraw()

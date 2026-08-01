@@ -228,12 +228,12 @@ void EnemyBase::Draw()
 			Vector3 top = pCap->GetWorldB();
 			Vector3 bottom = pCap->GetWorldA();
 			unsigned int lineColor = isHit_ ? Game::kRedColor : Game::kLightBlueColor;
-			DrawCapsule3D(top.ToDxlibVector(), bottom.ToDxlibVector(), pCap->GetRadius(), kDrawColliderDiv, lineColor, GetColor(0, 0, 0), FALSE);
+			DrawCapsule3D(top.ToDxlibVector(), bottom.ToDxlibVector(), pCap->GetRadius(), kDrawColliderDiv, lineColor, GetColor(0, 0, 0), false);
 		}
 		else if (SphereCollider* pSphere = dynamic_cast<SphereCollider*>(pCol.get()))
 		{
 			//攻撃コライダーはオレンジ色で表示
-			DrawSphere3D(pSphere->GetPos().ToDxlibVector(), pSphere->GetRadius(), kDebugAttackColliderDivNum, Game::kOrangeColor, GetColor(0, 0, 0), FALSE);
+			DrawSphere3D(pSphere->GetPos().ToDxlibVector(), pSphere->GetRadius(), kDebugAttackColliderDivNum, Game::kOrangeColor, GetColor(0, 0, 0), false);
 		}
 	}
 

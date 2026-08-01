@@ -24,14 +24,6 @@ public:
 	DrawFunc_t draw_;
 
 private:
-	//ディゾルブ用の定数バッファ
-	struct ConstantBuffer
-	{
-		float value;
-		float strength;
-		float lightX;
-		float lightY;
-	};
 
 	int frameCount_ = 0;
 
@@ -41,12 +33,5 @@ private:
 
 	//タイトルロゴハンドル
 	int titleLogoHandle_ = -1;
-	int noiseHandle_ = -1;				//ノイズテクスチャハンドル
-	int dissolvePSHandle_ = -1;			//ディゾルブピクセルシェーダ用のハンドル
-	int renderHandle_ = -1;				//レンダリング用ハンドル
-
-	int cBuffH_ = -1;
-
-	ConstantBuffer* pCBuff_ = nullptr;
 };
 

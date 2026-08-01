@@ -2,6 +2,7 @@
 #include "TitleScene.h"
 #include "Game.h"
 #include "System/Input.h"
+#include "FadeManager.h"
 #include<Dxlib.h>
 #include<memory>
 #include<algorithm>
@@ -44,7 +45,9 @@ void ResultScene::Draw()
 
 void ResultScene::FadeInUpdate()
 {
-	if (frameCount_-- <= 0)
+	frameCount_--;
+
+	if (frameCount_ <= 0)
 	{
 		update_ = &ResultScene::NormalUpdate;
 		draw_ = &ResultScene::NormalDraw;
@@ -62,7 +65,9 @@ void ResultScene::NormalUpdate()
 
 void ResultScene::FadeOutUpdate()
 {
-	if (frameCount_-- <= 0)
+	frameCount_--;
+
+	if (frameCount_ <= 0)
 	{
 		sceneManager_.ChangeScene(std::make_shared<TitleScene>(sceneManager_));
 	}
@@ -70,29 +75,28 @@ void ResultScene::FadeOutUpdate()
 
 void ResultScene::FadeDraw()
 {
-	NormalDraw();
-
 	float rate;
 
 	if (update_ == &ResultScene::FadeInUpdate)
 	{
-		// フェードイン
-		rate = (float)frameCount_ / kFadeInterval;
+		//フェードイン
+		rate = 1.0f - (float)frameCount_ / kFadeInterval;
 	}
 	else
 	{
 		//フェードアウト
-		rate = 1.0f - (float)frameCount_ / kFadeInterval;
+		rate = (float)frameCount_ / kFadeInterval;
 	}
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(255 * rate));
-	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	FadeManager::GetInstance().StartCapture();
+	NormalDraw();
+	FadeManager::GetInstance().EndCaptureAndDraw(rate);
 }
 
 void ResultScene::NormalDraw()
 {
-	DrawFormatString(0, 0, 0xffffff, L"リザルトシーン");
-	DrawFormatString(kBackTitlePosX, kBackTitlePosY, 0xffffff, L"ボタンを押してタイトルに戻る");
+	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenWidth, 0xffffff, true);
+	DrawFormatString(0, 0, 0x000000, L"リザルトシーン");
+	DrawFormatString(kBackTitlePosX, kBackTitlePosY, 0x000000, L"ボタンを押してタイトルに戻る");
 }

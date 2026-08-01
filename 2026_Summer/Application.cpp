@@ -4,6 +4,7 @@
 #include "TitleScene.h"
 #include "SceneManager.h"
 #include "EffectManager.h"
+#include "FadeManager.h"
 #include "EffekseerForDXLib.h"
 #include<Dxlib.h>
 #include<memory>
@@ -75,6 +76,10 @@ bool Application::Init()
 		//Effekseerを使用する場合、2DゲームでもZバッファを使用する。
 		SetWriteZBuffer3D(TRUE);
 	}
+
+	//フェードマネージャーの初期化
+	FadeManager::GetInstance().Init();
+
 	return true;
 }
 
@@ -117,6 +122,9 @@ void Application::Run()
 
 void Application::Terminate()
 {
+	//フェードマネージャーの解放
+	FadeManager::GetInstance().Release();
+
 	Effkseer_End();
 
 	//メモリの開放

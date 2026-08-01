@@ -24,9 +24,6 @@ namespace
 	//初期スケール
 	const Vector3 kFirstScale = { 1.0f, 1.0f, 1.0f };
 
-	//初期回転角度
-	const Vector3 kFirstRotate = { 0.0f, DX_PI_F, 0.0f };
-
 	//プレイヤーの最大体力
 	constexpr int kMaxHP = 100;
 

@@ -146,6 +146,7 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AStarPathFinder.cpp" />
     <ClCompile Include="AttackSelect.cpp" />
+    <ClCompile Include="FadeManager.cpp" />
     <ClCompile Include="GameObject\Enemy\Boss\BossStateRush.cpp" />
     <ClCompile Include="EnemyNavigation.cpp" />
     <ClCompile Include="GameObject\Enemy\Boss\BossStateAttack.cpp" />
@@ -234,6 +235,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="AStarPathFinder.h" />
     <ClInclude Include="AttackSelect.h" />
+    <ClInclude Include="FadeManager.h" />
     <ClInclude Include="GameObject\Enemy\Boss\BossStateRush.h" />
     <ClInclude Include="EnemyNavigation.h" />
     <ClInclude Include="GameObject\Enemy\Boss\BossStateAttack.h" />

@@ -4,11 +4,12 @@
 #include "System/Input.h"
 #include "Application.h"
 #include "EffectManager.h"
+#include "FadeManager.h"
 #include<Dxlib.h>
-#include<EffekseerForDXLib.h>
 #include<memory>
 #include<cassert>
 #include<algorithm>
+#include<EffekseerForDXLib.h>
 
 namespace
 {
@@ -43,59 +44,6 @@ namespace
 	//選択肢の文字列の文字数
 	constexpr int kTitleTextNum = 4;
 	constexpr int kEndTextNum = 6;
-
-	//自作のシェーダを適用させた描画関数
-	void DrawGraphUseOrigShader(const int x, const int y, const int texH, const int psH, const int psShaderH)
-	{
-		//板ポリゴンを構成するための4つの頂点
-		const int kVertNum = 4;
-		std::array<VERTEX2DSHADER, 4> vertices{};
-
-		for (auto& vertex : vertices)
-		{
-			vertex.rhw = 1.0f;
-			vertex.dif = GetColorU8(255, 255, 255, 255);
-			vertex.spc = GetColorU8(0, 0, 0, 0);
-		}
-
-		int graphWidth, graphHeight;
-		GetGraphSize(texH, &graphWidth, &graphHeight);
-		float rectStartX = static_cast<float>(x);
-		float rectStartY = static_cast<float>(y);
-		float rectEndX = static_cast<float>(x + graphWidth);
-		float rectEndY = static_cast<float>(y + graphHeight);
-
-		//座標
-		vertices[0].pos = { rectStartX, rectStartY, 0 };
-		vertices[0].u = 0.0f; vertices[0].v = 0.0f;
-		vertices[0].su = 0.0f; vertices[0].sv = 0.0f;
-
-		vertices[1].pos = { rectEndX, rectStartY, 0 };
-		vertices[1].u = 1.0f; vertices[1].v = 0.0f;
-		vertices[1].su = 1.0f; vertices[1].sv = 0.0f;
-
-		vertices[2].pos = { rectStartX, rectEndY, 0 };
-		vertices[2].u = 0.0f; vertices[2].v = 1.0f;
-		vertices[2].su = 0.0f; vertices[2].sv = 1.0f;
-
-		vertices[3].pos = { rectEndX, rectEndY, 0 };
-		vertices[3].u = 1.0f; vertices[3].v = 1.0f;
-		vertices[3].su = 1.0f; vertices[3].sv = 1.0f;
-
-		//インデックスデータ
-		unsigned short index[6] = { 0, 1, 2, 2, 1, 3 };
-
-		//シェーダーの適用
-		SetUsePixelShader(psShaderH);
-
-		//テクスチャの適用
-		SetUseTextureToShader(0, texH);     //register(t0)に描画先スクリーン
-		SetUseTextureToShader(1, psH);		//register(t1)にノイズ画像
-
-		//ポリゴン数は三角形の二つ
-		const int kPolyNum = 2;
-		DrawPolygonIndexed2DToShader(vertices.data(), static_cast<int>(vertices.size()), index, kPolyNum);
-	}
 }
 
 TitleScene::TitleScene(SceneManager& sceneManager) :
@@ -110,32 +58,11 @@ TitleScene::~TitleScene()
 {
 	//ハンドルの削除
 	DeleteGraph(titleLogoHandle_);
-	DeleteGraph(noiseHandle_);
-	DeleteGraph(dissolvePSHandle_);
-
-	//バッファの削除
-	DeleteShaderConstantBuffer(cBuffH_);
 }
 
 void TitleScene::Init()
 {
 	titleLogoHandle_ = LoadGraph(L"data/UI/titleLogo.png");
-
-	//ディゾルブ用ノイズ画像のロード
-	noiseHandle_ = LoadGraph(L"data/Shader/noise.png");
-	assert(noiseHandle_ >= 0);
-
-	//ピクセルシェーダのロード
-	dissolvePSHandle_ = LoadPixelShader(L"DissolvePS.pso");
-	assert(dissolvePSHandle_ >= 0);
-
-	renderHandle_ = MakeScreen(Game::kScreenWidth, Game::kScreenHeight, true);
-
-	//メモリの確保
-	cBuffH_ = CreateShaderConstantBuffer(sizeof(ConstantBuffer));
-
-	//CPU側にメモリを作る
-	pCBuff_ = static_cast<ConstantBuffer*>(GetBufferShaderConstantBuffer(cBuffH_));
 
 	frameCount_ = kFadeInterval;
 }
@@ -214,23 +141,9 @@ void TitleScene::FadeDraw()
 	}
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
-	int prevScreen = GetDrawScreen();
-	SetDrawScreen(renderHandle_);
-	ClearDrawScreen();
+	FadeManager::GetInstance().StartCapture();
 	NormalDraw();
-	SetDrawScreen(prevScreen);
-
-	//メモリの値を変更
-	pCBuff_->value = rate;
-	pCBuff_->strength = kDissolveStrength;
-	pCBuff_->lightX = 0.0f;
-	pCBuff_->lightY = 0.0f;
-
-	//更新
-	UpdateShaderConstantBuffer(cBuffH_);
-	SetShaderConstantBuffer(cBuffH_, DX_SHADERTYPE_PIXEL, kDissolveShaderSlot);
-
-	DrawGraphUseOrigShader(0, 0, renderHandle_, noiseHandle_, dissolvePSHandle_);
+	FadeManager::GetInstance().EndCaptureAndDraw(rate);
 }
 
 void TitleScene::NormalDraw()
