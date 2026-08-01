@@ -13,6 +13,7 @@ class CameraManager;
 class CollisionManager;
 class LockOnManager;
 class UIManager;
+class Boss;
 class GameScene :public Scene
 {
 public:
@@ -70,6 +71,9 @@ private:
 
 	//プレイヤー
 	std::shared_ptr<Player>pPlayer_;
+
+	//ボス
+	std::weak_ptr<Boss>pBoss_;
 
 	//カメラ(シーンが所有しているためunique_ptrで持つ)
 	std::unique_ptr<CameraManager>pCameraManager_;

@@ -290,22 +290,22 @@ void GameScene::NormalUpdate()
 
 	Effekseer_Sync3DSetting();
 
-	//死んでいるゲームオブジェクトの削除
-	gameObjects_.erase(std::remove_if(gameObjects_.begin(), gameObjects_.end(), 
-		[](const auto& obj) {return obj->IsDead();}),gameObjects_.end());
-
-	//死んでいる敵の削除
-	pEnemyManager_->RemoveEnemy();
-
-	//敵がいなくなったらリザルトに遷移
-	//今がこうなだけでボスを倒したら何かしらシーン遷移を行う
-	if (pEnemyManager_->GetEnemies().empty())
+	//ボスを倒したらリザルトに遷移
+	auto boss = pBoss_.lock();
+	if (boss && boss->IsDead())
 	{
 		update_ = &GameScene::FadeOutUpdate;
 		draw_ = &GameScene::FadeDraw;
 		frameCount_ = 0;
 		return;
 	}
+
+	//死んでいるゲームオブジェクトの削除
+	gameObjects_.erase(std::remove_if(gameObjects_.begin(), gameObjects_.end(), 
+		[](const auto& obj) {return obj->IsDead();}),gameObjects_.end());
+
+	//死んでいる敵の削除
+	pEnemyManager_->RemoveEnemy();
 }
 
 void GameScene::FadeOutUpdate()
@@ -396,5 +396,11 @@ void GameScene::SpawnBoss()
 		auto enemyGauge = std::make_shared<EnemyHPGaugeUI>(enemy);
 		pUiManager_->AddUI(enemyGauge);
 		enemy->SetHPGaugeUI(enemyGauge);
+
+		//ボスなら弱参照として保持
+		if (auto boss = std::dynamic_pointer_cast<Boss>(enemy))
+		{
+			pBoss_ = boss;
+		}
 	}
 }
