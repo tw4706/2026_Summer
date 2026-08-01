@@ -88,6 +88,8 @@ GameScene::~GameScene()
 
 void GameScene::Init()
 {
+	frameCount_ = kFadeInterval;
+
 	//カリングの設定（裏面のポリゴンは見えないようにする）
 	SetUseBackCulling(true);
 
@@ -228,7 +230,7 @@ void GameScene::NormalUpdate()
 	{
 		update_ = &GameScene::FadeOutUpdate;
 		draw_ = &GameScene::FadeDraw;
-		frameCount_ = 0;
+		frameCount_ = kFadeInterval;
 		return;
 	}
 
@@ -299,7 +301,7 @@ void GameScene::NormalUpdate()
 	{
 		update_ = &GameScene::FadeOutUpdate;
 		draw_ = &GameScene::FadeDraw;
-		frameCount_ = 0;
+		frameCount_ = kFadeInterval;
 		return;
 	}
 
@@ -313,6 +315,24 @@ void GameScene::NormalUpdate()
 
 void GameScene::FadeOutUpdate()
 {
+	for (auto& obj : gameObjects_)
+	{
+		if (!obj->IsDead())
+		{
+			obj->Update();
+		}
+	}
+
+	// 敵マネージャーの更新
+	for (auto& enemy : pEnemyManager_->GetEnemies())
+	{
+		enemy->Update();
+	}
+
+	pLockOnManager_->Update(pPlayer_, pEnemyManager_->GetEnemies(), pCameraManager_.get());
+
+	pCameraManager_->Update(pStage_->GetHandle());
+
 	frameCount_--;
 
 	if (frameCount_ <= 0)
@@ -337,9 +357,9 @@ void GameScene::FadeDraw()
 	}
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
+	FadeManager::GetInstance().StartCapture();
 	NormalDraw();
-	//FadeManager::GetInstance().StartCapture();
-	//FadeManager::GetInstance().EndCaptureAndDraw(rate);
+	FadeManager::GetInstance().EndCaptureAndDraw(rate);
 }
 
 void GameScene::NormalDraw()

@@ -60,6 +60,7 @@ void ResultScene::NormalUpdate()
 	{
 		update_ = &ResultScene::FadeOutUpdate;
 		draw_ = &ResultScene::FadeDraw;
+		frameCount_ = kFadeInterval;
 	}
 }
 
