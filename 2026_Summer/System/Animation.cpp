@@ -253,6 +253,10 @@ void Animation::ChangeState(AnimationState state, const std::wstring& animName)
 		{
 			speed = kAnimationSpeed * 1.5f;
 		}
+		if (state_ == AnimationState::EnemyAttack)
+		{
+			speed = kAnimationSpeed * 0.4f;
+		}
 
 		Play(animIndex, speed, loop);
 	}

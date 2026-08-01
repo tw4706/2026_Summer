@@ -55,6 +55,12 @@ void Boss::Update()
 	EnemyBase::Update();
 }
 
+void Boss::Draw()
+{
+	//“G‚ÌŠî’êƒNƒ‰ƒX‚Ì•`‰æ
+	EnemyBase::Draw();
+}
+
 bool Boss::IsAttackReady() const
 {
 	return attackCoolTime_ <= 0.0f;

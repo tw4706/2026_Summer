@@ -35,6 +35,8 @@ void BossStateRush::Enter()
 	Vector3 toPlayer = boss->GetPlayerPos() - boss->GetPos();
 	toPlayer.y_ = 0.0f;
 	dashDir_ = toPlayer.Normalize();
+	//突進時に向きを固定する
+	boss->SetMoveAngle(atan2f(dashDir_.x_, -dashDir_.z_));
 
 	//突進アニメーションへ遷移
 	boss->ChangeAnimation(AnimationState::BossRush);

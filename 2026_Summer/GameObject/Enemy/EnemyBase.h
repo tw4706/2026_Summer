@@ -190,6 +190,14 @@ public:
 	void SetNavigationGrid(const NavigationGrid* pNavGrid);
 
 protected:
+
+	/// <summary>
+	/// 視野角の描画をすべきかどうか
+	/// </summary>
+	/// <returns>すべきでない場合はfalse,それ以外はtrue</returns>
+	virtual bool ShouldDrawVisionDebug() const { return true; }
+
+protected:
 	//移動の際に向いている角度
 	float moveAngle_;
 
@@ -212,8 +220,8 @@ protected:
 	float colliderRadius_ = 0.0f;
 	float colliderHeight_ = 0.0f;
 
-	//プレイヤーの弱参照
-	std::weak_ptr<Player>pPlayer_;
+	//視野角のデバッグ描画をすべきかどうか
+	bool shouldDebugDrawVision_ = false;
 
 	//攻撃コライダー
 	SphereCollider* pAttackCollider_ = nullptr;
@@ -221,6 +229,9 @@ protected:
 
 	//攻撃データローダーの参照
 	const EnemyAttackDataLoader* pAttackDataLoader_ = nullptr;
+
+	//プレイヤーの弱参照
+	std::weak_ptr<Player>pPlayer_;
 
 	//自身のHPゲージUIへの弱参照
 	std::weak_ptr<EnemyHPGaugeUI> pHPGaugeUI_; 

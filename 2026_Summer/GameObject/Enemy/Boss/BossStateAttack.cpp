@@ -8,7 +8,7 @@ namespace
 	constexpr float kDeltaTime = 1.0f / 60.0f;
 
 	//UŒ‚”»’è‚Ì”¼Œa
-	constexpr float kAttackRadius = 100.0f;
+	constexpr float kAttackRadius = 200.0f;
 
 	//UŒ‚”»’è‚ğo‚·‹——£
 	constexpr float kAttackDistance = 150.0f;

@@ -8,6 +8,7 @@ public:
 
 	virtual void Init()override;
 	virtual void Update()override;
+	virtual void Draw()override;
 
 	/// <summary>
 	/// UŒ‚‚Ì€”õ‚ª‚Å‚«‚½‚©‚Ç‚¤‚©
@@ -28,6 +29,12 @@ public:
 
 	void OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColliderB)override;
 
+protected:
+	/// <summary>
+	/// ‹–ìŠp‚Ì•`‰æ‚ğ‚·‚×‚«‚©‚Ç‚¤‚©
+	/// </summary>
+	/// <returns>‚·‚×‚«‚Å‚È‚¢ê‡‚Ífalse,‚»‚êˆÈŠO‚Ítrue</returns>
+	bool ShouldDrawVisionDebug() const override { return false; }
 private:
 	float attackCoolTime_ = 0.0f;//UŒ‚‚ÌƒN[ƒ‹ƒ^ƒCƒ€
 };

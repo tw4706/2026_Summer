@@ -166,55 +166,58 @@ void EnemyBase::Draw()
 	model_.Draw();
 #ifdef _DEBUG
 
-
 	//索敵範囲のデバッグ表示
 	DrawDebugSearchRange(pos_, kSearchReactRange, 0xffff00);
 
-	//敵の視線範囲のデバッグ描画
-	float visionDist = searchRadius_;		//半径を距離として利用
-	float visionAngle = kVisionAngle;       //視野角の設定
+	//視野角のデバッグ描画をすべき場合は
+	if (shouldDebugDrawVision_)
+	{	
+		//敵の視野角範囲のデバッグ描画
+		float visionDist = searchRadius_;		//半径
+		float visionAngle = kVisionAngle;       //視野角の設定
 
-	Vector3 playerPos = GetPlayerPos();
+		Vector3 playerPos = GetPlayerPos();
 
-	//プレイヤーが扇状の視界に入っているかで色を変える
-	//最初は緑
-	unsigned int searchColor = Game::kGreenColor;
-	if (IsPlayerInVision(visionDist, visionAngle))
-	{
-		searchColor = Game::kRedColor; //見つけたら赤色
-	}
+		//プレイヤーが扇状の視界に入っているかで色を変える
+		//最初は緑
+		unsigned int searchColor = Game::kGreenColor;
+		if (IsPlayerInVision(visionDist, visionAngle))
+		{
+			searchColor = Game::kRedColor; //見つけたら赤色
+		}
 
-	//左右の線の描画
-	float halfAngleRad = (visionAngle * Game::kHalf) * kRadian;
+		//左右の線の描画
+		float halfAngleRad = (visionAngle * Game::kHalf) * kRadian;
 
-	//正面から左右に視野角の半分回転させた方向の単位ベクトル
-	Vector3 leftDir = { sinf(moveAngle_ - halfAngleRad), 0.0f, -cosf(moveAngle_ - halfAngleRad) };
-	Vector3 rightDir = { sinf(moveAngle_ + halfAngleRad), 0.0f, -cosf(moveAngle_ + halfAngleRad) };
+		//正面から左右に視野角の半分回転させた方向の単位ベクトル
+		Vector3 leftDir = { sinf(moveAngle_ - halfAngleRad), 0.0f, -cosf(moveAngle_ - halfAngleRad) };
+		Vector3 rightDir = { sinf(moveAngle_ + halfAngleRad), 0.0f, -cosf(moveAngle_ + halfAngleRad) };
 
-	//敵の位置からその方向に視界距離だけ伸びた点を計算
-	Vector3 leftLineEnd = pos_ + leftDir * visionDist;
-	Vector3 rightLineEnd = pos_ + rightDir * visionDist;
+		//敵の位置からその方向に視界距離だけ伸びた点を計算
+		Vector3 leftLineEnd = pos_ + leftDir * visionDist;
+		Vector3 rightLineEnd = pos_ + rightDir * visionDist;
 
-	//3D空間に線を描画
-	Vector3 drawOffset = { 0.0f, 0.0f, 0.0f };
-	DrawLine3D((pos_ + drawOffset).ToDxlibVector(), (leftLineEnd + drawOffset).ToDxlibVector(), searchColor);
-	DrawLine3D((pos_ + drawOffset).ToDxlibVector(), (rightLineEnd + drawOffset).ToDxlibVector(), searchColor);
+		//3D空間に線を描画
+		Vector3 drawOffset = { 0.0f, 0.0f, 0.0f };
+		DrawLine3D((pos_ + drawOffset).ToDxlibVector(), (leftLineEnd + drawOffset).ToDxlibVector(), searchColor);
+		DrawLine3D((pos_ + drawOffset).ToDxlibVector(), (rightLineEnd + drawOffset).ToDxlibVector(), searchColor);
 
-	//先端の円弧の描画
-	//左右の線の先端の間をさらにいくつかの線で繋いで円を作る
-	for (int i = 0; i < kDivNum; ++i)
-	{
-		//左右の角度の間を線形補間する
-		float angleA = (moveAngle_ - halfAngleRad) + (visionAngle * kRadian / kDivNum) * i;
-		float angleB = (moveAngle_ - halfAngleRad) + (visionAngle * kRadian / kDivNum) * (i + 1);
+		//先端の円弧の描画
+		//左右の線の先端の間をさらにいくつかの線で繋いで円を作る
+		for (int i = 0; i < kDivNum; ++i)
+		{
+			//左右の角度の間を線形補間する
+			float angleA = (moveAngle_ - halfAngleRad) + (visionAngle * kRadian / kDivNum) * i;
+			float angleB = (moveAngle_ - halfAngleRad) + (visionAngle * kRadian / kDivNum) * (i + 1);
 
-		Vector3 dirA = { sinf(angleA), 0.0f, -cosf(angleA) };
-		Vector3 dirB = { sinf(angleB), 0.0f, -cosf(angleB) };
+			Vector3 dirA = { sinf(angleA), 0.0f, -cosf(angleA) };
+			Vector3 dirB = { sinf(angleB), 0.0f, -cosf(angleB) };
 
-		Vector3 posA = pos_ + dirA * visionDist + drawOffset;
-		Vector3 posB = pos_ + dirB * visionDist + drawOffset;
+			Vector3 posA = pos_ + dirA * visionDist + drawOffset;
+			Vector3 posB = pos_ + dirB * visionDist + drawOffset;
 
-		DrawLine3D(posA.ToDxlibVector(), posB.ToDxlibVector(), searchColor);
+			DrawLine3D(posA.ToDxlibVector(), posB.ToDxlibVector(), searchColor);
+		}
 	}
 
 	//当たり判定のデバッグ表示
