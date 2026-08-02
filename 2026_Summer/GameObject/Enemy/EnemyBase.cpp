@@ -170,7 +170,7 @@ void EnemyBase::Draw()
 	DrawDebugSearchRange(pos_, kSearchReactRange, 0xffff00);
 
 	//視野角のデバッグ描画をすべき場合は
-	if (shouldDebugDrawVision_)
+	if (ShouldDrawVisionDebug())
 	{	
 		//敵の視野角範囲のデバッグ描画
 		float visionDist = searchRadius_;		//半径

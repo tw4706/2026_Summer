@@ -315,24 +315,6 @@ void GameScene::NormalUpdate()
 
 void GameScene::FadeOutUpdate()
 {
-	for (auto& obj : gameObjects_)
-	{
-		if (!obj->IsDead())
-		{
-			obj->Update();
-		}
-	}
-
-	// 敵マネージャーの更新
-	for (auto& enemy : pEnemyManager_->GetEnemies())
-	{
-		enemy->Update();
-	}
-
-	pLockOnManager_->Update(pPlayer_, pEnemyManager_->GetEnemies(), pCameraManager_.get());
-
-	pCameraManager_->Update(pStage_->GetHandle());
-
 	frameCount_--;
 
 	if (frameCount_ <= 0)
@@ -343,23 +325,25 @@ void GameScene::FadeOutUpdate()
 
 void GameScene::FadeDraw()
 {
+	NormalDraw();
+
 	float rate;
 
 	if (update_ == &GameScene::FadeInUpdate)
 	{
 		//フェードイン
-		rate = 1.0f - (float)frameCount_ / kFadeInterval;
+		rate = (float)frameCount_ / kFadeInterval;
 	}
 	else
 	{
 		//フェードアウト
-		rate = (float)frameCount_ / kFadeInterval;
+		rate = 1.0f - (float)frameCount_ / kFadeInterval;
 	}
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
-	FadeManager::GetInstance().StartCapture();
-	NormalDraw();
-	FadeManager::GetInstance().EndCaptureAndDraw(rate);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(255 * rate));
+	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
 void GameScene::NormalDraw()
@@ -398,7 +382,9 @@ void GameScene::CheckBossTrigger()
 	//既に出現しているなら何もしない
 	if (isBossSpawned_)return;
 
-	if (pPlayer_->GetPos().z_ <= bossTriggerPosZ_)
+	//雑魚敵をいないかつプレイヤーがボスの生成する範囲に入っていたら
+	//ボスを生成
+	if (pEnemyManager_->GetEnemies().empty()&&pPlayer_->GetPos().z_ <= bossTriggerPosZ_)
 	{
 		isBossSpawned_ = true;
 		SpawnBoss();
