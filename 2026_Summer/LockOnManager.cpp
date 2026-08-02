@@ -36,8 +36,8 @@ void LockOnManager::Update(std::shared_ptr<Player> pPlayer, const std::vector<st
 	//ロックオン中でなら何もしない
 	if (!IsLockOn()) return;
 
-	//ターゲットが死んでいるとき
-	if (pCurrentTarget_->IsDead())
+	//ターゲットのHPが0以下なら
+	if (pCurrentTarget_->GetHP()<=0)
 	{
 		//次のターゲットを距離を見て決める
 		float closestDistanceSq = FLT_MAX;

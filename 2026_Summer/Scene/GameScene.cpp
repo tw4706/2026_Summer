@@ -237,6 +237,18 @@ void GameScene::NormalUpdate()
 	//ボストリガー判定
 	CheckBossTrigger();
 
+	//ボスが生成されるまでは生成範囲まででプレイヤーを制限
+	if (!pEnemyManager_->GetEnemies().empty())
+	{
+		auto pos = pPlayer_->GetPos();
+
+		if (pos.z_ <= bossTriggerPosZ_)
+		{
+			pos.z_ = bossTriggerPosZ_;
+			pPlayer_->SetPos(pos);
+		}
+	}
+
 	//ロックオンボタンを押したらロックオンを開始する
 	if (Input::GetInstance().IsTriggered("lockOn"))
 	{
