@@ -217,7 +217,6 @@ void GameScene::NormalUpdate()
 {
 	frameCount_++;
 #ifdef _DEBUG
-
 	//ワープ(デバッグのみ)
 	if (Input::GetInstance().IsTriggered("debugWarp"))
 	{
@@ -238,7 +237,7 @@ void GameScene::NormalUpdate()
 	CheckBossTrigger();
 
 	//ボスが生成されるまでは生成範囲まででプレイヤーを制限
-	if (!pEnemyManager_->GetEnemies().empty())
+	if (!isBossSpawned_)
 	{
 		auto pos = pPlayer_->GetPos();
 
@@ -396,7 +395,8 @@ void GameScene::CheckBossTrigger()
 
 	//雑魚敵をいないかつプレイヤーがボスの生成する範囲に入っていたら
 	//ボスを生成
-	if (pEnemyManager_->GetEnemies().empty()&&pPlayer_->GetPos().z_ <= bossTriggerPosZ_)
+	/*if (pEnemyManager_->GetEnemies().empty()&&*/
+	if(pPlayer_->GetPos().z_ <= bossTriggerPosZ_)
 	{
 		isBossSpawned_ = true;
 		SpawnBoss();

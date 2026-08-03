@@ -88,8 +88,10 @@ void ResultScene::FadeDraw()
 		//フェードアウト
 		rate = (float)frameCount_ / kFadeInterval;
 	}
+
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
+	//フェードマネージャーの描画開始と終了
 	FadeManager::GetInstance().StartCapture();
 	NormalDraw();
 	FadeManager::GetInstance().EndCaptureAndDraw(rate);

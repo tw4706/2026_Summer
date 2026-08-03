@@ -74,11 +74,13 @@ void LockOnCamera::Update(int stageModelHandle)
 	//ロックオン時のカメラのターゲット座標の計算
 	Vector3 targetPos = playerCameraPos + (directionVec * kTargetDistance) + kTargetPosOffest;
 
-	//線形補間を行い、滑らかな追従を行う
+	//線形補間を行い滑らかな追従を行う
 	pos_ = Vector3::Lerp(pos_, targetPos, kTargetPosLerpRate);
 
 	//カメラとステージの消灯判定を行う
 	pos_ = CheckCollCameraToStage(stageModelHandle, playerCameraPos, pos_);
+
+	//デバッグ描画
 #ifdef _DEBUG
 	DrawFormatString(0, kDebugCameraPosY, Game::kRedColor, L"CameraPos: %.2f, %.2f, %.2f", pos_.x_, pos_.y_, pos_.z_);
 	DrawFormatString(0, kDebugTargetPosY, Game::kYellowColor, L"TargetPos: %.2f, %.2f, %.2f", targetPos.x_, targetPos.y_, targetPos.z_);
