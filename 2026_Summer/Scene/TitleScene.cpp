@@ -18,8 +18,8 @@ namespace
 	constexpr int kFadeInterval = 60;
 
 	//タイトル画面の選択肢の描画時のオフセット
-	constexpr int kTitleTextOffsetY = 100;
-	constexpr int kEndTextOffsetY = 130;
+	constexpr int kTitleTextOffsetY = 60;
+	constexpr int kEndTextOffsetY = 160;
 
 	//ロゴの描画時のオフセット
 	constexpr int kLogoOffsetX = -600;
@@ -38,13 +38,9 @@ namespace
 	//ディゾルブシェーダの強さ
 	constexpr float kDissolveStrength = 0.05f;
 
-	//選択肢の文字列
-	const wchar_t* kTextStart = L"始める";
-	const wchar_t* kTextEnd = L"ゲームを終了";
-
-	//選択肢の文字列の文字数
-	constexpr int kTitleTextNum = 4;
-	constexpr int kEndTextNum = 6;
+	//選択されているときの拡大率
+	constexpr float kSelectedScale = 0.8f;
+	constexpr float kUnselectedScale = 0.6f;
 }
 
 TitleScene::TitleScene(SceneManager& sceneManager) :
@@ -60,13 +56,22 @@ TitleScene::~TitleScene()
 {
 	//ハンドルの削除
 	DeleteGraph(titleLogoHandle_);
+	DeleteGraph(startTextHandle_);
+	DeleteGraph(endTextHandle_);
 }
 
 void TitleScene::Init()
 {
-	titleLogoHandle_ = LoadGraph(L"data/UI/titleLogo.png");
-
 	frameCount_ = kFadeInterval;
+
+	//ハンドルの読み込み
+	titleLogoHandle_ = LoadGraph(L"data/UI/titleLogo.png");
+	startTextHandle_= LoadGraph(L"data/UI/start.png");
+	endTextHandle_= LoadGraph(L"data/UI/endText.png");
+
+	//ハンドルサイズの取得
+	GetGraphSize(startTextHandle_, &startTextWidth_, &startTextHeight_);
+	GetGraphSize(endTextHandle_, &endTextWidth_, &endTextHeight_);
 
 	//背景の初期化
 	pBg_->Init();
@@ -169,11 +174,14 @@ void TitleScene::NormalDraw()
 		endColor = 0xff0000;
 	}
 
-	int titleWidth = GetDrawStringWidth(kTextStart, kTitleTextNum);
-	int endWidth = GetDrawStringWidth(kTextEnd, kEndTextNum);
+	float startScale = (currentIndex_ == 0) ? kSelectedScale : kUnselectedScale;
+	float endScale = (currentIndex_ == 1) ? kSelectedScale : kUnselectedScale;
 
-	DrawFormatString(Game::kScreenWidth / 2 - (titleWidth / 2), Game::kScreenHeight / 2 + kTitleTextOffsetY, titleColor, kTextStart);
-	DrawFormatString(Game::kScreenWidth / 2 - (endWidth / 2), Game::kScreenHeight / 2 + kEndTextOffsetY, endColor, kTextEnd);
+	DrawRotaGraph3(Game::kScreenWidth / 2, Game::kScreenHeight / 2 + kTitleTextOffsetY,
+		startTextWidth_ / 2, startTextHeight_ / 2, startScale, startScale, 0.0f, startTextHandle_, true);
+
+	DrawRotaGraph3(Game::kScreenWidth / 2, Game::kScreenHeight / 2 + kEndTextOffsetY,
+		endTextWidth_ / 2, endTextHeight_ / 2, endScale, endScale, 0.0f, endTextHandle_, true);
 
 	//タイトルロゴの描画
 	DrawRotaGraph3(Game::kScreenWidth / 2 + kLogoOffsetX, Game::kScreenHeight / 2 + kLogoOffsetY, 0, 0,

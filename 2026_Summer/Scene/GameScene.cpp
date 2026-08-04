@@ -40,6 +40,9 @@ namespace
 
 	//デバッグワープ後の座標
 	const Vector3 kDebugWarpPlayerPos = { -4100.0f,0.0f,-10000.0f };
+
+	//フレームレート
+	constexpr int kFps = 60;
 }
 
 GameScene::GameScene(SceneManager& sceneManager) :
@@ -216,6 +219,8 @@ void GameScene::FadeInUpdate()
 void GameScene::NormalUpdate()
 {
 	frameCount_++;
+	clearFrameCount_++;
+
 #ifdef _DEBUG
 	//ワープ(デバッグのみ)
 	if (Input::GetInstance().IsTriggered("debugWarp"))
@@ -313,6 +318,7 @@ void GameScene::NormalUpdate()
 		update_ = &GameScene::FadeOutUpdate;
 		draw_ = &GameScene::FadeDraw;
 		frameCount_ = kFadeInterval;
+		clearTime_ = static_cast<float>(clearFrameCount_) / kFps;
 		return;
 	}
 
@@ -330,7 +336,7 @@ void GameScene::FadeOutUpdate()
 
 	if (frameCount_ <= 0)
 	{
-		sceneManager_.ChangeScene(std::make_shared<ResultScene>(sceneManager_));
+		sceneManager_.ChangeScene(std::make_shared<ResultScene>(sceneManager_, clearTime_));
 	}
 }
 

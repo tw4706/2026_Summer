@@ -51,6 +51,12 @@ private:
 	//フレームカウンタ
 	int frameCount_;
 
+	//クリアまでのフレームカウンタ
+	int clearFrameCount_ = 0;
+
+	//クリアまでの時間
+	float clearTime_ = 0.0f;
+
 	//ボス出現をトリガーするZ座標
 	float bossTriggerPosZ_;
 

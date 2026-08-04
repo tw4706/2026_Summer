@@ -35,6 +35,15 @@ private:
 	//タイトルロゴハンドル
 	int titleLogoHandle_ = -1;
 
+	//ゲーム開始のテキストハンドル
+	int startTextHandle_ = -1;
+
+	//ゲーム終了のテキストハンドル
+	int endTextHandle_ = -1;
+
+	int startTextWidth_ = 0, startTextHeight_ = 0;
+	int endTextWidth_ = 0, endTextHeight_ = 0;
+
 	//背景
 	std::shared_ptr<Bg>pBg_;
 };

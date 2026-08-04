@@ -4,7 +4,7 @@
 class ResultScene :public Scene
 {
 public:
-	ResultScene(SceneManager& sceneManager);
+	ResultScene(SceneManager& sceneManager,float clearTime);
 	~ResultScene();
 
 	void Init()override;
@@ -24,5 +24,9 @@ public:
 
 private:
 	int frameCount_ = 0;
+
+	float clearTime_;
+	int currentIndex_ = 0;
+	wchar_t rank_;
 };
 

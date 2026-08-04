@@ -1,5 +1,6 @@
 #include "ResultScene.h"
 #include "TitleScene.h"
+#include "GameScene.h"
 #include "Game.h"
 #include "System/Input.h"
 #include "FadeManager.h"
@@ -12,17 +13,42 @@ namespace
 	//フェードの間隔
 	constexpr int kFadeInterval = 60;
 
-	//タイトルに戻る選択肢の座標
+	//ランクのタイム基準となる値
+	constexpr float kRankSTime = 60.0f;
+	constexpr float kRankATime = 120.0f;
+	constexpr float kRankBTime = 180.0f;
+
+	//選択肢の座標
+	constexpr int kRetryPosX = 0;
+	constexpr int kRetryPosY = 30;
 	constexpr int kBackTitlePosX = 0;
-	constexpr int kBackTitlePosY = 30;
+	constexpr int kBackTitlePosY = 60;
 }
 
-ResultScene::ResultScene(SceneManager& sceneManager):
+ResultScene::ResultScene(SceneManager& sceneManager,float clearTime) :
 	Scene(sceneManager),
 	update_(&ResultScene::FadeInUpdate),
 	draw_(&ResultScene::FadeDraw),
-	frameCount_(kFadeInterval)
+	frameCount_(kFadeInterval),
+	clearTime_(clearTime)
 {
+	//ランク判定
+	if (clearTime_ <= kRankSTime)
+	{
+		rank_ = L'S';
+	}
+	else if (clearTime_ <= kRankATime)
+	{
+		rank_ = L'A';
+	}
+	else if (clearTime_ <= kRankBTime)
+	{
+		rank_ = L'B';
+	}
+	else
+	{
+		rank_ = L'C';
+	}
 }
 
 ResultScene::~ResultScene()
@@ -56,6 +82,15 @@ void ResultScene::FadeInUpdate()
 
 void ResultScene::NormalUpdate()
 {
+	if (Input::GetInstance().IsTriggered("up"))
+	{
+		currentIndex_ = 0;
+	}
+	else if (Input::GetInstance().IsTriggered("down"))
+	{
+		currentIndex_ = 1;
+	}
+
 	if (Input::GetInstance().IsTriggered("next"))
 	{
 		update_ = &ResultScene::FadeOutUpdate;
@@ -70,7 +105,14 @@ void ResultScene::FadeOutUpdate()
 
 	if (frameCount_ <= 0)
 	{
-		sceneManager_.ChangeScene(std::make_shared<TitleScene>(sceneManager_));
+		if (currentIndex_ == 0)
+		{
+			sceneManager_.ChangeScene(std::make_shared<GameScene>(sceneManager_));
+		}
+		else
+		{
+			sceneManager_.ChangeScene(std::make_shared<TitleScene>(sceneManager_));
+		}
 	}
 }
 
@@ -99,7 +141,14 @@ void ResultScene::FadeDraw()
 
 void ResultScene::NormalDraw()
 {
-	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenWidth, 0xffffff, true);
+	int retryColor = (currentIndex_ == 0) ? 0xff0000 : 0x000000;
+	int titleColor = (currentIndex_ == 1) ? 0xff0000 : 0x000000;
+
+	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0xffffff, true);
 	DrawFormatString(0, 0, 0x000000, L"リザルトシーン");
-	DrawFormatString(kBackTitlePosX, kBackTitlePosY, 0x000000, L"ボタンを押してタイトルに戻る");
+	DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - 30, 0x000000, L"クリアタイム: %.1f秒", clearTime_);
+	DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 0x000000, L"ランク: %c", rank_);
+
+	DrawFormatString(Game::kScreenWidth / 2 + kRetryPosX, Game::kScreenHeight / 2 + kRetryPosY, retryColor, L"リトライ");
+	DrawFormatString(Game::kScreenWidth / 2 + kBackTitlePosX, Game::kScreenHeight / 2 + kBackTitlePosY, titleColor, L"タイトルに戻る");
 }
