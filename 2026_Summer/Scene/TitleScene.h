@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "SceneManager.h"
 
+class Bg;
 class TitleScene :public Scene
 {
 public:
@@ -33,5 +34,7 @@ private:
 
 	//タイトルロゴハンドル
 	int titleLogoHandle_ = -1;
-};
 
+	//背景
+	std::shared_ptr<Bg>pBg_;
+};

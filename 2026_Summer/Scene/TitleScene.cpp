@@ -1,6 +1,7 @@
 #include "TitleScene.h"
 #include "GameScene.h"
 #include "Game.h"
+#include"Bg.h"
 #include "System/Input.h"
 #include "Application.h"
 #include "EffectManager.h"
@@ -52,6 +53,7 @@ TitleScene::TitleScene(SceneManager& sceneManager) :
 	draw_(&TitleScene::FadeDraw),
 	frameCount_(kFadeInterval)
 {
+	pBg_ = std::make_shared<Bg>();
 }
 
 TitleScene::~TitleScene()
@@ -65,6 +67,9 @@ void TitleScene::Init()
 	titleLogoHandle_ = LoadGraph(L"data/UI/titleLogo.png");
 
 	frameCount_ = kFadeInterval;
+
+	//”wŒi‚Ì‰Šú‰»
+	pBg_->Init();
 }
 
 void TitleScene::Update()
@@ -148,7 +153,7 @@ void TitleScene::FadeDraw()
 
 void TitleScene::NormalDraw()
 {
-	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenWidth, 0xffffff, true);
+	pBg_->Draw(Vector3{0.0f,0.0f,0.0f});
 
 	int titleColor = 0;
 	int endColor = 0;
