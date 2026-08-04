@@ -14,6 +14,9 @@ namespace
 
 	//らーぷにかかる時間
 	constexpr float kLerpRate = 0.5f;
+
+	//ターゲットカメラの補間割合
+	constexpr float kTargetCameraLerpRate = 0.3f;
 }
 
 PlayerCamera::PlayerCamera() :
@@ -32,12 +35,13 @@ void PlayerCamera::Init()
 	//プレイヤーの注視点を取得
 	cameraTarget_ = pPlayer_->GetCameraTarget();
 
+	currentCameraTarget_ = Vector3::Lerp(currentCameraTarget_, cameraTarget_, kTargetCameraLerpRate);
 	currentYaw_ = yaw_;
 	currentPitch_ = pitch_;
 
 	Matrix4x4 rot = Matrix4x4::RotateY(yaw_) * Matrix4x4::RotateX(pitch_);
 	Vector3 offset = rot.TransformForVector(kTargetToCamera);
-	pos_ = cameraTarget_ + offset;
+	pos_ = currentCameraTarget_ + offset;
 }
 
 void PlayerCamera::Update(int stageModelHandle)
@@ -47,13 +51,14 @@ void PlayerCamera::Update(int stageModelHandle)
 	cameraTarget_ = pPlayer_->GetCameraTarget();
 
 	//カメラの回転を線形補間で行う
+	currentCameraTarget_ = cameraTarget_;
 	currentYaw_ = Vector3::Lerp(currentYaw_, yaw_, kLerpRate);
 	currentPitch_ = Vector3::Lerp(currentPitch_, pitch_, kLerpRate);
 
 	//行列を用いて位置を計算
 	Matrix4x4 rot = Matrix4x4::RotateY(currentYaw_) * Matrix4x4::RotateX(currentPitch_);
 	Vector3 offset = rot.TransformForVector(kTargetToCamera);
-	Vector3 targetCameraPos = cameraTarget_ + offset;
+	Vector3 targetCameraPos = currentCameraTarget_ + offset;
 	pos_ = targetCameraPos;
 
 	//注視点からカメラの座標に線分判定をする

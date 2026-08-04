@@ -73,6 +73,16 @@ void CollisionManager::UpdateCheckCollision()
 			Collidable& pObjB = pColB->GetOwner();
 			if (&pObjA == &pObjB) continue;
 
+			//敵のHPが0以下の時は当たり判定を行わない
+			if (EnemyBase* pEnemyA = dynamic_cast<EnemyBase*>(&pObjA))
+			{
+				if (pEnemyA->GetHP() <= 0) continue;
+			}
+			if (EnemyBase* pEnemyB = dynamic_cast<EnemyBase*>(&pObjB))
+			{
+				if (pEnemyB->GetHP() <= 0) continue;
+			}
+
 			//刀と、その刀の持ち主との衝突はスキップ
 			if (Katana* pKatanaA = dynamic_cast<Katana*>(&pObjA))
 			{
@@ -83,8 +93,6 @@ void CollisionManager::UpdateCheckCollision()
 				if (pKatanaB->GetOwnerCharacter() == &pObjA) continue;
 			}
 
-			//敵同士の衝突はスキップ
-			//if (dynamic_cast<EnemyBase*>(&pObjA) && dynamic_cast<EnemyBase*>(&pObjB))continue;
 
 			ColliderType typeA = pColA->GetType();
 			ColliderType typeB = pColB->GetType();

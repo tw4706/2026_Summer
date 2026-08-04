@@ -39,6 +39,9 @@ public:
     /// <param name="player">プレイヤーのポインタ</param>
     void SetPlayer(std::shared_ptr<Player> player) { pPlayer_ = player; }
 private:
+    //現在のカメラターゲット
+    Vector3 currentCameraTarget_ = {0.0f,0.0f,0.0f};
+
     std::shared_ptr<Player> pPlayer_;
 };
 

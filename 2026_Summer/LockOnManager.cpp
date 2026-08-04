@@ -217,7 +217,7 @@ void LockOnManager::StartLockOn(std::shared_ptr<Player> pPlayer, const std::vect
 	// ターゲットが見つかったらロックオン開始
 	if (closestEnemy)
 	{
-		//各カメラの取得
+		//ロックオンカメラの取得
 		auto camera = pCameraManager->GetCamera(L"LockOnCamera");
 		auto lockOnCamera = std::dynamic_pointer_cast<LockOnCamera>(camera);
 
