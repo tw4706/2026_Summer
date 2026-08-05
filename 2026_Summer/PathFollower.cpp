@@ -4,7 +4,7 @@
 namespace
 {
 	//目標点に到達したと判定する距離
-	constexpr float kReachDistance = 30.0f;
+	constexpr float kReachDistance = 50.0f;
 }
 
 PathFollower::PathFollower()
@@ -47,26 +47,27 @@ Vector3 PathFollower::GetCurrentTarget(const Vector3& currentPos)
 		return currentPos;
 	}
 
-	Vector3 targetPos = path_[currentIndex_];
-
-	//現在の目標点との距離を計算
-	Vector3 diff = targetPos - currentPos;
-	diff.y_ = 0.0f;
-	float dist = diff.LengthSq();
-
 	//到達していたら次のwaypointへ進める
-	if (dist < kReachDistance * kReachDistance)
+	while (currentIndex_<static_cast<int>(path_.size()))
 	{
-		currentIndex_++;
+		//次のノードの座標に更新
+		Vector3 targetPos = path_[currentIndex_];
 
-		//最後まで行ったら現在の位置を返して終了
-		if (currentIndex_ >= static_cast<int>(path_.size()))
+		//現在の目標点との距離を計算
+		Vector3 diff = targetPos - currentPos;
+		diff.y_ = 0.0f;
+		float dist = diff.LengthSq();
+
+		//到達していない場合はその座標を目標とする
+		if (dist >= kReachDistance * kReachDistance)
 		{
-			return targetPos; // 最後のノード位置を返す
+			return targetPos;
 		}
-		// 次のノードの座標に更新
-		targetPos = path_[currentIndex_];
+
+		//到達している場合はノードを進める
+		currentIndex_++;
 	}
 
-	return targetPos;
+	//すべてのノードを通っている場合は最終のノードの座標を返す
+	return path_.back();
 }

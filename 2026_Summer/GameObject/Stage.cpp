@@ -8,11 +8,12 @@ namespace
 	constexpr float kGridMaxX = 1000.0f;
 	constexpr float kGridMinZ = -8500.0f;
 	constexpr float kGridMaxZ = 0.0f;
+
 	//グリッド1マスのサイズ
-	constexpr float kGridCellSize = 100.0f;
+	constexpr float kGridCellSize = 120.0f;
 
 	//バウンディングボックスを作成する際の余白
-	constexpr int kBoundMargin = 120;
+	constexpr int kBoundMargin = 180;
 
 	//ステージのY軸回転
 	constexpr float kStageRotateY = -DX_PI_F / 2.0f;
@@ -79,7 +80,6 @@ void Stage::Draw()
 {
 	//モデルの描画
 	stageModel_.Draw();
-	stageColModel_.Draw();
 
 #ifdef _DEBUG
 	//ナビゲーショングリッドデバッグの表示
