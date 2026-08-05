@@ -394,7 +394,7 @@ bool CollisionManager::CheckCapsuleVsPolygon(Collidable& pCapsuleObj, Collidable
 
 			//–@ü‚ÌY™ôšK‚ÌŒX‚«‚Å°‚©•Ç‚©‚ð”»’è‚·‚é
 			//°‚Ìê‡
-			if (normal.y_ > 0.5f)
+			if (normal.y_ > 0.f)
 			{
 				float targetCapAY = poly.HitPosition.y + capRadius;
 				float diffY = targetCapAY - capA.y_;

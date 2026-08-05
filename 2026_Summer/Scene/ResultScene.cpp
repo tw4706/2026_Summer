@@ -144,11 +144,13 @@ void ResultScene::NormalDraw()
 	int retryColor = (currentIndex_ == 0) ? 0xff0000 : 0x000000;
 	int titleColor = (currentIndex_ == 1) ? 0xff0000 : 0x000000;
 
+	//リザルトでのクリアタイムやランクの表示
 	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0xffffff, true);
 	DrawFormatString(0, 0, 0x000000, L"リザルトシーン");
 	DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - 30, 0x000000, L"クリアタイム: %.1f秒", clearTime_);
 	DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 0x000000, L"ランク: %c", rank_);
 
+	//選択肢であるリトライやタイトルに戻る選択肢
 	DrawFormatString(Game::kScreenWidth / 2 + kRetryPosX, Game::kScreenHeight / 2 + kRetryPosY, retryColor, L"リトライ");
 	DrawFormatString(Game::kScreenWidth / 2 + kBackTitlePosX, Game::kScreenHeight / 2 + kBackTitlePosY, titleColor, L"タイトルに戻る");
 }

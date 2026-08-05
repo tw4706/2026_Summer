@@ -79,6 +79,7 @@ void Stage::Draw()
 {
 	//モデルの描画
 	stageModel_.Draw();
+	stageColModel_.Draw();
 
 #ifdef _DEBUG
 	//ナビゲーショングリッドデバッグの表示

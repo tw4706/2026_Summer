@@ -123,9 +123,10 @@ void PlayerStateAttack::Update()
 	Vector3 currentVel = player->GetVelocity();
 	currentVel.y_ -= player->GetGravity();
 
-	player->SetVelocity({ 0.0f, currentVel.y_, 0.0f });
 
 	player->AddPosition();
+
+	player->SetVelocity({ 0.0f, currentVel.y_, 0.0f });
 
 	if (player->GetIsGround())
 	{

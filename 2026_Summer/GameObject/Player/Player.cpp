@@ -267,8 +267,11 @@ void Player::LooktoLockOnEnemy()
 
 	if (auto enemy = GetLockOnEnemy().lock())
 	{
+		//差分ベクトル
 		Vector3 diff = enemy->GetPos() - pos_;
-		diff.y_ = 0.0f;//水平方向だけ保管するからYは0
+
+		//水平方向だけ保管するからYは0
+		diff.y_ = 0.0f;
 
 		//0除算防止のため
 		if (diff.LengthSq() > 0.0001f)
@@ -292,5 +295,6 @@ void Player::StopKatanaEffect()
 
 float Player::GetAnimationCurrentTime() const
 {
+	//現在のアニメーションの時間の取得
 	return animation_.GetCurrentAnimTime();
 }

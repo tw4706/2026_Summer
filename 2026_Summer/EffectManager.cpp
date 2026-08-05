@@ -26,7 +26,7 @@ void EffectManager::Update()
 
 void EffectManager::Load(const std::wstring& name, const std::wstring& path)
 {
-	//すでにロードされたいたら何もしない
+	//すでにロードされていたら何もしない
 	if (effects_.count(name) > 0)
 	{
 		return;
