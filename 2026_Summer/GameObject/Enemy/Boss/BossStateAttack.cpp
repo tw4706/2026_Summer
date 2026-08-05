@@ -1,6 +1,7 @@
 #include "BossStateAttack.h"
 #include "BossStateRun.h"
 #include "Boss.h"
+#include "EnemyAttackDataLoader.h"
 
 namespace
 {
@@ -33,8 +34,18 @@ void BossStateAttack::Enter()
 	//攻撃アニメーションへ遷移
 	boss->ChangeAnimation(AnimationState::EnemyAttack);
 
+	//ボスの攻撃力を取得して攻撃コライダーに設定する
+	int damage = 0;
+	if (const EnemyAttackDataLoader* loader = boss->GetAttackDataLoader())
+	{
+		if (const AttackData* data = loader->GetAttackData(AttackType::NormalAttack))
+		{
+			damage = static_cast<int>(data->damage_);
+		}
+	}
+
 	//攻撃コライダーを生成
-	boss->CreateAttackCollider(kAttackRadius, kAttackDistance);
+	boss->CreateAttackCollider(kAttackRadius, kAttackDistance, damage);
 }
 
 void BossStateAttack::Update()

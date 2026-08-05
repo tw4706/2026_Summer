@@ -32,7 +32,7 @@ void EnemyAttackSubStateAttack::Update()
 	//有効開始フレームに達したら攻撃コライダーを生成
 	if (!isAttackColliderActive_ && currentFrame >= attackData_.attackColliderStartFrame_)
 	{
-		enemy->CreateAttackCollider(attackData_.colliderRadius_, attackData_.colliderHeight_);
+		enemy->CreateAttackCollider(attackData_.colliderRadius_, attackData_.colliderHeight_,attackData_.damage_);
 		isAttackColliderActive_ = true;
 	}
 

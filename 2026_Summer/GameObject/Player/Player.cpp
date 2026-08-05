@@ -204,7 +204,9 @@ void Player::OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColl
 		if (attackCollider != nullptr &&
 			static_cast<const Collider*>(pColliderB) == static_cast<const Collider*>(attackCollider))
 		{
-			OnDamage(kEnemyDamage);
+			//敵の攻撃データを参照してダメージを受ける
+			int damage = pEnemy->GetAttackDamage();
+			OnDamage(damage);
 		}
 	}
 	isHit_ = true;

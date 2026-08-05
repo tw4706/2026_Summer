@@ -5,6 +5,7 @@
 #include "EnemyManager.h"
 #include "EnemyStateIdle.h"
 #include "EnemyStateDamage.h"
+#include "EnemyStateAttack.h"
 #include "EnemyStateDeath.h"
 #include "CollisionManager.h"
 #include "EffectManager.h"
@@ -301,6 +302,12 @@ void EnemyBase::OnCollision(Collidable& coll, Collider* pColliderA, Collider* pC
 			return;
 		}
 
+		//攻撃状態なら入らない
+		if (std::dynamic_pointer_cast<EnemyStateAttack>(pCurrentState_))
+		{
+			return;
+		}
+
 		auto enemy = std::dynamic_pointer_cast<EnemyBase>(shared_from_this());
 
 		int rand = std::rand() % kRandMax;
@@ -347,12 +354,13 @@ void EnemyBase::OnDamage(int damage)
 	}
 }
 
-void EnemyBase::CreateAttackCollider(float radius, float distance)
+void EnemyBase::CreateAttackCollider(float radius, float distance,int attackDamage)
 {
 	//攻撃コライダーが既に存在する場合は何もしない
 	if (pAttackCollider_)return;
 
 	attackColliderDistance_ = distance;
+	attackDamage_ = attackDamage;
 
 	pAttackCollider_ = this->CreateCollider<SphereCollider>(radius);
 

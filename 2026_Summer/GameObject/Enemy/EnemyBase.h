@@ -59,12 +59,18 @@ public:
 	/// </summary>
 	/// <param name="radius">半径</param>
 	/// <param name="distance">距離</param>
-	void CreateAttackCollider(float radius, float distance);
+	void CreateAttackCollider(float radius, float distance,int attackDamage);
 
 	/// <summary>
 	/// 攻撃コライダーの削除
 	/// </summary>
 	void RemoveAttackCollider();
+
+	/// <summary>
+	/// 攻撃で与えるダメージの取得
+	/// </summary>
+	/// <returns>攻撃によるダメージ</returns>
+	int GetAttackDamage() const { return attackDamage_; }
 
 	/// <summary>
 	/// CSVデータの適用
@@ -209,6 +215,9 @@ protected:
 
 	//最大体力
 	int maxHP_ = 0;
+
+	//攻撃力
+	int attackDamage_ = 0;
 
 	//モデルの拡大率
 	Vector3 scale_;
