@@ -103,7 +103,7 @@ void Stage::DrawNavGridDebug() const
 			//歩行可能なら緑不可能なら赤
 			unsigned int color = node->iswalked ? GetColor(0, 255, 0) : GetColor(0, 255, 255);
 
-			DrawSphere3D(pos.ToDxlibVector(), kDebugGridRadius, kDebugGridDiv, color, color, TRUE);
+			DrawSphere3D(pos.ToDxlibVector(), kDebugGridRadius, kDebugGridDiv, color, color, true);
 		}
 	}
 }

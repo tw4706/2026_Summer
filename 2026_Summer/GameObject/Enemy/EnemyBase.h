@@ -167,6 +167,12 @@ public:
 	bool IsPlayerInVision(float maxDist, float visionAngle) const;
 
 	/// <summary>
+	/// ボスが反応しているかどうか(反応ステートに入っているか)
+	/// </summary>
+	/// <returns></returns>
+	bool IsReacting() const;
+
+	/// <summary>
 	/// HPUIのセット
 	/// </summary>
 	/// <param name="pGauge">ゲージの弱参照</param>

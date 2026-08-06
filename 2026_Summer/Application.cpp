@@ -70,11 +70,11 @@ bool Application::Init()
 
 		//Zバッファを有効にする。
 		//Effekseerを使用する場合、2DゲームでもZバッファを使用する。
-		SetUseZBuffer3D(TRUE);
+		SetUseZBuffer3D(true);
 
 		//Zバッファへの書き込みを有効にする。
 		//Effekseerを使用する場合、2DゲームでもZバッファを使用する。
-		SetWriteZBuffer3D(TRUE);
+		SetWriteZBuffer3D(true);
 	}
 
 	//フェードマネージャーの初期化

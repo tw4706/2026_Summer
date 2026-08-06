@@ -77,10 +77,12 @@ void CollisionManager::UpdateCheckCollision()
 			if (EnemyBase* pEnemyA = dynamic_cast<EnemyBase*>(&pObjA))
 			{
 				if (pEnemyA->GetHP() <= 0) continue;
+				if (pEnemyA->IsReacting()) continue;
 			}
 			if (EnemyBase* pEnemyB = dynamic_cast<EnemyBase*>(&pObjB))
 			{
 				if (pEnemyB->GetHP() <= 0) continue;
+				if (pEnemyB->IsReacting()) continue;
 			}
 
 			//刀と、その刀の持ち主との衝突はスキップ

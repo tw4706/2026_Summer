@@ -48,7 +48,7 @@ void NavigationGrid::CreateGrid(int stageModelHandle, float minX, float maxX, fl
 			NodeData& node = nodes_[z * width_ + x];
 
 			//地面とヒットしてないとき
-			if (hit.HitFlag == FALSE)
+			if (hit.HitFlag == false)
 			{
 				//歩行できないようにする
 				node.pos = Vector3{ worldPos.x_, 0.0f, worldPos.z_ };

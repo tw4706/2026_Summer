@@ -7,6 +7,7 @@
 #include "EnemyStateDamage.h"
 #include "EnemyStateAttack.h"
 #include "EnemyStateDeath.h"
+#include "EnemyStateReact.h"
 #include "CollisionManager.h"
 #include "EffectManager.h"
 #include"Collider/CapsuleCollider.h"
@@ -272,7 +273,7 @@ void EnemyBase::Draw()
 				}
 
 				//WayPoint‚ð‹…‚Å•`‰æ
-				DrawSphere3D(wayPointPos.ToDxlibVector(), kDrawWayPointRadius, kDrawWayPointDiv, wayPointColor, wayPointColor, TRUE);
+				DrawSphere3D(wayPointPos.ToDxlibVector(), kDrawWayPointRadius, kDrawWayPointDiv, wayPointColor, wayPointColor, true);
 			}
 		}
 	}
@@ -548,6 +549,11 @@ bool EnemyBase::IsPlayerInVision(float maxDist, float visionAngle) const
 	}
 
 	return false;
+}
+
+bool EnemyBase::IsReacting() const
+{
+	return std::dynamic_pointer_cast<EnemyStateReact>(pCurrentState_) != nullptr;
 }
 
 void EnemyBase::DrawDebugSearchRange(const Vector3& centerPos, float radius, unsigned int color)

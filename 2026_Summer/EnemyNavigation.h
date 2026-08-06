@@ -51,6 +51,18 @@ public:
 	int GetNextWayPointId() const { return nextWayPointId_; }
 
 	/// <summary>
+	/// 再検索するまでのタイマーの取得
+	/// </summary>
+	/// <returns>タイマーを返す</returns>
+	float GetPathRetryTimer() const { return pathRetryTimer_; }
+
+	/// <summary>
+	/// 再検索するまでのタイマーのセット
+	/// </summary>
+	/// <param name="time">時間</param>
+	void SetPathRetryTimer(float time) { pathRetryTimer_ = time; }
+
+	/// <summary>
 	/// デバッグ用の目標座標の設定・取得
 	/// </summary>
 	void SetDebugTarget(const Vector3& pos);
@@ -77,5 +89,8 @@ private:
 	//デバッグ描画用の目標までの座標
 	Vector3 debugNextPos_ = { 0.0f, 0.0f, 0.0f };
 	bool hasDebugTarget_ = false;
+
+	//経路の探索を再検索するまでの時間
+	float pathRetryTimer_ = 0.0f;
 };
 

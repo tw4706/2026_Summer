@@ -64,7 +64,6 @@ private:
 	float cellSize_ = 50.0f;
 	Vector3 gridPos_; //グリッドの原点
 
-	//想定する地面の高さ
-	float expectedGroundY_ = 0.0f;
+	float expectedGroundY_ = 0.0f;//想定する地面の高さ
 };
 

@@ -35,13 +35,7 @@ void PlayerCamera::Init()
 	//プレイヤーの注視点を取得
 	cameraTarget_ = pPlayer_->GetCameraTarget();
 
-	currentCameraTarget_ = Vector3::Lerp(currentCameraTarget_, cameraTarget_, kTargetCameraLerpRate);
-	currentYaw_ = yaw_;
-	currentPitch_ = pitch_;
-
-	Matrix4x4 rot = Matrix4x4::RotateY(yaw_) * Matrix4x4::RotateX(pitch_);
-	Vector3 offset = rot.TransformForVector(kTargetToCamera);
-	pos_ = currentCameraTarget_ + offset;
+	currentCameraTarget_ = cameraTarget_;
 }
 
 void PlayerCamera::Update(int stageModelHandle)

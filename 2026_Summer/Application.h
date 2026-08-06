@@ -26,4 +26,3 @@ public:
 private:
 	bool isGameEnd_=false;	//ゲームを終了するかどうかのフラグ
 };
-

@@ -35,10 +35,10 @@ void Bg::Init()
 
 void Bg::Draw(const Vector3& cameraPos)
 {
-	SetUseBackCulling(FALSE);
-	SetUseZBuffer3D(TRUE);
-	SetWriteZBuffer3D(FALSE);
-	SetUseLighting(FALSE);
+	SetUseBackCulling(false);
+	SetUseZBuffer3D(true);
+	SetWriteZBuffer3D(false);
+	SetUseLighting(false);
 
 	VECTOR c = cameraPos.ToDxlibVector();
 
@@ -67,7 +67,7 @@ void Bg::Draw(const Vector3& cameraPos)
 			v[2].u = 0; v[2].v = 0;
 			v[3].u = 1; v[3].v = 0;
 
-			DrawPrimitive3D(v, 4, DX_PRIMTYPE_TRIANGLESTRIP, tex, FALSE);
+			DrawPrimitive3D(v, 4, DX_PRIMTYPE_TRIANGLESTRIP, tex, false);
 		};
 
 	// =========================
@@ -130,7 +130,7 @@ void Bg::Draw(const Vector3& cameraPos)
 		VGet(c.x + kSize, c.y - kSize, c.z + kSize),
 		skyTex_[3]);
 
-	SetUseZBuffer3D(TRUE);
-	SetUseLighting(TRUE);
-	SetUseBackCulling(TRUE);
+	SetUseZBuffer3D(true);
+	SetUseLighting(true);
+	SetUseBackCulling(true);
 }

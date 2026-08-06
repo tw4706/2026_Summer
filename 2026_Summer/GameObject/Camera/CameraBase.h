@@ -12,6 +12,11 @@ public:
 	virtual void Update(int stageModelHandle);
 
 	/// <summary>
+	/// 計算したカメラの位置と注視点を適用する関数
+	/// </summary>
+	void UpdateRenderSystem();
+
+	/// <summary>
 	/// カメラの回転
 	/// </summary>
 	/// <param name="yaw">ヨー角</param>
@@ -63,18 +68,13 @@ public:
 	/// </summary>
 	/// <param name="prevCameraPos">前のカメラ座標</param>
 	/// <param name="prevCameraTarget">前のカメラターゲット</param>
-	void SetCompulsoryPosAndTarget(Vector3& prevCameraPos, Vector3& prevCameraTarget);
+	void SetPrevPosAndTarget(Vector3& prevCameraPos, Vector3& prevCameraTarget);
 private:
 	/// <summary>
 	/// カメラシェイクの更新
 	/// </summary>
 	/// <returns>シェイク後のカメラ座標</returns>
 	Vector3 UpdateShake();
-
-	/// <summary>
-	/// 計算したカメラの位置と注視点を適用する関数
-	/// </summary>
-	void UpdateRenderSystem();
 protected:
 	Vector3 pos_;          //座標
 	Vector3 cameraTarget_; //注視点

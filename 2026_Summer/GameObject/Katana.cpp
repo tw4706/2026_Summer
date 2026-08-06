@@ -141,7 +141,7 @@ void Katana::Draw()
 			}
 
 			//•`‰æ
-			DrawCapsule3D(top, bottom, pDebugCapsule->GetRadius(), 8, lineColor, GetColor(0, 0, 0), FALSE);
+			DrawCapsule3D(top, bottom, pDebugCapsule->GetRadius(), 8, lineColor, GetColor(0, 0, 0), false);
 		}
 	}
 #endif

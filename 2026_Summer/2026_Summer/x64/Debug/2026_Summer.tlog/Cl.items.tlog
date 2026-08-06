@@ -1,6 +1,7 @@
 C:\Users\yongy\git\2026_Summer\2026_Summer\Application.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\Application.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\AStarPathFinder.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\AStarPathFinder.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\AttackSelect.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\AttackSelect.obj
+C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Camera\BossCamera.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\BossCamera.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\FadeManager.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\FadeManager.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\GameObject\Enemy\Boss\BossStateRush.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\BossStateRush.obj
 C:\Users\yongy\git\2026_Summer\2026_Summer\EnemyNavigation.cpp;C:\Users\yongy\git\2026_Summer\2026_Summer\2026_Summer\x64\Debug\EnemyNavigation.obj

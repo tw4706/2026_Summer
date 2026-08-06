@@ -40,7 +40,7 @@ void CameraManager::ChangeCamera(const std::wstring& name)
 
 		//今のカメラの座標とターゲットをそのまま次のカメラに適用する
 		//これを行うことによって切り替わりの際にカメラがぶおんってならないようにする
-		nextCamera->SetCompulsoryPosAndTarget(prevPos, prevTarget);
+		nextCamera->SetPrevPosAndTarget(prevPos, prevTarget);
 	}
 	//アクティなカメラを切り替える
 	pActiveCamera_ = nextCamera;

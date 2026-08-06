@@ -21,6 +21,9 @@ namespace
 
 	//反応行動を開始する範囲
 	constexpr float kSearchReactRange = 1000.0f;
+
+	//経過時間
+	constexpr float kDeltaTime = 1.0f / 60.0f;
 }
 
 EnemyStateIdle::EnemyStateIdle(std::weak_ptr<EnemyBase> pEnemy, float searchRadius) :
@@ -82,6 +85,12 @@ void EnemyStateIdle::Update()
 
 	auto& navigation = *enemy->pNavigation_;
 
+	//再探索クールダウンの更新
+	if (navigation.GetPathRetryTimer() > 0.0f)
+	{
+		navigation.SetPathRetryTimer(navigation.GetPathRetryTimer() - kDeltaTime);
+	}
+
 	//敵の位置とプレイヤーのPosを取得
 	Vector3 enemyPos = enemy->GetPos();
 	Vector3 playerPos = enemy->GetPlayerPos();
@@ -136,6 +145,9 @@ void EnemyStateIdle::Update()
 			{
 				navigation.GetPathFollower().SetPath(path);
 			}
+
+			//経路の再検索のクールタイムを設定
+			navigation.SetPathRetryTimer(1.0f);
 		}
 	}
 

@@ -14,6 +14,7 @@
 #include"Player/Player.h"
 #include"CollisionManager.h"
 #include"Camera/PlayerCamera.h"
+#include"Camera/BossCamera.h"
 #include"Camera/LockOnCamera.h"
 #include"Camera/CameraManager.h"
 #include"LockOnManager.h"
@@ -67,6 +68,8 @@ GameScene::GameScene(SceneManager& sceneManager) :
 	pCameraManager_->RegisterCamera(L"PlayerCamera", playerCamera);
 	auto lockOnCamera = std::make_shared<LockOnCamera>();
 	pCameraManager_->RegisterCamera(L"LockOnCamera", lockOnCamera);
+	auto bossCamera = std::make_shared<BossCamera>();
+	pCameraManager_->RegisterCamera(L"BossCamera", bossCamera);
 
 	//ステージの登録
 	pStage_ = std::make_shared<Stage>(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f);
@@ -359,7 +362,7 @@ void GameScene::FadeDraw()
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(255 * rate));
-	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
+	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
@@ -428,6 +431,14 @@ void GameScene::SpawnBoss()
 		if (auto boss = std::dynamic_pointer_cast<Boss>(enemy))
 		{
 			pBoss_ = boss;
+
+			//ボスカメラにターゲットを設定して切り替え
+			auto bossCam = std::dynamic_pointer_cast<BossCamera>(pCameraManager_->GetCamera(L"BossCamera"));
+			if (bossCam)
+			{
+				bossCam->SetTarget(pPlayer_, boss,pCameraManager_.get());
+			}
+			pCameraManager_->ChangeCamera(L"BossCamera");
 		}
 	}
 }
