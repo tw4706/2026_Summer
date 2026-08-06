@@ -73,7 +73,7 @@ void Stage::Init()
 
 void Stage::Update()
 {
-	//今のところステージはおいているだけなので何もしない
+	//今のところステージはおいているだけ
 }
 
 void Stage::Draw()
