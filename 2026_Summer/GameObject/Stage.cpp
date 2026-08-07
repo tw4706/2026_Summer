@@ -52,6 +52,8 @@ void Stage::Init()
 	stageColModel_.Load(L"data/MV1/StageCol.mv1");
 	stageModel_.Load(L"data/MV1/StageModel.mv1");
 
+
+	//ステージの当たり判定のモデルと実際に描画しているモデルの回転とポジションの設定
 	MV1SetRotationXYZ(stageColModel_.GetHandle(), VGet(0.0f, kStageRotateY, 0.0f));
 	MV1SetPosition(stageColModel_.GetHandle(), kFirstStageColPos.ToDxlibVector());
 

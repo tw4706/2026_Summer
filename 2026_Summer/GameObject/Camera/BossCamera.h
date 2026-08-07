@@ -2,6 +2,8 @@
 #include "CameraBase.h"
 
 class CameraManager;
+class Player;
+class EnemyBase;
 class BossCamera :public CameraBase
 {
 public:
@@ -14,7 +16,7 @@ public:
     /// </summary>
     /// <param name="pPlayer">対象になるプレイヤー</param>
     /// <param name="pBoss">対象となるボス</param>
-    void SetTarget(std::weak_ptr<class Player> pPlayer, std::weak_ptr<class EnemyBase> pBoss, CameraManager* pCameraManager);
+    void SetTarget(std::weak_ptr<Player> pPlayer, std::weak_ptr<EnemyBase> pBoss, CameraManager* pCameraManager);
 
 private:
     std::weak_ptr<Player> pPlayer_;

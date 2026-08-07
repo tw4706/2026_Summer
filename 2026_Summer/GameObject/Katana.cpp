@@ -1,4 +1,5 @@
 #include "Katana.h"
+#include "Game.h"
 #include "Animation.h"
 #include "Enemy/EnemyBase.h"
 #include "Collider/CapsuleCollider.h"
@@ -26,6 +27,21 @@ namespace
 
 	//コライダーの高さ
 	constexpr float kColliderHeight = 120.0f;
+
+	//Run状態の刀のX角度
+	constexpr float kRunRotateX = 4.0f;
+
+	//Run状態の刀のZ角度
+	constexpr float kRunRotateZ = 3.0f;
+
+	//刀の描画するローカル開始座標
+	const VECTOR klocalStartPos = VGet(0.0f, -30.0f, 0.0f);
+
+	//刀の描画するローカル終点座標
+	const VECTOR klocalEndPos = VGet(0.0f, 70.0f, 0.0f);
+
+	//刀のコライダーのデバッグ描画におけるポリゴンの分割数
+	constexpr int DrawKatanaCapsuleDivNum = 8;
 }
 
 Katana::Katana(Vector3 pos, Vector3 vel, float dir) :
@@ -64,8 +80,8 @@ void Katana::Update(const MATRIX& handMat, AnimationState ownerState)
 
 	if (ownerState == AnimationState::Run)
 	{
-		katanaRotate.x_ += DX_PI_F / 4.0f;
-		katanaRotate.z_ += DX_PI_F / 3.0f;
+		katanaRotate.x_ += DX_PI_F / kRunRotateX;
+		katanaRotate.z_ += DX_PI_F / kRunRotateZ;
 	}
 
 	// 行列を用いた計算
@@ -79,8 +95,8 @@ void Katana::Update(const MATRIX& handMat, AnimationState ownerState)
 
 	//worldMat_を使ってプレイヤーのpos_を刀の位置に合成させる
 	//ローカル座標での始点と終点
-	VECTOR localStart = VGet(0.0f, -30.0f, 0.0f);
-	VECTOR localEnd = VGet(0.0f, 70.0f, 0.0f);
+	VECTOR localStart = klocalStartPos;
+	VECTOR localEnd = klocalEndPos;
 
 	//ワールド座標での始点と終点
 	VECTOR worldStart = VTransform(localStart, worldMat_);
@@ -126,22 +142,22 @@ void Katana::Draw()
 			unsigned int lineColor;
 			if (isHit_)
 			{
-				//当たっている場合は赤色
-				lineColor = GetColor(255, 0, 0);
+				//当たっている場合は緑色
+				lineColor = Game::kGreenColor;
 			}
 			else if (IsEnabled())
 			{
-				//当たり判定が有効な場合は水色
-				lineColor = GetColor(255, 0, 0);
+				//当たり判定が有効な場合は赤色
+				lineColor = Game::kRedColor;
 			}
 			else
 			{
 				//当たり判定が無効な場合は水色
-				lineColor = GetColor(0, 255, 255);
+				lineColor = Game::kLightBlueColor;
 			}
 
 			//描画
-			DrawCapsule3D(top, bottom, pDebugCapsule->GetRadius(), 8, lineColor, GetColor(0, 0, 0), false);
+			DrawCapsule3D(top, bottom, pDebugCapsule->GetRadius(), DrawKatanaCapsuleDivNum, lineColor, GetColor(0, 0, 0), false);
 		}
 	}
 #endif

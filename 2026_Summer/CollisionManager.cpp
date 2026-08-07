@@ -256,11 +256,12 @@ bool CollisionManager::CheckCapsuleVsCapsule(Collidable& pCapsuleObjA, Collidabl
 	Vector3 b1 = pCapB->GetWorldA();
 	Vector3 b2 = pCapB->GetWorldB();
 
+	//AとBの半径の合計
 	float radSum = pCapA->GetRadius() + pCapB->GetRadius();
 
 	//最小距離の二乗を記憶する変数
 	float minDistanceSq = 1000000.0f;
-	Vector3 pointP, pointQ; //最終的なお互いの最近接点
+	Vector3 pointP, pointQ; //最終的なお互いの最近点
 
 	//垂線チェックループ
 	for (int i = 0; i < 2; ++i)
@@ -374,10 +375,8 @@ bool CollisionManager::CheckCapsuleVsPolygon(Collidable& pCapsuleObj, Collidable
 	if (modelHandle < 0) return false;
 
 	//Dxライブラリの関数でカプセルとポリゴンの当たり判定のチェックを行う
-	MV1_COLL_RESULT_POLY_DIM result = MV1CollCheck_Capsule(
-		modelHandle, -1,
-		capA.ToDxlibVector(),
-		capB.ToDxlibVector(),capRadius);
+	MV1_COLL_RESULT_POLY_DIM result = MV1CollCheck_Capsule(modelHandle, -1,
+		capA.ToDxlibVector(),capB.ToDxlibVector(),capRadius);
 
 	//当たっているポリゴンが一つ以上あるならtrue,そうでないならfalse
 	bool isHit = (result.HitNum > 0);
@@ -396,7 +395,7 @@ bool CollisionManager::CheckCapsuleVsPolygon(Collidable& pCapsuleObj, Collidable
 
 			//法線のY咆哮の傾きで床か壁かを判定する
 			//床の場合
-			if (normal.y_ > 0.f)
+			if (normal.y_ > 0.7f)
 			{
 				float targetCapAY = poly.HitPosition.y + capRadius;
 				float diffY = targetCapAY - capA.y_;

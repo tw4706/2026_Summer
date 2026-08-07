@@ -19,7 +19,7 @@ namespace
 	//アニメーションのスピード
 	constexpr float kSpeed = 1.0f;
 
-	//ブレンド率
+	//ブレンド率(最大と最小)
 	constexpr float kBlendRate1 = 1.0f;
 	constexpr float kBlendRate0 = 0.0f;
 }

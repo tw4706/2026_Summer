@@ -51,7 +51,7 @@ GameScene::GameScene(SceneManager& sceneManager) :
 	update_(&GameScene::FadeInUpdate),
 	draw_(&GameScene::FadeDraw),
 	frameCount_(kFadeInterval),
-	bossTriggerPosZ_( -10400.0f),
+	bossTriggerPosZ_( -10250.0f),
 	bossTriggerRadius_(1500.0f),
 	isBossSpawned_(false)
 {
@@ -337,6 +337,7 @@ void GameScene::FadeOutUpdate()
 {
 	frameCount_--;
 
+	//時間が経過したらリザルトシーンに遷移
 	if (frameCount_ <= 0)
 	{
 		sceneManager_.ChangeScene(std::make_shared<ResultScene>(sceneManager_, clearTime_));
@@ -386,8 +387,8 @@ void GameScene::NormalDraw()
 	pUiManager_->Draw();
 
 #ifdef _DEBUG
-	DrawString(0, 0, L"GameScene", GetColor(255, 255, 255));
-	DrawFormatString(0, 30, GetColor(255, 255, 255), L"FRAME:%d", frameCount_);
+	DrawString(0, 0, L"GameScene",Game::kWhiteColor);
+	DrawFormatString(0, 30, Game::kWhiteColor, L"FRAME:%d", frameCount_);
 #endif
 }
 
@@ -402,8 +403,7 @@ void GameScene::CheckBossTrigger()
 	//既に出現しているなら何もしない
 	if (isBossSpawned_)return;
 
-	//雑魚敵をいないかつプレイヤーがボスの生成する範囲に入っていたら
-	//ボスを生成
+	//雑魚敵をいないかつプレイヤーがボスの生成する範囲に入っていたらボスを生成
 	/*if (pEnemyManager_->GetEnemies().empty()&&*/
 	if(pPlayer_->GetPos().z_ <= bossTriggerPosZ_)
 	{
