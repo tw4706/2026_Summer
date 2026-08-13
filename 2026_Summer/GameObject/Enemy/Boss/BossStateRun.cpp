@@ -1,5 +1,6 @@
 #include "BossStateRun.h"
 #include "BossStateRush.h"
+#include "BossStateRangedAttack.h"
 #include "Boss.h"
 #include <algorithm>
 
@@ -17,8 +18,10 @@ namespace
 	//様子をうかがう距離
 	constexpr float kOrbitDistance = 400.0f;
 
-	//このズレ幅で補正速度が最大になる(比例配分の基準)
+	//このズレ幅で補正速度が最大になる
 	constexpr float kMaxCorrectRange = 150.0f;
+
+	constexpr float kRangedAttackDistance = 500.0f;
 }
 
 BossStateRun::BossStateRun(std::weak_ptr<Boss> pBoss, float searchRadius) :
@@ -46,15 +49,6 @@ void BossStateRun::Update()
 	auto boss = pBoss_.lock();
 	if (!boss)return;
 
-	//攻撃のクールタイムが来たら
-	if (boss->IsAttackReady())
-	{
-		//攻撃状態に遷移
-		auto nextState = std::make_shared<BossStateRush>(pBoss_, searchRadius_);
-		boss->ChangeState(nextState);
-		return;
-	}
-
 	Vector3 enemyPos = enemy->GetPos();
 	Vector3 playerPos = enemy->GetPlayerPos();
 
@@ -65,6 +59,25 @@ void BossStateRun::Update()
 	float distance = fromPlayer.Length();
 	//ほぼ重なっている場合は移動処理をしない
 	if (distance < 0.0001f) return;
+
+	//攻撃のクールタイムが来たら
+	if (boss->IsAttackReady())
+	{
+		std::shared_ptr<BossStateBase> nextState;
+
+		//距離が離れている場合は遠距離斬撃、近い場合は突進攻撃
+		if (distance >= kRangedAttackDistance)
+		{
+			nextState = std::make_shared<BossStateRangedAttack>(pBoss_, searchRadius_);
+		}
+		else
+		{
+			nextState = std::make_shared<BossStateRush>(pBoss_, searchRadius_);
+		}
+
+		boss->ChangeState(nextState);
+		return;
+	}
 
 	//プレイヤーから見た方向
 	Vector3 radialDir = fromPlayer.Normalize();

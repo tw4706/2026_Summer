@@ -62,6 +62,14 @@ public:
 	void CreateAttackCollider(float radius, float distance,int attackDamage);
 
 	/// <summary>
+	/// 飛ばす攻撃用のコライダーの生成
+	/// </summary>
+	/// <param name="radius">攻撃コライダーの半径</param>
+	/// <param name="speed">攻撃コライダーの進む速度</param>
+	/// <param name="attackDamage">ダメージ</param>
+	void CreateRangedAttackCollider(float radius, float speed, int attackDamage);
+
+	/// <summary>
 	/// 攻撃コライダーの削除
 	/// </summary>
 	void RemoveAttackCollider();
@@ -224,6 +232,15 @@ protected:
 
 	//攻撃力
 	int attackDamage_ = 0;
+
+	//遠距離攻撃かどうか
+	bool isRangedAttack_ = false;
+
+	//遠距離攻撃の飛んでいく方向
+	Vector3 rangedAttackDir_ = { 0.0f, 0.0f, 0.0f };
+
+	//遠距離攻撃の飛んでいく速度
+	float rangedAttackSpeed_ = 0.0f;
 
 	//モデルの拡大率
 	Vector3 scale_;

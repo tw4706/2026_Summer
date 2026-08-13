@@ -156,9 +156,19 @@ void EnemyBase::Update()
 	//攻撃コライダーの更新
 	if (pAttackCollider_)
 	{
-		Vector3 forward = { sinf(moveAngle_), 0.0f, -cosf(moveAngle_) };
-		Vector3 offset = pos_ + forward * attackColliderDistance_ + Vector3{ 0.0f, colliderHeight_ * Game::kHalf, 0.0f };
-		pAttackCollider_->SetPos(offset);
+		if (isRangedAttack_)
+		{
+			//保存しておいた方向へ直進させる
+			Vector3 moveVec = rangedAttackDir_ * rangedAttackSpeed_ * kDeltaTime;
+			Vector3 nextPos = pAttackCollider_->GetPos() + moveVec;
+			pAttackCollider_->SetPos(nextPos);
+		}
+		else
+		{
+			Vector3 forward = { sinf(moveAngle_), 0.0f, -cosf(moveAngle_) };
+			Vector3 offset = pos_ + forward * attackColliderDistance_ + Vector3{ 0.0f, colliderHeight_ * Game::kHalf, 0.0f };
+			pAttackCollider_->SetPos(offset);
+		}
 	}
 }
 
@@ -371,6 +381,25 @@ void EnemyBase::CreateAttackCollider(float radius, float distance,int attackDama
 	pAttackCollider_->SetPos(offset);
 }
 
+void EnemyBase::CreateRangedAttackCollider(float radius, float speed, int attackDamage)
+{
+	//攻撃コライダーが既に存在する場合は何もしない
+	if (pAttackCollider_)return;
+
+	attackDamage_ = attackDamage;
+	isRangedAttack_ = true;
+	rangedAttackSpeed_ = speed;
+
+	//攻撃開始時に向いている方向へ進む
+	rangedAttackDir_ = { sinf(moveAngle_), 0.0f, -cosf(moveAngle_) };
+
+	pAttackCollider_ = this->CreateCollider<SphereCollider>(radius);
+
+	//生成位置
+	Vector3 spawnPos = pos_ + Vector3{ 0.0f, colliderHeight_ * Game::kHalf, 0.0f };
+	pAttackCollider_->SetPos(spawnPos);
+}
+
 void EnemyBase::RemoveAttackCollider()
 {
 	if (!pAttackCollider_) return;
@@ -389,6 +418,7 @@ void EnemyBase::RemoveAttackCollider()
 	}
 
 	pAttackCollider_ = nullptr;
+	isRangedAttack_ = false;
 }
 
 void EnemyBase::ApplyData(const EnemyData& data, const EnemySpawnData& spawnData, const WayPointLoader* pWayPointLoader)
