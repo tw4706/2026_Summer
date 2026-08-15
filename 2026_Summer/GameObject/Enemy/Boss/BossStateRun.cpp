@@ -21,7 +21,8 @@ namespace
 	//‚±‚ÌƒYƒŒ•‚Å•â³‘¬“x‚ªÅ‘å‚É‚È‚é
 	constexpr float kMaxCorrectRange = 150.0f;
 
-	constexpr float kRangedAttackDistance = 500.0f;
+	//aŒ‚UŒ‚‚ğs‚¤‹——£
+	constexpr float kRangedAttackDistance = 800.0f;
 }
 
 BossStateRun::BossStateRun(std::weak_ptr<Boss> pBoss, float searchRadius) :

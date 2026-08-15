@@ -6,6 +6,7 @@
 #include "FadeManager.h"
 #include<Dxlib.h>
 #include<memory>
+#include<cmath>
 #include<algorithm>
 
 namespace
@@ -23,6 +24,13 @@ namespace
 	constexpr int kRetryPosY = 30;
 	constexpr int kBackTitlePosX = 0;
 	constexpr int kBackTitlePosY = 60;
+
+	// 演出のタイミング
+	constexpr int kClearTimeShowFrame = 0;		//クリアタイムを出すフレーム
+	constexpr int kRankShowFrame = 30;			//ランクを出すフレーム
+	constexpr int kButtonSlideStartFrame = 60;	//ボタンのスライドインを始めるフレーム
+	constexpr int kButtonSlideDuration = 20;	//スライドインにかけるフレーム数
+	constexpr int kButtonSlideDistance = 100;	//上からどれだけ離れた位置から降りてくるか
 }
 
 ResultScene::ResultScene(SceneManager& sceneManager,float clearTime) :
@@ -82,6 +90,17 @@ void ResultScene::FadeInUpdate()
 
 void ResultScene::NormalUpdate()
 {
+	// 演出中は入力を受け付けず、カウンタだけ進める
+	if (!isInputEnabled_)
+	{
+		performanceCount_++;
+		if (performanceCount_ >= kButtonSlideStartFrame + kButtonSlideDuration)
+		{
+			isInputEnabled_ = true;
+		}
+		return;
+	}
+
 	if (Input::GetInstance().IsTriggered("up"))
 	{
 		currentIndex_ = 0;
@@ -147,10 +166,27 @@ void ResultScene::NormalDraw()
 	//リザルトでのクリアタイムやランクの表示
 	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0xffffff, true);
 	DrawFormatString(0, 0, 0x000000, L"リザルトシーン");
-	DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - 30, 0x000000, L"クリアタイム: %.1f秒", clearTime_);
-	DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 0x000000, L"ランク: %c", rank_);
 
-	//選択肢であるリトライやタイトルに戻る選択肢
-	DrawFormatString(Game::kScreenWidth / 2 + kRetryPosX, Game::kScreenHeight / 2 + kRetryPosY, retryColor, L"リトライ");
-	DrawFormatString(Game::kScreenWidth / 2 + kBackTitlePosX, Game::kScreenHeight / 2 + kBackTitlePosY, titleColor, L"タイトルに戻る");
+	//クリアタイム表示
+	if (performanceCount_ >= kClearTimeShowFrame)
+	{
+		DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - 30, 0x000000, L"クリアタイム: %.1f秒", clearTime_);
+	}
+
+	//ランク表示(クリアタイムより後に出す)
+	if (performanceCount_ >= kRankShowFrame)
+	{
+		DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 0x000000, L"ランク: %c", rank_);
+	}
+
+	//ボタンを上からスライドインさせる
+	float t = std::clamp(static_cast<float>(performanceCount_ - kButtonSlideStartFrame) / kButtonSlideDuration,0.0f, 1.0f);
+	float eased = 1.0f - std::pow(1.0f - t, 3.0f);
+	int slideOffset = static_cast<int>((1.0f - eased) * kButtonSlideDistance);
+
+	if (performanceCount_ >= kButtonSlideStartFrame)
+	{
+		DrawFormatString(Game::kScreenWidth / 2 + kRetryPosX, Game::kScreenHeight / 2 + kRetryPosY - slideOffset, retryColor, L"リトライ");
+		DrawFormatString(Game::kScreenWidth / 2 + kBackTitlePosX, Game::kScreenHeight / 2 + kBackTitlePosY - slideOffset, titleColor, L"タイトルに戻る");
+	}
 }
