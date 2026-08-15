@@ -173,13 +173,13 @@ void ResultScene::NormalDraw()
 		DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - 30, 0x000000, L"クリアタイム: %.1f秒", clearTime_);
 	}
 
-	//ランク表示(クリアタイムより後に出す)
+	//ランク表示
 	if (performanceCount_ >= kRankShowFrame)
 	{
 		DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 0x000000, L"ランク: %c", rank_);
 	}
 
-	//ボタンを上からスライドインさせる
+	//ボタンを上からスライドさせる
 	float t = std::clamp(static_cast<float>(performanceCount_ - kButtonSlideStartFrame) / kButtonSlideDuration,0.0f, 1.0f);
 	float eased = 1.0f - std::pow(1.0f - t, 3.0f);
 	int slideOffset = static_cast<int>((1.0f - eased) * kButtonSlideDistance);
