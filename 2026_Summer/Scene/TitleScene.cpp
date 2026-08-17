@@ -41,6 +41,8 @@ namespace
 	//選択されているときの拡大率
 	constexpr float kSelectedScale = 0.8f;
 	constexpr float kUnselectedScale = 0.6f;
+
+	constexpr float kScaleLerpRate = 0.1f;
 }
 
 TitleScene::TitleScene(SceneManager& sceneManager) :
@@ -66,8 +68,8 @@ void TitleScene::Init()
 
 	//ハンドルの読み込み
 	titleLogoHandle_ = LoadGraph(L"data/UI/titleLogo.png");
-	startTextHandle_= LoadGraph(L"data/UI/start.png");
-	endTextHandle_= LoadGraph(L"data/UI/endText.png");
+	startTextHandle_ = LoadGraph(L"data/UI/start.png");
+	endTextHandle_ = LoadGraph(L"data/UI/endText.png");
 
 	//ハンドルサイズの取得
 	GetGraphSize(startTextHandle_, &startTextWidth_, &startTextHeight_);
@@ -158,30 +160,19 @@ void TitleScene::FadeDraw()
 
 void TitleScene::NormalDraw()
 {
-	pBg_->Draw(Vector3{0.0f,0.0f,0.0f});
-
-	int titleColor = 0;
-	int endColor = 0;
-
-	if (currentIndex_ == 0)
-	{
-		titleColor = 0xff0000;
-		endColor = 0x000000;
-	}
-	else if (currentIndex_ == 1)
-	{
-		titleColor = 0x000000;
-		endColor = 0xff0000;
-	}
+	pBg_->Draw(Vector3{ 0.0f,0.0f,0.0f });
 
 	float startScale = (currentIndex_ == 0) ? kSelectedScale : kUnselectedScale;
 	float endScale = (currentIndex_ == 1) ? kSelectedScale : kUnselectedScale;
 
+	startCurrentScale_ = Vector3::Lerp(startCurrentScale_, startScale, kScaleLerpRate);
+	endCurrentScale_ = Vector3::Lerp(endCurrentScale_, endScale, kScaleLerpRate);
+
 	DrawRotaGraph3(Game::kScreenWidth / 2, Game::kScreenHeight / 2 + kTitleTextOffsetY,
-		startTextWidth_ / 2, startTextHeight_ / 2, startScale, startScale, 0.0f, startTextHandle_, true);
+		startTextWidth_ / 2, startTextHeight_ / 2, startCurrentScale_, startCurrentScale_, 0.0f, startTextHandle_, true);
 
 	DrawRotaGraph3(Game::kScreenWidth / 2, Game::kScreenHeight / 2 + kEndTextOffsetY,
-		endTextWidth_ / 2, endTextHeight_ / 2, endScale, endScale, 0.0f, endTextHandle_, true);
+		endTextWidth_ / 2, endTextHeight_ / 2, endCurrentScale_, endCurrentScale_, 0.0f, endTextHandle_, true);
 
 	//タイトルロゴの描画
 	DrawRotaGraph3(Game::kScreenWidth / 2 + kLogoOffsetX, Game::kScreenHeight / 2 + kLogoOffsetY, 0, 0,

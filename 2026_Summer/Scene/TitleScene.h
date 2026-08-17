@@ -44,6 +44,10 @@ private:
 	int startTextWidth_ = 0, startTextHeight_ = 0;
 	int endTextWidth_ = 0, endTextHeight_ = 0;
 
+	float startCurrentScale_ = 0.0f;
+
+	float endCurrentScale_ = 0.0f;
+
 	//îwåi
 	std::shared_ptr<Bg>pBg_;
 };
