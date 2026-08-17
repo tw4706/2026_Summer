@@ -209,13 +209,10 @@ public:
 	/// </summary>
 	void SetNavigationGrid(const NavigationGrid* pNavGrid);
 
-#ifdef _DEBUG
 	/// <summary>
 	/// G‹›“GŸr–Å—pŠÖ”
 	/// </summary>
 	void Kill() { hp_ = 0; isDead_ = true; }
-#endif
-
 protected:
 
 	/// <summary>

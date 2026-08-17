@@ -1,6 +1,10 @@
 C:\GitHub\2026_Summer\2026_Summer\Application.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\Application.obj
 C:\GitHub\2026_Summer\2026_Summer\AStarPathFinder.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\AStarPathFinder.obj
 C:\GitHub\2026_Summer\2026_Summer\AttackSelect.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\AttackSelect.obj
+C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\Boss\BossStateRangedAttack.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\BossStateRangedAttack.obj
+C:\GitHub\2026_Summer\2026_Summer\GameObject\Camera\BossCamera.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\BossCamera.obj
+C:\GitHub\2026_Summer\2026_Summer\FadeManager.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\FadeManager.obj
+C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\Boss\BossStateRush.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\BossStateRush.obj
 C:\GitHub\2026_Summer\2026_Summer\EnemyNavigation.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyNavigation.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\Boss\BossStateAttack.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\BossStateAttack.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\Boss\BossStateDamage.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\BossStateDamage.obj
@@ -14,6 +18,7 @@ C:\GitHub\2026_Summer\2026_Summer\CSV\ComboDataLoader.cpp;C:\GitHub\2026_Summer\
 C:\GitHub\2026_Summer\2026_Summer\CSV\EnemySpawnDataLoader.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemySpawnDataLoader.obj
 C:\GitHub\2026_Summer\2026_Summer\CSV\EnemyAttackDataLoader.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyAttackDataLoader.obj
 C:\GitHub\2026_Summer\2026_Summer\EffectManager.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EffectManager.obj
+C:\GitHub\2026_Summer\2026_Summer\SoundManager.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\SoundManager.obj
 C:\GitHub\2026_Summer\2026_Summer\UI\ReticleUI.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\ReticleUI.obj
 C:\GitHub\2026_Summer\2026_Summer\UI\EnemyHPGaugeUI.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyHPGaugeUI.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\EnemyStateReact.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\EnemyStateReact.obj
