@@ -33,13 +33,16 @@ namespace
 	constexpr int kButtonSlideDistance = 100;	//上からどれだけ離れた位置から降りてくるか
 }
 
-ResultScene::ResultScene(SceneManager& sceneManager,float clearTime) :
+ResultScene::ResultScene(SceneManager& sceneManager,float clearTime,bool isGameOver) :
 	Scene(sceneManager),
 	update_(&ResultScene::FadeInUpdate),
 	draw_(&ResultScene::FadeDraw),
 	frameCount_(kFadeInterval),
-	clearTime_(clearTime)
+	clearTime_(clearTime),
+	isGameOver_(isGameOver)
 {
+	if (isGameOver_)return;
+
 	//ランク判定
 	if (clearTime_ <= kRankSTime)
 	{
@@ -90,7 +93,7 @@ void ResultScene::FadeInUpdate()
 
 void ResultScene::NormalUpdate()
 {
-	// 演出中は入力を受け付けず、カウンタだけ進める
+	//演出中は入力を受け付けず、カウンタを進める
 	if (!isInputEnabled_)
 	{
 		performanceCount_++;
@@ -167,16 +170,24 @@ void ResultScene::NormalDraw()
 	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0xffffff, true);
 	DrawFormatString(0, 0, 0x000000, L"リザルトシーン");
 
-	//クリアタイム表示
-	if (performanceCount_ >= kClearTimeShowFrame)
-	{
-		DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - 30, 0x000000, L"クリアタイム: %.1f秒", clearTime_);
-	}
 
-	//ランク表示
-	if (performanceCount_ >= kRankShowFrame)
+	if (isGameOver_)
 	{
-		DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 0x000000, L"ランク: %c", rank_);
+		DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - 15, 0x000000, L"GameOver");
+	}
+	else
+	{
+		//クリアタイム表示
+		if (performanceCount_ >= kClearTimeShowFrame)
+		{
+			DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - 30, 0x000000, L"クリアタイム: %.1f秒", clearTime_);
+		}
+
+		//ランク表示
+		if (performanceCount_ >= kRankShowFrame)
+		{
+			DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 0x000000, L"ランク: %c", rank_);
+		}
 	}
 
 	//ボタンを上からスライドさせる

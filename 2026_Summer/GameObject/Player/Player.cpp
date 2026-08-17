@@ -135,7 +135,10 @@ void Player::Update()
 	//ステートパターンの更新
 	if (pCurrentState_)
 	{
-		pCurrentState_->Update();
+		if (canControl_)
+		{
+			pCurrentState_->Update();
+		}
 	}
 
 	//アニメーションの更新

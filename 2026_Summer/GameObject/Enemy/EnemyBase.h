@@ -59,7 +59,7 @@ public:
 	/// </summary>
 	/// <param name="radius">半径</param>
 	/// <param name="distance">距離</param>
-	void CreateAttackCollider(float radius, float distance,int attackDamage);
+	void CreateAttackCollider(float radius, float distance, int attackDamage);
 
 	/// <summary>
 	/// 飛ばす攻撃用のコライダーの生成
@@ -208,6 +208,13 @@ public:
 	/// ナビゲーショングリッドのセット
 	/// </summary>
 	void SetNavigationGrid(const NavigationGrid* pNavGrid);
+
+#ifdef _DEBUG
+	/// <summary>
+	/// 雑魚敵殲滅用関数
+	/// </summary>
+	void Kill() { hp_ = 0; isDead_ = true; }
+#endif
 
 protected:
 

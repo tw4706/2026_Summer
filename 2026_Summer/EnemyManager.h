@@ -71,6 +71,11 @@ public:
 
 	const std::vector<std::shared_ptr<EnemyBase>>& GetEnemies() const { return enemies_; }
 
+	/// <summary>
+	/// ‚·‚×‚Ä‚ÌG‹›“GŸr–Å—pŠÖ”
+	/// </summary>
+	void AllEnemiesKill();
+
 private:
 	/// <summary>
 	/// Œ^–¼‚É‰‚¶‚½“G‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬‚·‚é

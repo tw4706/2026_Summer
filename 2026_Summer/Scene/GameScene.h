@@ -27,6 +27,7 @@ public:
 	void FadeInUpdate();
 	void NormalUpdate();
 	void FadeOutUpdate();
+	void BossFadeOutUpdate();
 	using UpdateFunc_t = void (GameScene::*)();
 	UpdateFunc_t update_;
 
@@ -65,6 +66,9 @@ private:
 
 	//ボスが出現済みかどうか
 	bool isBossSpawned_;
+
+	//ゲームオーバーかどうか
+	bool isGameOver_ = false;
 
 	//UIマネージャー
 	std::shared_ptr<UIManager> pUiManager_;

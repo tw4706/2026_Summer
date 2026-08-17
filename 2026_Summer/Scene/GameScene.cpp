@@ -230,11 +230,16 @@ void GameScene::NormalUpdate()
 	{
 		pPlayer_->SetPos(kDebugWarpPlayerPos);
 	}
+	if (Input::GetInstance().IsTriggered("debugKillAllEnemies"))
+	{
+		pEnemyManager_->AllEnemiesKill();
+	}
 #endif
 
 	//プレイヤーが死んだ場合はシーン遷移をする
 	if (pPlayer_->IsDead())
 	{
+		isGameOver_ = true;
 		update_ = &GameScene::FadeOutUpdate;
 		draw_ = &GameScene::FadeDraw;
 		frameCount_ = kFadeInterval;
@@ -243,6 +248,15 @@ void GameScene::NormalUpdate()
 
 	//ボストリガー判定
 	CheckBossTrigger();
+
+	if (isBossSpawned_ && !pPlayer_->GetCanControl())
+	{
+		auto bossCam = std::dynamic_pointer_cast<BossCamera>(pCameraManager_->GetCamera(L"BossCamera"));
+		if (bossCam && bossCam->IsBossEventFinished())
+		{
+			pPlayer_->SetCanControl(true);
+		}
+	}
 
 	//ボスが生成されるまでは生成範囲まででプレイヤーを制限
 	if (!isBossSpawned_)
@@ -318,6 +332,7 @@ void GameScene::NormalUpdate()
 	auto boss = pBoss_.lock();
 	if (boss && boss->IsDead())
 	{
+		isGameOver_ = false;
 		update_ = &GameScene::FadeOutUpdate;
 		draw_ = &GameScene::FadeDraw;
 		frameCount_ = kFadeInterval;
@@ -340,7 +355,19 @@ void GameScene::FadeOutUpdate()
 	//時間が経過したらリザルトシーンに遷移
 	if (frameCount_ <= 0)
 	{
-		sceneManager_.ChangeScene(std::make_shared<ResultScene>(sceneManager_, clearTime_));
+		sceneManager_.ChangeScene(std::make_shared<ResultScene>(sceneManager_, clearTime_,isGameOver_));
+	}
+}
+
+void GameScene::BossFadeOutUpdate()
+{
+	frameCount_--;
+
+	if (frameCount_ <= 0)
+	{
+		SpawnBoss();
+		update_ = &GameScene::FadeInUpdate;
+		frameCount_ = kFadeInterval;
 	}
 }
 
@@ -404,11 +431,12 @@ void GameScene::CheckBossTrigger()
 	if (isBossSpawned_)return;
 
 	//雑魚敵をいないかつプレイヤーがボスの生成する範囲に入っていたらボスを生成
-	/*if (pEnemyManager_->GetEnemies().empty()&&*/
-	if(pPlayer_->GetPos().z_ <= bossTriggerPosZ_)
+	if (pEnemyManager_->GetEnemies().empty()&&pPlayer_->GetPos().z_ <= bossTriggerPosZ_)
 	{
 		isBossSpawned_ = true;
-		SpawnBoss();
+		update_ = &GameScene::BossFadeOutUpdate;
+		draw_ = &GameScene::FadeDraw;
+		frameCount_ = kFadeInterval;
 	}
 }
 
@@ -441,4 +469,7 @@ void GameScene::SpawnBoss()
 			pCameraManager_->ChangeCamera(L"BossCamera");
 		}
 	}
-}
+
+	//プレイヤーの操作を不可能にする
+	pPlayer_->SetCanControl(false);
+};

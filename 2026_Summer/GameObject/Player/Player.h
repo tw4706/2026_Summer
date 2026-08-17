@@ -149,6 +149,19 @@ public:
 	/// </summary>
 	/// <returns>アニメーションの現在時間を返す</returns>
 	float GetAnimationCurrentTime() const;
+
+	/// <summary>
+	/// 操作可能かのフラグの取得
+	/// </summary>
+	/// <returns>可能ならtrueを返す、不可能ならfalseを返す</returns>
+	bool GetCanControl()const { return canControl_; }
+
+	/// <summary>
+	/// 操作可能かどうかの設定
+	/// </summary>
+	/// <param name="canControl">操作可能か</param>
+	void SetCanControl(bool canControl) { canControl_ = canControl; }
+
 private:
 	float moveAngle_;						//プレイヤーの向く角度
 	int handFrameIndex_;					//右手の刀を持つ手のフレームインデックス
@@ -156,6 +169,7 @@ private:
 	bool isInvincible_ = false;				//無敵中かどうか
 	bool isGuarding_ = false;				//ガード中かどうか
 	bool isLockOn_ = false;					//ロックオンしているかどうか
+	bool canControl_ = true;				//操作可能かどうか
 
 	ComboManager comboManager_;				//コンボマネージャー
 	CameraManager* pCameraManager_=nullptr;	//カメラマネージャー

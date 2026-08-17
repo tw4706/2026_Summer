@@ -123,6 +123,14 @@ void EnemyManager::RemoveEnemy()
 			[](const std::shared_ptr<EnemyBase>& e) {return e->IsDead(); }),enemies_.end());
 }
 
+void EnemyManager::AllEnemiesKill()
+{
+	for (auto& enemy : enemies_)
+	{
+		enemy->Kill();
+	}
+}
+
 std::shared_ptr<EnemyBase> EnemyManager::CreateInstance(const std::string& type)
 {
 	//“G‚ÌŒ^‚É‰‚¶‚½ƒNƒ‰ƒX‚ÉÀ‘Ì‚ğØ‚è‘Ö‚¦‚é

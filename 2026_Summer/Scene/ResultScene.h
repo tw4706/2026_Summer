@@ -4,7 +4,7 @@
 class ResultScene :public Scene
 {
 public:
-	ResultScene(SceneManager& sceneManager,float clearTime);
+	ResultScene(SceneManager& sceneManager,float clearTime,bool isGameOver);
 	~ResultScene();
 
 	void Init()override;
@@ -24,11 +24,12 @@ public:
 
 private:
 	int frameCount_ = 0;
-	int performanceCount_ = 0;//演出用のカウント
+	int performanceCount_ = 0;		//演出用のカウント
 
-	float clearTime_;//クリアタイム
-	int currentIndex_ = 0;//0の場合はリトライで1の場合はタイトルに戻る
-	wchar_t rank_;//表示ランク
-	bool isInputEnabled_ = false;//入力を受け付けるフラグ
+	float clearTime_;				//クリアタイム
+	int currentIndex_ = 0;			//0の場合はリトライで1の場合はタイトルに戻る
+	wchar_t rank_;					//表示ランク
+	bool isInputEnabled_ = false;	//入力を受け付けるフラグ
+	bool isGameOver_ = false;		//ゲームオーバーかどうかのフラグ
 };
 

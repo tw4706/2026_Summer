@@ -18,6 +18,12 @@ public:
     /// <param name="pBoss">対象となるボス</param>
     void SetTarget(std::weak_ptr<Player> pPlayer, std::weak_ptr<EnemyBase> pBoss, CameraManager* pCameraManager);
 
+    /// <summary>
+    /// ボス演出が終了したかどうか
+    /// </summary>
+    /// <returns>0秒を下回ったらtrueを返す</returns>
+    bool IsBossEventFinished() const { return bossEventTimer_ <= 0.0f; }
+
 private:
     std::weak_ptr<Player> pPlayer_;
     std::weak_ptr<EnemyBase> pBoss_;
