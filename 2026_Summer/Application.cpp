@@ -77,6 +77,9 @@ bool Application::Init()
 		SetWriteZBuffer3D(true);
 	}
 
+	AddFontResourceEx(L"data/Font/GenShinGothic-Monospace-Heavy.ttf", FR_PRIVATE, NULL);
+	Game::kFontUIHandle = CreateFontToHandle(L"源真ゴシック等幅 Heavy", 40, -1);
+
 	//フェードマネージャーの初期化
 	FadeManager::GetInstance().Init();
 
@@ -125,8 +128,8 @@ void Application::Terminate()
 	//フェードマネージャーの解放
 	FadeManager::GetInstance().Release();
 
-	Effkseer_End();
-
 	//メモリの開放
+	RemoveFontResourceEx(L"data/GenShinGothic-Monospace-Heavy.ttf", FR_PRIVATE, NULL);
+	Effkseer_End();
 	DxLib_End();				//ＤＸライブラリ使用の終了処理
 }

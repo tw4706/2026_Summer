@@ -13,6 +13,9 @@ void EnemyAttackSubStatePO::Enter()
 	auto enemy = pEnemy_.lock();
 	if (!enemy)return;
 
+	//攻撃前のエフェクト再生
+	enemy->PlayPrevEnemyAttackEffect();
+
 	//攻撃タイプに応じてアニメーションを切り替える
 	//攻撃アニメーションをスローにして予備動作っぽくしている
 	switch (attackData_.type_)

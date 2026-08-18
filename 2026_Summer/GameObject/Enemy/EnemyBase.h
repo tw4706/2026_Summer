@@ -213,6 +213,11 @@ public:
 	/// 雑魚敵殲滅用関数
 	/// </summary>
 	void Kill() { hp_ = 0; isDead_ = true; }
+
+	/// <summary>
+	/// 敵の攻撃前の際のエフェクト
+	/// </summary>
+	void PlayPrevEnemyAttackEffect();
 protected:
 
 	/// <summary>

@@ -25,12 +25,18 @@ namespace
 	constexpr int kBackTitlePosX = 0;
 	constexpr int kBackTitlePosY = 60;
 
+	//GameOverの文字のY座標オフセット
+	constexpr int kGameOverOffsetY = 15;
+
+	//クリア時間のY座標オフセット
+	constexpr int kClearTimeOffsetY = 30;
+
 	// 演出のタイミング
 	constexpr int kClearTimeShowFrame = 0;		//クリアタイムを出すフレーム
 	constexpr int kRankShowFrame = 30;			//ランクを出すフレーム
-	constexpr int kButtonSlideStartFrame = 60;	//ボタンのスライドインを始めるフレーム
-	constexpr int kButtonSlideDuration = 20;	//スライドインにかけるフレーム数
-	constexpr int kButtonSlideDistance = 100;	//上からどれだけ離れた位置から降りてくるか
+	constexpr int kButtonSlideStartFrame = 60;	//ボタンのスライドを始めるフレーム
+	constexpr int kButtonSlideDuration = 20;	//スライドするフレーム
+	constexpr int kButtonSlideDistance = 100;	//スライドのボタンの距離
 }
 
 ResultScene::ResultScene(SceneManager& sceneManager,float clearTime,bool isGameOver) :
@@ -173,14 +179,14 @@ void ResultScene::NormalDraw()
 
 	if (isGameOver_)
 	{
-		DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - 15, 0x000000, L"GameOver");
+		DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - kGameOverOffsetY, 0x000000, L"GameOver");
 	}
 	else
 	{
 		//クリアタイム表示
 		if (performanceCount_ >= kClearTimeShowFrame)
 		{
-			DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - 30, 0x000000, L"クリアタイム: %.1f秒", clearTime_);
+			DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - kClearTimeOffsetY, 0x000000, L"クリアタイム: %.1f秒", clearTime_);
 		}
 
 		//ランク表示

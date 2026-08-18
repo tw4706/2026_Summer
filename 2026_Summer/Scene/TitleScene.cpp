@@ -30,7 +30,6 @@ namespace
 	//選択肢の色
 	constexpr unsigned int kColorSelected = 0xff0000;
 	constexpr unsigned int kColorUnselected = 0x000000;
-	constexpr unsigned int kColorBackground = 0xffffff;
 
 	//シェーダーの登録番号
 	constexpr int kDissolveShaderSlot = 4;
@@ -42,6 +41,7 @@ namespace
 	constexpr float kSelectedScale = 0.8f;
 	constexpr float kUnselectedScale = 0.6f;
 
+	//選択肢の文字の拡大率の補間割合
 	constexpr float kScaleLerpRate = 0.1f;
 }
 

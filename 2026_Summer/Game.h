@@ -21,4 +21,6 @@ namespace Game
 	const unsigned int kYellowColor = GetColor(255, 255, 0);
 	const unsigned int kBlackColor = GetColor(0, 0, 0);
 	const unsigned int kWhiteColor = GetColor(255, 255, 255);
+
+	inline int kFontUIHandle = -1;
 }

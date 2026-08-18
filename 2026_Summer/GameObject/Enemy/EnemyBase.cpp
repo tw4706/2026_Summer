@@ -95,6 +95,7 @@ void EnemyBase::Init()
 
 	//エフェクトのロード
 	EffectManager::GetInstance().Load(L"Hit", L"data/Effect/HitEffect.efk");
+	EffectManager::GetInstance().Load(L"EnemyAttack", L"data/Effect/EnemyAttack.efk");
 
 	//アニメーションの初期化
 	animation_.Init(model_.GetHandle());
@@ -514,6 +515,14 @@ void EnemyBase::SetNavigationGrid(const NavigationGrid* pNavGrid)
 
 	pNavigation_->SetNavigationGrid(pNavGrid);
 
+}
+
+void EnemyBase::PlayPrevEnemyAttackEffect()
+{
+	Vector3 forward = { sinf(moveAngle_), 0.0f, -cosf(moveAngle_) };
+	Vector3 effectPos = pos_ + Vector3{ 0.0f, colliderHeight_ * 1.3f, 0.0f } + forward * 60.0f;
+
+	EffectManager::GetInstance().Play(L"EnemyAttack", effectPos);
 }
 
 void EnemyBase::SetSlowAnimationSpeed()
