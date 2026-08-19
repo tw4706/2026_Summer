@@ -218,6 +218,23 @@ public:
 	/// 敵の攻撃前の際のエフェクト
 	/// </summary>
 	void PlayPrevEnemyAttackEffect();
+
+	/// <summary>
+	/// 敵のジャンプ攻撃の範囲エフェクト
+	/// </summary>
+	void PlayEnemyJumpAttackRangeEffect();
+
+	/// <summary>
+	/// ジャンプ攻撃エフェクトが再生中かどうか
+	/// </summary>
+	/// <returns></returns>
+	bool IsJumpAttackEffectPlaying()const;
+
+	/// <summary>
+	/// ジャンプ攻撃エフェクトの停止
+	/// </summary>
+	void StopJumpAttackEffect();
+
 protected:
 
 	/// <summary>
@@ -235,6 +252,9 @@ protected:
 
 	//ステージのモデルハンドル(視線判定用)
 	int stageModelHandle_ = -1;
+
+	//ジャンプ攻撃エフェクトハンドル
+	int jumpAttackEffectHandle_ = -1;
 
 	//最大体力
 	int maxHP_ = 0;

@@ -27,6 +27,13 @@ public:
 	int Play(const std::wstring& name, const Vector3& pos);
 
 	/// <summary>
+	/// エフェクトが再生中かどうか
+	/// </summary>
+	/// <param name="handle">ハンドル</param>
+	/// <returns>再生中ならtrue,そうでない場合はfalse</returns>
+	bool IsPlaying(int handle)const;
+
+	/// <summary>
 	/// エフェクトの停止
 	/// </summary>
 	/// <param name="handle">ハンドル</param>

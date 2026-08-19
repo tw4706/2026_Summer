@@ -1,6 +1,7 @@
 #include "EnemyAttackSubStatePO.h"
 #include "EnemyAttackSubStateAttack.h"
 #include "../EnemyBase.h"
+#include "../BigMan.h"
 #include "../EnemyStateAttack.h"
 
 EnemyAttackSubStatePO::EnemyAttackSubStatePO(std::weak_ptr<EnemyBase> pEnemy, EnemyStateAttack* pEnemyAttack, const AttackData& attackData):
@@ -22,6 +23,10 @@ void EnemyAttackSubStatePO::Enter()
 	{
 	case AttackType::JumpAttack:
 		enemy->ChangeAnimation(AnimationState::EnemyJumpAttack);
+		if (std::dynamic_pointer_cast<BigMan>(enemy))
+		{
+			enemy->PlayEnemyJumpAttackRangeEffect();
+		}
 		break;
 	case AttackType::NormalAttack:
 	default:
@@ -39,6 +44,12 @@ void EnemyAttackSubStatePO::Update()
 	//攻撃アニメーションがデータで取得してきたフレーム以上だった場合
 	if (enemy->GetCurrentAnimTime() >= attackData_.attackTransFrame_)
 	{
+		//攻撃に入ると同時にBigManの場合はジャンプ攻撃エフェクトを止める
+		if (std::dynamic_pointer_cast<BigMan>(enemy))
+		{
+			enemy->StopJumpAttackEffect();
+		}
+
 		//攻撃のサブステートマシンを生成
 		auto nextState = std::make_shared<EnemyAttackSubStateAttack>(pEnemy_, pEnemyAttack_,attackData_);
 
@@ -52,4 +63,12 @@ void EnemyAttackSubStatePO::Update()
 
 void EnemyAttackSubStatePO::Exit()
 {
+	auto enemy = pEnemy_.lock();
+	if (!enemy)return;
+
+	//何かしらの不具合でエフェクトが止まっていないのを防ぐためエフェクトを止めておく
+	if (std::dynamic_pointer_cast<BigMan>(enemy))
+	{
+		enemy->StopJumpAttackEffect();
+	}
 }

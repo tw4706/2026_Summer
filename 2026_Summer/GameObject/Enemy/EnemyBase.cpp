@@ -96,6 +96,7 @@ void EnemyBase::Init()
 	//エフェクトのロード
 	EffectManager::GetInstance().Load(L"Hit", L"data/Effect/HitEffect.efk");
 	EffectManager::GetInstance().Load(L"EnemyAttack", L"data/Effect/EnemyAttack.efk");
+	EffectManager::GetInstance().Load(L"EnemyJumpAttack", L"data/Effect/EnemyJumpAttack.efk");
 
 	//アニメーションの初期化
 	animation_.Init(model_.GetHandle());
@@ -522,7 +523,30 @@ void EnemyBase::PlayPrevEnemyAttackEffect()
 	Vector3 forward = { sinf(moveAngle_), 0.0f, -cosf(moveAngle_) };
 	Vector3 effectPos = pos_ + Vector3{ 0.0f, colliderHeight_ * 1.3f, 0.0f } + forward * 60.0f;
 
+	//敵の攻撃前エフェクト再生
 	EffectManager::GetInstance().Play(L"EnemyAttack", effectPos);
+}
+
+void EnemyBase::PlayEnemyJumpAttackRangeEffect()
+{
+	//再生中なら何もしない
+	if (IsJumpAttackEffectPlaying())return;
+
+	//敵のジャンプ攻撃エフェクトの再生
+	jumpAttackEffectHandle_=EffectManager::GetInstance().Play(L"EnemyJumpAttack", pos_);
+}
+
+bool EnemyBase::IsJumpAttackEffectPlaying() const
+{
+	return EffectManager::GetInstance().IsPlaying(jumpAttackEffectHandle_);
+}
+
+void EnemyBase::StopJumpAttackEffect()
+{
+	if (jumpAttackEffectHandle_ < 0)return;
+
+	EffectManager::GetInstance().Stop(jumpAttackEffectHandle_);
+	jumpAttackEffectHandle_ = -1;
 }
 
 void EnemyBase::SetSlowAnimationSpeed()

@@ -52,6 +52,14 @@ int EffectManager::Play(const std::wstring& name, const Vector3& pos)
 	return handle;
 }
 
+bool EffectManager::IsPlaying(int handle) const
+{
+	//ƒnƒ“ƒhƒ‹‚ª“ü‚Á‚Ä‚¢‚È‚¢‚È‚ç‰½‚à‚µ‚È‚¢
+	if (handle < 0)return false;
+
+	return IsEffekseer3DEffectPlaying(handle) != 0;
+}
+
 void EffectManager::Stop(int handle)
 {
 	StopEffekseer3DEffect(handle);

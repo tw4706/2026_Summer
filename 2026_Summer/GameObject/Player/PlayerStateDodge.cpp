@@ -10,15 +10,15 @@ namespace
 	const std::wstring_view kPlayeDodge = L"Player|Dodge";
 
 	//回避速度
-	constexpr float kDodgeSpeed = 15.0f;
+	constexpr float kDodgeSpeed = 22.0f;
 
 	//無敵時間
 	constexpr float kDodgeDurataion = 0.3f;
 
 	//硬直時間
-	constexpr float kStiffnessDurataion = 0.0f;
+	constexpr float kStiffnessDurataion = 0.2f;
 
-	//フレームカウントの進める時間
+	//経過時間
 	constexpr float kFrameTime = 1.0f / 60.0f;
 }
 

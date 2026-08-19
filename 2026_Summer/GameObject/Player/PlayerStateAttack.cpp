@@ -1,5 +1,6 @@
 #include "PlayerStateAttack.h"
 #include "PlayerStateIdle.h"
+#include "PlayerStateGuard.h"
 #include "ComboManager.h"
 #include "Player.h"
 #include "Input.h"
@@ -81,6 +82,20 @@ void PlayerStateAttack::Update()
 
 	//現在のアニメーションフレームを取得
 	float currentFrame = player->GetAnimationCurrentTime();
+
+	//ガード入力が行われたら攻撃をキャンセルしてガード状態へ遷移
+	if (Input::GetInstance().IsTriggered("guard"))
+	{
+		//攻撃演出を止めてからガードへキャンセル遷移
+		player->SetKatanaColliderEnabled(false);
+		player->StopKatanaEffect();
+
+		//コンボのリセット
+		combo.ResetCombo();
+
+		player->ChangeState(std::make_shared<PlayerStateGuard>(pPlayer_));
+		return;
+	}
 
 	//攻撃入力が行われたら
 	if (Input::GetInstance().IsTriggered("attack"))
