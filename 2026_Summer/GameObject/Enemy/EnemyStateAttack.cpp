@@ -2,6 +2,7 @@
 #include "EnemyStateIdle.h"
 #include "EnemyAttackSubState/EnemyAttackSubStatePO.h"
 #include "EnemyBase.h"
+#include "Oni.h"
 #include "AttackSelect.h"
 
 EnemyStateAttack::EnemyStateAttack(std::weak_ptr<EnemyBase> pEnemy, float searchRadius) :
@@ -26,15 +27,24 @@ void EnemyStateAttack::Enter()
 	//全攻撃候補を取得
 	auto attackCandidates = pLoader->GetAllAttackData();
 
+	//Oniの場合はNormalAttackタイプの攻撃データのみにする
+	if (std::dynamic_pointer_cast<Oni>(enemy))
+	{
+		attackCandidates.erase(
+			std::remove_if(attackCandidates.begin(), attackCandidates.end(),
+				[](const AttackData* data) { return !data || data->type_ != AttackType::NormalAttack; }),
+			attackCandidates.end());
+	}
+
 	//プレイヤーの行動カウンタを取得
 	const PlayerActionCounter* pCounter = enemy->GetPlayerActionCounter();
 
 	//重みを持たせた抽選でどの攻撃を出すか決める
-	const AttackData* pSelected = AttackSelect::ChooseWeighted(attackCandidates,*pCounter);
+	const AttackData* pSelected = AttackSelect::ChooseWeighted(attackCandidates, *pCounter);
 	if (!pSelected)return;
 
 	//最初に攻撃の予備動作の状態に遷移してそっから分岐させる
-	auto nextAttackState = std::make_shared<EnemyAttackSubStatePO>(pEnemy_, this,*pSelected);
+	auto nextAttackState = std::make_shared<EnemyAttackSubStatePO>(pEnemy_, this, *pSelected);
 	ChangeAttackState(nextAttackState);
 }
 

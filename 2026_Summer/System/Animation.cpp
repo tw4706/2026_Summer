@@ -95,7 +95,7 @@ void Animation::Update(float deltaTime)
 		//アニメーションの時間をセット
 		MV1SetAttachAnimTime(modelHandle_, currentAttachAnim_, currentTime_);
 
-		//旧アニメーションも同様に時間を進行させる(ブレンド中は新旧両方のアニメーションが再生されるため)
+		//旧アニメーションも同様に時間を進行させる
 		if (prevAttach_ != -1)
 		{
 			float prevTime = MV1GetAttachAnimTime(modelHandle_, prevAttach_);
@@ -103,22 +103,10 @@ void Animation::Update(float deltaTime)
 
 			prevTime += deltaTime * speed_;
 
-			if (prevTotal > 0.0f)
+			//旧アニメーションはループはさせずにアニメーションの最後で止める
+			if (prevTotal > 0.0f && prevTime > prevTotal)
 			{
-				if (isLoop_)
-				{
-					if (prevTime > prevTotal)
-					{
-						prevTime = fmod(prevTime, prevTotal);
-					}
-				}
-				else
-				{
-					if (prevTime > prevTotal)
-					{
-						prevTime = prevTotal;
-					}
-				}
+				prevTime = prevTotal;
 			}
 
 			MV1SetAttachAnimTime(modelHandle_, prevAttach_, prevTime);
@@ -127,18 +115,18 @@ void Animation::Update(float deltaTime)
 	//アニメーションのブレンド
 	if (isBlending_)
 	{
-		//ブレンドタイムを進行
+		//ブレンド時間を進める
 		blendTime_ += deltaTime;
 
 		float t = kBlendRate1;
 
-		//ブレンドタイムがDurationを超えないように0.0f~1.0fで正規化する
+		//ブレンドタイムがDurationを超えないように正規化
 		if (blendDuration_ > 0.0f)
 		{
 			t = blendTime_ / blendDuration_;
 		}
 
-		//tが1.0fを超えないようにする
+		//1.0fを超えないようにする
 		if (t > 1.0f) t = 1.0f;
 
 		//新しいアニメーション
@@ -150,7 +138,7 @@ void Animation::Update(float deltaTime)
 			MV1SetAttachAnimBlendRate(modelHandle_, prevAttach_, kBlendRate1 - t);
 		}
 
-		//アニメーションのブレンドが完了したら古いアニメをデタッチ
+		//アニメーションのブレンドが完了したら古いアニメーションをデタッチ
 		if (t >= 1.0f)
 		{
 			if (prevAttach_ != -1)

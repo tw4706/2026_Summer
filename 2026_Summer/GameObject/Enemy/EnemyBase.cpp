@@ -2,6 +2,7 @@
 #include "Player/Player.h"
 #include "Katana.h"
 #include "Game.h"
+#include "BigMan.h"
 #include "EnemyManager.h"
 #include "EnemyStateIdle.h"
 #include "EnemyStateDamage.h"
@@ -37,7 +38,7 @@ namespace
 	//HPUIの見えている時間
 	constexpr float kHPUIVisibleTime = 3.0f;
 
-	//HPUIが消える時の条件の一つであるHPの基準
+	//HPUIが消える時の条件のHPの基準
 	constexpr float kDrawVisibleMinHP = 0.1f;
 
 	//ヒットエフェクトを表示する座標のオフセット
@@ -69,6 +70,9 @@ namespace
 
 	//索敵範囲のデバッグ描画用のDiv
 	constexpr int kDrawDebugRangeDiv = 16;
+
+	//BigManの攻撃前エフェクト表示する座標のオフセット
+	constexpr float kBigManEffectOffsetY = 50.0f;
 }
 
 EnemyBase::EnemyBase() :
@@ -522,6 +526,12 @@ void EnemyBase::PlayPrevEnemyAttackEffect()
 {
 	Vector3 forward = { sinf(moveAngle_), 0.0f, -cosf(moveAngle_) };
 	Vector3 effectPos = pos_ + Vector3{ 0.0f, colliderHeight_ * 1.3f, 0.0f } + forward * 60.0f;
+
+	//BigManの場合はエフェクトの位置を少し上にする
+	if (std::dynamic_pointer_cast<BigMan>(shared_from_this()))
+	{
+		effectPos.y_ += kBigManEffectOffsetY;
+	}
 
 	//敵の攻撃前エフェクト再生
 	EffectManager::GetInstance().Play(L"EnemyAttack", effectPos);
