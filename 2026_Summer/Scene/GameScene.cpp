@@ -18,6 +18,7 @@
 #include"Camera/LockOnCamera.h"
 #include"Camera/CameraManager.h"
 #include"LockOnManager.h"
+#include"SoundManager.h"
 #include"UIManager.h"
 #include"UI/EnemyHPGaugeUI.h"
 #include"UI/PlayerHPGaugeUI.h"
@@ -174,6 +175,8 @@ void GameScene::Init()
 
 	//カメラマネージャーの更新
 	pCameraManager_->Update(pStage_->GetHandle());
+
+	SoundManager::GetInstance().PlayBgm(BGM::Game);
 }
 
 void GameScene::Update()

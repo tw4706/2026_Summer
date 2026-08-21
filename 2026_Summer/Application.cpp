@@ -5,6 +5,7 @@
 #include "SceneManager.h"
 #include "EffectManager.h"
 #include "FadeManager.h"
+#include "SoundManager.h"
 #include "EffekseerForDXLib.h"
 #include<Dxlib.h>
 #include<memory>
@@ -82,6 +83,9 @@ bool Application::Init()
 
 	//フェードマネージャーの初期化
 	FadeManager::GetInstance().Init();
+
+	//サウンドマネージャーの初期化
+	SoundManager::GetInstance().Init();
 
 	return true;
 }

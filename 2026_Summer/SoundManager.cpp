@@ -7,23 +7,27 @@ namespace
 	constexpr int kBaseSeVolume = 220;
 
 	//各BGM・SEのパス
-	const wchar_t* kTitleBgm = L"data/BGM・SE/Title.mp3";
-	const wchar_t* kGameBgm = L"data/BGM・SE/Game.mp3";
-	const wchar_t* kResultBgm = L"data/BGM・SE/Result.mp3";
+	const wchar_t* kTitleBgm = L"data/BGM・SE/TitleBGM.mp3";
+	const wchar_t* kGameBgm = L"data/BGM・SE/GameBGM.mp3";
+	const wchar_t* kResultBgm = L"data/BGM・SE/ResultBGM.mp3";
 
 	const wchar_t* kDecideSe = L"data/BGM・SE/decide.mp3";
 	const wchar_t* kAttackSe = L"data/BGM・SE/attack.mp3";
 	const wchar_t* kMoveSe = L"data/BGM・SE/move.mp3";
 	const wchar_t* kHitSe = L"data/BGM・SE/enemyHit.mp3";
 	const wchar_t* kDodgeSe = L"data/BGM・SE/dodge.mp3";
-	const wchar_t* kJustDodgeSe = L"data/BGM・SE/justDodge.wav";
 	const wchar_t* kPlayerDeathSe = L"data/BGM・SE/playerDeath.mp3";
-	const wchar_t* kCountDownSe = L"data/BGM・SE/ready.mp3";
 	const wchar_t* kStartSe = L"data/BGM・SE/go.mp3";
 	const wchar_t* kCancelSe = L"data/BGM・SE/cancel.mp3";
-	const wchar_t* kAreaLockSe = L"data/BGM・SE/areaLock.mp3";
-	const wchar_t* kAreaReleaseSe = L"data/BGM・SE/areaRelease.mp3";
+	const wchar_t* kCursoleMoveSe = L"data/BGM・SE/moveCursole.mp3";
 }
+
+SoundManager& SoundManager::GetInstance()
+{
+	static SoundManager instance;
+	return instance;
+}
+
 
 SoundManager::SoundManager():
 	currentSeHandle_(-1),
@@ -60,13 +64,10 @@ void SoundManager::Init()
 	seHandles_[SE::Move] = LoadSoundMem(kMoveSe);
 	seHandles_[SE::Hit] = LoadSoundMem(kHitSe);
 	seHandles_[SE::Dodge] = LoadSoundMem(kDodgeSe);
-	seHandles_[SE::JustDodge] = LoadSoundMem(kJustDodgeSe);
 	seHandles_[SE::PlayerDeath] = LoadSoundMem(kPlayerDeathSe);
-	seHandles_[SE::CountDown] = LoadSoundMem(kCountDownSe);
 	seHandles_[SE::Start] = LoadSoundMem(kStartSe);
 	seHandles_[SE::Cancel] = LoadSoundMem(kCancelSe);
-	seHandles_[SE::AreaLock] = LoadSoundMem(kAreaLockSe);
-	seHandles_[SE::AreaRelease] = LoadSoundMem(kAreaReleaseSe);
+	seHandles_[SE::CursoleMove] = LoadSoundMem(kCursoleMoveSe);
 }
 
 void SoundManager::PlaySe(SE se)

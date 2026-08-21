@@ -6,6 +6,7 @@
 #include "Application.h"
 #include "EffectManager.h"
 #include "FadeManager.h"
+#include "SoundManager.h"
 #include "TitlePlayer.h"
 #include<Dxlib.h>
 #include<memory>
@@ -82,6 +83,8 @@ void TitleScene::Init()
 
 	//タイトル用プレイヤーの初期化とアニメーション設定
 	pTitlePlayer_->Init();
+
+	SoundManager::GetInstance().PlayBgm(BGM::Title);
 }
 
 void TitleScene::Update()
@@ -113,10 +116,12 @@ void TitleScene::NormalUpdate()
 	if (Input::GetInstance().IsTriggered("up"))
 	{
 		currentIndex_ = 0;
+		SoundManager::GetInstance().PlaySe(SE::CursoleMove);
 	}
 	else if (Input::GetInstance().IsTriggered("down"))
 	{
 		currentIndex_ = 1;
+		SoundManager::GetInstance().PlaySe(SE::CursoleMove);
 	}
 
 	if (Input::GetInstance().IsTriggered("next"))
@@ -132,6 +137,7 @@ void TitleScene::NormalUpdate()
 		{
 			Application::GetInstance().GameEnd();
 		}
+		SoundManager::GetInstance().PlaySe(SE::Decide);
 	}
 }
 

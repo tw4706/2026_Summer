@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "System/Input.h"
 #include "FadeManager.h"
+#include "SoundManager.h"
 #include<Dxlib.h>
 #include<memory>
 #include<cmath>
@@ -74,6 +75,7 @@ ResultScene::~ResultScene()
 
 void ResultScene::Init()
 {
+	SoundManager::GetInstance().PlayBgm(BGM::Result);
 }
 
 void ResultScene::Update()

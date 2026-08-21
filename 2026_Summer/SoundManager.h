@@ -15,20 +15,16 @@ enum class SE
 	Move,
 	Hit,
 	Dodge,
-	JustDodge,
 	PlayerDeath,
-	CountDown,
 	Start,
 	Cancel,
-	AreaLock,
-	AreaRelease
+	CursoleMove
 };
 
 class SoundManager
 {
 public:
-	SoundManager();
-	~SoundManager();
+	static SoundManager& GetInstance();
 
 	/// <summary>
 	/// ‰Šú‰»
@@ -46,6 +42,12 @@ public:
 	/// </summary>
 	/// <param name="bgm">BGMƒ^ƒCƒv</param>
 	void PlayBgm(BGM bgm);
+private:
+	SoundManager();
+	~SoundManager();
+
+	SoundManager(const SoundManager&) = delete;
+	void operator=(const SoundManager&) = delete;
 
 private:
 	std::map<BGM, int>bgmHandles_;

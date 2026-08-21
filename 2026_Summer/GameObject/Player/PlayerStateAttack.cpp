@@ -2,6 +2,7 @@
 #include "PlayerStateIdle.h"
 #include "PlayerStateGuard.h"
 #include "ComboManager.h"
+#include "SoundManager.h"
 #include "Player.h"
 #include "Input.h"
 
@@ -82,8 +83,16 @@ void PlayerStateAttack::Update()
 	//攻撃入力が行われたら
 	if (Input::GetInstance().IsTriggered("attack"))
 	{
+		bool wasComboRequested = combo.IsNextComboRequested();
+
 		//コンボで入力を受け付ける
 		combo.OnAttackInput(currentFrame);
+
+		//入力が有効なコンボ受付として成立した場合のみ鳴らす
+		if (!wasComboRequested &&combo.IsNextComboRequested())
+		{
+			SoundManager::GetInstance().PlaySe(SE::Attack);
+		}
 	}
 
 	//指定フレームでエフェクトの切り替え
