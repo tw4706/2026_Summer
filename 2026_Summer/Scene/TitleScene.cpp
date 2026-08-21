@@ -6,6 +6,7 @@
 #include "Application.h"
 #include "EffectManager.h"
 #include "FadeManager.h"
+#include "TitlePlayer.h"
 #include<Dxlib.h>
 #include<memory>
 #include<cassert>
@@ -52,6 +53,7 @@ TitleScene::TitleScene(SceneManager& sceneManager) :
 	frameCount_(kFadeInterval)
 {
 	pBg_ = std::make_shared<Bg>();
+	pTitlePlayer_ = std::make_shared<TitlePlayer>();
 }
 
 TitleScene::~TitleScene()
@@ -76,11 +78,17 @@ void TitleScene::Init()
 	GetGraphSize(endTextHandle_, &endTextWidth_, &endTextHeight_);
 
 	//背景の初期化
-	pBg_->Init();
+	pBg_->Init((L"data/Bg/backGroundTitle"));
+
+	//タイトル用プレイヤーの初期化とアニメーション設定
+	pTitlePlayer_->Init();
 }
 
 void TitleScene::Update()
 {
+	//タイトル用プレイヤーの更新
+	pTitlePlayer_->Update();
+
 	(this->*update_)();
 }
 
@@ -161,6 +169,8 @@ void TitleScene::FadeDraw()
 void TitleScene::NormalDraw()
 {
 	pBg_->Draw(Vector3{ 0.0f,0.0f,0.0f });
+
+	pTitlePlayer_->Draw();
 
 	float startScale = (currentIndex_ == 0) ? kSelectedScale : kUnselectedScale;
 	float endScale = (currentIndex_ == 1) ? kSelectedScale : kUnselectedScale;

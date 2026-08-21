@@ -1,8 +1,10 @@
 #pragma once
 #include "Scene.h"
+#include "Model.h"
 #include "SceneManager.h"
 
 class Bg;
+class TitlePlayer;
 class TitleScene :public Scene
 {
 public:
@@ -50,4 +52,7 @@ private:
 
 	//背景
 	std::shared_ptr<Bg>pBg_;
+
+	//タイトル用プレイヤー
+	std::shared_ptr<TitlePlayer>pTitlePlayer_;
 };

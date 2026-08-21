@@ -176,7 +176,7 @@ void ResultScene::NormalDraw()
 	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0xffffff, true);
 	DrawFormatString(0, 0, 0x000000, L"リザルトシーン");
 
-
+	//ゲームオーバーの時とクリアしたときで文字を変更する
 	if (isGameOver_)
 	{
 		DrawFormatString(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - kGameOverOffsetY, 0x000000, L"GameOver");
@@ -197,7 +197,7 @@ void ResultScene::NormalDraw()
 	}
 
 	//ボタンを上からスライドさせる
-	float t = std::clamp(static_cast<float>(performanceCount_ - kButtonSlideStartFrame) / kButtonSlideDuration,0.0f, 1.0f);
+	float t = std::clamp(static_cast<float>(performanceCount_ - kButtonSlideStartFrame) / kButtonSlideDuration, 0.0f, 1.0f);
 	float eased = 1.0f - std::pow(1.0f - t, 3.0f);
 	int slideOffset = static_cast<int>((1.0f - eased) * kButtonSlideDistance);
 

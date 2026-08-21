@@ -22,15 +22,15 @@ Bg::~Bg()
 	DeleteGraph(skyTex_[5]);
 }
 
-void Bg::Init()
+void Bg::Init(const std::wstring& folderPath)
 {
 	//スカイボックス用のテクスチャのロード
-	skyTex_[0] = LoadGraph(L"data/Bg/backGround_rt.png");
-	skyTex_[1] = LoadGraph(L"data/Bg/backGround_lf.png");
-	skyTex_[2] = LoadGraph(L"data/Bg/backGround_up.png");
-	skyTex_[3] = LoadGraph(L"data/Bg/backGround_dn.png");
-	skyTex_[4] = LoadGraph(L"data/Bg/backGround_ft.png");
-	skyTex_[5] = LoadGraph(L"data/Bg/backGround_bk.png");
+	skyTex_[0] = LoadGraph((folderPath + L"/rt.png").c_str());
+	skyTex_[1] = LoadGraph((folderPath + L"/lf.png").c_str());
+	skyTex_[2] = LoadGraph((folderPath + L"/up.png").c_str());
+	skyTex_[3] = LoadGraph((folderPath + L"/dn.png").c_str());
+	skyTex_[4] = LoadGraph((folderPath + L"/ft.png").c_str());
+	skyTex_[5] = LoadGraph((folderPath + L"/bk.png").c_str());
 }
 
 void Bg::Draw(const Vector3& cameraPos)

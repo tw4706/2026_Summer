@@ -2,6 +2,7 @@
 #include"Math/Vector3.h"
 #include<Dxlib.h>
 #include<array>
+#include<string>
 
 class Bg
 {
@@ -12,7 +13,7 @@ public:
 	/// <summary>
 	/// ‰Šú‰»
 	/// </summary>
-	void Init();
+	void Init(const std::wstring&folderPath);
 
 	/// <summary>
 	/// •`‰æ

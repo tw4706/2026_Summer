@@ -100,7 +100,7 @@ void GameScene::Init()
 	SetUseBackCulling(true);
 
 	//背景の初期化
-	pBg_->Init();
+	pBg_->Init(L"data/Bg/backGroundGame");
 
 	//現在のアクティブカメラを取得
 	auto activeCam = pCameraManager_->GetActiveCamera();
