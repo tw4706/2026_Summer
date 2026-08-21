@@ -97,9 +97,6 @@ void Player::Update()
 
 	Collidable::Update();
 
-	activeCamera_ = GetActiveCamera();
-	if (!activeCamera_)return;
-
 	//s—ñ‚ğì¬
 	//Šgk
 	Matrix4x4 scaleMat = Matrix4x4::Scale(kFirstScale.x_, kFirstScale.y_, kFirstScale.z_);
