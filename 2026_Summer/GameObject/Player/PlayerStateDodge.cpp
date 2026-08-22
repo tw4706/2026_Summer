@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "PlayerStateIdle.h"
 #include "PlayerStateRun.h"
+#include "SoundManager.h"
 
 namespace
 {
@@ -63,6 +64,9 @@ void PlayerStateDodge::Enter()
 
 	//タイマーをリセット
 	invincibleTimer_ = 0.0f;
+
+	//回避SEの再生
+	SoundManager::GetInstance().PlaySe(SE::Dodge);
 }
 
 void PlayerStateDodge::Update()

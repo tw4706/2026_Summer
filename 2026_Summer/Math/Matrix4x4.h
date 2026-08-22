@@ -11,10 +11,8 @@ public:
 	float w0_, w1_, w2_, w3_;
 
 	Matrix4x4();
-	Matrix4x4(float x0, float x1, float x2, float x3,
-			  float y0, float y1, float y2, float y3,
-			  float z0, float z1, float z2, float z3,
-		float w0, float w1, float w2, float w3);
+	Matrix4x4(float x0, float x1, float x2, float x3,float y0, float y1, float y2, float y3,
+			  float z0, float z1, float z2, float z3,float w0, float w1, float w2, float w3);
 
 	//s—ñ‚Ì‘«‚µZ
 	Matrix4x4 operator+(const Matrix4x4& other) const;

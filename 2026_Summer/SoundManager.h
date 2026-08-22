@@ -16,6 +16,8 @@ enum class SE
 	Hit,
 	Dodge,
 	Death,
+	Guard,
+	Jump,
 	Start,
 	Cancel,
 	CursoleMove
@@ -50,12 +52,17 @@ private:
 	void operator=(const SoundManager&) = delete;
 
 private:
+	//SEとBGMのハンドルを保有しておくマップ
 	std::map<BGM, int>bgmHandles_;
 	std::map<SE, int>seHandles_;
 
+	//現在のSEのハンドル
 	int currentSeHandle_ = -1;
+	//現在のBGMのハンドル
 	int currentBgmHandle_ = -1;
+	//SEの音量
 	int seVolume_ = 0;
+	//BGMの音量
 	int bgmVolume_ = 0;
 };
 

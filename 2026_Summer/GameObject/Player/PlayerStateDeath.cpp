@@ -1,11 +1,11 @@
 #include "PlayerStateDeath.h"
 #include "Player.h"
+#include "SoundManager.h"
 
 namespace
 {
 	//死亡アニメーション
 	const std::wstring_view kPlayerDeath = L"Player|Death";
-
 }
 
 PlayerStateDeath::PlayerStateDeath(std::weak_ptr<Player> pPlayer):
@@ -21,6 +21,9 @@ void PlayerStateDeath::Enter()
 	//速度をゼロに
 	player->SetVelocity({ 0.0f,0.0f,0.0f });
 	player->ChangeAnimation(AnimationState::Death, kPlayerDeath.data());
+
+	//DeathのSEの再生
+	SoundManager::GetInstance().PlaySe(SE::Death);
 }
 
 void PlayerStateDeath::Update()

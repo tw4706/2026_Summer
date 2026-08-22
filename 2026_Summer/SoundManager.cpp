@@ -17,6 +17,8 @@ namespace
 	const wchar_t* kHitSe = L"data/BGM・SE/enemyHit.mp3";
 	const wchar_t* kDodgeSe = L"data/BGM・SE/dodge.mp3";
 	const wchar_t* kDeathSe = L"data/BGM・SE/death.mp3";
+	const wchar_t* kGuardSe = L"data/BGM・SE/guard.mp3";
+	const wchar_t* kJumpSe = L"data/BGM・SE/jump.mp3";
 	const wchar_t* kStartSe = L"data/BGM・SE/go.mp3";
 	const wchar_t* kCancelSe = L"data/BGM・SE/cancel.mp3";
 	const wchar_t* kCursoleMoveSe = L"data/BGM・SE/moveCursole.mp3";
@@ -52,9 +54,11 @@ SoundManager::~SoundManager()
 
 void SoundManager::Init()
 {
+	//音量の設定
 	seVolume_ = kBaseSeVolume;
 	bgmVolume_ = kBaseBgmVolume;
 
+	//各BGM・SEの読み込み
 	bgmHandles_[BGM::Title] = LoadSoundMem(kTitleBgm);
 	bgmHandles_[BGM::Game] = LoadSoundMem(kGameBgm);
 	bgmHandles_[BGM::Result] = LoadSoundMem(kResultBgm);
@@ -65,6 +69,8 @@ void SoundManager::Init()
 	seHandles_[SE::Hit] = LoadSoundMem(kHitSe);
 	seHandles_[SE::Dodge] = LoadSoundMem(kDodgeSe);
 	seHandles_[SE::Death] = LoadSoundMem(kDeathSe);
+	seHandles_[SE::Guard] = LoadSoundMem(kGuardSe);
+	seHandles_[SE::Jump] = LoadSoundMem(kJumpSe);
 	seHandles_[SE::Start] = LoadSoundMem(kStartSe);
 	seHandles_[SE::Cancel] = LoadSoundMem(kCancelSe);
 	seHandles_[SE::CursoleMove] = LoadSoundMem(kCursoleMoveSe);

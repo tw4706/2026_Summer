@@ -9,6 +9,7 @@
 #include "PlayerStateDamage.h"
 #include "PlayerStateDeath.h"
 #include "Enemy/EnemyBase.h"
+#include "SoundManager.h"
 #include "Collider/CapsuleCollider.h"
 #include "Collider/SphereCollider.h"
 #include<Dxlib.h>
@@ -111,7 +112,7 @@ void Player::Update()
 	//モデルに行列をセット
 	model_.SetMatrix(worldMat);
 
-	//刀の更新（手のフレーム行列を渡す）
+	//刀の更新（手のモデルの行列を渡す）
 	if (handFrameIndex_ != -1 && pKatana_)
 	{
 		MATRIX handMat = MV1GetFrameLocalWorldMatrix(model_.GetHandle(), handFrameIndex_);
@@ -217,7 +218,10 @@ void Player::OnDamage(const int damage)
 	//ガード中はダメージを通さない
 	if (isGuarding_)
 	{
+		//ガードのSEの再生
+		SoundManager::GetInstance().PlaySe(SE::Guard);
 		return;
+
 	}
 
 	//hpを減らす

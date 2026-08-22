@@ -7,6 +7,7 @@
 #include "Input.h"
 #include "Camera/PlayerCamera.h"
 #include "Math/Matrix4x4.h"
+#include "SoundManager.h"
 
 namespace
 {
@@ -54,6 +55,9 @@ void PlayerStateJump::Enter()
 		//接地フラグを返す
 		pPlayer->SetIsGround(false);
 	}
+
+	//ジャンプSEの再生
+	SoundManager::GetInstance().PlaySe(SE::Jump);
 }
 
 void PlayerStateJump::Update()

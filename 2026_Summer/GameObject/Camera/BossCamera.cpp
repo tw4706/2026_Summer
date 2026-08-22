@@ -11,9 +11,11 @@ namespace
 	//経過時間
 	constexpr float kDeltaTime = 1.0f / 60.0f;
 
+	//補間の割合
 	constexpr float kPosLerpRate = 0.1f;
 	constexpr float kTargetLerpRate = 0.1f;
 
+	//ボスとプレイヤーの中間地点を注視点にする割合
 	constexpr float kBossFocusRate = 1.0f;
 }
 
@@ -30,18 +32,26 @@ void BossCamera::Init()
 	auto boss = pBoss_.lock();
 	if (!player || !boss) return;
 
+	//ボスとプレイヤーの座標の取得
 	Vector3 playerPos = player->GetPos();
 	Vector3 bossPos = boss->GetPos();
 
+	//注視点→ボスとプレイヤーの中間
 	Vector3 targetCameraTarget = (playerPos + bossPos) * 0.5f;
 
+	//カメラの見る位置である差分ベクトル
 	Vector3 diff = bossPos - playerPos;
+	//水平方向なのでYは0にしておく
 	diff.y_ = 0.0f;
+
+	//距離と向きの計算
 	float dist = diff.Length();
 	Vector3 dir = (dist > 0.0001f) ? diff.Normalize() : Vector3{ 0.0f, 0.0f, 1.0f };
 
+	//カメラ位置の計算
 	Vector3 sideOffset = Vector3{ dir.x_, 0.0f, -dir.z_ } *(dist * 0.5f + 500.0f);
 
+	//カメラのターゲット位置とカメラの位置の設定
 	cameraTarget_ = targetCameraTarget;
 	pos_ = targetCameraTarget + sideOffset + Vector3{ 0.0f, 300.0f, 0.0f };
 }
@@ -66,7 +76,7 @@ void BossCamera::Update(int stageModelHandle)
 
 	//カメラのターゲット位置の計算
 	Vector3 sideOffset = Vector3{ -dir.x_, 0.0f, -dir.z_ } *150.0f;
-	Vector3 targetPos = targetCameraTarget + sideOffset + Vector3{ 0.0f, 450.0f, 800.0f };
+	Vector3 targetPos = targetCameraTarget + sideOffset + Vector3{ 0.0f, 550.0f, 800.0f };
 
 	//現在値から目標値へ補間
 	cameraTarget_ = Vector3::Lerp(cameraTarget_, targetCameraTarget, kTargetLerpRate);
