@@ -455,8 +455,7 @@ bool CollisionManager::CheckCapsuleVsPolygon(Collidable& pCapsuleObj, Collidable
 		}
 		//ƒƒ‚ƒŠ‚Ì‰ğ•ú‚ğs‚¤
 		MV1CollResultPolyDimTerminate(result);
-
-		//“–‚½‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ•Ô‚·
-		return isHit;
 	}
+	//“–‚½‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ•Ô‚·
+	return isHit;
 }

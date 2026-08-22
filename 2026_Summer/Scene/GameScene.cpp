@@ -470,6 +470,9 @@ void GameScene::SpawnBoss()
 				bossCam->SetTarget(pPlayer_, boss,pCameraManager_.get());
 			}
 			pCameraManager_->ChangeCamera(L"BossCamera");
+
+			//ƒ{ƒX—pBGM‚ÉØ‚è‘Ö‚¦
+			SoundManager::GetInstance().PlayBgm(BGM::BossBattle);
 		}
 	}
 

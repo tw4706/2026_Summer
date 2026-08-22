@@ -5,6 +5,7 @@
 #include "Camera/LockOnCamera.h"
 #include "Camera/PlayerCamera.h"
 #include "Input.h"
+#include "SoundManager.h"
 #include <cmath>
 
 namespace
@@ -143,6 +144,9 @@ void LockOnManager::Update(std::shared_ptr<Player> pPlayer, const std::vector<st
 				lockOnCamera->SetTargetEnemy(nextTarget);
 				pPlayer->SetLockOnEnemy(nextTarget);
 				pCurrentTarget_ = nextTarget;
+
+				//ターゲット切り替えSE(ロックオンの使いまわしを使用しているが気に食わなかったら変える)
+				SoundManager::GetInstance().PlaySe(SE::LockOn);
 			}
 		}
 	}
@@ -151,6 +155,9 @@ void LockOnManager::Update(std::shared_ptr<Player> pPlayer, const std::vector<st
 void LockOnManager::StartLockOn(std::shared_ptr<Player> pPlayer, const std::vector<std::shared_ptr<EnemyBase>>& pEnemies, CameraManager* pCameraManager)
 {
 	if (!pPlayer || !pCameraManager) return;
+
+	//ロックオンSEの再生
+	SoundManager::GetInstance().PlaySe(SE::LockOn);
 
 	//すでにロックオン中なら
 	if (IsLockOn())

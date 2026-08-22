@@ -9,19 +9,20 @@ namespace
 	//各BGM・SEのパス
 	const wchar_t* kTitleBgm = L"data/BGM・SE/TitleBGM.mp3";
 	const wchar_t* kGameBgm = L"data/BGM・SE/GameBGM.mp3";
+	const wchar_t* kBossBgm = L"data/BGM・SE/BossBattleBGM.mp3";
 	const wchar_t* kResultBgm = L"data/BGM・SE/ResultBGM.mp3";
 
-	const wchar_t* kDecideSe = L"data/BGM・SE/decide.mp3";
-	const wchar_t* kAttackSe = L"data/BGM・SE/attack.mp3";
-	const wchar_t* kMoveSe = L"data/BGM・SE/move.mp3";
-	const wchar_t* kHitSe = L"data/BGM・SE/enemyHit.mp3";
-	const wchar_t* kDodgeSe = L"data/BGM・SE/dodge.mp3";
-	const wchar_t* kDeathSe = L"data/BGM・SE/death.mp3";
-	const wchar_t* kGuardSe = L"data/BGM・SE/guard.mp3";
-	const wchar_t* kJumpSe = L"data/BGM・SE/jump.mp3";
-	const wchar_t* kStartSe = L"data/BGM・SE/go.mp3";
-	const wchar_t* kCancelSe = L"data/BGM・SE/cancel.mp3";
-	const wchar_t* kCursoleMoveSe = L"data/BGM・SE/moveCursole.mp3";
+	const wchar_t* kDecideSe = L"data/BGM・SE/Decide.mp3";
+	const wchar_t* kAttackSe = L"data/BGM・SE/Attack.mp3";
+	const wchar_t* kMoveSe = L"data/BGM・SE/Move.mp3";
+	const wchar_t* kPlayerHitSe = L"data/BGM・SE/PlayerHit.mp3";
+	const wchar_t* kEnemyHitSe = L"data/BGM・SE/EnemyHit.mp3";
+	const wchar_t* kDodgeSe = L"data/BGM・SE/Dodge.mp3";
+	const wchar_t* kDeathSe = L"data/BGM・SE/Death.mp3";
+	const wchar_t* kGuardSe = L"data/BGM・SE/Guard.mp3";
+	const wchar_t* kJumpSe = L"data/BGM・SE/Jump.mp3";
+	const wchar_t* kLockOnSe = L"data/BGM・SE/LockOn.mp3";
+	const wchar_t* kCursoleMoveSe = L"data/BGM・SE/MoveCursole.mp3";
 }
 
 SoundManager& SoundManager::GetInstance()
@@ -61,18 +62,18 @@ void SoundManager::Init()
 	//各BGM・SEの読み込み
 	bgmHandles_[BGM::Title] = LoadSoundMem(kTitleBgm);
 	bgmHandles_[BGM::Game] = LoadSoundMem(kGameBgm);
+	bgmHandles_[BGM::BossBattle] = LoadSoundMem(kBossBgm);
 	bgmHandles_[BGM::Result] = LoadSoundMem(kResultBgm);
 
 	seHandles_[SE::Decide] = LoadSoundMem(kDecideSe);
 	seHandles_[SE::Attack] = LoadSoundMem(kAttackSe);
-	seHandles_[SE::Move] = LoadSoundMem(kMoveSe);
-	seHandles_[SE::Hit] = LoadSoundMem(kHitSe);
+	seHandles_[SE::PlayerHit] = LoadSoundMem(kPlayerHitSe);
+	seHandles_[SE::EnemyHit] = LoadSoundMem(kEnemyHitSe);
 	seHandles_[SE::Dodge] = LoadSoundMem(kDodgeSe);
 	seHandles_[SE::Death] = LoadSoundMem(kDeathSe);
 	seHandles_[SE::Guard] = LoadSoundMem(kGuardSe);
 	seHandles_[SE::Jump] = LoadSoundMem(kJumpSe);
-	seHandles_[SE::Start] = LoadSoundMem(kStartSe);
-	seHandles_[SE::Cancel] = LoadSoundMem(kCancelSe);
+	seHandles_[SE::LockOn] = LoadSoundMem(kLockOnSe);
 	seHandles_[SE::CursoleMove] = LoadSoundMem(kCursoleMoveSe);
 }
 

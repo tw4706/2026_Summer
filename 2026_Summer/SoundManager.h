@@ -5,6 +5,7 @@ enum class BGM
 {
 	Title,
 	Game,
+	BossBattle,
 	Result
 };
 
@@ -13,13 +14,13 @@ enum class SE
 	Decide,
 	Attack,
 	Move,
-	Hit,
+	PlayerHit,
+	EnemyHit,
 	Dodge,
 	Death,
 	Guard,
 	Jump,
-	Start,
-	Cancel,
+	LockOn,
 	CursoleMove
 };
 

@@ -1,6 +1,7 @@
 #include "EnemyStateDamage.h"
 #include "EnemyStateRun.h"
 #include "EnemyBase.h"
+#include "SoundManager.h"
 
 EnemyStateDamage::EnemyStateDamage(std::weak_ptr<EnemyBase> pEnemy, float searchRadius):
 	EnemyStateBase(pEnemy,searchRadius)
@@ -13,6 +14,9 @@ void EnemyStateDamage::Enter()
 	if (!enemy)return;
 
 	enemy->ChangeAnimation(AnimationState::Damage);
+
+	//ƒqƒbƒgSE‚ÌÄ¶
+	SoundManager::GetInstance().PlaySe(SE::EnemyHit);
 }
 
 void EnemyStateDamage::Update()

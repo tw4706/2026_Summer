@@ -1,6 +1,7 @@
 #include "PlayerStateDamage.h"
 #include "PlayerStateIdle.h"
 #include"Player/Player.h"
+#include"SoundManager.h"
 
 namespace
 {
@@ -28,6 +29,9 @@ void PlayerStateDamage::Enter()
 	player->ChangeAnimation(AnimationState::Damage, kPlayerDamage.data());
 
 	player->isInvincible_ = true;
+
+	//ƒqƒbƒgSE‚ÌÄ¶
+	SoundManager::GetInstance().PlaySe(SE::PlayerHit);
 }
 
 void PlayerStateDamage::Update()

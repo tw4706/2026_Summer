@@ -96,6 +96,26 @@ void Player::Update()
 {
 	isHit_ = false;
 
+	if (!pCurrentState_)
+	{
+		auto sharedSelf = std::dynamic_pointer_cast<Player>(shared_from_this());
+		std::weak_ptr<Player> weakSelf = sharedSelf;
+
+		//ステートパターンの生成
+		pCurrentState_ = std::make_shared<PlayerStateIdle>(weakSelf);
+
+		pCurrentState_->Enter();
+	}
+
+	//ステートパターンの更新
+	if (pCurrentState_)
+	{
+		if (canControl_)
+		{
+			pCurrentState_->Update();
+		}
+	}
+
 	Collidable::Update();
 
 	//行列を作成
@@ -117,26 +137,6 @@ void Player::Update()
 	{
 		MATRIX handMat = MV1GetFrameLocalWorldMatrix(model_.GetHandle(), handFrameIndex_);
 		pKatana_->Update(handMat, animation_.GetState());
-	}
-
-	if (!pCurrentState_)
-	{
-		auto sharedSelf = std::dynamic_pointer_cast<Player>(shared_from_this());
-		std::weak_ptr<Player> weakSelf = sharedSelf;
-
-		//ステートパターンの生成
-		pCurrentState_ = std::make_shared<PlayerStateIdle>(weakSelf);
-
-		pCurrentState_->Enter();
-	}
-
-	//ステートパターンの更新
-	if (pCurrentState_)
-	{
-		if (canControl_)
-		{
-			pCurrentState_->Update();
-		}
 	}
 
 	//アニメーションの更新

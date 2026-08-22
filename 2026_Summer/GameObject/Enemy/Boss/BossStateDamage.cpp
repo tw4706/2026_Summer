@@ -1,6 +1,7 @@
 #include "BossStateDamage.h"
 #include "BossStateIdle.h"
 #include "Boss.h"
+#include "SoundManager.h"
 
 BossStateDamage::BossStateDamage(std::weak_ptr<Boss>pBoss, float searchRadius):
 	BossStateBase(pBoss,searchRadius)
@@ -13,6 +14,9 @@ void BossStateDamage::Enter()
 	if (!boss)return;
 
 	boss->ChangeAnimation(AnimationState::Damage);
+
+	//ƒqƒbƒgSE‚ÌÄ¶
+	SoundManager::GetInstance().PlaySe(SE::EnemyHit);
 }
 
 void BossStateDamage::Update()
