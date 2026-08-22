@@ -15,7 +15,7 @@ enum class SE
 	Move,
 	Hit,
 	Dodge,
-	PlayerDeath,
+	Death,
 	Start,
 	Cancel,
 	CursoleMove

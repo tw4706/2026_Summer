@@ -16,7 +16,7 @@ namespace
 	const wchar_t* kMoveSe = L"data/BGM・SE/move.mp3";
 	const wchar_t* kHitSe = L"data/BGM・SE/enemyHit.mp3";
 	const wchar_t* kDodgeSe = L"data/BGM・SE/dodge.mp3";
-	const wchar_t* kPlayerDeathSe = L"data/BGM・SE/playerDeath.mp3";
+	const wchar_t* kDeathSe = L"data/BGM・SE/death.mp3";
 	const wchar_t* kStartSe = L"data/BGM・SE/go.mp3";
 	const wchar_t* kCancelSe = L"data/BGM・SE/cancel.mp3";
 	const wchar_t* kCursoleMoveSe = L"data/BGM・SE/moveCursole.mp3";
@@ -64,7 +64,7 @@ void SoundManager::Init()
 	seHandles_[SE::Move] = LoadSoundMem(kMoveSe);
 	seHandles_[SE::Hit] = LoadSoundMem(kHitSe);
 	seHandles_[SE::Dodge] = LoadSoundMem(kDodgeSe);
-	seHandles_[SE::PlayerDeath] = LoadSoundMem(kPlayerDeathSe);
+	seHandles_[SE::Death] = LoadSoundMem(kDeathSe);
 	seHandles_[SE::Start] = LoadSoundMem(kStartSe);
 	seHandles_[SE::Cancel] = LoadSoundMem(kCancelSe);
 	seHandles_[SE::CursoleMove] = LoadSoundMem(kCursoleMoveSe);
