@@ -83,7 +83,7 @@ void Katana::Update(const MATRIX& handMat, AnimationState ownerState)
 
 	isHit_ = false;
 
-	Vector3 katanaScale = kKatanaScale;
+	Vector3 katanaScale = { kKatanaScale.x_ * scale_.x_,kKatanaScale.y_ * scale_.y_,kKatanaScale.z_ * scale_.z_ };
 	Vector3 katanaRotate = kKatanaRotate;
 	Vector3 katanaTransform = kKatanaTransform;
 
@@ -99,7 +99,7 @@ void Katana::Update(const MATRIX& handMat, AnimationState ownerState)
 	Matrix4x4 transMat = Matrix4x4::Translate(katanaTransform.x_, katanaTransform.y_, katanaTransform.z_);
 	Matrix4x4 mat = scaleMat * rotMat * transMat;
 
-	worldMat_ = MMult(mat.ToDxLibMatrix(), handMat);
+	worldMat_ = MMult(mat.ToDxLibMatrix(), Matrix4x4::RemoveScale(handMat));
 	katanaModel_.SetMatrix(worldMat_);
 
 	//worldMat_を使ってプレイヤーのpos_を刀の位置に合成させる

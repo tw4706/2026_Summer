@@ -6,6 +6,9 @@ namespace
 	constexpr int kBaseBgmVolume = 160;
 	constexpr int kBaseSeVolume = 220;
 
+	//BGMのフェードスピード
+	constexpr float kBGMFadeSpeed = 0.05f;
+
 	//各BGM・SEのパス
 	const wchar_t* kTitleBgm = L"data/BGM・SE/TitleBGM.mp3";
 	const wchar_t* kGameBgm = L"data/BGM・SE/GameBGM.mp3";
@@ -32,7 +35,7 @@ SoundManager& SoundManager::GetInstance()
 }
 
 
-SoundManager::SoundManager():
+SoundManager::SoundManager() :
 	currentSeHandle_(-1),
 	currentBgmHandle_(-1)
 {
@@ -77,6 +80,41 @@ void SoundManager::Init()
 	seHandles_[SE::CursoleMove] = LoadSoundMem(kCursoleMoveSe);
 }
 
+void SoundManager::Update()
+{
+	if (state_ == BGMState::None) return;
+
+	if (state_ == BGMState::FadeOut)
+	{
+		fadeBGMVolume_ -= kBGMFadeSpeed;
+
+		if (fadeBGMVolume_ <= 0.0f)
+		{
+			fadeBGMVolume_ = 0.0f;
+
+			//現在のBGMを止めて次のBGMに切り替え
+			StopSoundMem(currentBgmHandle_);
+			currentBgmHandle_ = bgmHandles_[nextBgmState_];
+			PlaySoundMem(currentBgmHandle_, DX_PLAYTYPE_LOOP);
+
+			state_ = BGMState::FadeIn;
+		}
+	}
+	else if (state_ == BGMState::FadeIn)
+	{
+		fadeBGMVolume_ += kBGMFadeSpeed;
+
+		if (fadeBGMVolume_ >= 1.0f)
+		{
+			fadeBGMVolume_ = 1.0f;
+			state_ = BGMState::None;
+		}
+	}
+
+	//実際の音量に反映(bgmVolume_は元々の基準音量)
+	ChangeVolumeSoundMem(static_cast<int>(bgmVolume_ * fadeBGMVolume_), currentBgmHandle_);
+}
+
 void SoundManager::PlaySe(SE se)
 {
 	int handle = seHandles_[se];
@@ -85,26 +123,30 @@ void SoundManager::PlaySe(SE se)
 	ChangeVolumeSoundMem(seVolume_, handle);
 
 	//SEの再生	
-	PlaySoundMem(handle, DX_PLAYTYPE_BACK,TRUE);
+	PlaySoundMem(handle, DX_PLAYTYPE_BACK, TRUE);
 }
 
 void SoundManager::PlayBgm(BGM bgm)
 {
 	int handle = bgmHandles_[bgm];
 
-	if (currentBgmHandle_ == handle) return;
-
-	if (currentBgmHandle_ != -1)
+	//既に同じBGMが再生中、または既にそのBGMへフェード中なら何もしない
+	if (currentBgmHandle_ == handle || (state_ != BGMState::None && nextBgmState_ == bgm))
 	{
-		StopSoundMem(currentBgmHandle_);
+		return;
 	}
 
-	//再生しているBGMハンドルを更新する
-	currentBgmHandle_ = handle;
+	//再生中のBGMが無ければ即フェードインだけでよい
+	if (currentBgmHandle_ == -1)
+	{
+		currentBgmHandle_ = handle;
+		fadeBGMVolume_ = 0.0f;
+		state_ = BGMState::FadeIn;
+		PlaySoundMem(currentBgmHandle_, DX_PLAYTYPE_LOOP);
+		return;
+	}
 
-	//BGMの音量
-	ChangeVolumeSoundMem(bgmVolume_,currentBgmHandle_);
-
-	//BGM再生
-	PlaySoundMem(currentBgmHandle_, DX_PLAYTYPE_LOOP);
+	//次に再生するBGMを予約し、フェードアウトから開始
+	nextBgmState_ = bgm;
+	state_ = BGMState::FadeOut;
 }

@@ -17,6 +17,8 @@ public:
 	void Update(const MATRIX& handMat, AnimationState ownerState);
 	void Draw()override;
 
+	void SetScale(const Vector3& scale) { scale_ = scale; }
+
 	/// <summary>
 	/// 衝突判定
 	/// </summary>
@@ -41,6 +43,7 @@ private:
 	int currentEffectHandle_ = -1;//現在再生中のエフェクトハンドル
 	bool isAttacked_ = false;//攻撃したかどうか
 
+	Vector3 scale_ = { 1.0f,1.0f,1.0f };//刀のスケール
 	Model katanaModel_;//刀のモデル
 	MATRIX worldMat_;//刀のワールド行列
 	std::shared_ptr<CapsuleCollider> pCollider_;//コライダー

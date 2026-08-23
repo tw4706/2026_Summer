@@ -105,6 +105,8 @@ void Application::Run()
 		//前のフレーム描画を削除
 		ClearDrawScreen();
 		Input::GetInstance().Update();
+		//サウンドマネージャーの更新
+		SoundManager::GetInstance().Update();
 		sceneManager.Update();
 		UpdateEffekseer3D();
 		EffectManager::GetInstance().Update();

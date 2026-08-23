@@ -9,6 +9,8 @@
 
 namespace
 {
+	const Vector3 kKatanaScale = { 3.0f,3.0f,3.0f };
+
 	//Œo‰ßŽžŠÔ
 	constexpr float kDeltaTime = 1.0f / 60.0f;
 
@@ -40,6 +42,7 @@ void Boss::Init()
 
 	pKatana_ = std::make_unique<Katana>(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f);
 	pKatana_->SetOwnerCharacter(this);
+	pKatana_->SetScale(kKatanaScale);
 	pKatana_->Init(false);
 }
 

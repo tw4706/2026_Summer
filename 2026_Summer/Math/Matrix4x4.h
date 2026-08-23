@@ -46,5 +46,8 @@ public:
 
 	//DxLib‚ÌMatrix‚É•ÏŠ·
 	MATRIX ToDxLibMatrix()const;
+
+	//Šg‘å‚ğœ‹‚µ‚½s—ñ
+	static MATRIX RemoveScale(const MATRIX& mat);
 };
 

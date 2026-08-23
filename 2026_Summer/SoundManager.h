@@ -8,6 +8,13 @@ enum class BGM
 	BossBattle,
 	Result
 };
+enum class BGMState
+{
+	None,
+	Normal,
+	FadeIn,
+	FadeOut
+};
 
 enum class SE
 {
@@ -33,6 +40,11 @@ public:
 	/// 初期化
 	/// </summary>
 	void Init();
+
+	/// <summary>
+	/// 更新処理
+	/// </summary>
+	void Update();
 
 	/// <summary>
 	/// SEの再生
@@ -65,5 +77,14 @@ private:
 	int seVolume_ = 0;
 	//BGMの音量
 	int bgmVolume_ = 0;
+
+	//BGMのステート
+	BGMState state_ = BGMState::None;
+
+	//次に再生するBGM
+	BGM nextBgmState_ = BGM::Title;
+
+	//BGMのフェードイン・フェードアウトの音量
+	float fadeBGMVolume_ = 0.0f;
 };
 

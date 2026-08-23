@@ -218,3 +218,16 @@ MATRIX Matrix4x4::ToDxLibMatrix()const
 	return m;
 }
 
+MATRIX Matrix4x4::RemoveScale(const MATRIX& mat)
+{
+	MATRIX result = mat;
+	VECTOR xAxis = VNorm(VGet(mat.m[0][0], mat.m[0][1], mat.m[0][2]));
+	VECTOR yAxis = VNorm(VGet(mat.m[1][0], mat.m[1][1], mat.m[1][2]));
+	VECTOR zAxis = VNorm(VGet(mat.m[2][0], mat.m[2][1], mat.m[2][2]));
+
+	result.m[0][0] = xAxis.x; result.m[0][1] = xAxis.y; result.m[0][2] = xAxis.z;
+	result.m[1][0] = yAxis.x; result.m[1][1] = yAxis.y; result.m[1][2] = yAxis.z;
+	result.m[2][0] = zAxis.x; result.m[2][1] = zAxis.y; result.m[2][2] = zAxis.z;
+	return result;
+}
+
