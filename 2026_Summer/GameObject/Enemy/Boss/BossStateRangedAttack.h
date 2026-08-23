@@ -11,5 +11,6 @@ public:
 
 private:
 	float attackTime_ = 0.0f;
+	int slashEffectHandle_ = -1;//斬撃エフェクトのハンドル
 };
 

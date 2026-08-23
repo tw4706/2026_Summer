@@ -94,6 +94,7 @@ void Player::Init()
 
 void Player::Update()
 {
+	isPlayedGuardSE_ = isHit_;
 	isHit_ = false;
 
 	if (!pCurrentState_)
@@ -218,10 +219,13 @@ void Player::OnDamage(const int damage)
 	//ガード中はダメージを通さない
 	if (isGuarding_)
 	{
-		//ガードのSEの再生
-		SoundManager::GetInstance().PlaySe(SE::Guard);
+		//前のフレームでガードSEを再生していないときに再生する→音が多重しちゃうから
+		if (!isPlayedGuardSE_)
+		{
+			//ガードのSEの再生
+			SoundManager::GetInstance().PlaySe(SE::Guard);
+		}
 		return;
-
 	}
 
 	//hpを減らす

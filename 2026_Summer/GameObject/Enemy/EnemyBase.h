@@ -244,6 +244,9 @@ protected:
 	virtual bool ShouldDrawVisionDebug() const { return true; }
 
 protected:
+	//攻撃コライダー
+	SphereCollider* pAttackCollider_ = nullptr;
+protected:
 	//移動の際に向いている角度
 	float moveAngle_;
 
@@ -284,8 +287,6 @@ protected:
 	//視野角のデバッグ描画をすべきかどうか
 	bool shouldDebugDrawVision_ = false;
 
-	//攻撃コライダー
-	SphereCollider* pAttackCollider_ = nullptr;
 	float attackColliderDistance_ = 0.0f;
 
 	//攻撃データローダーの参照
@@ -295,7 +296,7 @@ protected:
 	std::weak_ptr<Player>pPlayer_;
 
 	//自身のHPゲージUIへの弱参照
-	std::weak_ptr<EnemyHPGaugeUI> pHPGaugeUI_; 
+	std::weak_ptr<EnemyHPGaugeUI> pHPGaugeUI_;
 
 	//経路探索のコンポーネント
 	std::unique_ptr<EnemyNavigation> pNavigation_;

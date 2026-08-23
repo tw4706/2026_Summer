@@ -4,6 +4,7 @@
 #include "BossStateDeath.h"
 #include "Katana.h"
 #include "EffectManager.h"
+#include "Collider/SphereCollider.h"
 #include<memory>
 
 namespace
@@ -33,6 +34,13 @@ void Boss::Init()
 {
 	//敵の基底クラスの初期化
 	EnemyBase::Init();
+
+	//刀を持たせる手のフレームを検索
+	handFrameIndex_ = model_.SearchFrame(L"mixamorig:RightHand");
+
+	pKatana_ = std::make_unique<Katana>(Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,0.0f }, 0.0f);
+	pKatana_->SetOwnerCharacter(this);
+	pKatana_->Init(false);
 }
 
 void Boss::Update()
@@ -53,12 +61,25 @@ void Boss::Update()
 
 	//敵の基底クラスの更新
 	EnemyBase::Update();
+
+	//刀をボスの手に追従させる
+	if (handFrameIndex_ != -1 && pKatana_)
+	{
+		MATRIX handMat = MV1GetFrameLocalWorldMatrix(model_.GetHandle(), handFrameIndex_);
+		pKatana_->Update(handMat, animation_.GetState());
+	}
 }
 
 void Boss::Draw()
 {
 	//敵の基底クラスの描画
 	EnemyBase::Draw();
+
+	//刀の描画
+	if (pKatana_)
+	{
+		pKatana_->Draw();
+	}
 }
 
 bool Boss::IsAttackReady() const
@@ -133,4 +154,18 @@ void Boss::OnCollision(Collidable& coll, Collider* pColliderA, Collider* pCollid
 	{
 		isHit_ = true;
 	}
+}
+
+Vector3 Boss::GetAttackColliderPos() const
+{
+	if (pAttackCollider_)
+	{
+		return pAttackCollider_->GetPos();
+	}
+	return pos_;
+}
+
+float Boss::GetRangedAttackAngle() const
+{
+	return atan2f(rangedAttackDir_.x_, rangedAttackDir_.z_);
 }

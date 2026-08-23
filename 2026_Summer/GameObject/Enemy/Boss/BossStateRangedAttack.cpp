@@ -1,7 +1,9 @@
 #include "BossStateRangedAttack.h"
 #include "BossStateRun.h"
 #include "Boss.h"
+#include "EffectManager.h"
 #include "EnemyAttackDataLoader.h"
+#include"EffekseerForDXLib.h"
 
 namespace
 {
@@ -46,6 +48,17 @@ void BossStateRangedAttack::Enter()
 
 	//飛んでいく斬撃コライダーを生成
 	boss->CreateRangedAttackCollider(kSlashRadius, kSlashSpeed, damage);
+
+	//生成された斬撃の初期位置でエフェクトを再生
+	Vector3 spawnPos = boss->GetAttackColliderPos();
+	slashEffectHandle_ = EffectManager::GetInstance().Play(L"BossSlash", spawnPos);
+
+	//飛んでいく方向にエフェクトの向きを合わせる
+	if (slashEffectHandle_ != -1)
+	{
+		float angle = boss->GetRangedAttackAngle();
+		SetRotationPlayingEffekseer3DEffect(slashEffectHandle_, 0.0f, angle, 0.0f);
+	}
 }
 
 void BossStateRangedAttack::Update()
@@ -54,6 +67,13 @@ void BossStateRangedAttack::Update()
 	if (!boss)return;
 
 	attackTime_ += kDeltaTime;
+
+	//斬撃コライダーの現在位置にエフェクトを追従させる
+	if (slashEffectHandle_ != -1)
+	{
+		Vector3 pos = boss->GetAttackColliderPos();
+		SetPosPlayingEffekseer3DEffect(slashEffectHandle_, pos.x_, pos.y_, pos.z_);
+	}
 
 	//一定時間経ったらRun状態に戻る
 	if (attackTime_ >= kAttackDuration)
@@ -73,4 +93,11 @@ void BossStateRangedAttack::Exit()
 
 	//斬撃コライダーの削除
 	boss->RemoveAttackCollider();
+
+	//斬撃エフェクトの停止
+	if (slashEffectHandle_ != -1)
+	{
+		EffectManager::GetInstance().Stop(slashEffectHandle_);
+		slashEffectHandle_ = -1;
+	}
 }

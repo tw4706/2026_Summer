@@ -47,6 +47,7 @@ void PlayerStateAttack::Enter()
 
 	isEffectPlaying_ = false;
 	isColliderEnabled_ = false;
+	isAttackSePlayed_ = false;
 }
 
 void PlayerStateAttack::Update()
@@ -83,19 +84,18 @@ void PlayerStateAttack::Update()
 	//攻撃入力が行われたら
 	if (Input::GetInstance().IsTriggered("attack"))
 	{
-		bool wasComboRequested = combo.IsNextComboRequested();
-
 		//コンボで入力を受け付ける
 		combo.OnAttackInput(currentFrame);
-
-		//入力が有効なコンボ受付として成立した場合のみ鳴らす
-		if (!wasComboRequested &&combo.IsNextComboRequested())
-		{
-			SoundManager::GetInstance().PlaySe(SE::Attack);
-		}
 	}
 
-	//指定フレームでエフェクトの切り替え
+	//CSVで指定したフレームで攻撃SEを再生
+	if (!isAttackSePlayed_ && currentFrame >= static_cast<float>(data->comboPlaySEFrame))
+	{
+		SoundManager::GetInstance().PlaySe(SE::Attack);
+		isAttackSePlayed_ = true;
+	}
+
+	//CSVで指定したフレームでエフェクトの切り替えをする
 	bool isEffectEnabled = (currentFrame >= static_cast<float>(data->effectStartFrame) &&
 		currentFrame <= static_cast<float>(data->effectEndFrame));
 	if (isEffectEnabled && !isEffectPlaying_)
@@ -109,7 +109,7 @@ void PlayerStateAttack::Update()
 		isEffectPlaying_ = false;
 	}
 
-	//コライダーが有効なフレームかつ現在有効でない場合
+	//コライダーが有効なフレームかつ現在有効じゃないとき
 	bool isColliderEnableFrame = (currentFrame >= static_cast<float>(data->colliderStartFrame) &&
 		currentFrame <= static_cast<float>(data->colliderEndFrame));
 

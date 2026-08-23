@@ -15,5 +15,6 @@ public:
 private:
     bool isEffectPlaying_ = false;//エフェクトを再生中かどうか
     bool isColliderEnabled_ = false;//コライダーが有効かどうか
+	bool isAttackSePlayed_ = false;//攻撃SEが再生されたかどうか
 };
 

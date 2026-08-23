@@ -11,4 +11,5 @@ struct ComboData
     float inputAcceptStartFrame = 0.0f;         //次のコンボの入力の受付開始フレーム
     float inputAcceptEndFrame = 0.0f;           //次のコンボの受付終了フレーム
     float comboTransitionFrame = 0.0f;          //次のコンボへ遷移可能なフレーム
+	float comboPlaySEFrame = 0.0f;             //コンボ再生時のSE再生フレーム
 };

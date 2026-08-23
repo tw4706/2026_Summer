@@ -101,6 +101,7 @@ void EnemyBase::Init()
 	EffectManager::GetInstance().Load(L"Hit", L"data/Effect/HitEffect.efk");
 	EffectManager::GetInstance().Load(L"EnemyAttack", L"data/Effect/EnemyAttack.efk");
 	EffectManager::GetInstance().Load(L"EnemyJumpAttack", L"data/Effect/EnemyJumpAttack.efk");
+	EffectManager::GetInstance().Load(L"BossSlash", L"data/Effect/BossSlash.efk");
 
 	//アニメーションの初期化
 	animation_.Init(model_.GetHandle());

@@ -57,15 +57,24 @@ Katana::~Katana()
 
 void Katana::Init()
 {
+	Init(true);
+}
+
+void Katana::Init(bool isColliderActive)
+{
 	//刀モデルのロード
 	katanaModel_.Load(L"data/MV1/Tachi.mv1");
 
 	//エフェクトのロード
 	EffectManager::GetInstance().Load(L"Slash", L"data/Effect/KatanaFrame.efk");
-	
-	auto pCapsule = std::make_unique<CapsuleCollider>(kColliderRadius, kColliderHeight, Vector3{ 0.0f, 0.0f, 0.0f });
-	pCapsule->SetUseWorldPos(true);
-	this->AddCollider(std::move(pCapsule));
+
+	//コライダーの生成
+	if (isColliderActive)
+	{
+		auto pCapsule = std::make_unique<CapsuleCollider>(kColliderRadius, kColliderHeight, Vector3{ 0.0f, 0.0f, 0.0f });
+		pCapsule->SetUseWorldPos(true);
+		this->AddCollider(std::move(pCapsule));
+	}
 }
 
 void Katana::Update(const MATRIX& handMat, AnimationState ownerState)
@@ -107,11 +116,11 @@ void Katana::Update(const MATRIX& handMat, AnimationState ownerState)
 		CapsuleCollider* pCapsule = static_cast<CapsuleCollider*>(colliders_[0].get());
 		if (pCapsule)
 		{
-			pCapsule->SetWorldPos(worldStart,worldEnd);
+			pCapsule->SetWorldPos(worldStart, worldEnd);
 		}
 	}
 
-	Vector3 katanaWorldPos = 
+	Vector3 katanaWorldPos =
 	{
 		worldMat_.m[3][0],
 		worldMat_.m[3][1],
@@ -179,7 +188,7 @@ void Katana::OnCollision(Collidable& coll, Collider* pColliderA, Collider* pColl
 	if (pEnemy)
 	{
 		pEnemy->OnDamage(kAttackDamage);
-		pEnemy->OnCollision(*this,pColliderA,pColliderB);
+		pEnemy->OnCollision(*this, pColliderA, pColliderB);
 		isAttacked_ = true;
 	}
 }

@@ -21,7 +21,7 @@ bool ComboDataLoader::Load(const std::wstring& filePath)
 
 		auto cols = SplitCsvLine(line);
 		//列が足りない行はスキップ
-		if (cols.size() < 8)continue;
+		if (cols.size() < 9)continue;
 
 		ComboData data;
 		int i = 0;
@@ -44,6 +44,9 @@ bool ComboDataLoader::Load(const std::wstring& filePath)
 
 		//次のコンボ遷移可能になるフレーム
 		data.comboTransitionFrame= std::stoi(cols[i++]);
+
+		//コンボ再生時のSE再生フレーム
+		data.comboPlaySEFrame = std::stoi(cols[i++]);
 
 		comboDataMap_[animNameKey] = data;
 	};

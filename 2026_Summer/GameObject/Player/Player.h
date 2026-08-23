@@ -170,6 +170,7 @@ private:
 	bool isGuarding_ = false;				//ガード中かどうか
 	bool isLockOn_ = false;					//ロックオンしているかどうか
 	bool canControl_ = true;				//操作可能かどうか
+	bool isPlayedGuardSE_ = false;			//ガードSEをさいせいしたかどうか			
 
 	ComboManager comboManager_;				//コンボマネージャー
 	CameraManager* pCameraManager_=nullptr;	//カメラマネージャー

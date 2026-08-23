@@ -115,10 +115,12 @@ void ResultScene::NormalUpdate()
 	if (Input::GetInstance().IsTriggered("up"))
 	{
 		currentIndex_ = 0;
+		SoundManager::GetInstance().PlaySe(SE::CursoleMove);
 	}
 	else if (Input::GetInstance().IsTriggered("down"))
 	{
 		currentIndex_ = 1;
+		SoundManager::GetInstance().PlaySe(SE::CursoleMove);
 	}
 
 	if (Input::GetInstance().IsTriggered("next"))
@@ -126,6 +128,7 @@ void ResultScene::NormalUpdate()
 		update_ = &ResultScene::FadeOutUpdate;
 		draw_ = &ResultScene::FadeDraw;
 		frameCount_ = kFadeInterval;
+		SoundManager::GetInstance().PlaySe(SE::Decide);
 	}
 }
 
