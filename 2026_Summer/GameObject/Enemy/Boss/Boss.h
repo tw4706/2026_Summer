@@ -1,5 +1,6 @@
 #pragma once
 #include "Enemy/EnemyBase.h"
+#include "Katana.h"
 class Boss :public EnemyBase
 {
 public:
