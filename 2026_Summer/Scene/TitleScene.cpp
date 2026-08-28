@@ -139,6 +139,9 @@ void TitleScene::NormalUpdate()
 		}
 		SoundManager::GetInstance().PlaySe(SE::Decide);
 	}
+
+	//”wŒi‚ÌXV
+	pBg_->Update();
 }
 
 void TitleScene::FadeOutUpdate()
