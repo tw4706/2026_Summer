@@ -79,7 +79,7 @@ void TitleScene::Init()
 	GetGraphSize(endTextHandle_, &endTextWidth_, &endTextHeight_);
 
 	//背景の初期化
-	pBg_->Init((L"data/Bg/backGroundTitle"));
+	pBg_->Init((L"data/Bg/backGround"));
 
 	//タイトル用プレイヤーの初期化とアニメーション設定
 	pTitlePlayer_->Init();
