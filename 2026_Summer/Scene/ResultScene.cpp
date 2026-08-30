@@ -63,7 +63,7 @@ namespace
 	constexpr int kTextOffsetX = 4;
 }
 
-ResultScene::ResultScene(SceneManager& sceneManager,float clearTime,bool isGameOver) :
+ResultScene::ResultScene(SceneManager& sceneManager, float clearTime, bool isGameOver) :
 	Scene(sceneManager),
 	update_(&ResultScene::FadeInUpdate),
 	draw_(&ResultScene::FadeDraw),
@@ -223,7 +223,7 @@ void ResultScene::NormalDraw()
 {
 	int retryColor = (currentIndex_ == 0) ? 0xff0000 : 0x000000;
 	int titleColor = (currentIndex_ == 1) ? 0xff0000 : 0x000000;
-	
+
 	//背景描画
 	pBg_->Draw(Vector3{ 0.0f, 0.0f, 0.0f });
 
@@ -236,7 +236,7 @@ void ResultScene::NormalDraw()
 		int textWidth = GetDrawStringWidthToHandle(text, static_cast<int>(wcslen(text)), Game::kFontUIHandle);
 
 		DrawFormatStringToHandle(centerX - textWidth / 2, centerY - kGameOverOffsetY, 0x000000, Game::kFontUIHandle, text);
-		DrawFormatStringToHandle(centerX - textWidth / 2+ kTextOffsetX, centerY - kGameOverOffsetY, 0xffffff, Game::kFontUIHandle, text);
+		DrawFormatStringToHandle(centerX - textWidth / 2 + kTextOffsetX, centerY - kGameOverOffsetY, 0xffffff, Game::kFontUIHandle, text);
 	}
 	else
 	{
@@ -250,7 +250,7 @@ void ResultScene::NormalDraw()
 			swprintf_s(timeBuffer, L"クリアタイム: %.1f秒", displayedTime_);
 			int textWidth = GetDrawStringWidthToHandle(timeBuffer, static_cast<int>(wcslen(timeBuffer)), Game::kFontUIHandle);
 
-			DrawFormatStringToHandle(centerX - textWidth / 2+ kTextOffsetX, centerY - kClearTimeOffsetY, 0xffffff, Game::kFontUIHandle, timeBuffer);
+			DrawFormatStringToHandle(centerX - textWidth / 2 + kTextOffsetX, centerY - kClearTimeOffsetY, 0xffffff, Game::kFontUIHandle, timeBuffer);
 			DrawFormatStringToHandle(centerX - textWidth / 2, centerY - kClearTimeOffsetY, 0x000000, Game::kFontUIHandle, timeBuffer);
 		}
 
@@ -281,7 +281,7 @@ void ResultScene::NormalDraw()
 			int drawH = static_cast<int>(rankH * rankScale);
 
 			int drawX = centerX - drawW / 2;
-			int drawY = centerY - drawH / 2- kRankOffsetY;
+			int drawY = centerY - drawH / 2 - kRankOffsetY;
 
 			DrawExtendGraph(drawX, drawY, drawX + drawW, drawY + drawH, rankHandle_, true);
 		}
@@ -297,13 +297,13 @@ void ResultScene::NormalDraw()
 		//リトライ
 		const wchar_t* retryText = L"リトライ";
 		int retryWidth = GetDrawStringWidthToHandle(retryText, static_cast<int>(wcslen(retryText)), Game::kFontUIHandle);
-		DrawFormatStringToHandle(centerX - retryWidth / 2 + kRetryPosX+ kTextOffsetX, centerY + kRetryPosY - slideOffset, 0xffffff, Game::kFontUIHandle, retryText);
+		DrawFormatStringToHandle(centerX - retryWidth / 2 + kRetryPosX + kTextOffsetX, centerY + kRetryPosY - slideOffset, 0xffffff, Game::kFontUIHandle, retryText);
 		DrawFormatStringToHandle(centerX - retryWidth / 2 + kRetryPosX, centerY + kRetryPosY - slideOffset, retryColor, Game::kFontUIHandle, retryText);
 
 		//タイトルに戻る
 		const wchar_t* titleText = L"タイトルに戻る";
 		int titleWidth = GetDrawStringWidthToHandle(titleText, static_cast<int>(wcslen(titleText)), Game::kFontUIHandle);
-		DrawFormatStringToHandle(centerX - titleWidth / 2 + kBackTitlePosX+ kTextOffsetX, centerY + kBackTitlePosY - slideOffset, 0xffffff, Game::kFontUIHandle, titleText);
+		DrawFormatStringToHandle(centerX - titleWidth / 2 + kBackTitlePosX + kTextOffsetX, centerY + kBackTitlePosY - slideOffset, 0xffffff, Game::kFontUIHandle, titleText);
 		DrawFormatStringToHandle(centerX - titleWidth / 2 + kBackTitlePosX, centerY + kBackTitlePosY - slideOffset, titleColor, Game::kFontUIHandle, titleText);
 	}
 }
