@@ -9,40 +9,58 @@
 #include<memory>
 #include<cmath>
 #include<algorithm>
+#include<cassert>
 
 namespace
 {
 	//フェードの間隔
 	constexpr int kFadeInterval = 60;
 
+	//ランクの画像パス
+	const wchar_t* kRankImagePaths[] =
+	{
+		L"data/UI/S.png",
+		L"data/UI/A.png",
+		L"data/UI/B.png",
+		L"data/UI/C.png",
+	};
+
 	//ランクのタイム基準となる値
 	constexpr float kRankSTime = 60.0f;
 	constexpr float kRankATime = 120.0f;
 	constexpr float kRankBTime = 180.0f;
 
-	constexpr int kTimeCountDuration = 60;   //タイムをカウントし終わるまでのフレーム数
+	constexpr int kTimeCountDuration = 60;		//タイムをカウントし終わるまでのフレーム数
 
-	constexpr int kRankScaleDuration = 20;   //ランク拡大にかけるフレーム数
-	constexpr float kRankScaleMax = 2.0f;    //ランクの最大拡大率
+	constexpr int kRankOffsetY = 60;			//ランクのY座標オフセット
+	constexpr int kRankScaleDuration = 20;		//ランク拡大にかけるフレーム数
+	constexpr float kRankScaleMax = 1.2f;		//ランクの最大拡大率
+
+	//ランクの拡縮
+	constexpr float kRankSpeed = 0.05f;   //拡縮の速さ
+	constexpr float kRankAmplitude = 0.1f;//拡縮の振れ幅
 
 	//選択肢の座標
 	constexpr int kRetryPosX = 0;
-	constexpr int kRetryPosY = 60;
+	constexpr int kRetryPosY = 160;
 	constexpr int kBackTitlePosX = 0;
-	constexpr int kBackTitlePosY = 120;
+	constexpr int kBackTitlePosY = 200;
 
 	//GameOverの文字のY座標オフセット
 	constexpr int kGameOverOffsetY = 30;
 
 	//クリア時間のY座標オフセット
-	constexpr int kClearTimeOffsetY = 100;
+	constexpr int kClearTimeOffsetY = 250;
 
-	// 演出のタイミング
+	//演出のタイミング
 	constexpr int kClearTimeShowFrame = 0;		//クリアタイムを出すフレーム
-	constexpr int kRankShowFrame = 30;			//ランクを出すフレーム
-	constexpr int kButtonSlideStartFrame = 60;	//ボタンのスライドを始めるフレーム
+	constexpr int kRankShowFrame = kClearTimeShowFrame + kTimeCountDuration;	//ランクを出すフレーム
+	constexpr int kButtonSlideStartFrame = kRankShowFrame + kRankScaleDuration;	//ボタンのスライドを始めるフレーム
 	constexpr int kButtonSlideDuration = 20;	//スライドするフレーム
 	constexpr int kButtonSlideDistance = 100;	//スライドのボタンの距離
+
+	//文字のオフセット
+	constexpr int kTextOffsetX = 4;
 }
 
 ResultScene::ResultScene(SceneManager& sceneManager,float clearTime,bool isGameOver) :
@@ -76,12 +94,30 @@ ResultScene::ResultScene(SceneManager& sceneManager,float clearTime,bool isGameO
 
 ResultScene::~ResultScene()
 {
+	//画像の削除
+	DeleteGraph(rankHandle_);
 }
 
 void ResultScene::Init()
 {
 	pBg_ = std::make_shared<Bg>();
 	pBg_->Init(L"data/Bg/backGroundResult");
+
+	//ゲームオーバーでなければランク画像をロード
+	if (!isGameOver_)
+	{
+		int rankIndex = 0;
+		switch (rank_)
+		{
+		case L'S': rankIndex = 0; break;
+		case L'A': rankIndex = 1; break;
+		case L'B': rankIndex = 2; break;
+		case L'C': rankIndex = 3; break;
+		}
+
+		rankHandle_ = LoadGraph(kRankImagePaths[rankIndex]);
+		assert(rankHandle_ >= 0);
+	}
 
 	SoundManager::GetInstance().PlayBgm(BGM::Result);
 }
@@ -119,6 +155,9 @@ void ResultScene::NormalUpdate()
 		}
 		return;
 	}
+
+	//カウントを進める
+	performanceCount_++;
 
 	if (Input::GetInstance().IsTriggered("up"))
 	{
@@ -197,6 +236,7 @@ void ResultScene::NormalDraw()
 		int textWidth = GetDrawStringWidthToHandle(text, static_cast<int>(wcslen(text)), Game::kFontUIHandle);
 
 		DrawFormatStringToHandle(centerX - textWidth / 2, centerY - kGameOverOffsetY, 0x000000, Game::kFontUIHandle, text);
+		DrawFormatStringToHandle(centerX - textWidth / 2+ kTextOffsetX, centerY - kGameOverOffsetY, 0xffffff, Game::kFontUIHandle, text);
 	}
 	else
 	{
@@ -210,23 +250,40 @@ void ResultScene::NormalDraw()
 			swprintf_s(timeBuffer, L"クリアタイム: %.1f秒", displayedTime_);
 			int textWidth = GetDrawStringWidthToHandle(timeBuffer, static_cast<int>(wcslen(timeBuffer)), Game::kFontUIHandle);
 
+			DrawFormatStringToHandle(centerX - textWidth / 2+ kTextOffsetX, centerY - kClearTimeOffsetY, 0xffffff, Game::kFontUIHandle, timeBuffer);
 			DrawFormatStringToHandle(centerX - textWidth / 2, centerY - kClearTimeOffsetY, 0x000000, Game::kFontUIHandle, timeBuffer);
 		}
 
 		//ランクはタイムのカウントが終わってから出す
 		if (performanceCount_ >= kRankShowFrame)
 		{
-			//拡大率の計算
-			float rt = std::clamp(static_cast<float>(performanceCount_ - kRankShowFrame) / kRankScaleDuration, 0.0f, 1.0f);
-			float rankScale = kRankScaleMax * (1.0f - std::pow(1.0f - rt, 3.0f));
+			float rankScale;
 
-			wchar_t rankBuffer[8];
-			swprintf_s(rankBuffer, L"%c", rank_);
+			//登場演出中(拡大アニメーション中)かどうか
+			int elapsed = performanceCount_ - kRankShowFrame;
+			if (elapsed < kRankScaleDuration)
+			{
+				//登場時は0から最大サイズまでイージングで拡大
+				float rt = std::clamp(static_cast<float>(elapsed) / kRankScaleDuration, 0.0f, 1.0f);
+				rankScale = kRankScaleMax * (1.0f - std::pow(1.0f - rt, 3.0f));
+			}
+			else
+			{
+				//登場後はサイン波でずっと拡縮を繰り返す
+				float pulseElapsed = static_cast<float>(elapsed - kRankScaleDuration);
+				rankScale = kRankScaleMax + std::sin(pulseElapsed * kRankSpeed) * kRankAmplitude;
+			}
 
-			int baseWidth = GetDrawStringWidthToHandle(rankBuffer, static_cast<int>(wcslen(rankBuffer)), Game::kFontUIHandle);
-			int drawX = centerX - static_cast<int>(baseWidth * rankScale / 2);
+			int rankW, rankH;
+			GetGraphSize(rankHandle_, &rankW, &rankH);
 
-			DrawExtendFormatStringToHandle(drawX, centerY, rankScale, rankScale, 0x000000, Game::kFontUIHandle, rankBuffer);
+			int drawW = static_cast<int>(rankW * rankScale);
+			int drawH = static_cast<int>(rankH * rankScale);
+
+			int drawX = centerX - drawW / 2;
+			int drawY = centerY - drawH / 2- kRankOffsetY;
+
+			DrawExtendGraph(drawX, drawY, drawX + drawW, drawY + drawH, rankHandle_, true);
 		}
 	}
 
@@ -237,14 +294,16 @@ void ResultScene::NormalDraw()
 
 	if (performanceCount_ >= kButtonSlideStartFrame)
 	{
-		// リトライ
+		//リトライ
 		const wchar_t* retryText = L"リトライ";
 		int retryWidth = GetDrawStringWidthToHandle(retryText, static_cast<int>(wcslen(retryText)), Game::kFontUIHandle);
+		DrawFormatStringToHandle(centerX - retryWidth / 2 + kRetryPosX+ kTextOffsetX, centerY + kRetryPosY - slideOffset, 0xffffff, Game::kFontUIHandle, retryText);
 		DrawFormatStringToHandle(centerX - retryWidth / 2 + kRetryPosX, centerY + kRetryPosY - slideOffset, retryColor, Game::kFontUIHandle, retryText);
 
-		// タイトルに戻る
+		//タイトルに戻る
 		const wchar_t* titleText = L"タイトルに戻る";
 		int titleWidth = GetDrawStringWidthToHandle(titleText, static_cast<int>(wcslen(titleText)), Game::kFontUIHandle);
+		DrawFormatStringToHandle(centerX - titleWidth / 2 + kBackTitlePosX+ kTextOffsetX, centerY + kBackTitlePosY - slideOffset, 0xffffff, Game::kFontUIHandle, titleText);
 		DrawFormatStringToHandle(centerX - titleWidth / 2 + kBackTitlePosX, centerY + kBackTitlePosY - slideOffset, titleColor, Game::kFontUIHandle, titleText);
 	}
 }

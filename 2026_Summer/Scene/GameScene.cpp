@@ -22,6 +22,7 @@
 #include"UIManager.h"
 #include"UI/EnemyHPGaugeUI.h"
 #include"UI/PlayerHPGaugeUI.h"
+#include"UI/BossHPGaugeUI.h"
 #include"UI/ReticleUI.h"
 #include"Game.h"
 #include"EffekseerForDXLib.h"
@@ -454,7 +455,17 @@ void GameScene::SpawnBoss()
 		enemy->SetNavigationGrid(pStage_->GetNaviGrid());
 		enemy->SetStageModelHandle(pStage_->GetHandle());
 
-		auto enemyGauge = std::make_shared<EnemyHPGaugeUI>(enemy);
+		//ボスならBossHPGaugeUI、それ以外はEnemyHPGaugeUIを生成
+		std::shared_ptr<EnemyHPGaugeUI> enemyGauge;
+		if (auto boss = std::dynamic_pointer_cast<Boss>(enemy))
+		{
+			enemyGauge = std::make_shared<BossHPGaugeUI>(boss);
+		}
+		else
+		{
+			enemyGauge = std::make_shared<EnemyHPGaugeUI>(enemy);
+		}
+
 		pUiManager_->AddUI(enemyGauge);
 		enemy->SetHPGaugeUI(enemyGauge);
 

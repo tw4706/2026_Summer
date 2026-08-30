@@ -27,6 +27,7 @@ public:
 private:
 	int frameCount_ = 0;
 	int performanceCount_ = 0;			//演出用のカウント
+	int rankHandle_ = -1;				//ランクの画像ハンドル
 
 	float displayedTime_ = 0.0f;		//カウントアップ中の表示タイム
 	float clearTime_;					//クリアタイム
