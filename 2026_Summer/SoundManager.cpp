@@ -3,7 +3,7 @@
 
 namespace
 {
-	constexpr int kBaseBgmVolume = 0;
+	constexpr int kBaseBgmVolume = 150;
 	constexpr int kBaseSeVolume = 220;
 
 	//BGMのフェードスピード
@@ -17,6 +17,8 @@ namespace
 
 	const wchar_t* kDecideSe = L"data/BGM・SE/Decide.mp3";
 	const wchar_t* kAttackSe = L"data/BGM・SE/Attack.mp3";
+	const wchar_t* kEnemyPrevAttackSe = L"data/BGM・SE/prevAttack.mp3";
+	const wchar_t* kEnemyAttackSe = L"data/BGM・SE/enemyAttack.mp3";
 	const wchar_t* kMoveSe = L"data/BGM・SE/Move.mp3";
 	const wchar_t* kPlayerHitSe = L"data/BGM・SE/PlayerHit.mp3";
 	const wchar_t* kEnemyHitSe = L"data/BGM・SE/EnemyHit.mp3";
@@ -72,6 +74,8 @@ void SoundManager::Init()
 
 	seHandles_[SE::Decide] = LoadSoundMem(kDecideSe);
 	seHandles_[SE::Attack] = LoadSoundMem(kAttackSe);
+	seHandles_[SE::EnemyPrevAttack] = LoadSoundMem(kEnemyPrevAttackSe);
+	seHandles_[SE::EnemyAttack] = LoadSoundMem(kEnemyAttackSe);
 	seHandles_[SE::PlayerHit] = LoadSoundMem(kPlayerHitSe);
 	seHandles_[SE::EnemyHit] = LoadSoundMem(kEnemyHitSe);
 	seHandles_[SE::Dodge] = LoadSoundMem(kDodgeSe);

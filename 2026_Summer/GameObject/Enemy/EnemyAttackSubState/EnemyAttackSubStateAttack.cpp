@@ -4,6 +4,7 @@
 #include "../EnemyStateIdle.h"
 #include "../EnemyStateAttack.h"
 #include "../EnemyBase.h"
+#include "SoundManager.h"
 
 EnemyAttackSubStateAttack::EnemyAttackSubStateAttack(std::weak_ptr<EnemyBase> pEnemy, EnemyStateAttack* pEnemyAttack, const AttackData& attackData) :
 	EnemyAttackSubStateBase(pEnemy, pEnemyAttack, attackData)
@@ -19,6 +20,8 @@ void EnemyAttackSubStateAttack::Enter()
 	enemy->SetAttackAnimationSpeed();
 
 	isAttackColliderActive_ = false;
+
+	SoundManager::GetInstance().PlaySe(SE::BossAttack);
 }
 
 void EnemyAttackSubStateAttack::Update()

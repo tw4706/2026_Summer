@@ -20,6 +20,8 @@ enum class SE
 {
 	Decide,
 	Attack,
+	EnemyPrevAttack,
+	EnemyAttack,
 	Move,
 	PlayerHit,
 	EnemyHit,

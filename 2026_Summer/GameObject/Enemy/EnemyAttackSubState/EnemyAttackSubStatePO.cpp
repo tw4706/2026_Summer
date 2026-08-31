@@ -3,6 +3,7 @@
 #include "../EnemyBase.h"
 #include "../BigMan.h"
 #include "../EnemyStateAttack.h"
+#include "SoundManager.h"
 
 EnemyAttackSubStatePO::EnemyAttackSubStatePO(std::weak_ptr<EnemyBase> pEnemy, EnemyStateAttack* pEnemyAttack, const AttackData& attackData):
 	EnemyAttackSubStateBase(pEnemy, pEnemyAttack, attackData)
@@ -34,6 +35,9 @@ void EnemyAttackSubStatePO::Enter()
 		break;
 	}
 	enemy->SetSlowAnimationSpeed();
+
+	SoundManager::GetInstance().PlaySe(SE::EnemyPrevAttack);
+
 }
 
 void EnemyAttackSubStatePO::Update()
