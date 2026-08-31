@@ -35,6 +35,11 @@ namespace
 	constexpr int kDebugGridDiv = 6;
 }
 
+Stage::Stage():
+	Collidable(Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f }, 0.0f)
+{
+}
+
 Stage::Stage(Vector3 pos, Vector3 vel, float dir) :
 	Collidable(pos, vel, dir)
 {

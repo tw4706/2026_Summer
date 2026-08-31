@@ -8,6 +8,7 @@
 #include "FadeManager.h"
 #include "SoundManager.h"
 #include "TitlePlayer.h"
+#include "Camera/TitleCamera.h"
 #include<Dxlib.h>
 #include<memory>
 #include<cassert>
@@ -45,6 +46,12 @@ namespace
 
 	//選択肢の文字の拡大率の補間割合
 	constexpr float kScaleLerpRate = 0.1f;
+
+	//プレイヤーの移動速度
+	constexpr float kPlayerMoveSpeed = 5.0f;
+
+	//固定カメラのままプレイヤーを走らせておくフレーム数
+	constexpr int kIntroHoldDuration = 60;
 }
 
 TitleScene::TitleScene(SceneManager& sceneManager) :
@@ -54,7 +61,9 @@ TitleScene::TitleScene(SceneManager& sceneManager) :
 	frameCount_(kFadeInterval)
 {
 	pBg_ = std::make_shared<Bg>();
+	pStage_ = std::make_shared<Stage>(Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f }, 0.0f);
 	pTitlePlayer_ = std::make_shared<TitlePlayer>();
+	pTitleCamera_ = std::make_shared<TitleCamera>();
 }
 
 TitleScene::~TitleScene()
@@ -81,16 +90,62 @@ void TitleScene::Init()
 	//背景の初期化
 	pBg_->Init((L"data/Bg/backGround"));
 
-	//タイトル用プレイヤーの初期化とアニメーション設定
+	//ステージの初期化
+	pStage_->Init();
+
 	pTitlePlayer_->Init();
+	pTitleCamera_->Init();
+
+	Vector3 dir = pTitlePlayer_->GetForward();
+	pTitlePlayer_->StartRun(dir, kPlayerMoveSpeed);
+	pTitleCamera_->SetupIntro(pTitlePlayer_->GetPos(), dir);
 
 	SoundManager::GetInstance().PlayBgm(BGM::Title);
 }
 
 void TitleScene::Update()
 {
-	//タイトル用プレイヤーの更新
-	pTitlePlayer_->Update();
+	//フェードアウト中かどうか
+	//このフラグを用いることによってフェードアウト中でもカメラの固定を行えるようにする
+	bool isFadingOut = (update_ == &TitleScene::FadeOutUpdate);
+
+	if (pTitlePlayer_)
+	{
+		pTitlePlayer_->Update();
+
+		//フェードアウト中でなければカメラ追従を行う
+		if (!isFadingOut)
+		{
+			pTitleCamera_->FollowPlayer(pTitlePlayer_->GetPos());
+		}
+	}
+
+	//フェードアウト中でなければカメラ本体の更新を行う
+	if (!isFadingOut)
+	{
+		pTitleCamera_->Update(0);
+	}
+
+	//固定のまま一定フレーム走らせたら、カメラを背後へ引き始める
+	if (!isPullBackStarted_)
+	{
+		introHoldFrameCount_++;
+		if (introHoldFrameCount_ >= kIntroHoldDuration)
+		{
+			pTitleCamera_->StartTransitionToFollow();
+			isPullBackStarted_ = true;
+		}
+	}
+
+	//完全追従になった＝背後に収まった瞬間を検知
+	if (!isFollowStarted_ && pTitleCamera_->IsFollowing())
+	{
+		isFollowStarted_ = true;
+		pTitlePlayer_->StopRun();
+
+		//ここで引きカメラの開始を行う
+		pTitleCamera_->StartPullBackForLogo();
+	}
 
 	(this->*update_)();
 }
@@ -113,6 +168,11 @@ void TitleScene::FadeInUpdate()
 
 void TitleScene::NormalUpdate()
 {
+	//背景の更新
+	pBg_->Update();
+
+	if (!isFollowStarted_) return;
+
 	if (Input::GetInstance().IsTriggered("up"))
 	{
 		currentIndex_ = 0;
@@ -139,9 +199,6 @@ void TitleScene::NormalUpdate()
 		}
 		SoundManager::GetInstance().PlaySe(SE::Decide);
 	}
-
-	//背景の更新
-	pBg_->Update();
 }
 
 void TitleScene::FadeOutUpdate()
@@ -171,15 +228,42 @@ void TitleScene::FadeDraw()
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
 	FadeManager::GetInstance().StartCapture();
+
+	//現在のカメラの座標を固定するために更新処理を置く
+	if (pTitleCamera_)
+	{
+		pTitleCamera_->Update(0);
+	}
+
 	NormalDraw();
 	FadeManager::GetInstance().EndCaptureAndDraw(rate);
 }
 
 void TitleScene::NormalDraw()
 {
-	pBg_->Draw(Vector3{ 0.0f,0.0f,0.0f });
+	//背景の描画
+	if (pBg_)
+	{
+		pBg_->Draw(Vector3{ 0.0f,0.0f,0.0f });
+	}
 
-	//pTitlePlayer_->Draw();
+	//ステージの描画
+	if (pStage_)
+	{
+		pStage_->Draw();
+	}
+
+	//演出中のみプレイヤーの描画を行う
+	if (!isFollowStarted_)
+	{
+		if (pTitlePlayer_)
+		{
+			pTitlePlayer_->Draw();
+		}
+
+		//演出が終わっていない場合はUIを描画せずに終了
+		return;
+	}
 
 	float startScale = (currentIndex_ == 0) ? kSelectedScale : kUnselectedScale;
 	float endScale = (currentIndex_ == 1) ? kSelectedScale : kUnselectedScale;

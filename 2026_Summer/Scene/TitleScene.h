@@ -1,10 +1,12 @@
 #pragma once
 #include "Scene.h"
 #include "Model.h"
+#include "Stage.h"
 #include "SceneManager.h"
 
 class Bg;
 class TitlePlayer;
+class TitleCamera;
 class TitleScene :public Scene
 {
 public:
@@ -27,8 +29,11 @@ public:
 	DrawFunc_t draw_;
 
 private:
-
 	int frameCount_ = 0;
+
+	int introFollowFrameCount_ = 0;
+
+	int introHoldFrameCount_ = 0;   //固定カメラのまま走らせているフレーム数
 
 	int currentIndex_ = 0;	//現在選ばれている要素
 
@@ -50,9 +55,19 @@ private:
 
 	float endCurrentScale_ = 0.0f;
 
+	bool isFollowStarted_ = false;
+
+	bool isPullBackStarted_ = false; //引き始めたかどうか
+
 	//背景
 	std::shared_ptr<Bg>pBg_;
 
+	//ステージ
+	std::shared_ptr<Stage> pStage_;
+
 	//タイトル用プレイヤー
 	std::shared_ptr<TitlePlayer>pTitlePlayer_;
+
+	//タイトル用カメラ
+	std::shared_ptr<TitleCamera> pTitleCamera_;
 };

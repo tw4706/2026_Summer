@@ -6,7 +6,8 @@
 class Stage :public Collidable
 {
 public:
-	Stage(Vector3 pos, Vector3 vel, float dir);
+	Stage();
+	Stage(Vector3 pos, Vector3 vel,float angle);
 	~Stage();
 
 	void Init();
