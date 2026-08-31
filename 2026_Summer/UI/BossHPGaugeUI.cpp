@@ -10,6 +10,9 @@ namespace
 	//画面右上を基準にした描画位置のオフセット
 	constexpr int kDrawOffsetX = 40;
 	constexpr int kDrawOffsetY = 40;
+
+	//HPUIのパス
+	const wchar_t* kBossHPUI = L"data/UI/BossHP.png";
 }
 
 BossHPGaugeUI::BossHPGaugeUI(std::weak_ptr<EnemyBase> pEnemy) :
@@ -24,6 +27,11 @@ void BossHPGaugeUI::Init()
 
 	//ボスは大きめのスケールで上書き
 	scale_ = kBossHPUIScale;
+}
+
+const wchar_t* BossHPGaugeUI::GetHPGraphPath() const
+{
+	return kBossHPUI;
 }
 
 bool BossHPGaugeUI::VisibleDrawPos(int& drawX, int& drawY) const

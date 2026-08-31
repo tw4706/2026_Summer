@@ -13,6 +13,7 @@
 Application::Application()
 {
 }
+
 Application::~Application()
 {
 }
@@ -26,7 +27,7 @@ Application& Application::GetInstance()
 bool Application::Init()
 {
 	//ウィンドウモード設定
-	ChangeWindowMode(true);
+	ChangeWindowMode(false);
 
 	//ウィンドウのタイトル変更
 	SetMainWindowText(L"SamuraiAdapt");

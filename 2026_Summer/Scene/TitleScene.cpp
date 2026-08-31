@@ -179,7 +179,7 @@ void TitleScene::NormalDraw()
 {
 	pBg_->Draw(Vector3{ 0.0f,0.0f,0.0f });
 
-	pTitlePlayer_->Draw();
+	//pTitlePlayer_->Draw();
 
 	float startScale = (currentIndex_ == 0) ? kSelectedScale : kUnselectedScale;
 	float endScale = (currentIndex_ == 1) ? kSelectedScale : kUnselectedScale;

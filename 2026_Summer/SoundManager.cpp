@@ -3,7 +3,7 @@
 
 namespace
 {
-	constexpr int kBaseBgmVolume = 160;
+	constexpr int kBaseBgmVolume = 0;
 	constexpr int kBaseSeVolume = 220;
 
 	//BGMのフェードスピード
@@ -26,6 +26,8 @@ namespace
 	const wchar_t* kJumpSe = L"data/BGM・SE/Jump.mp3";
 	const wchar_t* kLockOnSe = L"data/BGM・SE/LockOn.mp3";
 	const wchar_t* kCursoleMoveSe = L"data/BGM・SE/MoveCursole.mp3";
+	const wchar_t* kBossSlashSe = L"data/BGM・SE/bossSlash.mp3";
+	const wchar_t* kBossAttackSe = L"data/BGM・SE/bossAttack.mp3";
 }
 
 SoundManager& SoundManager::GetInstance()
@@ -78,6 +80,8 @@ void SoundManager::Init()
 	seHandles_[SE::Jump] = LoadSoundMem(kJumpSe);
 	seHandles_[SE::LockOn] = LoadSoundMem(kLockOnSe);
 	seHandles_[SE::CursoleMove] = LoadSoundMem(kCursoleMoveSe);
+	seHandles_[SE::BossSlash] = LoadSoundMem(kBossSlashSe);
+	seHandles_[SE::BossAttack] = LoadSoundMem(kBossAttackSe);
 }
 
 void SoundManager::Update()

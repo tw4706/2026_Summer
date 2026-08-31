@@ -2,6 +2,7 @@
 #include "BossStateRun.h"
 #include "Boss.h"
 #include "EnemyAttackDataLoader.h"
+#include "SoundManager.h"
 
 namespace
 {
@@ -46,6 +47,9 @@ void BossStateAttack::Enter()
 
 	//攻撃コライダーを生成
 	boss->CreateAttackCollider(kAttackRadius, kAttackDistance, damage);
+
+	//ボスの攻撃のSE再生
+	SoundManager::GetInstance().PlaySe(SE::BossAttack);
 }
 
 void BossStateAttack::Update()

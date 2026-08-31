@@ -2,6 +2,7 @@
 #include "BossStateRun.h"
 #include "Boss.h"
 #include "EffectManager.h"
+#include "SoundManager.h"
 #include "EnemyAttackDataLoader.h"
 #include"EffekseerForDXLib.h"
 
@@ -59,6 +60,8 @@ void BossStateRangedAttack::Enter()
 		float angle = boss->GetRangedAttackAngle();
 		SetRotationPlayingEffekseer3DEffect(slashEffectHandle_, 0.0f, angle, 0.0f);
 	}
+
+	SoundManager::GetInstance().PlaySe(SE::BossSlash);
 }
 
 void BossStateRangedAttack::Update()

@@ -28,7 +28,9 @@ enum class SE
 	Guard,
 	Jump,
 	LockOn,
-	CursoleMove
+	CursoleMove,
+	BossSlash,
+	BossAttack
 };
 
 class SoundManager

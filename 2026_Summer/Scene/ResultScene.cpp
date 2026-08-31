@@ -26,8 +26,8 @@ namespace
 	};
 
 	//ランクのタイム基準となる値
-	constexpr float kRankSTime = 60.0f;
-	constexpr float kRankATime = 120.0f;
+	constexpr float kRankSTime = 100.0f;
+	constexpr float kRankATime = 140.0f;
 	constexpr float kRankBTime = 180.0f;
 
 	constexpr int kTimeCountDuration = 60;		//タイムをカウントし終わるまでのフレーム数
@@ -37,8 +37,8 @@ namespace
 	constexpr float kRankScaleMax = 1.2f;		//ランクの最大拡大率
 
 	//ランクの拡縮
-	constexpr float kRankSpeed = 0.05f;   //拡縮の速さ
-	constexpr float kRankAmplitude = 0.1f;//拡縮の振れ幅
+	constexpr float kRankSpeed = 0.05f;			//拡縮の速さ
+	constexpr float kRankAmplitude = 0.1f;		//拡縮の振れ幅
 
 	//選択肢の座標
 	constexpr int kRetryPosX = 0;
@@ -53,11 +53,11 @@ namespace
 	constexpr int kClearTimeOffsetY = 250;
 
 	//演出のタイミング
-	constexpr int kClearTimeShowFrame = 0;		//クリアタイムを出すフレーム
+	constexpr int kClearTimeShowFrame = 0;										//クリアタイムを出すフレーム
 	constexpr int kRankShowFrame = kClearTimeShowFrame + kTimeCountDuration;	//ランクを出すフレーム
 	constexpr int kButtonSlideStartFrame = kRankShowFrame + kRankScaleDuration;	//ボタンのスライドを始めるフレーム
-	constexpr int kButtonSlideDuration = 20;	//スライドするフレーム
-	constexpr int kButtonSlideDistance = 100;	//スライドのボタンの距離
+	constexpr int kButtonSlideDuration = 20;									//スライドするフレーム
+	constexpr int kButtonSlideDistance = 100;									//スライドのボタンの距離
 
 	//文字のオフセット
 	constexpr int kTextOffsetX = 4;
@@ -235,8 +235,7 @@ void ResultScene::NormalDraw()
 		const wchar_t* text = L"GameOver";
 		int textWidth = GetDrawStringWidthToHandle(text, static_cast<int>(wcslen(text)), Game::kFontUIHandle);
 
-		DrawFormatStringToHandle(centerX - textWidth / 2, centerY - kGameOverOffsetY, 0x000000, Game::kFontUIHandle, text);
-		DrawFormatStringToHandle(centerX - textWidth / 2 + kTextOffsetX, centerY - kGameOverOffsetY, 0xffffff, Game::kFontUIHandle, text);
+		DrawFormatStringToHandle(centerX - textWidth / 2 + kTextOffsetX, centerY - kGameOverOffsetY, 0x000000, Game::kFontUIHandle, text);
 	}
 	else
 	{
@@ -250,7 +249,6 @@ void ResultScene::NormalDraw()
 			swprintf_s(timeBuffer, L"クリアタイム: %.1f秒", displayedTime_);
 			int textWidth = GetDrawStringWidthToHandle(timeBuffer, static_cast<int>(wcslen(timeBuffer)), Game::kFontUIHandle);
 
-			DrawFormatStringToHandle(centerX - textWidth / 2 + kTextOffsetX, centerY - kClearTimeOffsetY, 0xffffff, Game::kFontUIHandle, timeBuffer);
 			DrawFormatStringToHandle(centerX - textWidth / 2, centerY - kClearTimeOffsetY, 0x000000, Game::kFontUIHandle, timeBuffer);
 		}
 
@@ -297,13 +295,11 @@ void ResultScene::NormalDraw()
 		//リトライ
 		const wchar_t* retryText = L"リトライ";
 		int retryWidth = GetDrawStringWidthToHandle(retryText, static_cast<int>(wcslen(retryText)), Game::kFontUIHandle);
-		DrawFormatStringToHandle(centerX - retryWidth / 2 + kRetryPosX + kTextOffsetX, centerY + kRetryPosY - slideOffset, 0xffffff, Game::kFontUIHandle, retryText);
 		DrawFormatStringToHandle(centerX - retryWidth / 2 + kRetryPosX, centerY + kRetryPosY - slideOffset, retryColor, Game::kFontUIHandle, retryText);
 
 		//タイトルに戻る
 		const wchar_t* titleText = L"タイトルに戻る";
 		int titleWidth = GetDrawStringWidthToHandle(titleText, static_cast<int>(wcslen(titleText)), Game::kFontUIHandle);
-		DrawFormatStringToHandle(centerX - titleWidth / 2 + kBackTitlePosX + kTextOffsetX, centerY + kBackTitlePosY - slideOffset, 0xffffff, Game::kFontUIHandle, titleText);
 		DrawFormatStringToHandle(centerX - titleWidth / 2 + kBackTitlePosX, centerY + kBackTitlePosY - slideOffset, titleColor, Game::kFontUIHandle, titleText);
 	}
 }

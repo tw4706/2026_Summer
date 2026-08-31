@@ -14,6 +14,8 @@ public:
 	void VisbleDamage();
 
 protected:
+
+	//HPƒo[‚Ì‰æ‘œ‚ğ•Ô‚·
 	virtual const wchar_t* GetHPGraphPath() const override;
 	virtual void UpdateHP() override;
 	virtual bool VisibleDrawPos(int& drawX, int& drawY)const override;

@@ -1,5 +1,6 @@
 #include "BossStateRush.h"
 #include "BossStateAttack.h"
+#include "SoundManager.h"
 #include "Boss.h"
 
 namespace
