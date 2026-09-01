@@ -23,6 +23,12 @@ public:
 
 	//追従状態に切り替わったかどうか
 	bool IsFollowing() const { return mode_ == Mode::Follow; }
+
+	/// <summary>
+	/// 演出をスキップする関数
+	/// </summary>
+	/// <param name="playerPos">タイトル用プレイヤーの座標</param>
+	void SkipFollow(const Vector3& playerPos);
 private:
 	enum class Mode
 	{

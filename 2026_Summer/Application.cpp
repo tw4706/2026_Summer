@@ -99,6 +99,10 @@ void Application::Run()
 	//シーンの切り替え
 	sceneManager.ChangeScene(std::make_shared<TitleScene>(sceneManager));
 
+#ifdef _DEBUG
+	//デバッグ時のFPS表示用変数
+	int nowFps = 0;
+#endif
 	while (ProcessMessage() != -1)
 	{
 		LONGLONG start = GetNowHiPerformanceCount();
@@ -114,6 +118,11 @@ void Application::Run()
 		sceneManager.Draw();
 		DrawEffekseer3D();
 
+		//FPSの表示
+#ifdef _DEBUG
+		DrawFormatString(0, 0, GetColor(255, 255, 0), L"FPS:%d", nowFps);
+#endif
+
 		if (isGameEnd_||CheckHitKey(KEY_INPUT_ESCAPE))
 		{
 			break;
@@ -127,6 +136,14 @@ void Application::Run()
 		{
 
 		}
+#ifdef _DEBUG
+		//実測フレーム時間からFPSを算出
+		LONGLONG frameTime = GetNowHiPerformanceCount() - start;
+		if (frameTime > 0)
+		{
+			nowFps = static_cast<int>(1000000LL / frameTime);
+		}
+#endif
 	}
 }
 

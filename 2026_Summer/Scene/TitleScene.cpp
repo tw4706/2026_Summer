@@ -154,6 +154,19 @@ void TitleScene::Update()
 		pTitleCamera_->StartPullBackForLogo();
 	}
 
+	//演出スキップ
+	if (!isFollowStarted_ && Input::GetInstance().IsTriggered("next"))
+	{
+		pTitlePlayer_->StopRun();
+		pTitleCamera_->SkipFollow(pTitlePlayer_->GetPos());
+
+		isPullBackStarted_ = true;
+		isFollowStarted_ = true;
+
+		//このまま決定を押すと同時にフェードアウトが始まってしまうので、returnで止める
+		return;
+	}
+
 	(this->*update_)();
 }
 

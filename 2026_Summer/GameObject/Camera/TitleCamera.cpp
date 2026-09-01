@@ -111,3 +111,10 @@ void TitleCamera::StartPullBackForLogo()
 {
 	mode_ = Mode::PullBackForLogo;
 }
+
+void TitleCamera::SkipFollow(const Vector3& playerPos)
+{
+	pos_ = playerPos + kLogoOffset;
+	cameraTarget_ = playerPos + kTargetHeightOffset;
+	mode_ = Mode::PullBackForLogo;
+}

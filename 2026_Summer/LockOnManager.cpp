@@ -11,11 +11,11 @@
 namespace
 {
 	//ロックオンで探す最大距離
-	constexpr float kMaxLockOnDistance = 1000.0f;
+	constexpr float kMaxLockOnDistance = 2000.0f;
 	constexpr float kMaxLockOnDistanceSq = kMaxLockOnDistance * kMaxLockOnDistance;
 
 	//ターゲット切り替え時に敵を切り替えれる距離
-	constexpr float kTargetChangeDistance = 1000.0f;
+	constexpr float kTargetChangeDistance = 1500.0f;
 	constexpr float kTargetChangeDistanceSq = kTargetChangeDistance * kTargetChangeDistance;
 
 	//ロックオンを行う索敵の視野角
