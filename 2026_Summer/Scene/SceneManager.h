@@ -45,6 +45,11 @@ public:
 	void PopScene();
 
 	/// <summary>
+	/// シーンの削除
+	/// </summary>
+	void RemoveScene();
+
+	/// <summary>
 	/// シーンの描画
 	/// </summary>
 	void Update();

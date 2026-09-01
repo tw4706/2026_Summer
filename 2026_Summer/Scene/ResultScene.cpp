@@ -182,9 +182,10 @@ void ResultScene::FadeOutUpdate()
 {
 	frameCount_--;
 
-	if (frameCount_ <= 0)
+	if (frameCount_ < 0)
 	{
-		sceneManager_.PopScene();
+		//シーンの削除
+		sceneManager_.RemoveScene();
 
 		//選択肢に応じたシーンの遷移を行う
 		if (currentIndex_ == 0)
@@ -207,19 +208,21 @@ void ResultScene::FadeDraw()
 	if (update_ == &ResultScene::FadeInUpdate)
 	{
 		//フェードイン
-		rate = 1.0f - (float)frameCount_ / kFadeInterval;
+		rate = (float)frameCount_ / kFadeInterval;
 	}
 	else
 	{
 		//フェードアウト
-		rate = (float)frameCount_ / kFadeInterval;
+		rate = 1.0f-(float)frameCount_ / kFadeInterval;
 	}
 
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
+	NormalDraw();
+
 	//フェードマネージャーの描画開始と終了
 	FadeManager::GetInstance().StartCapture();
-	NormalDraw();
+	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), true);
 	FadeManager::GetInstance().EndCaptureAndDraw(rate);
 }
 

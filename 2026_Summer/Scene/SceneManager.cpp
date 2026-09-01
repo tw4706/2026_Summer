@@ -51,6 +51,15 @@ void SceneManager::PopScene()
 	}
 }
 
+void SceneManager::RemoveScene()
+{
+	if (scenes_.size() >= 2)
+	{
+		auto it = std::prev(scenes_.end(), 2);
+		scenes_.erase(it);
+	}
+}
+
 void SceneManager::Update()
 {
 	//––”ö‚Ì—v‘f‚Ì‚ÝUpdate‚·‚é
