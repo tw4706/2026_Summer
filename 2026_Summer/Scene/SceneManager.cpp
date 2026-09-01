@@ -58,5 +58,8 @@ void SceneManager::Update()
 }
 void SceneManager::Draw()
 {
-	scenes_.back()->Draw();
+	for (auto& scene : scenes_)
+	{
+		scene->Draw();
+	}
 }

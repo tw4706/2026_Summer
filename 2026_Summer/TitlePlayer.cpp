@@ -4,7 +4,7 @@ namespace
 {
 	constexpr float kFirstAngle = DX_PI_F;
 
-	const Vector3 kFirstPos = { 200.0f, 0.0f, 0.0f };
+	const Vector3 kFirstPos = { 200.0f, -5.0f, 0.0f };
 	const Vector3 kFirstScale = { 2.0f, 2.0f, 2.0f };
 	constexpr float kDeltaTime = 1.0f / 60.0f;
 
@@ -66,7 +66,7 @@ void TitlePlayer::UpdateMatrix()
 {
 	//s—ñ‚ğì¬‚µ‚ÄŒ©‚½–Ú‚¾‚¯”½‰f
 	Matrix4x4 scaleMat = Matrix4x4::Scale(scale_.x_, scale_.y_, scale_.z_);
-	Matrix4x4 rotMat = Matrix4x4::RotateY(angle_+DX_PI_F);
+	Matrix4x4 rotMat = Matrix4x4::RotateY(angle_ + DX_PI_F);
 	Matrix4x4 transMat = Matrix4x4::Translate(pos_.x_, pos_.y_, pos_.z_);
 	Matrix4x4 worldMat = scaleMat * rotMat * transMat;
 

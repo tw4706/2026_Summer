@@ -48,6 +48,13 @@ private:
 	//ゲーム終了のテキストハンドル
 	int endTextHandle_ = -1;
 
+	//ゲーム開始の影テキストハンドル
+	int startShadowTextHandle_ = -1;
+
+	//ゲーム終了の影テキストハンドル
+	int endShadowTextHandle_ = -1;
+
+	//始めと終了の文字列のWidthとHeight
 	int startTextWidth_ = 0, startTextHeight_ = 0;
 	int endTextWidth_ = 0, endTextHeight_ = 0;
 

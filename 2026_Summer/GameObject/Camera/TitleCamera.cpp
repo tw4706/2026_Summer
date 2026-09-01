@@ -13,7 +13,7 @@ namespace
 	const Vector3 kTargetHeightOffset = { 0.0f, 130.0f, 0.0f };
 
 	//左斜め前の固定カメラオフセット
-	const Vector3 kIntroOffset = { 200.0f, 300.0f, -600.0f };
+	const Vector3 kIntroOffset = { 200.0f, 300.0f, -1600.0f };
 
 	//固定→追従へ引いていく際の補間割合
 	constexpr float kPullBackLerpRate = 0.03f;
@@ -22,7 +22,7 @@ namespace
 	constexpr float kLogoPullBackLerpRate = 0.02f;
 
 	//背後へカメラを引き込む時間
-	constexpr int kTransitionDuration = 180;
+	constexpr int kTransitionDuration = 300;
 }
 
 TitleCamera::TitleCamera() :

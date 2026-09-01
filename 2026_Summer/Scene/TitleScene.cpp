@@ -24,6 +24,9 @@ namespace
 	constexpr int kTitleTextOffsetY = 60;
 	constexpr int kEndTextOffsetY = 160;
 
+	//テキストの影のX座標オフセット
+	constexpr int kShadowTextOffsetX = 4;
+
 	//ロゴの描画時のオフセット
 	constexpr int kLogoOffsetX = -600;
 	constexpr int kLogoOffsetY = -500;
@@ -72,6 +75,8 @@ TitleScene::~TitleScene()
 	DeleteGraph(titleLogoHandle_);
 	DeleteGraph(startTextHandle_);
 	DeleteGraph(endTextHandle_);
+	DeleteGraph(startShadowTextHandle_);
+	DeleteGraph(endShadowTextHandle_);
 }
 
 void TitleScene::Init()
@@ -82,6 +87,8 @@ void TitleScene::Init()
 	titleLogoHandle_ = LoadGraph(L"data/UI/titleLogo.png");
 	startTextHandle_ = LoadGraph(L"data/UI/start.png");
 	endTextHandle_ = LoadGraph(L"data/UI/endText.png");
+	startShadowTextHandle_ = LoadGraph(L"data/UI/start_white.png");
+	endShadowTextHandle_ = LoadGraph(L"data/UI/end_white.png");
 
 	//ハンドルサイズの取得
 	GetGraphSize(startTextHandle_, &startTextWidth_, &startTextHeight_);
@@ -271,9 +278,13 @@ void TitleScene::NormalDraw()
 	startCurrentScale_ = Vector3::Lerp(startCurrentScale_, startScale, kScaleLerpRate);
 	endCurrentScale_ = Vector3::Lerp(endCurrentScale_, endScale, kScaleLerpRate);
 
+	DrawRotaGraph3(Game::kScreenWidth / 2+ kShadowTextOffsetX, Game::kScreenHeight / 2 + kTitleTextOffsetY,
+		startTextWidth_ / 2, startTextHeight_ / 2, startCurrentScale_, startCurrentScale_, 0.0f, startShadowTextHandle_, true);
 	DrawRotaGraph3(Game::kScreenWidth / 2, Game::kScreenHeight / 2 + kTitleTextOffsetY,
 		startTextWidth_ / 2, startTextHeight_ / 2, startCurrentScale_, startCurrentScale_, 0.0f, startTextHandle_, true);
 
+	DrawRotaGraph3(Game::kScreenWidth / 2+ kShadowTextOffsetX, Game::kScreenHeight / 2 + kEndTextOffsetY,
+		endTextWidth_ / 2, endTextHeight_ / 2, endCurrentScale_, endCurrentScale_, 0.0f, endShadowTextHandle_, true);
 	DrawRotaGraph3(Game::kScreenWidth / 2, Game::kScreenHeight / 2 + kEndTextOffsetY,
 		endTextWidth_ / 2, endTextHeight_ / 2, endCurrentScale_, endCurrentScale_, 0.0f, endTextHandle_, true);
 

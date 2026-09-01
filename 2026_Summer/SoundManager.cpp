@@ -3,7 +3,7 @@
 
 namespace
 {
-	constexpr int kBaseBgmVolume = 150;
+	constexpr int kBaseBgmVolume = 160;
 	constexpr int kBaseSeVolume = 220;
 
 	//BGMのフェードスピード

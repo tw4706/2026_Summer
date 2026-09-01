@@ -359,7 +359,9 @@ void GameScene::FadeOutUpdate()
 	//時間が経過したらリザルトシーンに遷移
 	if (frameCount_ <= 0)
 	{
-		sceneManager_.ChangeScene(std::make_shared<ResultScene>(sceneManager_, clearTime_,isGameOver_));
+		draw_ = &GameScene::NormalDraw;
+		sceneManager_.PushScene(std::make_shared<ResultScene>(sceneManager_, clearTime_,isGameOver_));
+		return;
 	}
 }
 
