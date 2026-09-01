@@ -233,8 +233,8 @@ void ResultScene::NormalDraw()
 	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-	int retryColor = (currentIndex_ == 0) ? 0xff0000 : 0x000000;
-	int titleColor = (currentIndex_ == 1) ? 0xff0000 : 0x000000;
+	int titleColor = (currentIndex_ == 1) ? 0xffffff:0xff0000;
+	int retryColor = (currentIndex_ == 0) ? 0xffffff:0xff0000;
 
 	const int centerX = Game::kScreenWidth / 2;
 	const int centerY = Game::kScreenHeight / 2;
@@ -258,8 +258,7 @@ void ResultScene::NormalDraw()
 			swprintf_s(timeBuffer, L"クリアタイム: %.1f秒", displayedTime_);
 			int textWidth = GetDrawStringWidthToHandle(timeBuffer, static_cast<int>(wcslen(timeBuffer)), Game::kFontUIHandle);
 
-			DrawFormatStringToHandle(centerX - textWidth / 2+4, centerY - kClearTimeOffsetY, 0xffffff, Game::kFontUIHandle, timeBuffer);
-			DrawFormatStringToHandle(centerX - textWidth / 2, centerY - kClearTimeOffsetY, 0x000000, Game::kFontUIHandle, timeBuffer);
+			DrawFormatStringToHandle(centerX - textWidth / 2, centerY - kClearTimeOffsetY, 0xffffff, Game::kFontUIHandle, timeBuffer);
 		}
 
 		//ランクはタイムのカウントが終わってから出す
@@ -305,13 +304,11 @@ void ResultScene::NormalDraw()
 		//リトライ
 		const wchar_t* retryText = L"リトライ";
 		int retryWidth = GetDrawStringWidthToHandle(retryText, static_cast<int>(wcslen(retryText)), Game::kFontUIHandle);
-		DrawFormatStringToHandle(centerX - retryWidth / 2 + kRetryPosX+4, centerY + kRetryPosY - slideOffset, 0xffffff, Game::kFontUIHandle, retryText);
-		DrawFormatStringToHandle(centerX - retryWidth / 2 + kRetryPosX, centerY + kRetryPosY - slideOffset, retryColor, Game::kFontUIHandle, retryText);
+		DrawFormatStringToHandle(centerX - retryWidth / 2 + kRetryPosX, centerY + kRetryPosY - slideOffset, titleColor, Game::kFontUIHandle, retryText);
 
 		//タイトルに戻る
 		const wchar_t* titleText = L"タイトルに戻る";
 		int titleWidth = GetDrawStringWidthToHandle(titleText, static_cast<int>(wcslen(titleText)), Game::kFontUIHandle);
-		DrawFormatStringToHandle(centerX - titleWidth / 2 + kBackTitlePosX+4, centerY + kBackTitlePosY - slideOffset, 0xffffff, Game::kFontUIHandle, titleText);
-		DrawFormatStringToHandle(centerX - titleWidth / 2 + kBackTitlePosX, centerY + kBackTitlePosY - slideOffset, titleColor, Game::kFontUIHandle, titleText);
+		DrawFormatStringToHandle(centerX - titleWidth / 2 + kBackTitlePosX, centerY + kBackTitlePosY - slideOffset, retryColor, Game::kFontUIHandle, titleText);
 	}
 }

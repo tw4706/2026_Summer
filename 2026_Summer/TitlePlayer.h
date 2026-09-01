@@ -42,23 +42,6 @@ public:
 	/// <param name="state">アニメーションの状態</param>
 	void ChangeAnimation(AnimationState state);
 
-	/// <summary>
-	/// 走行開始
-	/// </summary>
-	/// <param name="dir">進行方向</param>
-	/// <param name="speed">移動速度</param>
-	void StartRun(const Vector3& dir, float speed);
-
-	/// <summary>
-	/// 走行の停止
-	/// </summary>
-	void StopRun();
-
-	//外部から進行方向を参照したい場合用
-	const Vector3& GetMoveDir() const { return moveDir_; }
-
-	Vector3 GetForward() const;
-
 private:
 	//モデル
 	Model model_;
@@ -71,11 +54,5 @@ private:
 	Vector3 scale_;
 	//角度
 	float angle_;
-	//移動方向
-	Vector3 moveDir_;
-	//移動速度
-	float moveSpeed_;
-	//走行中かどうか
-	bool isRunning_;
 };
 

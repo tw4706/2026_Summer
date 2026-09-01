@@ -8,7 +8,7 @@
 #include "FadeManager.h"
 #include "SoundManager.h"
 #include "TitlePlayer.h"
-#include "Camera/TitleCamera.h"
+#include "Model.h"
 #include<Dxlib.h>
 #include<memory>
 #include<cassert>
@@ -50,11 +50,14 @@ namespace
 	//選択肢の文字の拡大率の補間割合
 	constexpr float kScaleLerpRate = 0.1f;
 
-	//プレイヤーの移動速度
-	constexpr float kPlayerMoveSpeed = 5.0f;
+	//ステージのY軸回転
+	constexpr float kStageRotateY = 0.0f;
 
-	//固定カメラのままプレイヤーを走らせておくフレーム数
-	constexpr int kIntroHoldDuration = 60;
+	//ステージの初期位置
+	const Vector3 kFirstStageModelPos = { 950.0f, 100.0f, 1000.0f };
+
+	//ステージモデルの拡大率
+	const Vector3 kFirstScale = { 2.0f, 2.0f, 2.0f };
 }
 
 TitleScene::TitleScene(SceneManager& sceneManager) :
@@ -64,9 +67,7 @@ TitleScene::TitleScene(SceneManager& sceneManager) :
 	frameCount_(kFadeInterval)
 {
 	pBg_ = std::make_shared<Bg>();
-	pStage_ = std::make_shared<Stage>(Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f }, 0.0f);
 	pTitlePlayer_ = std::make_shared<TitlePlayer>();
-	pTitleCamera_ = std::make_shared<TitleCamera>();
 }
 
 TitleScene::~TitleScene()
@@ -77,6 +78,8 @@ TitleScene::~TitleScene()
 	DeleteGraph(endTextHandle_);
 	DeleteGraph(startShadowTextHandle_);
 	DeleteGraph(endShadowTextHandle_);
+	DeleteGraph(textFrameHandle_);
+	stageModel_.Release();
 }
 
 void TitleScene::Init()
@@ -89,69 +92,30 @@ void TitleScene::Init()
 	endTextHandle_ = LoadGraph(L"data/UI/endText.png");
 	startShadowTextHandle_ = LoadGraph(L"data/UI/start_white.png");
 	endShadowTextHandle_ = LoadGraph(L"data/UI/end_white.png");
+	textFrameHandle_ = LoadGraph(L"data/UI/ButtonFrame.png");
+	stageModel_.Load(L"data/MV1/TitleStage.mv1");
+
+	MV1SetRotationXYZ(stageModel_.GetHandle(), VGet(0.0f, kStageRotateY, 0.0f));
+	MV1SetPosition(stageModel_.GetHandle(), kFirstStageModelPos.ToDxlibVector());
 
 	//ハンドルサイズの取得
 	GetGraphSize(startTextHandle_, &startTextWidth_, &startTextHeight_);
 	GetGraphSize(endTextHandle_, &endTextWidth_, &endTextHeight_);
+	GetGraphSize(textFrameHandle_, &textFrameWidth_, &textFrameHeight_);
 
 	//背景の初期化
 	pBg_->Init((L"data/Bg/backGround"));
 
-	//ステージの初期化
-	pStage_->Init();
-
 	pTitlePlayer_->Init();
-	pTitleCamera_->Init();
-
-	Vector3 dir = pTitlePlayer_->GetForward();
-	pTitlePlayer_->StartRun(dir, kPlayerMoveSpeed);
-	pTitleCamera_->SetupIntro(pTitlePlayer_->GetPos(), dir);
 
 	SoundManager::GetInstance().PlayBgm(BGM::Title);
 }
 
 void TitleScene::Update()
 {
-	//フェードアウト中かどうか
-	//このフラグを用いることによってフェードアウト中でもカメラの固定を行えるようにする
-	bool isFadingOut = (update_ == &TitleScene::FadeOutUpdate);
-
 	if (pTitlePlayer_)
 	{
 		pTitlePlayer_->Update();
-
-		//フェードアウト中でなければカメラ追従を行う
-		if (!isFadingOut)
-		{
-			pTitleCamera_->FollowPlayer(pTitlePlayer_->GetPos());
-		}
-	}
-
-	//フェードアウト中でなければカメラ本体の更新を行う
-	if (!isFadingOut)
-	{
-		pTitleCamera_->Update(0);
-	}
-
-	//固定のまま一定フレーム走らせたら、カメラを背後へ引き始める
-	if (!isPullBackStarted_)
-	{
-		introHoldFrameCount_++;
-		if (introHoldFrameCount_ >= kIntroHoldDuration)
-		{
-			pTitleCamera_->StartTransitionToFollow();
-			isPullBackStarted_ = true;
-		}
-	}
-
-	//完全追従になった＝背後に収まった瞬間を検知
-	if (!isFollowStarted_ && pTitleCamera_->IsFollowing())
-	{
-		isFollowStarted_ = true;
-		pTitlePlayer_->StopRun();
-
-		//ここで引きカメラの開始を行う
-		pTitleCamera_->StartPullBackForLogo();
 	}
 
 	(this->*update_)();
@@ -177,8 +141,6 @@ void TitleScene::NormalUpdate()
 {
 	//背景の更新
 	pBg_->Update();
-
-	if (!isFollowStarted_) return;
 
 	if (Input::GetInstance().IsTriggered("up"))
 	{
@@ -235,13 +197,6 @@ void TitleScene::FadeDraw()
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
 	FadeManager::GetInstance().StartCapture();
-
-	//現在のカメラの座標を固定するために更新処理を置く
-	if (pTitleCamera_)
-	{
-		pTitleCamera_->Update(0);
-	}
-
 	NormalDraw();
 	FadeManager::GetInstance().EndCaptureAndDraw(rate);
 }
@@ -254,36 +209,36 @@ void TitleScene::NormalDraw()
 		pBg_->Draw(Vector3{ 0.0f,0.0f,0.0f });
 	}
 
-	//ステージの描画
-	if (pStage_)
-	{
-		pStage_->Draw();
-	}
+	//ステージモデルの描画
+	MV1SetScale(stageModel_.GetHandle(), kFirstScale.ToDxlibVector());
+	stageModel_.Draw();
 
-	//演出中のみプレイヤーの描画を行う
-	if (!isFollowStarted_)
+	//プレイヤーの描画
+	if (pTitlePlayer_)
 	{
-		if (pTitlePlayer_)
-		{
-			pTitlePlayer_->Draw();
-		}
-
-		//演出が終わっていない場合はUIを描画せずに終了
-		return;
+		pTitlePlayer_->Draw();
 	}
 
 	float startScale = (currentIndex_ == 0) ? kSelectedScale : kUnselectedScale;
 	float endScale = (currentIndex_ == 1) ? kSelectedScale : kUnselectedScale;
 
+	//文字の拡大率
 	startCurrentScale_ = Vector3::Lerp(startCurrentScale_, startScale, kScaleLerpRate);
 	endCurrentScale_ = Vector3::Lerp(endCurrentScale_, endScale, kScaleLerpRate);
 
-	DrawRotaGraph3(Game::kScreenWidth / 2+ kShadowTextOffsetX, Game::kScreenHeight / 2 + kTitleTextOffsetY,
+	//選択肢の文字列の描画
+	//はじめる
+	DrawRotaGraph3(Game::kScreenWidth / 2, Game::kScreenHeight / 2 + kTitleTextOffsetY,
+		textFrameWidth_ / 2, textFrameHeight_ / 2, startCurrentScale_, startCurrentScale_, 0.0f, textFrameHandle_, true);
+	DrawRotaGraph3(Game::kScreenWidth / 2 + kShadowTextOffsetX, Game::kScreenHeight / 2 + kTitleTextOffsetY,
 		startTextWidth_ / 2, startTextHeight_ / 2, startCurrentScale_, startCurrentScale_, 0.0f, startShadowTextHandle_, true);
 	DrawRotaGraph3(Game::kScreenWidth / 2, Game::kScreenHeight / 2 + kTitleTextOffsetY,
 		startTextWidth_ / 2, startTextHeight_ / 2, startCurrentScale_, startCurrentScale_, 0.0f, startTextHandle_, true);
 
-	DrawRotaGraph3(Game::kScreenWidth / 2+ kShadowTextOffsetX, Game::kScreenHeight / 2 + kEndTextOffsetY,
+	//終了
+	DrawRotaGraph3(Game::kScreenWidth / 2, Game::kScreenHeight / 2 + kEndTextOffsetY,
+		textFrameWidth_ / 2, textFrameHeight_ / 2, endCurrentScale_, endCurrentScale_, 0.0f, textFrameHandle_, true);
+	DrawRotaGraph3(Game::kScreenWidth / 2 + kShadowTextOffsetX, Game::kScreenHeight / 2 + kEndTextOffsetY,
 		endTextWidth_ / 2, endTextHeight_ / 2, endCurrentScale_, endCurrentScale_, 0.0f, endShadowTextHandle_, true);
 	DrawRotaGraph3(Game::kScreenWidth / 2, Game::kScreenHeight / 2 + kEndTextOffsetY,
 		endTextWidth_ / 2, endTextHeight_ / 2, endCurrentScale_, endCurrentScale_, 0.0f, endTextHandle_, true);
