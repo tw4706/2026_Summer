@@ -426,7 +426,7 @@ bool CollisionManager::CheckCapsuleVsPolygon(Collidable& pCapsuleObj, Collidable
 				if (normLen < 0.0001f) continue;
 				norm = norm / normLen;
 
-				//–@ü•ûŒü‚Ö‚ÌˆÚ“®—Ê‚ð‚ß‚èž‚Ý—Ê‚Æ‚·‚é
+				// –@ü•ûŒü‚Ö‚ÌˆÚ“®—Ê‚ª‚ß‚èž‚Ý—Ê
 				Vector3 vel = pCapsuleObj.GetVelocity();
 				float moveNormal = -(vel.Dot(norm));
 				

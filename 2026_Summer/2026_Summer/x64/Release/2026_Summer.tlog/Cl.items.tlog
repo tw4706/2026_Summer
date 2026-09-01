@@ -1,6 +1,7 @@
 C:\GitHub\2026_Summer\2026_Summer\Application.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\Application.obj
 C:\GitHub\2026_Summer\2026_Summer\AStarPathFinder.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\AStarPathFinder.obj
 C:\GitHub\2026_Summer\2026_Summer\AttackSelect.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\AttackSelect.obj
+C:\GitHub\2026_Summer\2026_Summer\GameObject\Camera\TitleCamera.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\TitleCamera.obj
 C:\GitHub\2026_Summer\2026_Summer\UI\BossHPGaugeUI.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\BossHPGaugeUI.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Enemy\Boss\BossStateRangedAttack.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\BossStateRangedAttack.obj
 C:\GitHub\2026_Summer\2026_Summer\GameObject\Camera\BossCamera.cpp;C:\GitHub\2026_Summer\2026_Summer\2026_Summer\x64\Release\BossCamera.obj
