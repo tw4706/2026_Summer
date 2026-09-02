@@ -14,25 +14,32 @@ namespace
 	constexpr int kFadeInterval = 60;
 
 	//選択肢の座標
-	constexpr int kResumePosX = 200;
-	constexpr int kResumePosY = 140;
-	constexpr int kBackTitlePosX = 200;
+	constexpr int kBackeGamePosY = 140;
 	constexpr int kBackTitlePosY = 200;
 
 	//ボタンUIの座標
-	constexpr int kButtonXPosX = 500;
-	constexpr int kButtonXPosY = 140;
-	constexpr int kButtonYPosX = 500;
+	constexpr int kButtonXPosX = 200;
+	constexpr int kButtonXPosY = 80;
+	constexpr int kButtonYPosX = 200;
 	constexpr int kButtonYPosY = 200;
-	constexpr int kButtonAPosX = 500;
-	constexpr int kButtonAPosY = 260;
-	constexpr int kButtonLPosX = 600;
-	constexpr int kButtonLPosY = 140;
-	constexpr int kButtonRPosX = 600;
+	constexpr int kButtonAPosX = 200;
+	constexpr int kButtonAPosY = 320;
+	constexpr int kButtonLPosX = 700;
+	constexpr int kButtonLPosY = 80;
+	constexpr int kButtonRPosX = 700;
 	constexpr int kButtonRPosY = 200;
+
+	//テキストとボタンの間隔
+	constexpr int kButtonTextOffsetX = 120;
+
+	//テキストのY座標オフセット
+	constexpr int kButtonTextOffsetY = 40;
 
 	//アニメーション切り替え間隔
 	constexpr int kButtonAnimeInterval = 20;
+
+	//テキストの色
+	constexpr int kButtonTextColor = 0xffffff;
 }
 
 PauseScene::PauseScene(SceneManager& sceneManager) :
@@ -195,11 +202,11 @@ void PauseScene::NormalDraw()
 
 	const wchar_t* resumeText = L"ゲームにもどる";
 	int resumeWidth = GetDrawStringWidthToHandle(resumeText, static_cast<int>(wcslen(resumeText)), Game::kFontUIHandle);
-	DrawFormatStringToHandle(centerX - resumeWidth / 2, centerY, resumeColor, Game::kFontUIHandle, resumeText);
+	DrawFormatStringToHandle(centerX - resumeWidth / 2, centerY+ kBackeGamePosY, resumeColor, Game::kFontUIHandle, resumeText);
 
 	const wchar_t* titleText = L"タイトルにもどる";
 	int titleWidth = GetDrawStringWidthToHandle(titleText, static_cast<int>(wcslen(titleText)), Game::kFontUIHandle);
-	DrawFormatStringToHandle(centerX - titleWidth / 2, centerY + 50, titleColor, Game::kFontUIHandle, titleText);
+	DrawFormatStringToHandle(centerX - titleWidth / 2, centerY + kBackTitlePosY, titleColor, Game::kFontUIHandle, titleText);
 
 	//ボタンUIの描画
 	buttonX_.Draw();
@@ -207,4 +214,11 @@ void PauseScene::NormalDraw()
 	buttonA_.Draw();
 	buttonL_.Draw();
 	buttonR_.Draw();
+
+	//操作説明のテキストの描画
+	DrawFormatStringToHandle(kButtonXPosX + kButtonTextOffsetX, kButtonXPosY + kButtonTextOffsetY, kButtonTextColor, Game::kFontUIHandle, L"：回避");
+	DrawFormatStringToHandle(kButtonYPosX + kButtonTextOffsetX, kButtonYPosY + kButtonTextOffsetY, kButtonTextColor, Game::kFontUIHandle, L"：攻撃");
+	DrawFormatStringToHandle(kButtonAPosX + kButtonTextOffsetX, kButtonAPosY + kButtonTextOffsetY, kButtonTextColor, Game::kFontUIHandle, L"：ジャンプ");
+	DrawFormatStringToHandle(kButtonLPosX + kButtonTextOffsetX, kButtonLPosY + kButtonTextOffsetY, kButtonTextColor, Game::kFontUIHandle, L"：ロックオン");
+	DrawFormatStringToHandle(kButtonRPosX + kButtonTextOffsetX, kButtonRPosY + kButtonTextOffsetY, kButtonTextColor, Game::kFontUIHandle, L"：ガード");
 }

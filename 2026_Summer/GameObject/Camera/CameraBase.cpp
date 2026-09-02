@@ -17,7 +17,7 @@ namespace
     constexpr float kLightDirection = -1.8f;
 
     //押し出し方向
-    constexpr float kHitDirection = 15.0f;
+    constexpr float kHitDirection = 100.0f;
 
     //乱数のオフセット
     constexpr float kRandomOffset = 0.5f;

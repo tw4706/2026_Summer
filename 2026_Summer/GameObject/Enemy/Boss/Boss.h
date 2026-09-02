@@ -50,6 +50,7 @@ protected:
 	bool ShouldDrawVisionDebug() const override { return false; }
 private:
 	float attackCoolTime_ = 0.0f;//攻撃のクールタイム
+	float hitStunCoolTime_ = 0.0f;//怯みのクールタイム
 
 	//刀
 	std::unique_ptr<Katana> pKatana_;

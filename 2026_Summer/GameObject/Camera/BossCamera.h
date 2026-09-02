@@ -25,10 +25,11 @@ public:
     bool IsBossEventFinished() const { return bossEventTimer_ <= 0.0f; }
 
 private:
+    float bossEventTimer_ = 0.0f;   //ボスイベントのタイマー
+    Vector3 lerpPos_;               //衝突判定の影響を受けない、補間用座標
+
     std::weak_ptr<Player> pPlayer_;
     std::weak_ptr<EnemyBase> pBoss_;
     CameraManager* pCameraManager_ = nullptr;
-
-    float bossEventTimer_ = 0.0f;//ボスイベントのタイマー
 };
 

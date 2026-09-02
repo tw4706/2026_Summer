@@ -22,6 +22,9 @@ namespace
 
 	//ダメージに行く確率
 	constexpr int kRandomToDamage = 20;
+
+	//被弾のクールタイム
+	constexpr float kHitStunCoolTime = 4.0f;
 }
 
 Boss::Boss()
@@ -52,6 +55,12 @@ void Boss::Update()
 	if (attackCoolTime_ >= 0.0f)
 	{
 		attackCoolTime_ -= kDeltaTime;
+	}
+
+	//被弾のクールタイムの減少
+	if (hitStunCoolTime_ >= 0.0f)
+	{
+		hitStunCoolTime_ -= kDeltaTime;
 	}
 
 	//ステートがない場合
@@ -145,12 +154,18 @@ void Boss::OnCollision(Collidable& coll, Collider* pColliderA, Collider* pCollid
 
 		auto boss = std::dynamic_pointer_cast<Boss>(shared_from_this());
 
-		int rand = std::rand() % kRandMax;
-
-		if (rand < kRandomToDamage)
+		//被弾クールタイム中は怯まない
+		if (hitStunCoolTime_ <= 0.0f)
 		{
-			auto nextState = std::make_shared<BossStateDamage>(boss, searchRadius_);
-			ChangeState(nextState);
+			int rand = std::rand() % kRandMax;
+
+			if (rand < kRandomToDamage)
+			{
+				auto nextState = std::make_shared<BossStateDamage>(boss, searchRadius_);
+				ChangeState(nextState);
+				//被弾のクールタイムを設定
+				hitStunCoolTime_ = kHitStunCoolTime;
+			}
 		}
 	}
 	else
