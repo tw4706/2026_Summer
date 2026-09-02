@@ -19,11 +19,11 @@ namespace
 	constexpr float kStageRotateY = -DX_PI_F / 2.0f;
 
 	//ステージの初期位置
-	const Vector3 kFirstStageColPos = { 0.0f, -65.0f, 0.0f };
+	const Vector3 kFirstStageColPos = { 0.0f, -70.0f, 0.0f };
 	const Vector3 kFirstStageModelPos = { 0.0f, -70.0f, 0.0f };
 
 	//地面の高さの限界
-	constexpr float kGroundY = -65.0f;
+	constexpr float kGroundY = -70.0f;
 
 	//デバッグノードのオフセット
 	constexpr float kDebugNodeOffset = -5.0f;

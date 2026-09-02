@@ -59,6 +59,9 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 	inputTable_["next"] = { {PeripheralType::keyboard,KEY_INPUT_RETURN},
 						{PeripheralType::pad1,PAD_INPUT_A},
 						{PeripheralType::padXInput,XINPUT_BUTTON_A} };
+	inputTable_["pause"] = { {PeripheralType::keyboard,KEY_INPUT_O},
+						{PeripheralType::pad1,PAD_INPUT_A},
+						{PeripheralType::padXInput,XINPUT_BUTTON_START} };
 	inputTable_["debugWarp"] = { {PeripheralType::keyboard,KEY_INPUT_W} };
 	inputTable_["debugKillAllEnemies"] = { {PeripheralType::keyboard,KEY_INPUT_K} };
 

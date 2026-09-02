@@ -147,6 +147,7 @@
     <ClCompile Include="AStarPathFinder.cpp" />
     <ClCompile Include="AttackSelect.cpp" />
     <ClCompile Include="GameObject\Camera\TitleCamera.cpp" />
+    <ClCompile Include="Scene\PauseScene.cpp" />
     <ClCompile Include="UI\BossHPGaugeUI.cpp" />
     <ClCompile Include="GameObject\Enemy\Boss\BossStateRangedAttack.cpp" />
     <ClCompile Include="GameObject\Camera\BossCamera.cpp" />
@@ -219,7 +220,10 @@
     <ClCompile Include="GameObject\Player\PlayerStateJumpAttack.cpp" />
     <ClCompile Include="PlayerActionCounter.cpp" />
     <ClCompile Include="GameObject\Player\PlayerStateKnockBack.cpp" />
-    <ClCompile Include="Scene\SceneManager.cpp" />
+    <ClCompile Include="Scene\SceneManager.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\ResultScene.cpp" />
     <ClCompile Include="GameObject\Collider\SphereCollider.cpp" />
@@ -242,6 +246,7 @@
     <ClInclude Include="AStarPathFinder.h" />
     <ClInclude Include="AttackSelect.h" />
     <ClInclude Include="GameObject\Camera\TitleCamera.h" />
+    <ClInclude Include="Scene\PauseScene.h" />
     <ClInclude Include="UI\BossHPGaugeUI.h" />
     <ClInclude Include="GameObject\Enemy\Boss\BossStateRangedAttack.h" />
     <ClInclude Include="GameObject\Camera\BossCamera.h" />

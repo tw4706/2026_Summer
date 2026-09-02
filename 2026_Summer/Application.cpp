@@ -27,7 +27,7 @@ Application& Application::GetInstance()
 bool Application::Init()
 {
 	//ウィンドウモード設定
-	ChangeWindowMode(true);
+	ChangeWindowMode(false);
 
 	//ウィンドウのタイトル変更
 	SetMainWindowText(L"SamuraiAdapt");
@@ -79,8 +79,8 @@ bool Application::Init()
 		SetWriteZBuffer3D(true);
 	}
 
-	AddFontResourceEx(L"data/Font/GenShinGothic-Monospace-Heavy.ttf", FR_PRIVATE, NULL);
-	Game::kFontUIHandle = CreateFontToHandle(L"源真ゴシック等幅 Heavy", 40, -1);
+	AddFontResourceEx(L"data/Font/HGRGY.TTC", FR_PRIVATE, NULL);
+	Game::kFontUIHandle = CreateFontToHandle(L"HG行書体", 40, -1);
 
 	//フェードマネージャーの初期化
 	FadeManager::GetInstance().Init();

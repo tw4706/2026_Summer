@@ -9,6 +9,7 @@
 #include"SceneManager.h"
 #include"FadeManager.h"
 #include"ResultScene.h"
+#include"PauseScene.h"
 #include"Enemy/BigMan.h"
 #include"Enemy/Boss/Boss.h"
 #include"Player/Player.h"
@@ -280,6 +281,14 @@ void GameScene::NormalUpdate()
 		pLockOnManager_->StartLockOn(pPlayer_, pEnemyManager_->GetEnemies(), pCameraManager_.get());
 	}
 
+	//ポーズが押されたらポーズ画面に遷移
+	if (Input::GetInstance().IsTriggered("pause"))
+	{
+		draw_ = &GameScene::NormalDraw;
+		sceneManager_.PushScene(std::make_shared<PauseScene>(sceneManager_));
+		return;
+	}
+
 	if (!reserveObjList_.empty())
 	{
 		//オブジェクトのコライダーを登録
@@ -482,6 +491,7 @@ void GameScene::SpawnBoss()
 			{
 				bossCam->SetTarget(pPlayer_, boss,pCameraManager_.get());
 			}
+
 			pCameraManager_->ChangeCamera(L"BossCamera");
 
 			//ボス用BGMに切り替え

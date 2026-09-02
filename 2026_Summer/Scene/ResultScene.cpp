@@ -42,7 +42,7 @@ namespace
 
 	//選択肢の座標
 	constexpr int kRetryPosX = 0;
-	constexpr int kRetryPosY = 160;
+	constexpr int kRetryPosY = 140;
 	constexpr int kBackTitlePosX = 0;
 	constexpr int kBackTitlePosY = 200;
 
@@ -69,7 +69,12 @@ ResultScene::ResultScene(SceneManager& sceneManager, float clearTime, bool isGam
 	draw_(&ResultScene::FadeDraw),
 	frameCount_(kFadeInterval),
 	clearTime_(clearTime),
-	isGameOver_(isGameOver)
+	isGameOver_(isGameOver),
+	rankHandle_(-1),
+	performanceCount_(0),
+	currentIndex_(0),
+	isInputEnabled_(false),
+	displayedTime_(0.0f)
 {
 	if (isGameOver_)return;
 
@@ -244,7 +249,7 @@ void ResultScene::NormalDraw()
 		const wchar_t* text = L"GameOver";
 		int textWidth = GetDrawStringWidthToHandle(text, static_cast<int>(wcslen(text)), Game::kFontUIHandle);
 
-		DrawFormatStringToHandle(centerX - textWidth / 2 + kTextOffsetX, centerY - kGameOverOffsetY, 0x000000, Game::kFontUIHandle, text);
+		DrawFormatStringToHandle(centerX - textWidth / 2 + kTextOffsetX, centerY - kGameOverOffsetY, 0xffffff, Game::kFontUIHandle, text);
 	}
 	else
 	{
@@ -266,7 +271,7 @@ void ResultScene::NormalDraw()
 		{
 			float rankScale;
 
-			//登場演出中(拡大アニメーション中)かどうか
+			//登場演出中かどうか
 			int elapsed = performanceCount_ - kRankShowFrame;
 			if (elapsed < kRankScaleDuration)
 			{
@@ -307,7 +312,7 @@ void ResultScene::NormalDraw()
 		DrawFormatStringToHandle(centerX - retryWidth / 2 + kRetryPosX, centerY + kRetryPosY - slideOffset, retryColor, Game::kFontUIHandle, retryText);
 
 		//タイトルに戻る
-		const wchar_t* titleText = L"タイトルに戻る";
+		const wchar_t* titleText = L"タイトルにもどる";
 		int titleWidth = GetDrawStringWidthToHandle(titleText, static_cast<int>(wcslen(titleText)), Game::kFontUIHandle);
 		DrawFormatStringToHandle(centerX - titleWidth / 2 + kBackTitlePosX, centerY + kBackTitlePosY - slideOffset, titleColor, Game::kFontUIHandle, titleText);
 	}
