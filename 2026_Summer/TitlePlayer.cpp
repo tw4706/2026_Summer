@@ -1,4 +1,5 @@
 #include "TitlePlayer.h"
+#include "SoundManager.h"
 
 namespace
 {
@@ -84,6 +85,7 @@ void TitlePlayer::StartRun(const Vector3& dir, float speed)
 	moveSpeed_ = speed;
 	isRunning_ = true;
 	ChangeAnimation(AnimationState::Run);
+	SoundManager::GetInstance().PlaySe(SE::TitleRun);
 }
 
 void TitlePlayer::StopRun()

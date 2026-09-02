@@ -159,6 +159,7 @@ void TitleScene::Update()
 	{
 		pTitlePlayer_->StopRun();
 		pTitleCamera_->SkipFollow(pTitlePlayer_->GetPos());
+		SoundManager::GetInstance().StopSe();
 
 		isPullBackStarted_ = true;
 		isFollowStarted_ = true;

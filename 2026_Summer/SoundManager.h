@@ -23,6 +23,7 @@ enum class SE
 	EnemyPrevAttack,
 	EnemyAttack,
 	Move,
+	TitleRun,
 	PlayerHit,
 	EnemyHit,
 	Dodge,
@@ -61,6 +62,16 @@ public:
 	/// </summary>
 	/// <param name="bgm">BGMÉ^ÉCÉv</param>
 	void PlayBgm(BGM bgm);
+
+	/// <summary>
+	/// BGMÇÃí‚é~
+	/// </summary>
+	void StopBgm();
+
+	/// <summary>
+	/// SEÇÃí‚é~
+	/// </summary>
+	void StopSe();
 private:
 	SoundManager();
 	~SoundManager();

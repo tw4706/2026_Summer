@@ -19,7 +19,7 @@ namespace
 	const wchar_t* kAttackSe = L"data/BGM・SE/Attack.mp3";
 	const wchar_t* kEnemyPrevAttackSe = L"data/BGM・SE/prevAttack.mp3";
 	const wchar_t* kEnemyAttackSe = L"data/BGM・SE/enemyAttack.mp3";
-	const wchar_t* kMoveSe = L"data/BGM・SE/Move.mp3";
+	const wchar_t* kTitleRunSe = L"data/BGM・SE/running.mp3";
 	const wchar_t* kPlayerHitSe = L"data/BGM・SE/PlayerHit.mp3";
 	const wchar_t* kEnemyHitSe = L"data/BGM・SE/EnemyHit.mp3";
 	const wchar_t* kDodgeSe = L"data/BGM・SE/Dodge.mp3";
@@ -37,7 +37,6 @@ SoundManager& SoundManager::GetInstance()
 	static SoundManager instance;
 	return instance;
 }
-
 
 SoundManager::SoundManager() :
 	currentSeHandle_(-1),
@@ -76,6 +75,7 @@ void SoundManager::Init()
 	seHandles_[SE::Attack] = LoadSoundMem(kAttackSe);
 	seHandles_[SE::EnemyPrevAttack] = LoadSoundMem(kEnemyPrevAttackSe);
 	seHandles_[SE::EnemyAttack] = LoadSoundMem(kEnemyAttackSe);
+	seHandles_[SE::TitleRun] = LoadSoundMem(kTitleRunSe);
 	seHandles_[SE::PlayerHit] = LoadSoundMem(kPlayerHitSe);
 	seHandles_[SE::EnemyHit] = LoadSoundMem(kEnemyHitSe);
 	seHandles_[SE::Dodge] = LoadSoundMem(kDodgeSe);
@@ -126,6 +126,7 @@ void SoundManager::Update()
 void SoundManager::PlaySe(SE se)
 {
 	int handle = seHandles_[se];
+	currentSeHandle_ = handle;
 
 	//SEの音量
 	ChangeVolumeSoundMem(seVolume_, handle);
@@ -157,4 +158,21 @@ void SoundManager::PlayBgm(BGM bgm)
 	//次に再生するBGMを予約し、フェードアウトから開始
 	nextBgmState_ = bgm;
 	state_ = BGMState::FadeOut;
+}
+
+void SoundManager::StopBgm()
+{
+	if (currentBgmHandle_ == -1) return;
+
+	//BGMの停止
+	StopSoundMem(currentBgmHandle_);
+	state_ = BGMState::None;
+}
+
+void SoundManager::StopSe()
+{
+	if (currentSeHandle_ == -1) return;
+
+	//SEの停止
+	StopSoundMem(currentSeHandle_);
 }
