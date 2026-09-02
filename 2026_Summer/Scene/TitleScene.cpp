@@ -51,10 +51,10 @@ namespace
 	constexpr float kScaleLerpRate = 0.1f;
 
 	//プレイヤーの移動速度
-	constexpr float kPlayerMoveSpeed = 5.0f;
+	constexpr float kPlayerMoveSpeed = 6.0f;
 
 	//固定カメラのままプレイヤーを走らせておくフレーム数
-	constexpr int kIntroHoldDuration = 60;
+	constexpr int kIntroHoldDuration = 250;
 }
 
 TitleScene::TitleScene(SceneManager& sceneManager) :
@@ -140,6 +140,7 @@ void TitleScene::Update()
 		if (introHoldFrameCount_ >= kIntroHoldDuration)
 		{
 			pTitleCamera_->StartTransitionToFollow();
+			pTitlePlayer_->WalkToRun();
 			isPullBackStarted_ = true;
 		}
 	}

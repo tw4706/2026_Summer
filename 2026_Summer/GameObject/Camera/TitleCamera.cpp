@@ -22,7 +22,7 @@ namespace
 	constexpr float kLogoPullBackLerpRate = 0.02f;
 
 	//”wŒã‚ÖƒJƒƒ‰‚ğˆø‚«‚ŞŠÔ
-	constexpr int kTransitionDuration = 300;
+	constexpr int kTransitionDuration = 180;
 }
 
 TitleCamera::TitleCamera() :

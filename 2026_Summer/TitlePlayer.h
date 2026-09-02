@@ -54,6 +54,11 @@ public:
 	/// </summary>
 	void StopRun();
 
+	/// <summary>
+	/// 歩行アニメーションから走りアニメーションへの遷移
+	/// </summary>
+	void WalkToRun();
+
 	//外部から進行方向を参照したい場合用
 	const Vector3& GetMoveDir() const { return moveDir_; }
 

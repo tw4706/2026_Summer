@@ -32,7 +32,7 @@ namespace
 	constexpr int kButtonRPosY = 200;
 
 	//アニメーション切り替え間隔
-	constexpr int kButtonAnimeInterval = 10;
+	constexpr int kButtonAnimeInterval = 20;
 }
 
 PauseScene::PauseScene(SceneManager& sceneManager) :

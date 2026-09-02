@@ -39,6 +39,7 @@ void TitlePlayer::Init()
 	//アニメーションの初期化
 	animation_.Init(model_.GetHandle());
 	animation_.RegisterAnimName(AnimationState::Idle, L"Player|Idle");
+	animation_.RegisterAnimName(AnimationState::Idle, L"Player|Walk");
 	animation_.RegisterAnimName(AnimationState::Run, L"Player|Run");
 	animation_.ChangeState(AnimationState::Idle);
 
@@ -84,7 +85,7 @@ void TitlePlayer::StartRun(const Vector3& dir, float speed)
 	moveDir_ = dir;
 	moveSpeed_ = speed;
 	isRunning_ = true;
-	ChangeAnimation(AnimationState::Run);
+	ChangeAnimation(AnimationState::Walk);
 	SoundManager::GetInstance().PlaySe(SE::TitleRun);
 }
 
@@ -93,6 +94,14 @@ void TitlePlayer::StopRun()
 	isRunning_ = false;
 	moveSpeed_ = 0.0f;
 	ChangeAnimation(AnimationState::Idle);
+}
+
+void TitlePlayer::WalkToRun()
+{	
+	//走行中でなければ何もしない
+	if (!isRunning_) return;
+
+	ChangeAnimation(AnimationState::Run);
 }
 
 Vector3 TitlePlayer::GetForward() const
