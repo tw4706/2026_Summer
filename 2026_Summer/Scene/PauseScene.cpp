@@ -18,6 +18,21 @@ namespace
 	constexpr int kResumePosY = 140;
 	constexpr int kBackTitlePosX = 200;
 	constexpr int kBackTitlePosY = 200;
+
+	//ボタンUIの座標
+	constexpr int kButtonXPosX = 500;
+	constexpr int kButtonXPosY = 140;
+	constexpr int kButtonYPosX = 500;
+	constexpr int kButtonYPosY = 200;
+	constexpr int kButtonAPosX = 500;
+	constexpr int kButtonAPosY = 260;
+	constexpr int kButtonLPosX = 600;
+	constexpr int kButtonLPosY = 140;
+	constexpr int kButtonRPosX = 600;
+	constexpr int kButtonRPosY = 200;
+
+	//アニメーション切り替え間隔
+	constexpr int kButtonAnimeInterval = 10;
 }
 
 PauseScene::PauseScene(SceneManager& sceneManager) :
@@ -36,10 +51,39 @@ PauseScene::~PauseScene()
 
 void PauseScene::Init()
 {
+	//画像の初期化
+	std::vector<int> handlesX;
+	handlesX.push_back(LoadGraph(L"data/UI/Button/X1.png"));
+	handlesX.push_back(LoadGraph(L"data/UI/Button/X2.png"));
+	buttonX_.Init(kButtonXPosX, kButtonXPosY, handlesX, 0.25f, kButtonAnimeInterval);
+
+	std::vector<int> handlesY;
+	handlesY.push_back(LoadGraph(L"data/UI/Button/Y1.png"));
+	handlesY.push_back(LoadGraph(L"data/UI/Button/Y2.png"));
+	buttonY_.Init(kButtonYPosX, kButtonYPosY, handlesY, 0.25f, kButtonAnimeInterval);
+
+	std::vector<int> handlesA;
+	handlesA.push_back(LoadGraph(L"data/UI/Button/A1.png"));
+	handlesA.push_back(LoadGraph(L"data/UI/Button/A2.png"));
+	buttonA_.Init(kButtonAPosX, kButtonAPosY, handlesA, 0.25f, kButtonAnimeInterval);
+
+	//L,Rボタンは静止画としてそのまま読み込む
+	int handleL = LoadGraph(L"data/UI/Button/LB.png");
+	buttonL_.Init(kButtonLPosX, kButtonLPosY, handleL,0.25f);
+
+	int handleR = LoadGraph(L"data/UI/Button/RB.png");
+	buttonR_.Init(kButtonRPosX, kButtonRPosY, handleR, 0.25f);
 }
 
 void PauseScene::Update()
 {
+	//ボタンUIの更新
+	buttonX_.Update();
+	buttonY_.Update();
+	buttonA_.Update();
+	buttonL_.Update();
+	buttonR_.Update();
+
 	(this->*update_)();
 }
 
@@ -156,4 +200,11 @@ void PauseScene::NormalDraw()
 	const wchar_t* titleText = L"タイトルにもどる";
 	int titleWidth = GetDrawStringWidthToHandle(titleText, static_cast<int>(wcslen(titleText)), Game::kFontUIHandle);
 	DrawFormatStringToHandle(centerX - titleWidth / 2, centerY + 50, titleColor, Game::kFontUIHandle, titleText);
+
+	//ボタンUIの描画
+	buttonX_.Draw();
+	buttonY_.Draw();
+	buttonA_.Draw();
+	buttonL_.Draw();
+	buttonR_.Draw();
 }

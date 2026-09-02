@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+#include "UI/ButtonUI.h"
 class PauseScene :public Scene
 {
 public:
@@ -25,5 +26,14 @@ private:
 	int frameCount_ = 0;
 	int currentIndex_ = 0;
 	bool isInputEnabled_ = false;
+
+	//X,Y,Aボタン
+	ButtonUI buttonX_;
+	ButtonUI buttonY_;
+	ButtonUI buttonA_;
+
+	//L,Rボタン
+	ButtonUI buttonL_;
+	ButtonUI buttonR_;
 };
 
